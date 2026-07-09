@@ -1,0 +1,131 @@
+keyword,counterparty,product_type,match_type
+Wagetap; Wagetap: Instant Cash Advance,Wagetap,wage_advance,keyword
+Wagepay; Wagepay: Instant Pay Advance; WAGEPAYCT,Wagepay,wage_advance,keyword
+Press Pay; PressPay,PressPay,wage_advance,keyword
+Payday Advance; Payday Loans,Payday Advance,wage_advance,keyword
+MyPayNow,MyPayNow,wage_advance,keyword
+Auto Finance Loans; Car Loan,Auto Finance Loans,car_loan,keyword
+Yamaha Motor Finance; Yamaha Motor Fin,Yamaha Motor Finance,personal_loan,keyword
+Wisr; Wisr-smarter money habits,Wisr,personal_loan,keyword
+Volkswagen Financial,Volkswagen Financial,personal_loan,keyword
+VetPay,VetPay,personal_loan,keyword
+Ume Loans,Ume Loans,personal_loan,keyword
+Toyota Finance,Toyota Finance,personal_loan,keyword
+Thorn Group,Thorn Group,personal_loan,keyword
+Taurus Motor Finance,Taurus Motor Finance,personal_loan,keyword
+Swoosh Finance; Ausfinancial Pty Ltd; AusFinancial Pty; Ref: Swoosh,Swoosh Finance,personal_loan,keyword
+Sure Cash,Sure Cash,personal_loan,keyword
+Sunshine Loans; Sunshine Sunshine; Sunshine Deposit,Sunshine Loans,personal_loan,keyword
+Stay Finance,Stay Finance,personal_loan,keyword
+St George Loans,St George Loans,personal_loan,keyword
+Square Loans,Square Loans,personal_loan,keyword
+Spotter Loan; Spotter Loans,Spotter Loans,personal_loan,keyword
+Splend,Splend,personal_loan,keyword
+Speedle Loans; Speedle,Speedle Loans,personal_loan,keyword
+Society One,Society One,personal_loan,keyword
+Snaffle,Snaffle,personal_loan,keyword
+Salt and Lime; Salt and Lime Loans,Salt and Lime,personal_loan,keyword
+SALT&LIME,Salt and Lime,personal_loan,keyword
+Safe Financial,Safe Financial,personal_loan,keyword
+Resimac,Resimac,personal_loan,keyword
+Red Tree Finance,Red Tree Finance,personal_loan,keyword
+Rapid Loans,Rapid Loans,personal_loan,keyword
+R4K Group; R4K Services,R4K Group,personal_loan,keyword
+Quickzy; Quickzy Finance,Quickzy,personal_loan,keyword
+Quickcash,Quickcash,personal_loan,keyword
+Poligon Group,Poligon Group,personal_loan,keyword
+Plenti,Plenti,personal_loan,keyword
+Pepper Money,Pepper Money,personal_loan,keyword
+PEOPLESCHOICECU Loans; People's Choice,People's Choice,personal_loan,keyword
+PayLater Travel,PayLater Travel,personal_loan,keyword
+Paylab,Paylab,personal_loan,keyword
+PayExpress; SEMVIA FINANCE PTY LTD; SEMVIA FINANCE,PayExpress,personal_loan,keyword
+OurMoneyMarket; our money market,Our Money Market,personal_loan,keyword
+Now Finance,Now Finance,personal_loan,keyword
+Nissan Finance,Nissan Finance,personal_loan,keyword
+Nimble; Nimble AnyTime,Nimble,personal_loan,keyword
+NextPayday,NextPayday,wage_advance,keyword
+NEWCASTLE Credit Card Cash Adv; NEWCASTLE Loans; newcastle,Newcastle,personal_loan,keyword
+Needy Loans,Needy Loans,personal_loan,keyword
+MyCashOnline,MyCashOnline,personal_loan,keyword
+My OZ Money,My OZ Money,personal_loan,keyword
+Moneyspot; Moneys,MoneySpot,personal_loan,keyword
+MoneyPlus; Money Plus,MoneyPlus,personal_loan,keyword
+MoneyMe,MoneyMe,personal_loan,keyword
+Money3,Money3,personal_loan,keyword
+Money Place,Money Place,personal_loan,keyword
+Money Centre,Money Centre,personal_loan,keyword
+Mercedes-Benz Financial Services,Mercedes-Benz Financial Services,personal_loan,keyword
+Mazda Finance,Mazda Finance,personal_loan,keyword
+Macquarie Leasing,Macquarie Leasing,personal_loan,keyword
+Liberty Financial,Liberty Financial,personal_loan,keyword
+Latitude Financial; Latitude Motor,Latitude Financial,personal_loan,keyword
+JP Finance and Investment,JP Finance and Investment,personal_loan,keyword
+Jacaranda Finance; BetterCredit Jacaranda Finance; JacarandaFinance; Jacaranda,Jacaranda Finance,personal_loan,keyword
+Home Loan,Home Loan,personal_loan,keyword
+Harmoney,Harmoney,personal_loan,keyword
+Handout Loans,Handout Loans,personal_loan,keyword
+Green Light Auto Finance,Green Light Auto Finance,personal_loan,keyword
+Good To Go,Good To Go,personal_loan,keyword
+Golden Bridge Cash Solution; GOLDEN BRIDGE; GOLDEN BRIDGE ENTERP; GOLDEN BRIDGE ENTERPRISE,Golden Bridge Cash Solution,personal_loan,keyword
+General Mortgage,General Mortgage,personal_loan,keyword
+Gedda Money,Gedda Money,personal_loan,keyword
+Fundo Loans; Fundo; FUNDOLOANS,Fundo Loans,personal_loan,keyword
+Fundency,Fundency,personal_loan,keyword
+Flash Money,Flash Money,personal_loan,keyword
+First Mortgage Company,First Mortgage Company,personal_loan,keyword
+Finance One,Finance One,personal_loan,keyword
+Fair Go Finance; FairGO; Fair Go Finance SACC; FGF 254519,Fair Go Finance,personal_loan,keyword
+Earned Wage Access,Earned Wage Access,personal_loan,keyword
+Difrent Rental,Difrent Rental,personal_loan,keyword
+DentiCare,DentiCare,personal_loan,keyword
+Credit24,Credit24,personal_loan,keyword
+Credit Corp Loan; Credit Corp Loans; Credit Corp Fina; Credit Corp Fins; CrediCorp; CREDIT CORP GROUP LIM; CREDIT CORP GROUP LI; CREDIT CORP CommBank app BPAY; CCFS SYDNEY,Credit Corp,personal_loan,keyword
+City Finance,City Finance,personal_loan,keyword
+Citibank Loans; Citi,Citibank Loans,personal_loan,keyword
+Circlepay,Circlepay,personal_loan,keyword
+Cigno Loans; Cigno Austalia,Cigno Loans,personal_loan,keyword
+Champion Loans,Champion Loans,personal_loan,keyword
+CashPal,CashPal,personal_loan,keyword
+CashFaster,CashFaster,personal_loan,keyword
+Cash Train,Cash Train,personal_loan,keyword
+Cash Stop,Cash Stop,personal_loan,keyword
+Cash Savvy,Cash Savvy,personal_loan,keyword
+Cash Place,Cash Place,personal_loan,keyword
+Cash Now,Cash Now,personal_loan,keyword
+Cash N Go; cashngo,Cash N Go,personal_loan,keyword
+Cash Direct,Cash Direct,personal_loan,keyword
+Cash Converters; Cash Converters My Loans,Cash Converters,personal_loan,keyword
+Cash Bridge; Sunbow Finance; CB Loan,Cash Bridge,personal_loan,keyword
+CarCoop,CarCoop,personal_loan,keyword
+Branded Financial,Branded Financial,personal_loan,keyword
+Azora Finance,Azora Finance,personal_loan,keyword
+Autopay,Autopay,personal_loan,keyword
+Automotive Financial Services,Automotive Financial Services,personal_loan,keyword
+Arteva Funding,Arteva Funding,personal_loan,keyword
+APS Loans,APS Loans,personal_loan,keyword
+Angle Finance,Angle Finance,personal_loan,keyword
+Allied Retail Finance,Allied Retail Finance,personal_loan,keyword
+Affordable Car Loans,Affordable Car Loans,personal_loan,keyword
+360 Cash Loans; LazerMoney; 30/12 Financier,360 Cash Loans,personal_loan,keyword
+1st Choice Rentals,1st Choice Rentals,personal_loan,keyword
+1 of 4;2 of 4;3 of 4;4 of 4;,NAB Now Pay Later,bnpl,keyword
+Zip Plus,Zip Plus,bnpl,keyword
+Zip Pay; ZIPPAY,Zip Pay,bnpl,keyword
+Zipmoney; Zip Money,Zip Money,personal_loan,keyword
+Payright,Payright,bnpl,keyword
+Paypal Pay in 4; PayPal Pay in 4; Pay in 4; Payin4,PayPal Pay in 4,bnpl,keyword
+NAB Now Pay Later,NAB Now Pay Later,bnpl,keyword
+Lowes Zero Card,Lowes Zero Card,bnpl,keyword
+Layaway,Layaway,bnpl,keyword
+Klarna,Klarna,bnpl,keyword
+Humm; humm loan,Humm,bnpl,keyword
+Gimmie,Gimmie,bnpl,keyword
+Deferit,Deferit,bnpl,keyword
+CBA StepPay; StepPay Repayment; STEPPAY PYMT-THANK YOU,CBA StepPay,bnpl,keyword
+Brighte,Brighte,bnpl,keyword
+Beforepay; Beforepay: Borrow up to 2000; BeforepayCT,Beforepay,wage_advance,keyword
+Afterpay; Afterpay: Shop Smarter,Afterpay,bnpl,keyword
+SAFE FINANCE; Safe Finance,Safe Financial,personal_loan,keyword
+DELTA RENTALS,Delta Rentals ,personal_loan,keyword
+Mooch Money; @mooch.mon,Mooch Money,personal_loan,keyword

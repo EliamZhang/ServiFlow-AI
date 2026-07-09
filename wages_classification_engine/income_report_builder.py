@@ -1,0 +1,179 @@
+from __future__ import annotations
+
+import math
+from pathlib import Path
+
+import pandas as pd
+
+
+PUBLISHED_TRANSACTION_SHEET_NAME = "transactions"
+INCOME_DETAIL_SHEET_NAME = "transactions_detail"
+SUMMARY_SHEET_NAME = "income_summary"
+EXCEL_MAX_ROWS = 1_048_576
+EXCEL_DATA_ROWS_PER_SHEET = EXCEL_MAX_ROWS - 1
+
+PUBLISHED_TRANSACTION_EXTRA_COLUMNS = [
+    "counterparty",
+    "finv_category",
+]
+
+SUMMARY_PRIORITY_COLUMNS = [
+    "finv_category",
+    "stream_id",
+    "bank_account_id",
+    "bank",
+    "account_type",
+    "credit_limit",
+    "application_id",
+    "counterparty",
+    "transaction_start_date",
+    "transaction_end_date",
+]
+
+AUDIT_DETAIL_COLUMNS = [
+    "user_id",
+    "sample_datetime",
+    "application_id",
+    "job_id",
+    "transaction_id",
+    "bank_account_id",
+    "account_type",
+    "transaction_date",
+    "amount",
+    "dr_cr",
+    "category",
+    "illion_trx_uuid",
+    "balance",
+    "text",
+    "counterparty",
+    "income_type_pred",
+    "centrelink_payment_type",
+    "is_income_pred",
+    "is_wages_pred",
+    "stream_id",
+    "finv_category",
+    "income_type_rule_name",
+    "income_type_pred_reason",
+    "wages_rule_name",
+    "wages_pred_reason",
+]
+
+# Backward-compatible constant names for any external imports.
+DETAIL_SHEET_NAME = INCOME_DETAIL_SHEET_NAME
+FULL_DETAIL_COLUMNS = AUDIT_DETAIL_COLUMNS
+
+
+def _require_columns(df: pd.DataFrame, columns: list[str], context: str) -> None:
+    missing = [col for col in columns if col not in df.columns]
+    if missing:
+        raise ValueError(f"{context} missing required column(s): {', '.join(missing)}")
+
+
+def _get_original_columns(result_df: pd.DataFrame) -> list[str]:
+    original_columns = result_df.attrs.get("original_columns")
+    if not isinstance(original_columns, list) or not original_columns:
+        raise ValueError("result_df must include attrs['original_columns']; use detect_wages() output.")
+    return [col for col in original_columns if col in result_df.columns]
+
+
+def _get_income_summary(result_df: pd.DataFrame) -> pd.DataFrame:
+    summary_df = result_df.attrs.get("income_summary")
+    if not isinstance(summary_df, pd.DataFrame):
+        raise ValueError("result_df must include attrs['income_summary']; use detect_wages() output.")
+    return summary_df.copy()
+
+
+def _select_transaction_columns(result_df: pd.DataFrame) -> pd.DataFrame:
+    _require_columns(result_df, PUBLISHED_TRANSACTION_EXTRA_COLUMNS, "transactions sheet")
+    selected_columns = _get_original_columns(result_df)
+    for column in PUBLISHED_TRANSACTION_EXTRA_COLUMNS:
+        if column not in selected_columns:
+            selected_columns.append(column)
+    return result_df[selected_columns].copy()
+
+
+def _select_audit_detail_columns(result_df: pd.DataFrame) -> pd.DataFrame:
+    existing_columns = [col for col in AUDIT_DETAIL_COLUMNS if col in result_df.columns]
+    return result_df[existing_columns].copy()
+
+
+def _filter_report_detail_rows(detail_output: pd.DataFrame) -> pd.DataFrame:
+    _require_columns(detail_output, ["is_income_pred"], "detail sheet")
+    return detail_output[detail_output["is_income_pred"].eq(1)].copy()
+
+
+def _format_summary_columns(summary_df: pd.DataFrame, include_centrelink_detail: bool) -> pd.DataFrame:
+    output = summary_df.copy()
+    if not include_centrelink_detail:
+        output = output.drop(columns=["centrelink_payment_type"], errors="ignore")
+
+    required_columns = [col for col in SUMMARY_PRIORITY_COLUMNS if col in output.columns]
+    remaining_columns = [col for col in output.columns if col not in required_columns]
+    return output[required_columns + remaining_columns]
+
+
+def _write_income_detail_sheets(writer: pd.ExcelWriter, income_detail_df: pd.DataFrame) -> None:
+    if len(income_detail_df) <= EXCEL_DATA_ROWS_PER_SHEET:
+        income_detail_df.to_excel(writer, sheet_name=INCOME_DETAIL_SHEET_NAME, index=False)
+        return
+
+    sheet_count = math.ceil(len(income_detail_df) / EXCEL_DATA_ROWS_PER_SHEET)
+    for idx in range(sheet_count):
+        start = idx * EXCEL_DATA_ROWS_PER_SHEET
+        end = start + EXCEL_DATA_ROWS_PER_SHEET
+        sheet_name = f"detail_{idx + 1:02d}"
+        income_detail_df.iloc[start:end].to_excel(writer, sheet_name=sheet_name, index=False)
+
+    print(
+        "Detail report exceeded Excel row limit; "
+        f"split income transaction detail across {sheet_count} sheets."
+    )
+
+
+def build_income_workbook(
+    result_df: pd.DataFrame, output_path: str | Path, include_full_detail: bool = False
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    summary_df = _format_summary_columns(
+        _get_income_summary(result_df),
+        include_centrelink_detail=include_full_detail,
+    )
+
+    if not include_full_detail:
+        transactions_df = _select_transaction_columns(result_df)
+
+        with pd.ExcelWriter(output_path) as writer:
+            transactions_df.to_excel(writer, sheet_name=PUBLISHED_TRANSACTION_SHEET_NAME, index=False)
+            summary_df.to_excel(writer, sheet_name=SUMMARY_SHEET_NAME, index=False)
+
+        print(
+            f"Income report workbook saved with {len(summary_df)} summary rows and "
+            f"{len(transactions_df)} transaction rows."
+        )
+        return transactions_df, summary_df
+
+    income_detail_df = _filter_report_detail_rows(_select_audit_detail_columns(result_df))
+
+    with pd.ExcelWriter(output_path) as writer:
+        summary_df.to_excel(writer, sheet_name=SUMMARY_SHEET_NAME, index=False)
+        _write_income_detail_sheets(writer, income_detail_df)
+
+    print(
+        f"Income report workbook saved with {len(summary_df)} summary rows and "
+        f"{len(income_detail_df)} income-detail rows."
+    )
+
+    return income_detail_df, summary_df
+
+
+def build_income_report(
+    result_df: pd.DataFrame, output_path: str | Path, summary_only: bool = True
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Backward-compatible wrapper for the previous report API."""
+    return build_income_workbook(
+        result_df=result_df,
+        output_path=output_path,
+        include_full_detail=not summary_only,
+    )

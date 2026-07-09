@@ -1,0 +1,722 @@
+﻿priority,account_type,dr_cr,bank,match_type,keyword,min_prefix_len,counterparty,product_type
+80,-,debit,*,prefix,AMERICAN EXPRESS,13,American Express Credit Card Repayment,bank
+80,-,debit,*,prefix,BPAY DAVID JONES,13,American Express Credit Card Repayment,bank
+80,-,debit,*,prefix,DAVID JONES AMEX,13,American Express Credit Card Repayment,bank
+80,-,debit,*,prefix,DAVID JONES CARD,13,American Express Credit Card Repayment,bank
+80,-,debit,*,prefix,DAVID JONES LIMITED,16,American Express Credit Card Repayment,bank
+80,savings,debit,*,prefix,AMERICAN EXPRESS,13,American Express Credit Card Repayment,bank
+80,savings,debit,*,prefix,BPAY DAVID JONE,12,American Express Credit Card Repayment,bank
+80,savings,debit,*,prefix,DAVID JONES AMEX,13,American Express Credit Card Repayment,bank
+80,savings,debit,*,prefix,DAVID JONES CARD,13,American Express Credit Card Repayment,bank
+80,savings,debit,*,prefix,DAVID JONES LIMITED,16,American Express Credit Card Repayment,bank
+80,transaction,debit,*,prefix,AMERICAN EXPRESS,13,American Express Credit Card Repayment,bank
+80,transaction,debit,*,prefix,AMERICAN EXPRESS COMMBANK APP BPAY,31,American Express Credit Card Repayment,bank
+80,transaction,debit,*,prefix,BPAY DAVID JONE,12,American Express Credit Card Repayment,bank
+80,transaction,debit,*,prefix,DAVID JONES AMEX,13,American Express Credit Card Repayment,bank
+80,transaction,debit,*,prefix,DAVID JONES CARD,13,American Express Credit Card Repayment,bank
+80,transaction,debit,*,prefix,DAVID JONES LIMITED,16,American Express Credit Card Repayment,bank
+90,-,debit,*,keyword,AMEX,0,American Express Credit Card Repayment,bank
+90,savings,debit,*,keyword,AMEX,0,American Express Credit Card Repayment,bank
+90,transaction,debit,*,keyword,AMEX,0,American Express Credit Card Repayment,bank
+70,-,debit,*,regex,^ANZ INTERNET BANKING BPAY ANZ CARDS ?\{\d{6}\}$,0,ANZ Credit Card Repayment,bank
+70,transaction,debit,*,regex,^ANZ INTERNET BANKING BPAY ANZ CARDS ?\{\d{6}\}$,0,ANZ Credit Card Repayment,bank
+90,-,*,*,keyword,ANZ CARD,0,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ CARDS,8,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ MASTERCARD,10,ANZ Credit Card Repayment,bank
+90,savings,*,*,keyword,ANZ CARD,0,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ CARDS,8,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ MASTERCARD,10,ANZ Credit Card Repayment,bank
+90,transaction,*,*,keyword,ANZ CARD,0,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ CARDS,8,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ MASTERCARD,10,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ (CREDIT CARDS),15,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ BANKING GROUP,14,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ CREDIT CARD,12,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ CREDIT CARD CASH ADVANCE T,27,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ LOAN REDRAW,12,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ LOAN REPAYMENT,15,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ MOBILE BANKING PAYMENT,23,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,ANZ VISA CARD,10,ANZ Credit Card Repayment,bank
+80,-,*,*,prefix,PAYMENT TO ANZ,11,ANZ Credit Card Repayment,bank
+80,home loan,credit,*,prefix,ANZ CREDIT CARD,12,ANZ Credit Card Repayment,bank
+80,investments,credit,*,prefix,ANZ CREDIT CARD,12,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ (CREDIT CARDS),15,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ BANKING GROUP,14,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ CREDIT CARD,12,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ CREDIT CARD CASH ADVANCE T,27,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ LOAN REDRAW,12,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ LOAN REPAYMENT,15,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ MOBILE BANKING PAYMENT,23,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,ANZ VISA CARD,10,ANZ Credit Card Repayment,bank
+80,savings,*,*,prefix,PAYMENT TO ANZ,11,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ (CREDIT CARDS),15,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ BANKING GROUP,14,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ CREDIT CARD,12,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ CREDIT CARD CASH ADVANCE T,27,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ LOAN REDRAW,12,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ LOAN REPAYMENT,15,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ MOBILE BANKING PAYMENT,23,ANZ Credit Card Repayment,bank
+90,transaction,*,*,keyword,ANZ VISA,0,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,ANZ VISA CARD,10,ANZ Credit Card Repayment,bank
+80,transaction,*,*,prefix,PAYMENT TO ANZ,11,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,BPAY PAYMENT,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,CARD PAYMENT,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,CASH THANK YOU,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,CC PAY,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,CC PAYMENT,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,CC REPAYMENT,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,CREDIT CARD PAYMENT,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,EASIPAY PAYMENT,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,INTERNET PAYMENT,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,LINKED ACC TRNS,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,LINKED ACCOUNT TRANSFER,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,PAYMENT - BPAY,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,PAYMENT - THANK YOU,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,PAYMENT RECEIVED,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,PAYMENT THANK YOU,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,PAYMENT THANKYOU,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,PAYMENT- CHEQUE THANK YOU,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,PAYMENT-BPAY-THANK YOU,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,TFR FROM,0,ANZ Credit Card Repayment,bank
+90,credit card,credit,anz,keyword,TRANSFER FROM,0,ANZ Credit Card Repayment,bank
+80,-,debit,anz,prefix,LOAN PAYMENT,9,ANZ Loans,contract_loan
+80,personal loan,credit,anz,prefix,LOAN PAYMENT,9,ANZ Loans,contract_loan
+80,*,*,*,prefix,BANKSA CARDS,8,BANKSA Credit Card Repayment,bank
+70,-,credit,bankwest,regex,TRANSFER\s+(\d+)\s+FROM\s+(\d{3}-\d{3}-\d{3}),0,Bankwest Credit Card Repayment,bank
+70,credit card,credit,bankwest,regex,TRANSFER\s+(\d+)\s+FROM\s+(\d{3}-\d{3}-\d{3}),0,Bankwest Credit Card Repayment,bank
+80,-,credit,bankwest,prefix,BANKWEST CREDIT CARD,17,Bankwest Credit Card Repayment,bank
+90,-,debit,bankwest,keyword,IB TRANSFER,0,Bankwest Credit Card Repayment,bank
+80,credit card,debit,*,prefix,BANKWEST CREDIT CARD,17,Bankwest Credit Card Repayment,bank
+90,home loan,debit,bankwest,keyword,IB TRANSFER,0,Bankwest Credit Card Repayment,bank
+90,personal loan,debit,bankwest,keyword,IB TRANSFER,0,Bankwest Credit Card Repayment,bank
+90,savings,debit,bankwest,keyword,IB TRANSFER,0,Bankwest Credit Card Repayment,bank
+90,transaction,debit,bankwest,keyword,IB TRANSFER,0,Bankwest Credit Card Repayment,bank
+90,-,*,*,keyword,BANKWEST,0,Bankwest Credit Card Repayment,bank
+80,-,*,*,prefix,BANKWEST CREDIT CARD CASH ADVA,27,Bankwest Credit Card Repayment,bank
+80,-,*,*,prefix,BANKWEST LOANS,11,Bankwest Credit Card Repayment,bank
+90,-,*,*,keyword,BW QANTAS,0,Bankwest Credit Card Repayment,bank
+80,investments,debit,*,prefix,BANKWEST CREDIT CARD,17,Bankwest Credit Card Repayment,bank
+90,savings,debit,*,keyword,BANKWEST,0,Bankwest Credit Card Repayment,bank
+90,transaction,*,*,keyword,BANKWEST,0,Bankwest Credit Card Repayment,bank
+80,transaction,*,*,prefix,BANKWEST CREDIT CARD CASH ADVA,27,Bankwest Credit Card Repayment,bank
+80,transaction,*,*,prefix,BANKWEST LOANS,11,Bankwest Credit Card Repayment,bank
+90,transaction,*,*,keyword,BW QANTAS,0,Bankwest Credit Card Repayment,bank
+80,*,*,*,prefix,BOM CARDS,8,BOM Credit Card Repayment,bank
+70,credit card,credit,boq,regex,\d+\s+PAYMENT\s+IB2-\d+,0,BOQ Credit Card Repayment,bank
+80,-,*,*,prefix,BOQ CARDS,8,BOQ Credit Card Repayment,bank
+80,savings,*,*,prefix,BOQ CARDS,8,BOQ Credit Card Repayment,bank
+80,transaction,*,*,prefix,BOQ CARDS,8,BOQ Credit Card Repayment,bank
+80,-,*,*,prefix,BOQ VISA CARD,10,BOQ Credit Card Repayment,bank
+80,transaction,*,*,prefix,BOQ VISA CARD,10,BOQ Credit Card Repayment,bank
+90,savings,*,*,keyword,BOQ,0,BOQ Credit Card Repayment,bank
+80,-,debit,*,prefix,BPAY WDL COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+80,-,debit,*,prefix,COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+80,credit card,debit,cba,prefix,COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+80,home loan,debit,*,prefix,COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+80,savings,credit,*,prefix,COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+80,savings,debit,*,prefix,COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+80,transaction,debit,*,prefix,BPAY WDL COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COMMONWEALTH CARDS,10,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,CBA Credit Card Repayment,bank
+80,credit card,debit,cba,prefix,AUTO PAYMENT - DECLINED,20,CBA Credit Card Repayment,bank
+80,investments,credit,cba,prefix,"PAYMENT RECEIVED, THANK YOU",24,CBA Credit Card Repayment,bank
+80,personal loan,credit,cba,prefix,"PAYMENT RECEIVED, THANK YOU",24,CBA Credit Card Repayment,bank
+80,trading,credit,cba,prefix,"PAYMENT RECEIVED, THANK YOU",24,CBA Credit Card Repayment,bank
+80,transaction,credit,cba,prefix,"PAYMENT RECEIVED, THANK YOU",24,CBA Credit Card Repayment,bank
+80,-,credit,*,prefix,AUTO PAYMENT - THANK YOU,21,CBA Credit Card Repayment,bank
+80,-,credit,*,prefix,"PAYMENT RECEIVED, THANK YOU",24,CBA Credit Card Repayment,bank
+80,-,debit,*,prefix,AUTO PAYMENT - DECLINED,20,CBA Credit Card Repayment,bank
+80,-,debit,*,prefix,COMMONWEALTH BANK (CREDIT CARDS),29,CBA Credit Card Repayment,bank
+80,savings,credit,*,prefix,"PAYMENT RECEIVED, THANK YOU",24,CBA Credit Card Repayment,bank
+80,transaction,debit,*,prefix,AUTO PAYMENT - DECLINED,20,CBA Credit Card Repayment,bank
+90,transaction,debit,*,keyword,COMMONWEAL,0,CBA Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COMMONWEALTH BANK,14,CBA Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COMMONWEALTH BANK (CREDIT CARDS),29,CBA Credit Card Repayment,bank
+80,transaction,debit,*,prefix,SCHEDULED PAYMENT TO A CBA ACCOUNT,31,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,BPAY PAYMENT,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,CARD PAYMENT,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,CASH THANK YOU,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,CC PAY,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,CC PAYMENT,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,CC REPAYMENT,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,CREDIT CARD PAYMENT,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,EASIPAY PAYMENT,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,INTERNET PAYMENT,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,LINKED ACC TRNS,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,LINKED ACCOUNT TRANSFER,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,PAYMENT - BPAY,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,PAYMENT - THANK YOU,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,PAYMENT RECEIVED,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,PAYMENT THANK YOU,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,PAYMENT THANKYOU,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,PAYMENT- CHEQUE THANK YOU,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,PAYMENT-BPAY-THANK YOU,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,TFR FROM,0,CBA Credit Card Repayment,bank
+90,credit card,credit,cba,keyword,TRANSFER FROM,0,CBA Credit Card Repayment,bank
+80,-,debit,cba,prefix,LOAN REPAYMENT LN REPAY,20,CBA Loans,contract_loan
+90,-,debit,cba,keyword,REPAYMENT/PAYMENT,0,CBA Loans,contract_loan
+80,personal loan,credit,cba,prefix,LOAN REPAYMENT LN REPAY,20,CBA Loans,contract_loan
+90,personal loan,credit,cba,keyword,REPAYMENT/PAYMENT,0,CBA Loans,contract_loan
+80,transaction,debit,cba,prefix,LOAN REPAYMENT LN REPAY,20,CBA Loans,contract_loan
+90,transaction,debit,cba,keyword,REPAYMENT/PAYMENT,0,CBA Loans,contract_loan
+80,-,debit,*,prefix,CLASSIC PLUS CARD,14,Citibank Credit Card Repayment,bank
+80,-,debit,*,prefix,CLASSIC PLUS CARD CRN,18,Citibank Credit Card Repayment,bank
+80,transaction,debit,*,prefix,CLASSIC PLUS CARD,14,Citibank Credit Card Repayment,bank
+80,transaction,debit,*,prefix,CLASSIC PLUS CARD CRN,18,Citibank Credit Card Repayment,bank
+80,transaction,debit,*,prefix,CLASSIC PLUS CARD LOANS,20,Citibank Credit Card Repayment,bank
+80,*,debit,*,prefix,PAYPAL REW,10,Citibank Credit Card Repayment,bank
+80,transaction,debit,*,prefix,CLASSIC PLUS CARD MK,17,Citibank Credit Card Repayment,bank
+80,-,debit,*,prefix,COLES MASTERCARD,10,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,DIRECT DEBIT COLES LOW RATE,10,Coles Credit Card Repayment,bank
+80,credit card,debit,*,prefix,COLES MASTERCARD,10,Coles Credit Card Repayment,bank
+80,investments,debit,*,prefix,COLES MASTERCARD,10,Coles Credit Card Repayment,bank
+80,savings,debit,*,prefix,COLES MASTERCARD,10,Coles Credit Card Repayment,bank
+80,savings,debit,*,prefix,PAYMENT TO COLES LOW RATE,10,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES MASTERCARD,10,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,DIRECT DEBIT COLES LOW RATE,10,Coles Credit Card Repayment,bank
+90,-,debit,*,keyword,COLES,0,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,COLES (CREDIT CARDS),17,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,COLES CC TFD,9,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,COLES CR CARD,10,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,COLES CREDIT CARDS,15,Coles Credit Card Repayment,bank
+90,-,debit,*,keyword,COLES MAST,0,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,COLES NO ANNUAL,12,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,COLES REWARDS,10,Coles Credit Card Repayment,bank
+90,home loan,debit,*,keyword,COLES MAST,0,Coles Credit Card Repayment,bank
+90,investments,debit,*,keyword,COLES,0,Coles Credit Card Repayment,bank
+80,savings,debit,*,prefix,COLES (CREDIT CARDS),17,Coles Credit Card Repayment,bank
+80,savings,debit,*,prefix,PAYMENT TO COLES NO ANNUAL,23,Coles Credit Card Repayment,bank
+90,trading,debit,*,keyword,COLES MAST,0,Coles Credit Card Repayment,bank
+90,transaction,debit,*,keyword,COLES,0,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES (CREDIT CARDS),17,Coles Credit Card Repayment,bank
+90,transaction,debit,*,keyword,COLES CC,0,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES CC TFC,9,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES CC TFD,9,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES CR CARD,10,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES CREDIT CARDS,15,Coles Credit Card Repayment,bank
+90,transaction,debit,*,keyword,COLES MAST,0,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES NO ANNUAL,12,Coles Credit Card Repayment,bank
+80,transaction,debit,*,prefix,COLES REWARDS,10,Coles Credit Card Repayment,bank
+80,-,debit,*,prefix,DINERS CLUB,8,Diners Club Credit Card Repaym,bank
+80,transaction,debit,*,prefix,DINERS CLUB,8,Diners Club Credit Card Repaym,bank
+80,transaction,debit,*,prefix,FARMLANDS,8,Farmlands Card Repayment,bank
+80,transaction,debit,*,prefix,CBA A/C NETBANK Q CARD,19,FlexiCards Credit Card Repayment,bank
+90,-,credit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+80,-,debit,*,prefix,LATITUDE GEM CARD,14,Gem Credit Card Repayment,bank
+80,car loan,debit,*,prefix,LATITUDE GEM VISA,14,Gem Credit Card Repayment,bank
+80,credit card,debit,*,prefix,LATITUDE GEM VISA,14,Gem Credit Card Repayment,bank
+90,investments,credit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+90,investments,debit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+80,investments,debit,*,prefix,LATITUDE GEM VISA,14,Gem Credit Card Repayment,bank
+80,personal loan,debit,*,prefix,LATITUDE GEM VISA,14,Gem Credit Card Repayment,bank
+90,savings,credit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+90,savings,debit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+80,savings,debit,*,prefix,LATITUDE GEM VISA,14,Gem Credit Card Repayment,bank
+90,trading,debit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+90,transaction,credit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+90,transaction,debit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+80,credit card,credit,cua,prefix,DE PAYMENT,5,Great Southern Bank Credit Card Repayment,bank
+80,-,debit,*,prefix,GREAT SOUTHERN BANK,16,Great Southern Bank Credit Card Repayment,bank
+80,transaction,debit,*,prefix,GREAT SOUTHERN BANK,16,Great Southern Bank Credit Card Repayment,bank
+80,transaction,debit,*,prefix,GSB CREDIT REPAY,13,Great Southern Bank Credit Card Repayment,bank
+70,-,debit,cua,regex,^FEE FREE TXN TRANSFER TO: 804414 \d{6} .+ CREDIT CA$,0,Great Southern Bank Credit Card Repayment,bank
+80,savings,debit,*,prefix,GREAT SOUTHERN BANK,16,Great Southern Bank Credit Card Repayment,bank
+80,*,debit,*,prefix,HARRIS SCARFE,10,Harris Scarfe Credit Card Repa,bank
+90,-,debit,*,keyword,HOL,0,HERITAGE Credit Card Repayment,bank
+80,savings,debit,*,prefix,HERITAGE CARDS,8,HERITAGE Credit Card Repayment,bank
+90,savings,debit,*,keyword,HOL,0,HERITAGE Credit Card Repayment,bank
+80,transaction,debit,*,prefix,HERITAGE CARDS,8,HERITAGE Credit Card Repayment,bank
+80,-,debit,*,prefix,HSBC CARDS,8,HSBC Credit Card Repayment,bank
+90,credit card,debit,*,keyword,HSBC,0,HSBC Credit Card Repayment,bank
+80,investments,debit,*,prefix,HSBC CARDS,8,HSBC Credit Card Repayment,bank
+80,savings,debit,*,prefix,HSBC CARDS,8,HSBC Credit Card Repayment,bank
+80,transaction,credit,*,prefix,HSBC CREDITCARDS,13,HSBC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,HSBC CREDITCARDS,13,HSBC Credit Card Repayment,bank
+90,transaction,debit,*,keyword,HSBC,0,HSBC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,HSBC CARDS,8,HSBC Credit Card Repayment,bank
+80,savings,debit,*,prefix,ONCE CREDIT,5,Humm90 Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ONCE CREDIT,5,Humm90 Credit Card Repayment,bank
+80,transaction,debit,*,prefix,SKYE MASTE,9,Humm90 Credit Card Repayment,bank
+80,savings,debit,ing,prefix,TO ORANGE ONE LOW RATE CLASSIC,10,ING Credit Card Repayment,bank
+80,savings,debit,ing,prefix,TO ORANGE ONE LOW RATE PLATINUM,10,ING Credit Card Repayment,bank
+80,transaction,debit,ing,prefix,INSTALMENT REPAYMENT - INSTALMENT REPAYMENT - RECEIPT,8,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,ING Credit Card Repayment,bank
+80,savings,debit,ing,prefix,TO ORANGE ONE REWARDS PLATINUM,27,ING Credit Card Repayment,bank
+80,-,debit,*,prefix,ING LOAN REDRAW,12,ING Credit Card Repayment,bank
+80,-,debit,*,prefix,ING LOAN REDRAW CREDIT,19,ING Credit Card Repayment,bank
+80,-,debit,*,prefix,ING LOAN REPAYMENT DEBIT,21,ING Credit Card Repayment,bank
+90,-,debit,*,keyword,ING LOANS,0,ING Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ING LOAN REDRAW,12,ING Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ING LOAN REDRAW CREDIT,19,ING Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ING LOAN REPAYMENT DEBIT,21,ING Credit Card Repayment,bank
+90,transaction,debit,*,keyword,ING LOANS,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,BPAY PAYMENT,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,CARD PAYMENT,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,CASH THANK YOU,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,CC PAY,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,CC PAYMENT,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,CC REPAYMENT,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,CREDIT CARD PAYMENT,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,EASIPAY PAYMENT,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,INTERNET PAYMENT,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,LINKED ACC TRNS,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,LINKED ACCOUNT TRANSFER,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,PAYMENT - BPAY,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,PAYMENT - THANK YOU,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,PAYMENT RECEIVED,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,PAYMENT THANK YOU,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,PAYMENT THANKYOU,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,PAYMENT- CHEQUE THANK YOU,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,PAYMENT-BPAY-THANK YOU,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,TFR FROM,0,ING Credit Card Repayment,bank
+90,credit card,credit,ing,keyword,TRANSFER FROM,0,ING Credit Card Repayment,bank
+80,*,credit,*,prefix,CREDIT CRD,8,Kogan Credit Card Repayment,bank
+80,*,debit,*,prefix,KOGAN MONEY BLACK CARD,10,Kogan Credit Card Repayment,bank
+70,-,credit,cba,regex,^DIRECT CREDIT \d{6} GO \d{6} PD\d{4}X{8}\d{4}$,0,Latitude Credit Card Repayment,bank
+70,-,debit,cba,regex,^DIRECT DEBIT \d{6} GO \d{6} (?:[0-9]{6}|SC[0-9]{4})X{8}\d{4}$,0,Latitude Credit Card Repayment,bank
+70,-,debit,cba,regex,^DIRECT DEBIT \d{6} GO \d{6}(?: \d{6}|SC\d{4})X{8}\d{4}$,0,Latitude Credit Card Repayment,bank
+70,transaction,credit,*,regex,^DIRECT CREDIT \d{6} GO \d{6} PD\d{4}X{8}\d{4}$,0,Latitude Credit Card Repayment,bank
+70,transaction,debit,*,regex,^DIRECT DEBIT \d{6} GO \d{6} (?:[0-9]{6}|SC[0-9]{4})X{8}\d{4}$,0,Latitude Credit Card Repayment,bank
+70,transaction,debit,*,regex,^DIRECT DEBIT \d{6} GO \d{6}(?: \d{6}|SC\d{4})X{8}\d{4}$,0,Latitude Credit Card Repayment,bank
+80,-,debit,*,prefix,ECO MASTERCARD MOB,10,Latitude Credit Card Repayment,bank
+80,credit card,debit,*,prefix,GO MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,credit card,debit,*,prefix,LATITUDE MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,home loan,debit,*,prefix,GO MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,home loan,debit,*,prefix,LATITUDE MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,investments,*,*,prefix,GO MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,investments,*,*,prefix,LATITUDE MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,personal loan,debit,*,prefix,GO MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,personal loan,debit,*,prefix,LATITUDE MASTERCARD,10,Latitude Credit Card Repayment,bank
+80,savings,debit,*,prefix,LATITUDE MASTERCAR,10,Latitude Credit Card Repayment,bank
+80,transaction,debit,*,prefix,GE CREDITL GE PAYMENT,8,Latitude Credit Card Repayment,bank
+90,credit card,debit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,credit card,debit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,credit card,debit,*,prefix,DIRECT DEBIT GO,12,Latitude Credit Card Repayment,bank
+90,credit card,debit,*,keyword,LATITUDE GO,0,Latitude Credit Card Repayment,bank
+80,credit card,debit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,-,debit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,-,debit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,-,debit,*,prefix,BPAY LATITUDE GEM,14,Latitude Credit Card Repayment,bank
+80,-,debit,*,prefix,BPAY WDL LATITUDE GEM VISA,23,Latitude Credit Card Repayment,bank
+90,-,debit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+80,-,debit,*,prefix,LATITUDE CREDIT CARD REPAYMENT,27,Latitude Credit Card Repayment,bank
+90,-,debit,*,keyword,LATITUDE GO,0,Latitude Credit Card Repayment,bank
+80,-,debit,*,prefix,PAYMENT BY AUTHORITY TO GO,23,Latitude Credit Card Repayment,bank
+80,-,debit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,home loan,debit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,home loan,debit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,home loan,debit,*,prefix,DIRECT DEBIT GO,12,Latitude Credit Card Repayment,bank
+90,home loan,debit,*,keyword,LATITUDE GO,0,Latitude Credit Card Repayment,bank
+80,home loan,debit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,investments,*,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,investments,*,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,investments,*,*,prefix,DIRECT DEBIT GO,12,Latitude Credit Card Repayment,bank
+90,investments,*,*,keyword,LATITUDE GO,0,Latitude Credit Card Repayment,bank
+90,personal loan,debit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,personal loan,debit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,personal loan,debit,*,prefix,DIRECT DEBIT GO,12,Latitude Credit Card Repayment,bank
+90,personal loan,debit,*,keyword,LATITUDE GO,0,Latitude Credit Card Repayment,bank
+80,personal loan,debit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,savings,credit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,savings,credit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,savings,credit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,savings,debit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,savings,debit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,savings,debit,*,prefix,BUYER'S EDGE,9,Latitude Credit Card Repayment,bank
+80,savings,debit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,trading,debit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,trading,debit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+90,trading,debit,*,keyword,LATITUDE G,0,Latitude Credit Card Repayment,bank
+80,trading,debit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,transaction,credit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,transaction,credit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,transaction,credit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,transaction,debit,*,keyword,28 DEGREES,0,Latitude Credit Card Repayment,bank
+80,transaction,debit,*,prefix,28 DEGREES GLOBAL,14,Latitude Credit Card Repayment,bank
+80,transaction,debit,*,prefix,BPAY LATITUDE GEM,14,Latitude Credit Card Repayment,bank
+80,transaction,debit,*,prefix,BPAY WDL LATITUDE GEM VISA,23,Latitude Credit Card Repayment,bank
+90,transaction,debit,*,keyword,GEM VISA,0,Gem Credit Card Repayment,bank
+80,transaction,debit,*,prefix,LATITUDE CREDIT CARD REPAYMENT,27,Latitude Credit Card Repayment,bank
+90,transaction,debit,*,keyword,LATITUDE GO,0,Latitude Credit Card Repayment,bank
+90,transaction,debit,*,keyword,LATITUDE I,0,Latitude Credit Card Repayment,bank
+80,transaction,debit,*,prefix,PAYMENT BY AUTHORITY TO GO,23,Latitude Credit Card Repayment,bank
+80,transaction,debit,*,prefix,PAYMENT TO 28,10,Latitude Credit Card Repayment,bank
+90,-,debit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,-,debit,*,keyword,GO,0,Latitude Credit Card Repayment,bank
+90,credit card,debit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,credit card,debit,*,keyword,EFT GO,0,Latitude Credit Card Repayment,bank
+90,home loan,debit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,home loan,debit,*,keyword,EFT GO,0,Latitude Credit Card Repayment,bank
+90,investments,*,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,investments,*,*,keyword,EFT GO,0,Latitude Credit Card Repayment,bank
+90,personal loan,debit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,personal loan,debit,*,keyword,EFT GO,0,Latitude Credit Card Repayment,bank
+90,savings,credit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,savings,credit,*,keyword,GO,0,Latitude Credit Card Repayment,bank
+90,savings,debit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,savings,debit,*,keyword,GO,0,Latitude Credit Card Repayment,bank
+90,transaction,credit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+90,transaction,credit,*,keyword,GO,0,Latitude Credit Card Repayment,bank
+90,transaction,debit,*,keyword,CREDITLINE,0,Latitude Credit Card Repayment,bank
+80,-,debit,*,prefix,LATITUDE LOW RATE,14,Latitude Credit Card Repayment,bank
+80,savings,debit,*,prefix,LATITUDE LOW RATE,14,Latitude Credit Card Repayment,bank
+80,transaction,debit,*,prefix,LATITUDE LOW RATE,14,Latitude Credit Card Repayment,bank
+80,*,*,*,prefix,LOWES-MENS,8,Lowes Zero Card,bank
+80,*,*,*,prefix,LOWES-MENSWEAR,8,Lowes Zero Card,bank
+90,*,*,*,keyword,EZY,0,Lowes Zero Card,bank
+90,*,*,*,keyword,LOWES,0,Lowes Zero Card,bank
+90,*,debit,*,keyword,MBL CARD,0,MACQUARIE Credit Card Repayment,bank
+80,*,debit,*,prefix,MACQUARIE,8,MACQUARIE Credit Card Repayment,bank
+80,*,debit,*,prefix,MEMBERS EQUITY PTY,10,MEBANK Credit Card Repayment,bank
+90,credit card,credit,mebank,keyword,TFR FROM,0,MEBANK Credit Card Repayment,bank
+90,transaction,credit,mebank,keyword,TFR FROM,0,MEBANK Credit Card Repayment,bank
+90,*,debit,*,keyword,ME BANK,0,MEBANK Credit Card Repayment,bank
+20,-,debit,*,prefix,MASTERCARD,10,Miscellaneous Credit Card Repayments,bank
+20,investments,credit,*,prefix,MASTERCARD,10,Miscellaneous Credit Card Repayments,bank
+20,savings,credit,*,prefix,MASTERCARD,10,Miscellaneous Credit Card Repayments,bank
+20,savings,debit,*,prefix,MASTERCARD,10,Miscellaneous Credit Card Repayments,bank
+20,transaction,credit,*,prefix,MASTERCARD,10,Miscellaneous Credit Card Repayments,bank
+20,transaction,debit,*,prefix,MASTERCARD,10,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+20,-,debit,*,prefix,BPAY WDL MYCARD CREDITCARDS,24,Miscellaneous Credit Card Repayments,bank
+30,-,debit,*,keyword,CARD SERVI,0,Miscellaneous Credit Card Repayments,bank
+20,-,debit,*,prefix,CARD SERVICES,10,Miscellaneous Credit Card Repayments,bank
+30,-,debit,*,keyword,CREDIT CARD,0,Miscellaneous Credit Card Repayments,bank
+30,-,debit,*,keyword,MASTER CARD,0,Miscellaneous Credit Card Repayments,bank
+20,-,debit,*,prefix,MYCARD CREDIT CARDS,16,Miscellaneous Credit Card Repayments,bank
+20,-,debit,*,prefix,MYCARD CREDITCARDS,15,Miscellaneous Credit Card Repayments,bank
+20,savings,debit,*,prefix,BPAY WDL MYCARD CREDITCARDS,24,Miscellaneous Credit Card Repayments,bank
+30,savings,debit,*,keyword,CREDIT CARD,0,Miscellaneous Credit Card Repayments,bank
+20,savings,debit,*,prefix,CREDIT CARD REPAYMENT,18,Miscellaneous Credit Card Repayments,bank
+20,savings,debit,*,prefix,CREDIT CARDS,9,Miscellaneous Credit Card Repayments,bank
+30,savings,debit,*,keyword,CREDITCARDS,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,credit,*,keyword,M/CARD,0,Miscellaneous Credit Card Repayments,bank
+20,transaction,credit,*,prefix,PAYMENT - CASH THANK YOU,21,Miscellaneous Credit Card Repayments,bank
+20,transaction,debit,*,prefix,BPAY WDL MYCARD CREDITCARDS,24,Miscellaneous Credit Card Repayments,bank
+30,transaction,debit,*,keyword,CARD SERVI,0,Miscellaneous Credit Card Repayments,bank
+20,transaction,debit,*,prefix,CARD SERVICES,10,Miscellaneous Credit Card Repayments,bank
+30,transaction,debit,*,keyword,CREDIT CARD,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,debit,*,keyword,MASTER CARD,0,Miscellaneous Credit Card Repayments,bank
+20,transaction,debit,*,prefix,MYCARD CREDIT CARDS,16,Miscellaneous Credit Card Repayments,bank
+20,transaction,debit,*,prefix,MYCARD CREDITCARDS,15,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,BPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,CASH THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,CC PAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,CC PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,CC REPAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,EASIPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,LINKED ACC TRNS,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,LINKED ACCOUNT TRANSFER,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,PAYMENT - BPAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,PAYMENT - THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,PAYMENT RECEIVED,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,PAYMENT THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,PAYMENT THANKYOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,PAYMENT- CHEQUE THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,PAYMENT-BPAY-THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,TFR FROM,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,banksa,keyword,TRANSFER FROM,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,BPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,CASH THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,CC PAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,CC PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,CC REPAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,EASIPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,LINKED ACC TRNS,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,LINKED ACCOUNT TRANSFER,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,PAYMENT - BPAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,PAYMENT - THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,PAYMENT RECEIVED,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,PAYMENT THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,PAYMENT THANKYOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,PAYMENT- CHEQUE THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,PAYMENT-BPAY-THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,TFR FROM,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,bom,keyword,TRANSFER FROM,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,BPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,CASH THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,CC PAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,CC PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,CC REPAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,EASIPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,LINKED ACC TRNS,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,LINKED ACCOUNT TRANSFER,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,PAYMENT - BPAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,PAYMENT - THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,PAYMENT RECEIVED,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,PAYMENT THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,PAYMENT THANKYOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,PAYMENT- CHEQUE THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,PAYMENT-BPAY-THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,TFR FROM,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,stgeorge,keyword,TRANSFER FROM,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,BPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,CASH THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,CC PAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,CC PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,CC REPAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,EASIPAY PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,INTERNET PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,LINKED ACC TRNS,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,LINKED ACCOUNT TRANSFER,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,PAYMENT - BPAY,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,PAYMENT - THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,PAYMENT RECEIVED,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,PAYMENT THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,PAYMENT THANKYOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,PAYMENT- CHEQUE THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,PAYMENT-BPAY-THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,TFR FROM,0,Miscellaneous Credit Card Repayments,bank
+30,credit card,credit,suncorp,keyword,TRANSFER FROM,0,Miscellaneous Credit Card Repayments,bank
+30,-,debit,*,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,-,debit,*,keyword,PAYMENT - BPAY,0,Miscellaneous Credit Card Repayments,bank
+30,savings,credit,*,keyword,PAYMENT - THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,savings,debit,*,keyword,CC PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,savings,debit,*,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,savings,debit,*,keyword,PAYMENT - BPAY,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,credit,*,keyword,CC PAY,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,credit,*,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,credit,*,keyword,PAYMENT-BPAY-THANK YOU,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,debit,*,keyword,CREDIT CARD PAYMENT,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,debit,*,keyword,PAYMENT - BPAY,0,Miscellaneous Credit Card Repayments,bank
+30,-,debit,*,keyword,CC,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,credit,*,keyword,CC,0,Miscellaneous Credit Card Repayments,bank
+30,transaction,debit,*,keyword,CC,0,Miscellaneous Credit Card Repayments,bank
+90,transaction,debit,*,keyword,MYER,0,Myer Credit Card Repayment,bank
+70,-,debit,westpac,regex,^WITHDRAWAL MOBILE \d{7} BPAY NAB CARDS?$,0,NAB Credit Card Repayment,bank
+70,transaction,debit,westpac,regex,^WITHDRAWAL MOBILE \d{7} BPAY NAB CARDS?$,0,NAB Credit Card Repayment,bank
+80,car loan,debit,*,prefix,NAB CARDS,8,NAB Credit Card Repayment,bank
+80,credit card,debit,*,prefix,NAB CARDS,8,NAB Credit Card Repayment,bank
+80,home loan,debit,*,prefix,NAB CARDS,8,NAB Credit Card Repayment,bank
+80,investments,debit,*,prefix,NAB CARDS,8,NAB Credit Card Repayment,bank
+80,personal loan,debit,*,prefix,NAB CARDS,8,NAB Credit Card Repayment,bank
+80,savings,*,*,prefix,NAB CARDS,8,NAB Credit Card Repayment,bank
+90,transaction,credit,*,keyword,NAB CARD,0,NAB Credit Card Repayment,bank
+90,transaction,debit,*,keyword,NAB CARD,0,NAB Credit Card Repayment,bank
+80,-,debit,nab,prefix,CASH/TRANSFER PAYMENT - THANK YOU,30,NAB Credit Card Repayment,bank
+80,credit card,credit,nab,prefix,CASH/TRANSFER PAYMENT - THANK YOU,30,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,NAB Credit Card Repayment,bank
+80,credit card,credit,nab,prefix,PAYMENT AUTHORISATION,18,NAB Credit Card Repayment,bank
+80,-,debit,*,prefix,NAB CREDIT CARD CASH ADVANCE T,27,NAB Credit Card Repayment,bank
+80,-,debit,*,prefix,NAB LOAN REDRAW,12,NAB Credit Card Repayment,bank
+80,-,debit,*,prefix,NAB LOAN REPAYMENT,15,NAB Credit Card Repayment,bank
+80,savings,*,*,prefix,NAB CREDIT CARD,12,NAB Credit Card Repayment,bank
+80,transaction,credit,*,prefix,CASH/TRANSFER PAYMENT - THANK YOU,30,NAB Credit Card Repayment,bank
+90,transaction,debit,*,keyword,CARDHOLDER,0,NAB Credit Card Repayment,bank
+80,transaction,debit,*,prefix,NAB CREDIT CARD,12,NAB Credit Card Repayment,bank
+80,transaction,debit,*,prefix,NAB CREDIT CARD CASH ADVANCE T,27,NAB Credit Card Repayment,bank
+80,transaction,debit,*,prefix,NAB LOAN REDRAW,12,NAB Credit Card Repayment,bank
+80,transaction,debit,*,prefix,NAB LOAN REPAYMENT,15,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,BPAY PAYMENT,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,CARD PAYMENT,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,CASH THANK YOU,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,CC PAY,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,CC PAYMENT,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,CC REPAYMENT,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,CREDIT CARD PAYMENT,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,EASIPAY PAYMENT,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,INTERNET PAYMENT,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,LINKED ACC TRNS,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,LINKED ACCOUNT TRANSFER,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,PAYMENT - BPAY,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,PAYMENT - THANK YOU,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,PAYMENT RECEIVED,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,PAYMENT THANK YOU,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,PAYMENT THANKYOU,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,PAYMENT- CHEQUE THANK YOU,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,PAYMENT-BPAY-THANK YOU,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,TFR FROM,0,NAB Credit Card Repayment,bank
+90,credit card,credit,nab,keyword,TRANSFER FROM,0,NAB Credit Card Repayment,bank
+80,-,debit,nab,prefix,LOAN INSTALMENT DIRECT DEBIT,25,NAB Loans,contract_loan
+80,personal loan,credit,nab,prefix,LOAN INSTALMENT DIRECT DEBIT,25,NAB Loans,contract_loan
+80,transaction,debit,nab,prefix,TRANSFER DEBIT LOAN INSTALMENT TO A/C,34,NAB Loans,contract_loan
+80,*,debit,newcastle,prefix,MB TFR TO,8,NEWCASTLE Credit Card Repayment,bank
+90,credit card,credit,newcastle,keyword,PAYMENT,0,NEWCASTLE Credit Card Repayment,bank
+90,credit card,debit,*,keyword,QANTAS,0,Qantas Credit Card Repayment,bank
+90,home loan,debit,*,keyword,QANTAS,0,Qantas Credit Card Repayment,bank
+90,investments,debit,*,keyword,QANTAS,0,Qantas Credit Card Repayment,bank
+90,trading,debit,*,keyword,QANTAS,0,Qantas Credit Card Repayment,bank
+90,transaction,credit,*,keyword,QANTAS,0,Qantas Credit Card Repayment,bank
+90,transaction,debit,*,keyword,QANTAS,0,Qantas Credit Card Repayment,bank
+90,transaction,debit,*,keyword,QUDOS,0,Qudos Credit Card Repayment,bank
+80,*,debit,*,prefix,PURPLE CARD,8,SBS Money,bank
+80,-,debit,*,prefix,ST GEORGE,8,STGEORGE Credit Card Repayment,bank
+80,-,debit,*,prefix,ST GEORGE CARDS,12,STGEORGE Credit Card Repayment,bank
+80,credit card,credit,stgeorge,prefix,ST GEORGE,8,STGEORGE Credit Card Repayment,bank
+80,credit card,debit,*,prefix,ST GEORGE CARDS,12,STGEORGE Credit Card Repayment,bank
+80,investments,debit,*,prefix,ST GEORGE CARDS,12,STGEORGE Credit Card Repayment,bank
+80,savings,debit,*,prefix,ST GEORGE CARDS,12,STGEORGE Credit Card Repayment,bank
+80,transaction,credit,*,prefix,ST GEORGE,8,STGEORGE Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ST GEORGE,8,STGEORGE Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ST GEORGE CARDS,12,STGEORGE Credit Card Repayment,bank
+90,transaction,debit,*,keyword,SUNCORP,0,SUNCORP Credit Card Repayment,bank
+80,-,debit,*,prefix,VIRGIN MONEY,9,Virgin Money Credit Card Repayment,bank
+80,credit card,debit,anz,prefix,VIRGIN MONEY,9,Virgin Money Credit Card Repayment,bank
+80,investments,debit,*,prefix,VIRGIN MONEY,9,Virgin Money Credit Card Repayment,bank
+80,savings,debit,*,prefix,VIRGIN MONEY,9,Virgin Money Credit Card Repayment,bank
+80,trading,debit,*,prefix,VIRGIN MONEY,9,Virgin Money Credit Card Repayment,bank
+80,transaction,debit,*,prefix,VALERIA FALSETTA COMMBANK VIRGIN CARD,34,Virgin Money Credit Card Repayment,bank
+80,transaction,debit,*,prefix,VIRGIN MONEY,9,Virgin Money Credit Card Repayment,bank
+70,-,debit,westpac,regex,^WITHDRAWAL MOBILE \d{7} TFR LOW RATE MA$,0,WESTPAC Credit Card Repayment,bank
+70,transaction,debit,westpac,regex,"^WITHDRAWAL MOBILE \d{6,7} BPAY DAVID JONE$",0,WESTPAC Credit Card Repayment,bank
+70,transaction,debit,westpac,regex,^WITHDRAWAL MOBILE \d{7} BPAY LOW RATE M$,0,WESTPAC Credit Card Repayment,bank
+70,transaction,debit,westpac,regex,^WITHDRAWAL MOBILE \d{7} TFR LOW RATE MA$,0,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,ALTITUDE BL,10,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,ALTITUDE PL,10,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,ALTITUDE QA,10,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,ALTITUDE VE,10,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPAC LIT,10,WESTPAC Credit Card Repayment,bank
+80,home loan,debit,westpac,prefix,ALTITUDE QA,10,WESTPAC Credit Card Repayment,bank
+80,home loan,debit,westpac,prefix,ALTITUDE VE,10,WESTPAC Credit Card Repayment,bank
+80,home loan,debit,westpac,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,home loan,debit,westpac,prefix,WESTPAC LIT,10,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,ALTITUDE PL,10,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,ALTITUDE QA,10,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,ALTITUDE VE,10,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,WESTPAC LIT,10,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,ALTITUDE PL,10,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,ALTITUDE QA,10,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,ALTITUDE VE,10,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,WESTPAC LIT,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ALTITUDE BL,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ALTITUDE PL,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ALTITUDE QA,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ALTITUDE VE,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC LIT,10,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,CREDIT CARD PAYMENT INTERNET PAYMENT,0,WESTPAC Credit Card Repayment,bank
+80,credit card,credit,westpac,prefix,PAYMENT CASH-THANK YOU,19,WESTPAC Credit Card Repayment,bank
+80,credit card,credit,westpac,prefix,TFR FROM WESTPA C,14,WESTPAC Credit Card Repayment,bank
+80,credit card,credit,westpac,prefix,TFR FROM WESTPA C CHOICE,21,WESTPAC Credit Card Repayment,bank
+80,credit card,credit,westpac,prefix,TFR FROM WESTPA C ESAVER,21,WESTPAC Credit Card Repayment,bank
+80,credit card,debit,westpac,prefix,WESTPAC CARDS,10,WESTPAC Credit Card Repayment,bank
+90,home loan,debit,westpac,keyword,FLEX CARD,0,WESTPAC Credit Card Repayment,bank
+90,home loan,debit,westpac,keyword,WESTPAC LOW,0,WESTPAC Credit Card Repayment,bank
+80,investments,debit,westpac,prefix,WESTPAC CARDS,10,WESTPAC Credit Card Repayment,bank
+90,personal loan,credit,westpac,keyword,DAY TO DAY,0,WESTPAC Credit Card Repayment,bank
+90,personal loan,credit,westpac,keyword,FLEXI LOAN,0,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,PAYMENT - CASH THANK Y OU,22,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,ROCKET REPAY HO,12,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,WESTPA C 55+ AND,13,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,WESTPA C BUSINES,13,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,WESTPA C CASH IN,13,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,WESTPA C ESAVER,12,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,WESTPA C LOW FEE,13,WESTPAC Credit Card Repayment,bank
+80,savings,credit,westpac,prefix,WESTPA C 55+,9,WESTPAC Credit Card Repayment,bank
+80,savings,credit,westpac,prefix,WESTPA C CHOICE,12,WESTPAC Credit Card Repayment,bank
+90,trading,*,westpac,keyword,FLEX CARD,0,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,IGNITE BY WESTPAC,14,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,TFR WESTPAC LOW,12,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,WESTPA C CHOICE,12,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,WESTPAC (CREDIT CARDS),19,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,WESTPAC CARDS,10,WESTPAC Credit Card Repayment,bank
+80,trading,*,westpac,prefix,WESTPAC CREDIT CARD,16,WESTPAC Credit Card Repayment,bank
+90,-,debit,*,keyword,FLEX CARD,0,WESTPAC Credit Card Repayment,bank
+90,-,debit,*,keyword,FLEXI LOAN,0,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,FROM WESTPA C CHOICE,17,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,IGNITE BY WESTPAC,14,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,PAYMENT BY AUTHORITY TO CC PAYMENT,31,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,TFR WESTPAC LOW,12,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPA C CHOICE,12,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPAC (CREDIT CARDS),19,WESTPAC Credit Card Repayment,bank
+90,-,debit,*,keyword,WESTPAC CA,0,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPAC CARDS,10,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPAC CREDIT CARD,16,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPAC CREDIT CARD CASH ADVAN,27,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPAC LOAN REDRAW,16,WESTPAC Credit Card Repayment,bank
+80,-,debit,*,prefix,WESTPAC LOAN REPAYMENT,19,WESTPAC Credit Card Repayment,bank
+90,-,debit,*,keyword,WESTPACCARDS,0,WESTPAC Credit Card Repayment,bank
+90,savings,debit,*,keyword,FLEX CARD,0,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,IGNITE BY WESTPAC,14,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,TFR WESTPAC LOW,12,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,WESTPA C CHOICE,12,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,WESTPAC (CREDIT CARDS),19,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,WESTPAC CARDS,10,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,WESTPAC CREDIT CARD,16,WESTPAC Credit Card Repayment,bank
+90,transaction,debit,*,keyword,FLEX CARD,0,WESTPAC Credit Card Repayment,bank
+90,transaction,debit,*,keyword,FLEXI LOAN,0,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FROM WESTPA C CHOICE,17,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,IGNITE BY WESTPAC,14,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,PAYMENT BY AUTHORITY TO CC PAYMENT,31,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,TFR WESTPAC LOW,12,WESTPAC Credit Card Repayment,bank
+80,transaction,*,*,prefix,WESTPA C CHOICE,12,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC (CREDIT CARDS),19,WESTPAC Credit Card Repayment,bank
+90,transaction,debit,*,keyword,WESTPAC CA,0,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC CARDS,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC CREDIT CARD,16,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC CREDIT CARD CASH ADVAN,27,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC LOAN REDRAW,16,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC LOAN REPAYMENT,19,WESTPAC Credit Card Repayment,bank
+90,transaction,debit,*,keyword,WESTPACCARDS,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,BPAY PAYMENT,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,CARD PAYMENT,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,CASH THANK YOU,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,CC PAY,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,CC PAYMENT,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,CC REPAYMENT,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,CREDIT CARD PAYMENT,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,EASIPAY PAYMENT,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,INTERNET PAYMENT,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,LINKED ACC TRNS,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,LINKED ACCOUNT TRANSFER,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,PAYMENT - BPAY,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,PAYMENT - THANK YOU,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,PAYMENT RECEIVED,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,PAYMENT THANK YOU,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,PAYMENT THANKYOU,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,PAYMENT- CHEQUE THANK YOU,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,PAYMENT-BPAY-THANK YOU,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,TFR FROM,0,WESTPAC Credit Card Repayment,bank
+90,credit card,credit,westpac,keyword,TRANSFER FROM,0,WESTPAC Credit Card Repayment,bank
+90,personal loan,credit,westpac,keyword,PAYMENT- CHEQUE THANK YOU,0,WESTPAC Credit Card Repayment,bank
+90,personal loan,credit,westpac,keyword,PAYMENT-BPAY-THANK YOU,0,WESTPAC Credit Card Repayment,bank
+80,transaction,credit,*,prefix,FLEXI LOAN,8,WESTPAC Credit Card Repayment,bank
+80,home loan,debit,westpac,prefix,FLEX CARD,8,WESTPAC Credit Card Repayment,bank
+80,home loan,debit,westpac,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,ALTITUDE PL,8,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,FLEX CARD,8,WESTPAC Credit Card Repayment,bank
+80,savings,debit,*,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,trading,debit,*,prefix,ALTITUDE PL,8,WESTPAC Credit Card Repayment,bank
+80,trading,debit,*,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,ALTITUDE PL,8,WESTPAC Credit Card Repayment,bank
+90,transaction,debit,*,keyword,DAY VISA,0,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD,8,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD BACK,11,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD BIL,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD CREDIT,13,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD FLEX,11,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD FLEX CARD,16,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD H,8,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD HOUSE LOAN,17,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD PAY,10,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,FLEX CARD SAVINGS,14,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,LOW RATE MA,8,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,PERIODICAL MC FLEXI,16,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,PERIODICAL MC FLEXI LOAN,21,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC LOW CARD,13,WESTPAC Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WESTPAC LOW CRED CARD,18,WESTPAC Credit Card Repayment,bank
+80,transaction,credit,*,prefix,WESTPAC CARD SERVICES,18,WESTPAC Credit Card Repayment,bank
+80,transaction,credit,*,prefix,WESTPAC CARD SERVICES WESTPAC,26,WESTPAC Credit Card Repayment,bank
+80,transaction,credit,*,prefix,WESTPAC CARD SERVICES SIDR-,24,WESTPAC Credit Card Repayment,bank
+80,personal loan,credit,westpac,prefix,TFR FROM WESTPA C CHOICE,21,Westpac Loans,contract_loan
+80,savings,debit,*,prefix,WOOLWORTHS,8,Woolworths Credit Card Repayment,bank
+80,transaction,credit,*,prefix,WOOLWORTHS,8,Woolworths Credit Card Repayment,bank
+80,transaction,debit,*,prefix,WOOLWORTHS,8,Woolworths Credit Card Repayment,bank

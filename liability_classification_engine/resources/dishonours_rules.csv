@@ -1,0 +1,9 @@
+rule_type,pattern,required_terms
+keyword,REVERSAL CREDIT REVERSAL,
+keyword,DIRECT DEBIT DISHONOURED,
+keyword,Direct Debit Dishonour,
+keyword,MISCELLANEOUS CREDIT LOAN INSTALMENT DIRECT DEBIT,
+keyword,Unpaid Payment Fee,
+keyword,Reversal - Direct Debit - Receipt,
+regex,^Return\s+\d{2}/\d{2}/\d{2}\s+Direct Debit\b,Return;Direct Debit
+regex,^Return\s+\d{2}/\d{2}/\d{2}\s+Loan Repayment LN REPAY\b,Return;Loan Repayment LN REPAY

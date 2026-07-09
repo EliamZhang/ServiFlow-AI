@@ -1,0 +1,26 @@
+rate_type,counterparty,value
+bnpl_max_fn_limit,Afterpay,308
+bnpl_max_fn_limit,Brighte,385
+bnpl_max_fn_limit,CBA StepPay,154
+bnpl_max_fn_limit,Deferit,154
+bnpl_max_fn_limit,EveryPay,385
+bnpl_max_fn_limit,Fupay,38
+bnpl_max_fn_limit,Gimmie,77
+bnpl_max_fn_limit,Klarna,385
+bnpl_max_fn_limit,LatitudePay,77
+bnpl_max_fn_limit,Layaway,19
+bnpl_max_fn_limit,Laybuy,92
+bnpl_max_fn_limit,Lowes Zero Card,77
+bnpl_max_fn_limit,My Layby,92
+bnpl_max_fn_limit,NAB Now Pay Later,231
+bnpl_max_fn_limit,Pay In 4,154
+bnpl_max_fn_limit,PayItLater,77
+bnpl_max_fn_limit,Payo,77
+bnpl_max_fn_limit,Paypal Pay in 4,154
+bnpl_max_fn_limit,Salon Pay,92
+bnpl_max_fn_limit,Sezzle,308
+bnpl_max_fn_limit,Spondooli,385
+bnpl_max_fn_limit,Spot BNPL,77
+bnpl_max_fn_limit,Suncorp PayLater,77
+bnpl_max_fn_limit,Wizpay,38
+bnpl_max_fn_limit,Zip Pay,77
