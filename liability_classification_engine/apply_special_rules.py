@@ -1,6 +1,3 @@
-import csv
-import os
-
 import pandas as pd
 
 
@@ -57,7 +54,6 @@ def apply_special_rules(df):
         "counterparty",
         "dr_cr",
         "product_type",
-        "transaction_date",
     }
     if not required_columns.issubset(output.columns):
         return output
@@ -65,11 +61,6 @@ def apply_special_rules(df):
     group_columns = ["counterparty"]
     if "bank_account_id" in output.columns:
         group_columns.insert(0, "bank_account_id")
-
-    output["_special_rule_transaction_date"] = pd.to_datetime(
-        output["transaction_date"],
-        errors="coerce",
-    )
 
     for _, group in output.groupby(group_columns, dropna=False, sort=False):
         counterparty = normalize_text(group["counterparty"].iloc[0])
@@ -90,21 +81,4 @@ def apply_special_rules(df):
         ]
         output.loc[repayment_rows.index, "product_type"] = "wage_advance"
 
-    output.drop(columns=["_special_rule_transaction_date"], inplace=True)
     return output
-
-
-def process_file(input_file, output_file):
-    with open(input_file, encoding="utf-8-sig", newline="") as f:
-        rows = list(csv.DictReader(f))
-        fieldnames = list(rows[0]) if rows else []
-
-    for row in rows:
-        apply_rules(row)
-
-    temp_file = output_file + ".tmp"
-    with open(temp_file, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
-    os.replace(temp_file, output_file)

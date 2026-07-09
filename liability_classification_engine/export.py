@@ -29,13 +29,8 @@ def write_workbook(
     workbook_path = Path(workbook_file)
     workbook_path.parent.mkdir(parents=True, exist_ok=True)
 
-    mode = "a" if workbook_path.exists() else "w"
-    writer_kwargs: dict[str, object] = {"engine": "openpyxl", "mode": mode}
-    if mode == "a":
-        writer_kwargs["if_sheet_exists"] = "replace"
-
     try:
-        with pd.ExcelWriter(workbook_path, **writer_kwargs) as writer:
+        with pd.ExcelWriter(workbook_path, engine="openpyxl") as writer:
             transactions_export = _prepare_transactions_export(transactions)
             transactions_export.to_excel(
                 writer,

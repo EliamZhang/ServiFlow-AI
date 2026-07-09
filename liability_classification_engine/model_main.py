@@ -6,7 +6,7 @@ import pandas as pd
 
 from apply_special_rules import apply_special_rules
 from detect_dishonours import apply_dishonour_rules
-from generate_loan_dashboard_v14 import build_html, dataframe_to_records
+from loan_dashboard import build_html, dataframe_to_records
 from loan_summary import build_loan_summary, write_loan_summary_workbook_from_dataframe
 from match_counterparty import apply_cc_rules, apply_counterparty_rules
 from match_stream import add_final_product_type, identify_streams
@@ -14,7 +14,6 @@ from match_stream import add_final_product_type, identify_streams
 
 FINAL_WORKBOOK = Path("output/sample_with_counterparty.xlsx")
 FINAL_DASHBOARD = Path("output/loan_dashboard.html")
-LEGACY_CSV_OUTPUT = Path("output/sample_with_counterparty.csv")
 
 
 def parse_args() -> argparse.Namespace:
@@ -84,7 +83,6 @@ def main(with_dashboard: bool = False) -> None:
     )
     if with_dashboard:
         write_dashboard_html(transactions, FINAL_WORKBOOK, FINAL_DASHBOARD)
-    LEGACY_CSV_OUTPUT.unlink(missing_ok=True)
 
 
 if __name__ == "__main__":

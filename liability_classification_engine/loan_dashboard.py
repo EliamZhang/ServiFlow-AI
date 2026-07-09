@@ -1,35 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Generate a polished single-file HTML credit review dashboard with bank-account-aware stream summaries, a loan_summary-style Loan Overview table, fixed expanded stream directory, and all bank transactions section from an Excel file.
-
-Input Excel must contain two sheets:
-- loan_summary
-- transactions_detail
-
-Usage:
-    python generate_loan_detection_flat_view_with_sidebar_all_transactions.py input.xlsx output.html
-
-Dependencies:
-    pip install pandas openpyxl
-"""
+"""Build the single-file HTML credit review dashboard."""
 
 from __future__ import annotations
 
-import argparse
 import json
-
-try:
-    import orjson
-except ImportError:  # pragma: no cover - optional speed-up
-    orjson = None
 from functools import lru_cache
 from datetime import date, datetime, timedelta
-from pathlib import Path
 from typing import Any, Dict, List
 
 import pandas as pd
-from openpyxl import load_workbook
 
 
 DATE_COLUMNS = {
@@ -71,19 +49,6 @@ DEFAULT_NA_TEXT = {
     "nan",
     "null",
 }
-
-
-def find_sheet_name(sheet_names: Any, target: str) -> str:
-    """Find a sheet by exact or case-insensitive name without loading every sheet."""
-    names = list(sheet_names.keys()) if hasattr(sheet_names, "keys") else list(sheet_names)
-    if target in names:
-        return target
-
-    normalized = {str(name).strip().lower(): str(name) for name in names}
-    if target.lower() in normalized:
-        return normalized[target.lower()]
-
-    raise ValueError(f"Cannot find sheet '{target}'. Available sheets: {names}")
 
 
 def is_blank(value: Any) -> bool:
@@ -144,19 +109,6 @@ def normalize_date(value: Any) -> str:
     return normalize_date_text(str(value))
 
 
-def normalize_number(value: Any) -> Any:
-    """Normalize numeric fields for JSON while keeping blanks empty."""
-    if is_blank(value):
-        return ""
-    try:
-        numeric_value = pd.to_numeric(value, errors="coerce")
-        if pd.isna(numeric_value):
-            return str(value).strip()
-        return float(numeric_value)
-    except Exception:
-        return str(value).strip()
-
-
 def normalize_id_like(value: Any) -> Any:
     """Keep ID-like values readable by avoiding unnecessary .0 suffix when possible."""
     if is_blank(value):
@@ -174,40 +126,6 @@ def normalize_id_like(value: Any) -> Any:
         try:
             item = value.item()
             return normalize_id_like(item)
-        except Exception:
-            pass
-
-    return value
-
-
-def normalize_value(column: str, value: Any) -> Any:
-    col = column.strip()
-    col_lower = col.lower()
-
-    if col_lower in DATE_COLUMNS or "date" in col_lower or "datetime" in col_lower:
-        return normalize_date(value)
-
-    if col_lower in AMOUNT_COLUMNS:
-        return normalize_number(value)
-
-    if col_lower.endswith("_id") or col_lower in {"application_id", "user_id", "job_id"}:
-        return normalize_id_like(value)
-
-    if is_blank(value):
-        return ""
-
-    if isinstance(value, pd.Timestamp):
-        return value.strftime("%Y-%m-%d")
-
-    if isinstance(value, datetime):
-        return value.strftime("%Y-%m-%d")
-
-    if isinstance(value, date):
-        return value.strftime("%Y-%m-%d")
-
-    if hasattr(value, "item"):
-        try:
-            return value.item()
         except Exception:
             pass
 
@@ -266,64 +184,8 @@ def dataframe_to_records(df: pd.DataFrame) -> List[Dict[str, Any]]:
     return df.to_dict(orient="records")
 
 
-def worksheet_to_records(worksheet: Any) -> List[Dict[str, Any]]:
-    """Stream a worksheet into clean JSON-ready records without loading all sheets."""
-    rows = worksheet.iter_rows(values_only=True)
-    try:
-        raw_headers = next(rows)
-    except StopIteration:
-        return []
-
-    headers = [str(col).strip() if col is not None else "" for col in raw_headers]
-    records: List[Dict[str, Any]] = []
-
-    for values in rows:
-        row: Dict[str, Any] = {}
-        has_value = False
-        for index, col in enumerate(headers):
-            if not col:
-                continue
-            value = values[index] if index < len(values) else None
-            normalized = normalize_value(col, value)
-            row[col] = normalized
-            if normalized != "":
-                has_value = True
-        if has_value:
-            records.append(row)
-
-    return records
-
-
-def read_excel_data(input_file: Path) -> Dict[str, Any]:
-    # Stream only the two required sheets. This is faster and uses less memory
-    # than loading the full workbook into pandas before converting to JSON.
-    workbook = load_workbook(input_file, read_only=True, data_only=True)
-    try:
-        loan_sheet = find_sheet_name(workbook.sheetnames, "loan_summary")
-        tx_sheet = find_sheet_name(workbook.sheetnames, "transactions_detail")
-
-        loan_summary = worksheet_to_records(workbook[loan_sheet])
-        transactions = worksheet_to_records(workbook[tx_sheet])
-    finally:
-        workbook.close()
-
-    return {
-        "loanSummary": loan_summary,
-        "transactions": transactions,
-        "meta": {
-            "sourceFile": input_file.name,
-            "generatedAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "loanSummaryRows": len(loan_summary),
-            "transactionRows": len(transactions),
-        },
-    }
-
-
 def build_html(data: Dict[str, Any]) -> str:
-    if orjson is not None:
-        data_json = orjson.dumps(data).decode("utf-8")
-    else:
-        data_json = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    data_json = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     data_json = data_json.replace("</", "<\\/")
     return HTML_TEMPLATE.replace("__DATA_JSON__", data_json)
 
@@ -2948,37 +2810,3 @@ HTML_TEMPLATE = r'''<!doctype html>
 </body>
 </html>
 '''
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Generate a single-file HTML credit review page from loan_summary and transactions_detail sheets, including bank account metadata, loan_summary-style overview, and all bank transactions."
-    )
-    parser.add_argument("input_excel", help="Input Excel file path")
-    parser.add_argument(
-        "output_html",
-        nargs="?",
-        default="loan_detection_flat_view_with_sidebar_all_transactions.html",
-        help="Output HTML file path. Default: loan_detection_flat_view_with_sidebar_all_transactions.html",
-    )
-    args = parser.parse_args()
-
-    input_file = Path(args.input_excel).expanduser().resolve()
-    output_file = Path(args.output_html).expanduser().resolve()
-
-    if not input_file.exists():
-        raise FileNotFoundError(f"Input file does not exist: {input_file}")
-
-    data = read_excel_data(input_file)
-    html = build_html(data)
-
-    output_file.parent.mkdir(parents=True, exist_ok=True)
-    output_file.write_text(html, encoding="utf-8")
-
-    print(f"Done: {output_file}")
-    print(f"loan_summary rows: {data['meta']['loanSummaryRows']}")
-    print(f"transactions_detail rows: {data['meta']['transactionRows']}")
-
-
-if __name__ == "__main__":
-    main()

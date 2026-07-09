@@ -47,6 +47,7 @@ DUE_DATE_COLUMN_CANDIDATES = [
 ]
 
 BNPL_LIMIT_COLUMNS = ["counterparty", "bnpl_max_fn_limit"]
+BNPL_LIMIT_SOURCE_COLUMNS = {"rate_type", "counterparty", "value"}
 FORTNIGHTLY = "fortnightly"
 MONEY_PRECISION = Decimal("0.01")
 WAGE_ADVANCE_TOTAL_MULTIPLIER = Decimal("1.05")
@@ -132,7 +133,7 @@ def stream_base(stream_id: object) -> str:
     text = normalize_text(stream_id)
     if not text:
         return ""
-    return re.sub(r"[-_]\d+$", "", text).replace("-", "_")
+    return re.sub(r"_\d+$", "", text)
 
 
 def derive_final_product_type(product_type: object, stream_id: object) -> object:
@@ -166,31 +167,25 @@ def load_bnpl_maximum_limits(
     if not path.exists():
         return pd.DataFrame(columns=BNPL_LIMIT_COLUMNS)
 
-    if path.suffix.lower() in {".xlsx", ".xls"}:
-        limits = pd.read_excel(path)
-    else:
-        limits = pd.read_csv(path, encoding="utf-8-sig")
-
-    if set(BNPL_LIMIT_COLUMNS).issubset(limits.columns):
-        limits = limits[BNPL_LIMIT_COLUMNS].copy()
-    elif {"rate_type", "counterparty", "value"}.issubset(limits.columns):
-        limits = (
-            limits[
-                limits["rate_type"]
-                .astype("string")
-                .str.strip()
-                .str.casefold()
-                .eq("bnpl_max_fn_limit")
-            ][["counterparty", "value"]]
-            .copy()
-            .rename(columns={"value": "bnpl_max_fn_limit"})
-        )
-    else:
-        missing_columns = set(BNPL_LIMIT_COLUMNS).difference(limits.columns)
+    limits = pd.read_csv(path, encoding="utf-8-sig")
+    if not BNPL_LIMIT_SOURCE_COLUMNS.issubset(limits.columns):
+        missing_columns = BNPL_LIMIT_SOURCE_COLUMNS.difference(limits.columns)
         raise ValueError(
             "bnpl_maximum_limits is missing required columns: "
             + ", ".join(sorted(missing_columns))
         )
+
+    limits = (
+        limits[
+            limits["rate_type"]
+            .astype("string")
+            .str.strip()
+            .str.casefold()
+            .eq("bnpl_max_fn_limit")
+        ][["counterparty", "value"]]
+        .copy()
+        .rename(columns={"value": "bnpl_max_fn_limit"})
+    )
 
     limits["_counterparty_key"] = limits["counterparty"].map(normalize_match_key)
     limits["_limit_amount"] = limits["bnpl_max_fn_limit"].map(parse_decimal_amount)
@@ -257,10 +252,6 @@ def calculate_frequency_day(
         if counts[weekday] == top_count:
             return (pd.Timestamp("2024-01-01") + pd.Timedelta(days=weekday)).day_name()
     return None
-
-
-def parse_sample_datetime(value: object) -> pd.Timestamp | pd.NaT:
-    return pd.to_datetime(value, errors="coerce")
 
 
 def prepare_summary_input(df: pd.DataFrame) -> pd.DataFrame:
@@ -501,7 +492,7 @@ def calculate_predicted_closing_date(
     frequency: str,
     transaction_end_date: pd.Timestamp | pd.NaT,
 ) -> str:
-    if not stream_id.lower().startswith(("sacc_", "sacc-")):
+    if not stream_id.lower().startswith("sacc_"):
         return "NA"
     if status == "Closed":
         return "NA"
@@ -1009,26 +1000,6 @@ def build_loan_summary(
         return empty_summary()
 
     return pd.concat(summaries, ignore_index=True)[SUMMARY_COLUMNS]
-
-
-def write_loan_summary_workbook(
-    transactions_csv: str | Path,
-    workbook_file: str | Path,
-    limits_file: str | Path = "resources/bnpl_maximum_limits.csv",
-) -> None:
-    """Create or update the standard output workbook.
-
-    ``交易明细`` and ``贷款总结`` are generated sheets and are replaced on each
-    run. Any other sheets in an existing workbook are preserved for future
-    product summaries or review output.
-    """
-
-    transactions = pd.read_csv(transactions_csv, encoding="utf-8-sig")
-    write_loan_summary_workbook_from_dataframe(
-        transactions,
-        workbook_file,
-        limits_file=limits_file,
-    )
 
 
 def write_loan_summary_workbook_from_dataframe(

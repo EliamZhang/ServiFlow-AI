@@ -11,12 +11,9 @@ and therefore must run last.
 
 from __future__ import annotations
 
-import argparse
-import os
 import re
 from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
-from pathlib import Path
 from typing import Callable
 
 import pandas as pd
@@ -45,7 +42,6 @@ STABLE_AMOUNT_MIN_REPEATS = 2
 STABLE_AMOUNT_SPLIT_DELTA = Decimal("0.01")
 
 SACC_PREFIX = "sacc_"
-LEGACY_SACC_PREFIX = "sacc-"
 NON_SACC_PREFIX = "non_sacc_"
 SPECIAL_LOC_PREFIX = "loc_"
 UNKNOWN_PREFIX = "unknown_"
@@ -610,26 +606,6 @@ def assign_personal_loan_rule(
     return stream_count
 
 
-def identify_personal_loan_streams(
-    df: pd.DataFrame,
-    group_columns: list[str] | None = None,
-) -> pd.DataFrame:
-    """Public compatibility function for personal-loan-only matching."""
-
-    group_columns = group_columns or DEFAULT_GROUP_COLUMNS
-    output = ensure_stream_id_column(df)
-    validate_columns(output, group_columns)
-
-    eligible_mask = output["product_type"].eq(PERSONAL_LOAN)
-    stream_count = assign_personal_loan_rule(
-        output,
-        eligible_mask,
-        group_columns,
-    )
-    output.attrs["personal_loan_streams_identified"] = stream_count
-    return output
-
-
 # ---------------------------------------------------------------------------
 # LOC refinement: merge qualifying SACC streams after Personal Loan
 # ---------------------------------------------------------------------------
@@ -650,7 +626,7 @@ class LocStreamIdGenerator:
             value = row.get("stream_id")
             if pd.isna(value):
                 continue
-            match = re.fullmatch(r"loc[-_](\d+)", str(value).strip().lower())
+            match = re.fullmatch(r"loc_(\d+)", str(value).strip().lower())
             if match:
                 counters[application_key] = max(
                     counters.get(application_key, 0),
@@ -705,13 +681,7 @@ def build_sacc_funding_table(
     stream_id_text = output["stream_id"].astype("string")
     eligible_mask = (
         output["product_type"].eq(PERSONAL_LOAN)
-        & (
-            stream_id_text.str.lower().str.startswith(SACC_PREFIX, na=False)
-            | stream_id_text.str.lower().str.startswith(
-                LEGACY_SACC_PREFIX,
-                na=False,
-            )
-        )
+        & stream_id_text.str.lower().str.startswith(SACC_PREFIX, na=False)
         & output["dr_cr"].astype("string").str.lower().eq("credit")
         & ~output["_is_dishonour_credit"]
     )
@@ -826,7 +796,6 @@ def is_revolving_loc_funding_stream(value: object) -> bool:
     stream_id = str(value).strip().lower()
     return (
         stream_id.startswith(SACC_PREFIX)
-        or stream_id.startswith(LEGACY_SACC_PREFIX)
         or stream_id.startswith(NON_SACC_PREFIX)
         or stream_id.startswith(SPECIAL_LOC_PREFIX)
     )
@@ -1117,7 +1086,7 @@ def merge_sacc_streams_into_loc(
                 .astype(str)
                 .unique(),
                 key=lambda value: int(
-                    re.fullmatch(r"loc[-_](\d+)", value.strip().lower()).group(1)
+                    re.fullmatch(r"loc_(\d+)", value.strip().lower()).group(1)
                 ),
             )
             sacc_stream_mask = (
@@ -1800,7 +1769,7 @@ def merge_sacc_streams_into_loc(
                 .astype(str)
                 .unique(),
                 key=lambda value: int(
-                    re.fullmatch(r"loc[-_](\d+)", value.strip().lower()).group(1)
+                    re.fullmatch(r"loc_(\d+)", value.strip().lower()).group(1)
                 ),
             )
             if not target_loc_ids:
@@ -1871,7 +1840,7 @@ def merge_sacc_streams_into_loc(
                 .astype(str)
                 .unique(),
                 key=lambda value: int(
-                    re.fullmatch(r"loc[-_](\d+)", value.strip().lower()).group(1)
+                    re.fullmatch(r"loc_(\d+)", value.strip().lower()).group(1)
                 ),
             )
             if len(loc_ids) <= 1:
@@ -1973,11 +1942,11 @@ def parse_stream_id(value: object) -> tuple[str, int] | None:
     if pd.isna(value):
         return None
 
-    match = re.fullmatch(r"(.+?)[-_](\d+)", str(value).strip())
+    match = re.fullmatch(r"(.+?)_(\d+)", str(value).strip())
     if not match:
         return None
 
-    return match.group(1).replace("-", "_"), int(match.group(2))
+    return match.group(1), int(match.group(2))
 
 
 def next_stream_id(output: pd.DataFrame, application_id: object, prefix: str) -> str:
@@ -2089,7 +2058,6 @@ def refine_unknown_personal_loan_streams(
     max_gap = pd.Timedelta(days=UNKNOWN_REASSIGN_MAX_GAP_DAYS)
     target_prefixes = (
         SACC_PREFIX,
-        LEGACY_SACC_PREFIX,
         NON_SACC_PREFIX,
         SPECIAL_LOC_PREFIX,
     )
@@ -2253,7 +2221,6 @@ def apply_special_counterparty_stream_overrides(
                 stream_text = group["stream_id"].astype("string").str.lower()
                 sacc_rows = group.loc[
                     stream_text.str.startswith(SACC_PREFIX, na=False)
-                    | stream_text.str.startswith(LEGACY_SACC_PREFIX, na=False)
                 ]
                 if sacc_rows.empty:
                     continue
@@ -2416,7 +2383,7 @@ def identify_streams(
 
 
 # ---------------------------------------------------------------------------
-# Validation, I/O and CLI
+# Validation and final labels
 # ---------------------------------------------------------------------------
 
 
@@ -2437,10 +2404,6 @@ def validate_columns(df: pd.DataFrame, group_columns: list[str]) -> None:
         )
 
 
-def read_input_csv(input_file: str | Path) -> pd.DataFrame:
-    return pd.read_csv(input_file, dtype={"stream_id": "string"})
-
-
 def add_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
     output = df.copy()
     product_type = output["product_type"].astype("string").str.strip()
@@ -2448,8 +2411,7 @@ def add_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
         output["stream_id"]
         .astype("string")
         .str.strip()
-        .str.replace(r"[-_]\d+$", "", regex=True)
-        .str.replace("-", "_", regex=False)
+        .str.replace(r"_\d+$", "", regex=True)
     )
 
     valid_mask = (
@@ -2471,116 +2433,3 @@ def add_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
         )
     ]
     return output
-
-
-def write_output_csv(df: pd.DataFrame, output_file: str | Path) -> None:
-    output_path = Path(output_file)
-    temp_path = Path(f"{output_path}.tmp")
-    output = add_final_product_type(df)
-    output.to_csv(temp_path, index=False, encoding="utf-8")
-    os.replace(temp_path, output_path)
-
-
-def assign_stream_ids(
-    input_file: str,
-    output_file: str,
-    group_columns: list[str] | None = None,
-) -> None:
-    """Compatibility entry point: run the complete priority pipeline."""
-
-    df = read_input_csv(input_file)
-    output = identify_streams(
-        df,
-        group_columns=group_columns,
-        reset_stream_ids=True,
-    )
-    write_output_csv(output, output_file)
-
-
-def assign_personal_loan_stream_ids(
-    input_file: str,
-    output_file: str,
-    group_columns: list[str] | None = None,
-) -> None:
-    """Compatibility entry point: run only the personal-loan rule."""
-
-    df = read_input_csv(input_file)
-    output = identify_personal_loan_streams(
-        df,
-        group_columns=group_columns,
-    )
-    write_output_csv(output, output_file)
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Identify loan streams by product priority and assign stream_id."
-        )
-    )
-    parser.add_argument(
-        "-i",
-        "--input",
-        default="sample_with_counterparty.csv",
-        help="Input CSV path. Defaults to sample_with_counterparty.csv.",
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        default="sample_with_personal_loan_streams.csv",
-        help=(
-            "Output CSV path. "
-            "Defaults to sample_with_personal_loan_streams.csv."
-        ),
-    )
-    parser.add_argument(
-        "--group-columns",
-        default=",".join(DEFAULT_GROUP_COLUMNS),
-        help=(
-            "Comma-separated personal-loan grouping columns. "
-            "Defaults to application_id,counterparty."
-        ),
-    )
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
-    group_columns = [
-        column.strip()
-        for column in args.group_columns.split(",")
-        if column.strip()
-    ]
-
-    df = read_input_csv(args.input)
-    output = identify_streams(
-        df,
-        group_columns=group_columns,
-        reset_stream_ids=True,
-    )
-    write_output_csv(output, args.output)
-
-    for rule in sorted(PRODUCT_RULES, key=lambda item: item.priority):
-        count = output.attrs.get("stream_counts", {}).get(
-            rule.product_type,
-            0,
-        )
-        print(f"{rule.product_type} streams identified: {count}")
-
-    print(
-        "Dishonour credit rows assigned to original streams: "
-        f"{output.attrs.get('dishonour_credit_assigned_count', 0)}"
-    )
-    print(
-        "SACC streams merged into special LOC: "
-        f"{output.attrs.get('sacc_streams_merged', 0)}"
-    )
-    print(
-        "Rows updated by special LOC rule: "
-        f"{output.attrs.get('loc_rows_updated', 0)}"
-    )
-    print(f"Output written to: {Path(args.output)}")
-
-
-if __name__ == "__main__":
-    main()

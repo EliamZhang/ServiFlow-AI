@@ -4,15 +4,6 @@ import re
 import pandas as pd
 
 
-def clean_fieldnames(rows, fieldnames):
-    valid_fieldnames = [name for name in fieldnames if (name or "").strip()]
-    for row in rows:
-        for key in list(row):
-            if not (key or "").strip():
-                row.pop(key, None)
-    return valid_fieldnames
-
-
 def normalize_rule_value(value):
     if pd.isna(value):
         return ""
@@ -235,21 +226,3 @@ def apply_cc_rules(df, rules_file):
             output.at[row_id, "product_type"] = product_type
 
     return output
-
-
-def process_file(sample_file, rules_file, output_file):
-    keyword_rules = load_rules(rules_file)
-    with open(sample_file, encoding="utf-8-sig", newline="") as f:
-        rows = list(csv.DictReader(f))
-        fieldnames = list(rows[0]) if rows else []
-        fieldnames = clean_fieldnames(rows, fieldnames)
-        if "counterparty" not in fieldnames:
-            fieldnames.append("counterparty")
-        if "product_type" not in fieldnames:
-            fieldnames.append("product_type")
-    for row in rows:
-        row["counterparty"], row["product_type"] = match_text(row.get("text"), keyword_rules)
-    with open(output_file, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
