@@ -24,11 +24,15 @@ class IncomeEngine:
         matched = details[details["is_income_pred"].eq(1)].copy()
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
         predictions["matched"] = True
-        predictions["proposed_counterparty"] = matched["counterparty"].values
-        predictions["proposed_finv_category"] = matched["finv_category"].values
+        predictions["counterparty"] = matched["counterparty"].values
+        predictions["finv_category"] = matched["finv_category"].values
         predictions["stream_id"] = matched["stream_id"].values
-        predictions["rule_id"] = matched["income_type_rule_name"].values
-        predictions["reason"] = matched["income_type_pred_reason"].values
+        predictions["classification_rule_id"] = matched[
+            "income_type_rule_name"
+        ].values
+        predictions["classification_reason"] = matched[
+            "income_type_pred_reason"
+        ].values
         return EngineResult(
             predictions=predictions,
             transactions=details,
