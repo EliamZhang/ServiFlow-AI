@@ -4,15 +4,15 @@ from pathlib import Path
 
 import pandas as pd
 
-from serviflow.models import PipelineResult
+from classification_core.models import PipelineResult
 
 from .domain.summary import build_summary
-from .pipeline import DEFAULT_RESOURCES_DIR, ENGINE_DIR, run_pipeline
+from .pipeline import DEFAULT_RESOURCES_DIR, ENGINE_DIR, PROJECT_ROOT, run_pipeline
 from .presentation.dashboard import build_html, dataframe_to_records
 from .presentation.reporting import write_report
 
 
-DEFAULT_INPUT = ENGINE_DIR / "sample.csv"
+DEFAULT_INPUT = PROJECT_ROOT / "sample.csv"
 DEFAULT_OUTPUT = ENGINE_DIR / "output" / "liability_report.xlsx"
 DEFAULT_DASHBOARD = ENGINE_DIR / "output" / "liability_dashboard.html"
 

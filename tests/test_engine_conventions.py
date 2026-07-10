@@ -5,12 +5,24 @@ from pathlib import Path
 
 import income_classification_engine as income
 import liability_classification_engine as liability
+from income_classification_engine.cli import DEFAULT_INPUT as INCOME_DEFAULT_INPUT
 from income_classification_engine.presentation import reporting as income_reporting
+from liability_classification_engine.cli import (
+    DEFAULT_INPUT as LIABILITY_DEFAULT_INPUT,
+)
 from liability_classification_engine.presentation import reporting as liability_reporting
-from serviflow.models import PipelineResult
+from classification_core.models import PipelineResult
 
 
 class EngineConventionTests(unittest.TestCase):
+    def test_both_engines_use_the_root_sample(self) -> None:
+        project_root = Path(__file__).resolve().parent.parent
+        expected = project_root / "sample.csv"
+        self.assertEqual(INCOME_DEFAULT_INPUT, expected)
+        self.assertEqual(LIABILITY_DEFAULT_INPUT, expected)
+        samples = list(project_root.rglob("sample.csv"))
+        self.assertEqual(samples, [expected])
+
     def test_top_level_python_files_are_identical(self) -> None:
         project_root = Path(__file__).resolve().parent.parent
         expected = {

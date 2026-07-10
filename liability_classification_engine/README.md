@@ -4,6 +4,8 @@ The liability engine is a first-class package. It implements the shared engine
 protocol directly in `engine.py` and can also run independently through its
 package CLI.
 
+The independent CLI reads the project root `sample.csv` by default.
+
 ## Package layout
 
 ```text

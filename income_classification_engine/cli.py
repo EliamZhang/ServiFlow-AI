@@ -7,12 +7,11 @@ from .domain.classification import (
     print_income_type_summary,
     print_optional_validation,
 )
-from .pipeline import run_pipeline
+from .pipeline import ENGINE_DIR, PROJECT_ROOT, run_pipeline
 from .presentation.reporting import write_report
 
 
-ENGINE_DIR = Path(__file__).resolve().parent
-DEFAULT_INPUT = ENGINE_DIR / "sample.csv"
+DEFAULT_INPUT = PROJECT_ROOT / "sample.csv"
 DEFAULT_OUTPUT = ENGINE_DIR / "output" / "income_report.xlsx"
 
 

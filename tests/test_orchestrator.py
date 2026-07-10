@@ -4,9 +4,9 @@ import unittest
 
 import pandas as pd
 
-from serviflow.config import EngineSpec, PipelineConfig
-from serviflow.models import EngineContext, EngineResult, SummaryArtifact
-from serviflow.orchestrator import ClassificationOrchestrator
+from classification_core.config import EngineSpec, PipelineConfig
+from classification_core.models import EngineContext, EngineResult, SummaryArtifact
+from classification_core.orchestrator import ClassificationOrchestrator
 
 
 class FakeEngine:

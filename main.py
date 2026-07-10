@@ -5,24 +5,31 @@ from pathlib import Path
 
 import pandas as pd
 
-from .config import (
+from classification_core.config import (
     DEFAULT_CATEGORY_CATALOG,
     DEFAULT_PIPELINE_CONFIG,
     load_category_owners,
     load_pipeline_config,
 )
-from .orchestrator import ClassificationOrchestrator
-from .reporting import write_report, write_transactions_csv
+from classification_core.models import ClassificationRunResult
+from classification_core.orchestrator import ClassificationOrchestrator
+from classification_core.reporting import write_report, write_transactions_csv
 
 
-DEFAULT_OUTPUT = Path("output") / "serviflow_report.xlsx"
+PROJECT_ROOT = Path(__file__).resolve().parent
+DEFAULT_INPUT = PROJECT_ROOT / "sample.csv"
+DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "classification_report.xlsx"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run all enabled ServiFlow classification engines in priority order."
+        description="Run all enabled transaction classification engines in priority order."
     )
-    parser.add_argument("--input", required=True, help="Input transaction CSV path.")
+    parser.add_argument(
+        "--input",
+        default=str(DEFAULT_INPUT),
+        help="Input transaction CSV path.",
+    )
     parser.add_argument(
         "--output",
         default=str(DEFAULT_OUTPUT),
@@ -45,13 +52,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_pipeline(
-    input_file: str | Path,
-    output_file: str | Path,
+def run_classification(
+    input_file: str | Path = DEFAULT_INPUT,
+    output_file: str | Path = DEFAULT_OUTPUT,
     config_file: str | Path = DEFAULT_PIPELINE_CONFIG,
     category_catalog_file: str | Path = DEFAULT_CATEGORY_CATALOG,
     transactions_csv: str | Path | None = None,
-):
+) -> ClassificationRunResult:
     transactions = pd.read_csv(input_file, encoding="utf-8-sig")
     orchestrator = ClassificationOrchestrator(
         config=load_pipeline_config(config_file),
@@ -66,7 +73,7 @@ def run_pipeline(
 
 def main() -> None:
     args = parse_args()
-    result = run_pipeline(
+    result = run_classification(
         input_file=args.input,
         output_file=args.output,
         config_file=args.config,

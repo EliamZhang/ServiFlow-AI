@@ -1,6 +1,6 @@
 """Liability classification engine package."""
 
-from serviflow.models import PipelineResult
+from classification_core.models import PipelineResult
 
 from .domain.summary import build_summary
 from .engine import LiabilityEngine

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from serviflow.models import PipelineResult
+from classification_core.models import PipelineResult
 
 from .domain.counterparty import apply_credit_card_rules, apply_counterparty_rules
 from .domain.dishonours import apply_dishonour_rules
@@ -13,6 +13,7 @@ from .domain.streams import add_finv_category, identify_streams
 
 
 ENGINE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = ENGINE_DIR.parent
 DEFAULT_RESOURCES_DIR = ENGINE_DIR / "resources"
 
 

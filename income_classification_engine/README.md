@@ -2,6 +2,8 @@
 
 Rule-based income and wages classification for bank transactions.
 
+The independent CLI reads the project root `sample.csv` by default.
+
 ## Package layout
 
 ```text
@@ -22,7 +24,6 @@ Build the production Excel workbook:
 
 ```powershell
 python -m income_classification_engine `
-  --input income_classification_engine/sample.csv `
   --output income_classification_engine/output/income_report.xlsx
 ```
 
@@ -30,7 +31,6 @@ Build the full audit workbook:
 
 ```powershell
 python -m income_classification_engine `
-  --input income_classification_engine/sample.csv `
   --output income_classification_engine/output/income_report_full.xlsx `
   --full
 ```
@@ -39,7 +39,6 @@ Optionally save row-level prediction CSV output:
 
 ```powershell
 python -m income_classification_engine `
-  --input income_classification_engine/sample.csv `
   --output income_classification_engine/output/income_report.xlsx `
   --predictions-csv income_classification_engine/output/income_predictions.csv
 ```

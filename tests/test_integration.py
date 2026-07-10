@@ -5,12 +5,12 @@ from pathlib import Path
 
 import pandas as pd
 
-from serviflow.config import load_category_owners, load_pipeline_config
-from serviflow.orchestrator import ClassificationOrchestrator
+from classification_core.config import load_category_owners, load_pipeline_config
+from classification_core.orchestrator import ClassificationOrchestrator
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SAMPLE_FILE = PROJECT_ROOT / "income_classification_engine" / "sample.csv"
+SAMPLE_FILE = PROJECT_ROOT / "sample.csv"
 
 
 class CurrentSampleIntegrationTests(unittest.TestCase):

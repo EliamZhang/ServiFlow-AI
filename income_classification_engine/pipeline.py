@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pandas as pd
 
-from serviflow.models import PipelineResult
+from classification_core.models import PipelineResult
 
 from .domain.classification import (
     add_income_type_rules,
@@ -12,6 +14,10 @@ from .domain.classification import (
     reorder_output_columns,
 )
 from .domain.summary import add_income_streams
+
+
+ENGINE_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = ENGINE_DIR.parent
 
 
 def run_pipeline(

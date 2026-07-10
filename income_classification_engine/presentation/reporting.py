@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from serviflow.excel import format_sheets
-from serviflow.models import PipelineResult
+from classification_core.excel import format_sheets
+from classification_core.models import PipelineResult
 
 from ..domain.summary import build_summary
 
