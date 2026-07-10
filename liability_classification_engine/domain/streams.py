@@ -92,7 +92,7 @@ class ProductRule:
 
     priority: int
     product_type: str
-    matcher: Callable[[pd.DataFrame, pd.Series, list[str]], int]
+    matcher: Callable[[pd.DataFrame, pd.Series, list[str]], None]
 
 
 # ---------------------------------------------------------------------------
@@ -224,7 +224,7 @@ def assign_grouped_product_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     prefix: str,
-) -> int:
+) -> None:
     """Assign one globally unique stream per account + counterparty group.
 
     Stream numbering is based on a stable business sort so IDs do not depend
@@ -232,7 +232,7 @@ def assign_grouped_product_streams(
     """
 
     streams_by_key: dict[tuple[object, object, object], str] = {}
-    stream_counts_by_application: dict[object, int] = {}
+    stream_number_by_application: dict[object, int] = {}
     sort_columns = [
         column for column in SIMPLE_STREAM_SORT_COLUMNS if column in output.columns
     ]
@@ -256,58 +256,56 @@ def assign_grouped_product_streams(
         stream_key = (application_id, bank_account_id, counterparty)
         if stream_key not in streams_by_key:
             application_key = normalize_group_value(application_id)
-            stream_counts_by_application[application_key] = (
-                stream_counts_by_application.get(application_key, 0) + 1
+            stream_number_by_application[application_key] = (
+                stream_number_by_application.get(application_key, 0) + 1
             )
             streams_by_key[stream_key] = (
-                f"{prefix}_{stream_counts_by_application[application_key]:03d}"
+                f"{prefix}_{stream_number_by_application[application_key]:03d}"
             )
 
         output.at[row_id, "stream_id"] = streams_by_key[stream_key]
-
-    return len(streams_by_key)
 
 
 def identify_direct_loc_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     _: list[str],
-) -> int:
+) -> None:
     """Assign streams to rows already classified as product_type == loc."""
 
-    return assign_grouped_product_streams(output, eligible_mask, "loc")
+    assign_grouped_product_streams(output, eligible_mask, "loc")
 
 
 def identify_bnpl_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     _: list[str],
-) -> int:
-    return assign_grouped_product_streams(output, eligible_mask, "bnpl")
+) -> None:
+    assign_grouped_product_streams(output, eligible_mask, "bnpl")
 
 
 def identify_wage_advance_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     _: list[str],
-) -> int:
-    return assign_grouped_product_streams(output, eligible_mask, "wage_advance")
+) -> None:
+    assign_grouped_product_streams(output, eligible_mask, "wage_advance")
 
 
 def identify_bank_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     _: list[str],
-) -> int:
-    return assign_grouped_product_streams(output, eligible_mask, "bank")
+) -> None:
+    assign_grouped_product_streams(output, eligible_mask, "bank")
 
 
 def identify_contract_loan_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     _: list[str],
-) -> int:
-    return assign_grouped_product_streams(output, eligible_mask, "contract_loan")
+) -> None:
+    assign_grouped_product_streams(output, eligible_mask, "contract_loan")
 
 
 # ---------------------------------------------------------------------------
@@ -473,9 +471,7 @@ def assign_dishonour_credits(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     group_columns: list[str],
-) -> int:
-    assigned_count = 0
-
+) -> None:
     for _, group in output.loc[eligible_mask].groupby(
         group_columns,
         dropna=False,
@@ -530,16 +526,13 @@ def assign_dishonour_credits(
                 ["_transaction_date", "_row_id"]
             ).iloc[-1]
             output.at[row_id, "stream_id"] = matched["stream_id"]
-            assigned_count += 1
-
-    return assigned_count
 
 
 def assign_personal_loan_rule(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     group_columns: list[str],
-) -> int:
+) -> None:
     """Assign personal-loan streams to rows already claimed by this rule."""
 
     output["_row_id"] = output.index
@@ -550,8 +543,6 @@ def assign_personal_loan_rule(
     output["_is_dishonour_credit"] = is_dishonour_credit(output)
 
     stream_ids_by_application: dict[object, PersonalLoanStreamIdGenerator] = {}
-    stream_count = 0
-
     for _, group in output.loc[eligible_mask].groupby(
         group_columns,
         dropna=False,
@@ -582,7 +573,6 @@ def assign_personal_loan_rule(
                 output.loc[funding.row_indices, "stream_id"] = stream_id
 
             output.loc[repayment_stream.row_indices, "stream_id"] = stream_id
-            stream_count += 1
 
         for funding in funding_flows:
             if funding.matched:
@@ -590,20 +580,17 @@ def assign_personal_loan_rule(
 
             stream_id = stream_ids.next_for_amount(funding.amount)
             output.loc[funding.row_indices, "stream_id"] = stream_id
-            stream_count += 1
 
-    dishonour_count = assign_dishonour_credits(
+    assign_dishonour_credits(
         output,
         eligible_mask,
         group_columns,
     )
-    output.attrs["dishonour_credit_assigned_count"] = dishonour_count
 
     output.drop(
         columns=["_row_id", "_transaction_date", "_is_dishonour_credit"],
         inplace=True,
     )
-    return stream_count
 
 
 # ---------------------------------------------------------------------------
@@ -999,7 +986,7 @@ def merge_sacc_streams_into_loc(
     group_columns: list[str],
     cv_threshold: Decimal = DEFAULT_LOC_CV_THRESHOLD,
     min_sacc_streams: int = DEFAULT_MIN_SACC_STREAMS,
-) -> int:
+) -> None:
     """Merge qualifying SACC streams into one special LOC stream.
 
     A group qualifies when it has at least ``min_sacc_streams`` SACC streams
@@ -1031,17 +1018,6 @@ def merge_sacc_streams_into_loc(
     loc_id_generator = LocStreamIdGenerator(
         output[["application_id", "stream_id"]]
     )
-
-    loc_group_count = 0
-    updated_row_count = 0
-    merged_sacc_stream_count = 0
-    revolving_loc_group_count = 0
-    revolving_loc_rows_updated = 0
-    single_funding_loc_group_count = 0
-    single_funding_loc_rows_updated = 0
-    orphan_sacc_rows_merged = 0
-    orphan_sacc_streams_merged = 0
-    loc_rows_consolidated = 0
 
     if not funding_table.empty:
         for group_key, group_funding in funding_table.groupby(
@@ -1113,10 +1089,6 @@ def merge_sacc_streams_into_loc(
                 else loc_id_generator.next(group_key[0])
             )
             output.loc[update_mask, "stream_id"] = stream_id
-
-            loc_group_count += 1
-            updated_row_count += int(update_mask.sum())
-            merged_sacc_stream_count += len(original_sacc_ids)
 
     revolving_group_columns = list(group_columns)
     if (
@@ -1304,9 +1276,6 @@ def merge_sacc_streams_into_loc(
                         group_key[0],
                     )
                     output.loc[update_mask, "stream_id"] = stream_id
-
-                    revolving_loc_group_count += 1
-                    revolving_loc_rows_updated += int(update_mask.sum())
                     assigned_revolving_loc = True
                     break
 
@@ -1407,9 +1376,6 @@ def merge_sacc_streams_into_loc(
                     group_key[0],
                 )
                 output.loc[update_mask, "stream_id"] = stream_id
-
-                revolving_loc_group_count += 1
-                revolving_loc_rows_updated += int(update_mask.sum())
                 assigned_revolving_loc = True
                 break
 
@@ -1556,9 +1522,6 @@ def merge_sacc_streams_into_loc(
                     group_key[0],
                 )
                 output.loc[update_indices, "stream_id"] = stream_id
-
-                revolving_loc_group_count += 1
-                revolving_loc_rows_updated += len(update_indices)
                 break
 
         for group_key, group_rows in revolving_rows.groupby(
@@ -1736,8 +1699,6 @@ def merge_sacc_streams_into_loc(
                 continue
 
             output.loc[update_mask, "stream_id"] = stream_id
-            single_funding_loc_group_count += 1
-            single_funding_loc_rows_updated += int(update_mask.sum())
 
     loc_stream_mask = (
         output["stream_id"]
@@ -1815,8 +1776,6 @@ def merge_sacc_streams_into_loc(
                     continue
 
                 output.loc[stream_rows.index, "stream_id"] = target_loc_id
-                orphan_sacc_rows_merged += len(stream_rows)
-                orphan_sacc_streams_merged += 1
 
     loc_stream_mask = (
         output["stream_id"]
@@ -1860,7 +1819,6 @@ def merge_sacc_streams_into_loc(
                 continue
 
             output.loc[update_mask, "stream_id"] = loc_ids[0]
-            loc_rows_consolidated += int(update_mask.sum())
 
     output.drop(
         columns=[
@@ -1873,32 +1831,12 @@ def merge_sacc_streams_into_loc(
         inplace=True,
     )
 
-    output.attrs["special_loc_groups_identified"] = loc_group_count
-    output.attrs["loc_rows_updated"] = updated_row_count
-    output.attrs["sacc_streams_merged"] = merged_sacc_stream_count
-    output.attrs["revolving_loc_groups_identified"] = revolving_loc_group_count
-    output.attrs["revolving_loc_rows_updated"] = revolving_loc_rows_updated
-    output.attrs["single_funding_loc_groups_identified"] = (
-        single_funding_loc_group_count
-    )
-    output.attrs["single_funding_loc_rows_updated"] = (
-        single_funding_loc_rows_updated
-    )
-    output.attrs["orphan_sacc_rows_merged_to_loc"] = orphan_sacc_rows_merged
-    output.attrs["orphan_sacc_streams_merged_to_loc"] = orphan_sacc_streams_merged
-    output.attrs["loc_rows_consolidated"] = loc_rows_consolidated
-    return (
-        loc_group_count
-        + revolving_loc_group_count
-        + single_funding_loc_group_count
-    )
-
 
 def identify_loc_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
     group_columns: list[str],
-) -> int:
+) -> None:
     """Run the final LOC stage.
 
     1. Assign original ``product_type == loc`` rows using the existing grouped
@@ -1906,18 +1844,15 @@ def identify_loc_streams(
     2. Refine qualifying personal-loan ``sacc_*`` streams into ``loc_*``.
     """
 
-    direct_loc_count = identify_direct_loc_streams(
+    identify_direct_loc_streams(
         output,
         eligible_mask,
         group_columns,
     )
-    special_loc_count = merge_sacc_streams_into_loc(
+    merge_sacc_streams_into_loc(
         output,
         group_columns,
     )
-
-    output.attrs["direct_loc_streams_identified"] = direct_loc_count
-    return direct_loc_count + special_loc_count
 
 
 # ---------------------------------------------------------------------------
@@ -1978,7 +1913,7 @@ def median_gap_matches_unknown_frequency(median_gap: float) -> bool:
 def merge_periodic_remaining_unknown_streams(
     output: pd.DataFrame,
     group_columns: list[str],
-) -> int:
+) -> None:
     """Merge remaining unknown streams when all transaction dates are periodic."""
 
     stream_text = output["stream_id"].astype("string").str.strip().str.lower()
@@ -1986,8 +1921,6 @@ def merge_periodic_remaining_unknown_streams(
         output["product_type"].eq(PERSONAL_LOAN)
         & stream_text.str.startswith(UNKNOWN_PREFIX, na=False)
     ]
-    updated_count = 0
-
     for _, group in unknown_rows.groupby(
         group_columns,
         dropna=False,
@@ -2029,16 +1962,12 @@ def merge_periodic_remaining_unknown_streams(
             continue
 
         output.loc[update_index, "stream_id"] = target_stream_id
-        updated_count += len(update_index)
-
-    output.attrs["periodic_unknown_stream_rows_merged"] = updated_count
-    return updated_count
 
 
 def refine_unknown_personal_loan_streams(
     output: pd.DataFrame,
     group_columns: list[str],
-) -> int:
+) -> None:
     """Refine remaining unknown personal-loan streams after LOC refinement."""
 
     output["_transaction_date"] = pd.to_datetime(
@@ -2054,7 +1983,6 @@ def refine_unknown_personal_loan_streams(
     else:
         output["_sample_datetime"] = pd.NaT
 
-    updated_count = 0
     max_gap = pd.Timedelta(days=UNKNOWN_REASSIGN_MAX_GAP_DAYS)
     target_prefixes = (
         SACC_PREFIX,
@@ -2134,7 +2062,6 @@ def refine_unknown_personal_loan_streams(
                 )
 
             output.loc[stream_rows.index, "stream_id"] = target_stream_id
-            updated_count += 1
 
         group = output.loc[group.index]
         stream_text = group["stream_id"].astype("string").str.lower()
@@ -2169,9 +2096,8 @@ def refine_unknown_personal_loan_streams(
 
             target_stream_id = nearby_gaps.sort_values().index[0]
             output.loc[stream_rows.index, "stream_id"] = target_stream_id
-            updated_count += 1
 
-    updated_count += merge_periodic_remaining_unknown_streams(
+    merge_periodic_remaining_unknown_streams(
         output,
         group_columns,
     )
@@ -2181,16 +2107,12 @@ def refine_unknown_personal_loan_streams(
         inplace=True,
         errors="ignore",
     )
-    output.attrs["unknown_personal_loan_streams_refined"] = updated_count
-    return updated_count
 
 
 def apply_special_counterparty_stream_overrides(
     output: pd.DataFrame,
     group_columns: list[str],
-) -> int:
-    updated_count = 0
-
+) -> None:
     personal_loan_rows = output.loc[
         output["product_type"].eq(PERSONAL_LOAN)
         & output["counterparty"]
@@ -2236,7 +2158,6 @@ def apply_special_counterparty_stream_overrides(
                         prefix,
                     )
                     output.loc[stream_group.index, "stream_id"] = target_stream_id
-                    updated_count += len(stream_group)
                 continue
 
             if mode != "merge_group":
@@ -2270,10 +2191,6 @@ def apply_special_counterparty_stream_overrides(
                 continue
 
             output.loc[update_index, "stream_id"] = target_stream_id
-            updated_count += len(update_index)
-
-    output.attrs["special_counterparty_stream_rows_updated"] = updated_count
-    return updated_count
 
 
 def renumber_stream_ids_by_application(df: pd.DataFrame) -> pd.DataFrame:
@@ -2350,7 +2267,6 @@ def identify_streams(
     validate_columns(output, group_columns)
 
     claimed_mask = pd.Series(False, index=output.index, dtype=bool)
-    stream_counts: dict[str, int] = {}
 
     for rule in sorted(PRODUCT_RULES, key=lambda item: item.priority):
         eligible_mask = (
@@ -2362,23 +2278,14 @@ def identify_streams(
         # cannot receive a stream_id because key information is missing.
         claimed_mask |= eligible_mask
 
-        stream_counts[rule.product_type] = rule.matcher(
+        rule.matcher(
             output,
             eligible_mask,
             group_columns,
         )
 
-    stream_counts["personal_loan_unknown_refined"] = (
-        refine_unknown_personal_loan_streams(output, group_columns)
-    )
-    stream_counts["special_counterparty_stream_overrides"] = (
-        apply_special_counterparty_stream_overrides(output, group_columns)
-    )
-    output.attrs["stream_counts"] = stream_counts
-    output.attrs["personal_loan_streams_identified"] = stream_counts.get(
-        PERSONAL_LOAN,
-        0,
-    )
+    refine_unknown_personal_loan_streams(output, group_columns)
+    apply_special_counterparty_stream_overrides(output, group_columns)
     return renumber_stream_ids_by_application(output)
 
 
@@ -2404,7 +2311,7 @@ def validate_columns(df: pd.DataFrame, group_columns: list[str]) -> None:
         )
 
 
-def add_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
+def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
     output = df.copy()
     product_type = output["product_type"].astype("string").str.strip()
     stream_base = (
@@ -2420,8 +2327,8 @@ def add_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
         & stream_base.notna()
         & stream_base.ne("")
     )
-    output["final_product_type"] = pd.NA
-    output.loc[valid_mask, "final_product_type"] = [
+    output["finv_category"] = pd.NA
+    output.loc[valid_mask, "finv_category"] = [
         (
             base
             if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan"}

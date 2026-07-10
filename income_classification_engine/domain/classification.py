@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Rule-based income detector for bank transactions.
+Rule-based income classification pipeline for bank transactions.
 
 Main output fields:
 - finv_category: production income category used by downstream FInv output.
@@ -18,17 +18,6 @@ Main output fields:
     Values:
         wage_advance
         blank for other rows
-- centrelink_payment_type: subtype for Centrelink / government benefit income.
-    Values:
-        pension
-        family_benefit
-        youth_allowance
-        jobseeker
-        parenting_payment
-        carer_payment
-        disability_support
-        other_centrelink
-        blank for non-centrelink rows
 - income_type_rule_name: the income classification rule that matched.
 - income_type_pred_reason: readable reason for income classification.
 
@@ -38,18 +27,16 @@ Important restrictions:
 - Do NOT use category as decision logic. It is only used for optional validation.
 - Do NOT use a numeric score. Final result is based on yes/no business rules.
 
-Usage:
-    python wages_detector.py --input sample.csv --output output/income_predictions.csv
+This module is invoked by the unified engine pipeline.
 """
 
-import argparse
-import csv
 import re
-from pathlib import Path
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List
 
 import numpy as np
 import pandas as pd
+
+from classification_core.reasons import format_classification_reason
 
 
 # =============================================================================
@@ -127,24 +114,6 @@ CENTRELINK_PATTERNS = [
     r"\bPARENTING\s*PAYMENT\b",
     r"\bCARER\s*PAYMENT\b",
     r"\bDISABILITY\s*SUPPORT\b",
-]
-
-CENTRELINK_PAYMENT_TYPE_PATTERNS: List[Tuple[str, List[str]]] = [
-    ("pension", [r"\bPENSION\b"]),
-    (
-        "family_benefit",
-        [
-            r"\bFAMILY\s*ALLOWANCE\b",
-            r"\bFAMILY\s*PAYMENT\b",
-            r"\bFAMILY\s*TAX\s*BENEFIT\b",
-            r"\bFTB\b",
-        ],
-    ),
-    ("youth_allowance", [r"\bYOUTH\s*ALLOWANCE\b", r"\bYTH\s*ALL\b"]),
-    ("jobseeker", [r"\bJOB\s*SEEKER\b", r"\bJOBSEEKER\b"]),
-    ("parenting_payment", [r"\bPARENTING\s*PAYMENT\b"]),
-    ("carer_payment", [r"\bCARER\s*PAYMENT\b"]),
-    ("disability_support", [r"\bDISABILITY\s*SUPPORT\b", r"\bDSP\b"]),
 ]
 
 SELF_EMPLOYED_GIG_PATTERNS = [
@@ -249,40 +218,6 @@ HIGH_REPEAT_PAYER_COUNT_MIN = 4
 VERY_HIGH_REPEAT_PAYER_COUNT_MIN = 8
 STABLE_PAYER_REPEAT_COUNT_MIN = 6
 
-WEEKDAY_NAMES = {
-    0: "Monday",
-    1: "Tuesday",
-    2: "Wednesday",
-    3: "Thursday",
-    4: "Friday",
-    5: "Saturday",
-    6: "Sunday",
-}
-
-INCOME_SUMMARY_COLUMNS = [
-    "finv_category",
-    "stream_id",
-    "bank_account_id",
-    "account_type",
-    "application_id",
-    "bank",
-    "credit_limit",
-    "counterparty",
-    "centrelink_payment_type",
-    "transaction_start_date",
-    "transaction_end_date",
-    "status",
-    "transaction_count",
-    "total_income_amount",
-    "average_income_amount",
-    "median_income_amount",
-    "latest_income_amount",
-    "estimated_monthly_income",
-    "frequency",
-    "frequency_day",
-    "predicted_next_income_date",
-]
-
 IMPORTANT_OUTPUT_COLUMNS = [
     # New income classification fields
     "finv_category",
@@ -291,7 +226,6 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "income_type_pred",
     "known_non_income_type_pred",
     "known_non_income_rule_name",
-    "centrelink_payment_type",
     "income_type_rule_name",
     "income_type_pred_reason",
     "is_income_pred",
@@ -373,10 +307,6 @@ HARD_NEGATIVE_REGEX = compile_patterns(HARD_NEGATIVE_PATTERNS)
 SOFT_NEGATIVE_REGEX = compile_patterns(SOFT_NEGATIVE_PATTERNS)
 NEGATIVE_REGEX = compile_patterns(NEGATIVE_PATTERNS)
 GIG_EXCLUSION_REGEX = compile_patterns(GIG_EXCLUSION_PATTERNS)
-CENTRELINK_PAYMENT_TYPE_REGEX: List[Tuple[str, List[re.Pattern]]] = [
-    (payment_type, compile_patterns(patterns))
-    for payment_type, patterns in CENTRELINK_PAYMENT_TYPE_PATTERNS
-]
 
 
 def clean_text(value) -> str:
@@ -391,15 +321,6 @@ def count_matches(text: str, patterns: List[re.Pattern]) -> int:
     if not text:
         return 0
     return sum(1 for pattern in patterns if pattern.search(text))
-
-
-def classify_centrelink_payment_type(text: str) -> str:
-    if not text:
-        return "other_centrelink"
-    for payment_type, patterns in CENTRELINK_PAYMENT_TYPE_REGEX:
-        if count_matches(text, patterns) > 0:
-            return payment_type
-    return "other_centrelink"
 
 
 def make_payer_key(text: str) -> str:
@@ -858,62 +779,42 @@ def choose_rule_name(df: pd.DataFrame) -> pd.Series:
 
 
 def build_wages_reason(row: pd.Series) -> str:
-    reasons = [
-        f"matched rule: {row.get('wages_rule_name', '')}"
-        if row.get("is_wages_pred", 0) == 1
-        else f"not wages: {row.get('wages_rule_name', '')}",
-        "credit transaction" if row.get("is_credit", 0) == 1 else "not credit",
+    category = "wages" if row.get("is_wages_pred", 0) == 1 else "not_wages"
+    evidence = [
+        "credit" if row.get("is_credit", 0) == 1 else "not_credit",
+        (
+            "strong_wage_keyword"
+            if row.get("has_strong_wage_keyword", 0) == 1
+            else ""
+        ),
+        (
+            "medium_income_keyword"
+            if row.get("has_medium_income_keyword", 0) == 1
+            else ""
+        ),
+        (
+            "repeat_payer"
+            if row.get("same_payer_credit_count", 0) >= 2
+            else ""
+        ),
+        (
+            "regular_cycle"
+            if row.get("has_regular_salary_cycle", 0) == 1
+            else ""
+        ),
+        "stable_amount" if row.get("has_stable_amount", 0) == 1 else "",
+        (
+            "negative_keyword"
+            if row.get("has_hard_negative_keyword", 0) == 1
+            or row.get("has_soft_negative_keyword", 0) == 1
+            else ""
+        ),
     ]
-
-    checks = [
-        (row.get("has_strong_wage_keyword", 0) == 1, "salary/payroll/wage keyword"),
-        (row.get("has_medium_income_keyword", 0) == 1, "direct credit/deposit keyword"),
-        (row.get("is_common_wage_amount", 0) == 1, "common wage amount range"),
-        (
-            row.get("is_common_wage_amount", 0) != 1 and row.get("is_possible_wage_amount", 0) == 1,
-            "possible wage amount range",
-        ),
-        (
-            row.get("is_common_wage_amount", 0) != 1 and row.get("is_possible_wage_amount", 0) != 1,
-            "amount outside normal wage range",
-        ),
-        (row.get("same_payer_credit_count", 0) >= 2, "same payer appears repeatedly"),
-        (row.get("has_regular_salary_cycle", 0) == 1, "regular weekly/fortnightly/monthly cycle"),
-        (row.get("has_stable_amount", 0) == 1, "stable repeated amount"),
-        (
-            row.get("rule_transfer_strong_wage_keyword", 0) == 1,
-            "transfer/osko style credit but explicit wage keyword and valid payer",
-        ),
-        (
-            row.get("rule_repeat_employer_like_payment", 0) == 1,
-            "repeated stable employer-like payment text without negative markers",
-        ),
-        (row.get("rule_medium_income_high_repeat", 0) == 1, "repeated direct credits within possible wage amount range"),
-        (row.get("rule_stable_payer_without_keywords", 0) == 1, "stable repeated payer without explicit wage keyword"),
-        (
-            row.get("rule_soft_negative_alias_to_known_wage_payer", 0) == 1,
-            f"payer overlaps with known wage payer: {row.get('matched_known_wage_payer_key', '')}",
-        ),
-        (
-            row.get("rule_small_amount_alias_to_known_wage_payer", 0) == 1,
-            f"small amount but payer overlaps with known wage payer: {row.get('matched_known_wage_payer_key', '')}",
-        ),
-        (
-            row.get("rule_small_amount_medium_income_high_repeat", 0) == 1,
-            "small repeated direct credit from high-frequency payer",
-        ),
-        (
-            row.get("rule_small_amount_same_known_wage_payer", 0) == 1,
-            "small direct credit from payer already strongly linked to wages",
-        ),
-        (row.get("small_amount_wage_history_override", 0) == 1, "same payer previously detected as wages"),
-        (row.get("has_wage_advance_keyword", 0) == 1, "earned wage advance / short-term credit keyword"),
-        (row.get("has_return_like_keyword", 0) == 1, "return / value date / dishonour style credit"),
-        (row.get("has_hard_negative_keyword", 0) == 1, "hard negative keyword, e.g. return/loan/refund/interest"),
-        (row.get("has_soft_negative_keyword", 0) == 1, "soft negative keyword, e.g. transfer"),
-    ]
-    reasons.extend(reason for matched, reason in checks if matched)
-    return "; ".join(reasons)
+    return format_classification_reason(
+        category=category,
+        rule=row.get("wages_rule_name", ""),
+        evidence=evidence,
+    )
 
 
 def apply_wages_rules(df: pd.DataFrame) -> pd.DataFrame:
@@ -938,11 +839,7 @@ def apply_wages_rules(df: pd.DataFrame) -> pd.DataFrame:
 # Income type classification
 # =============================================================================
 
-def add_income_type_rules(
-    df: pd.DataFrame,
-    include_centrelink_payment_type: bool = True,
-    compute_centrelink: Optional[bool] = None,
-) -> pd.DataFrame:
+def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
     """
     Add income classification fields.
 
@@ -959,12 +856,7 @@ def add_income_type_rules(
     - centrelink is intentionally separated from wages.
     - self_employed_gig excludes obvious internal transfers, refunds, loans, tax,
       investment income and other non-income credits.
-    - compute_centrelink is retained as a legacy alias for
-      include_centrelink_payment_type.
     """
-    if compute_centrelink is not None:
-        include_centrelink_payment_type = compute_centrelink
-
     out = df.copy()
     credit = out["is_credit"] == 1
 
@@ -1036,13 +928,6 @@ def add_income_type_rules(
         default="",
     )
 
-    out["centrelink_payment_type"] = ""
-    if include_centrelink_payment_type:
-        is_centrelink = out["income_type_pred"].eq("centrelink")
-        out.loc[is_centrelink, "centrelink_payment_type"] = out.loc[is_centrelink, "text_clean"].apply(
-            classify_centrelink_payment_type
-        )
-
     out["income_type_pred_reason"] = out.apply(build_income_type_reason, axis=1)
     return out
 
@@ -1052,265 +937,44 @@ def build_income_type_reason(row: pd.Series) -> str:
     rule_name = row.get("income_type_rule_name", "")
 
     if income_type == "non_income":
-        reasons = ["not classified as income", f"rule: {rule_name}"]
-        if row.get("is_credit", 0) != 1:
-            reasons.append("not credit")
-        if row.get("known_non_income_type_pred", ""):
-            reasons.append(f"known_non_income_type={row.get('known_non_income_type_pred', '')}")
-        if row.get("has_gig_exclusion_keyword", 0) == 1:
-            reasons.append("contains transfer/refund/loan/tax/investment exclusion keyword")
-        if row.get("has_hard_negative_keyword", 0) == 1:
-            reasons.append("contains hard negative wage keyword")
-        elif row.get("has_soft_negative_keyword", 0) == 1:
-            reasons.append("contains soft negative wage keyword")
-        return "; ".join(reasons)
-
-    reasons = [f"income_type={income_type}", f"matched rule: {rule_name}", "credit transaction"]
+        evidence = [
+            "not_credit" if row.get("is_credit", 0) != 1 else "",
+            (
+                f"known_non_income={row.get('known_non_income_type_pred', '')}"
+                if row.get("known_non_income_type_pred", "")
+                else ""
+            ),
+            (
+                "exclusion_keyword"
+                if row.get("has_gig_exclusion_keyword", 0) == 1
+                or row.get("has_hard_negative_keyword", 0) == 1
+                or row.get("has_soft_negative_keyword", 0) == 1
+                else ""
+            ),
+        ]
+        return format_classification_reason(
+            category=income_type,
+            rule=rule_name,
+            evidence=evidence,
+        )
 
     checks = [
-        (row.get("has_salary_packaging_keyword", 0) == 1, "salary packaging / accesspay / salary sacrifice keyword"),
-        (row.get("has_centrelink_keyword", 0) == 1, "centrelink / government benefit keyword"),
-        (row.get("centrelink_payment_type", "") != "", f"centrelink_payment_type={row.get('centrelink_payment_type', '')}"),
-        (row.get("is_wages_pred", 0) == 1, "wages detector matched"),
-        (row.get("has_strong_wage_keyword", 0) == 1, "salary/payroll/wage keyword"),
-        (row.get("has_medium_income_keyword", 0) == 1, "direct credit/deposit keyword"),
-        (row.get("same_payer_credit_count", 0) >= 2, "same payer appears repeatedly"),
-        (row.get("has_regular_salary_cycle", 0) == 1, "regular weekly/fortnightly/monthly cycle"),
-        (row.get("has_stable_amount", 0) == 1, "stable repeated amount"),
-        (row.get("has_self_employed_gig_keyword", 0) == 1, "gig platform / invoice / contractor / business payment keyword"),
+        (row.get("is_credit", 0) == 1, "credit"),
+        (row.get("has_salary_packaging_keyword", 0) == 1, "salary_packaging_keyword"),
+        (row.get("has_centrelink_keyword", 0) == 1, "centrelink_keyword"),
+        (row.get("is_wages_pred", 0) == 1, "wages_detector"),
+        (row.get("has_strong_wage_keyword", 0) == 1, "strong_wage_keyword"),
+        (row.get("has_medium_income_keyword", 0) == 1, "medium_income_keyword"),
+        (row.get("same_payer_credit_count", 0) >= 2, "repeat_payer"),
+        (row.get("has_regular_salary_cycle", 0) == 1, "regular_cycle"),
+        (row.get("has_stable_amount", 0) == 1, "stable_amount"),
+        (row.get("has_self_employed_gig_keyword", 0) == 1, "gig_keyword"),
     ]
-    reasons.extend(reason for matched, reason in checks if matched)
-    return "; ".join(reasons)
-
-
-# =============================================================================
-# Income stream summarisation
-# =============================================================================
-
-def first_non_null(series: pd.Series):
-    non_null = series.dropna()
-    if non_null.empty:
-        return np.nan
-    return non_null.iloc[0]
-
-
-def clean_counterparty(value) -> str:
-    if pd.isna(value):
-        return ""
-    text = str(value).strip().upper()
-    return text[:80]
-
-
-def derive_counterparty(row: pd.Series) -> str:
-    if int(row.get("is_income_pred", 0)) != 1:
-        return ""
-
-    income_type = str(row.get("income_type_pred", "")).strip()
-    centrelink_payment_type = str(row.get("centrelink_payment_type", "")).strip()
-    payer_key = clean_counterparty(row.get("payer_key_from_text", ""))
-    text_clean = clean_counterparty(row.get("text_clean", ""))
-
-    if income_type == "centrelink":
-        return f"CENTRELINK {centrelink_payment_type.upper()}".strip()
-    if payer_key:
-        return payer_key
-    return text_clean
-
-
-def build_income_stream_group_key(row: pd.Series) -> Optional[str]:
-    if int(row.get("is_income_pred", 0)) != 1:
-        return None
-
-    bank_account_id = str(row.get("bank_account_id", "")).strip()
-    finv_category = str(row.get("finv_category", "")).strip()
-    counterparty = str(row.get("counterparty", "")).strip()
-    centrelink_payment_type = str(row.get("centrelink_payment_type", "")).strip()
-    if not bank_account_id or not finv_category or not counterparty:
-        return None
-    return "||".join([bank_account_id, finv_category, counterparty, centrelink_payment_type])
-
-
-def summarize_frequency(dates: pd.Series) -> tuple[str, Optional[int], str]:
-    valid_dates = pd.to_datetime(dates, errors="coerce").dropna().sort_values()
-    if len(valid_dates) <= 1:
-        weekday_name = WEEKDAY_NAMES.get(valid_dates.iloc[-1].weekday(), "") if len(valid_dates) == 1 else ""
-        return "one_off", None, weekday_name
-
-    gaps = valid_dates.diff().dt.days.dropna()
-    if gaps.empty:
-        weekday_name = WEEKDAY_NAMES.get(valid_dates.iloc[-1].weekday(), "")
-        return "one_off", None, weekday_name
-
-    median_gap = float(gaps.median())
-    rounded_gap = int(round(median_gap))
-
-    if 6 <= median_gap <= 8:
-        frequency = "weekly"
-        typical_gap_days = 7
-    elif 13 <= median_gap <= 16:
-        frequency = "fortnightly"
-        typical_gap_days = 14
-    elif 27 <= median_gap <= 33:
-        frequency = "monthly"
-        typical_gap_days = 30
-    else:
-        frequency = "irregular"
-        typical_gap_days = rounded_gap if rounded_gap > 0 else None
-
-    weekday_mode = valid_dates.dt.weekday.mode()
-    weekday_name = WEEKDAY_NAMES.get(int(weekday_mode.iloc[0]), "") if not weekday_mode.empty else ""
-    return frequency, typical_gap_days, weekday_name
-
-
-def estimate_monthly_income(frequency: str, typical_amount: float) -> float:
-    if pd.isna(typical_amount):
-        return np.nan
-    if frequency == "weekly":
-        return typical_amount * 52.0 / 12.0
-    if frequency == "fortnightly":
-        return typical_amount * 26.0 / 12.0
-    if frequency == "monthly":
-        return typical_amount
-    return np.nan
-
-
-def derive_stream_status(
-    transaction_count: int,
-    frequency: str,
-    typical_gap_days: Optional[int],
-    last_date: pd.Timestamp,
-    global_last_date: pd.Timestamp,
-) -> str:
-    if pd.isna(last_date):
-        return "unknown"
-    if transaction_count <= 1:
-        return "single_transaction"
-    if frequency not in {"weekly", "fortnightly", "monthly"} or not typical_gap_days:
-        return "irregular"
-
-    days_since_last = (global_last_date - last_date).days
-    allowed_gap = int(round(typical_gap_days * 1.75))
-    return "active" if days_since_last <= allowed_gap else "inactive"
-
-
-def assign_income_stream_ids(result_df: pd.DataFrame) -> pd.DataFrame:
-    out = result_df.copy()
-    income_mask = out["is_income_pred"].eq(1)
-    income_df = out[income_mask].copy()
-    if income_df.empty:
-        return out
-
-    stream_order = (
-        income_df.groupby("_income_stream_group_key", dropna=False)
-        .agg(
-            finv_category=("finv_category", first_non_null),
-            bank_account_id=("bank_account_id", first_non_null),
-            counterparty=("counterparty", first_non_null),
-            first_txn_date=("txn_date", "min"),
-        )
-        .sort_values(["finv_category", "bank_account_id", "counterparty", "first_txn_date"], na_position="last")
-        .reset_index()
+    return format_classification_reason(
+        category=income_type,
+        rule=rule_name,
+        evidence=(reason for matched, reason in checks if matched),
     )
-
-    stream_id_map = {}
-    counters: dict[str, int] = {}
-    for _, row in stream_order.iterrows():
-        income_type = str(row["finv_category"])
-        counters[income_type] = counters.get(income_type, 0) + 1
-        stream_id_map[row["_income_stream_group_key"]] = f"{income_type}_{counters[income_type]:03d}"
-
-    out.loc[income_mask, "stream_id"] = out.loc[income_mask, "_income_stream_group_key"].map(stream_id_map).fillna("")
-    return out
-
-
-def build_income_summary(result_df: pd.DataFrame) -> pd.DataFrame:
-    income_df = result_df[result_df["is_income_pred"].eq(1)].copy()
-    if income_df.empty:
-        return pd.DataFrame(columns=INCOME_SUMMARY_COLUMNS)
-
-    income_df["txn_date"] = pd.to_datetime(income_df["txn_date"], errors="coerce")
-    income_df["amount_num"] = pd.to_numeric(income_df["amount_num"], errors="coerce")
-    global_last_date = income_df["txn_date"].max()
-    group_column = "_income_stream_group_key" if "_income_stream_group_key" in income_df.columns else "stream_id"
-
-    summary_rows = []
-    grouped = income_df.groupby(group_column, dropna=False)
-
-    for _, group in grouped:
-        group = group.sort_values("txn_date")
-        frequency, typical_gap_days, frequency_day = summarize_frequency(group["txn_date"])
-        transaction_count = int(len(group))
-        start_date = group["txn_date"].min()
-        end_date = group["txn_date"].max()
-        latest_row = group.iloc[-1]
-        latest_income_amount = latest_row.get("amount_num", np.nan)
-        median_income_amount = group["amount_num"].median()
-        estimated_monthly_income = estimate_monthly_income(frequency, median_income_amount)
-        status = derive_stream_status(
-            transaction_count=transaction_count,
-            frequency=frequency,
-            typical_gap_days=typical_gap_days,
-            last_date=end_date,
-            global_last_date=global_last_date,
-        )
-
-        predicted_next_income_date = pd.NaT
-        if (
-            transaction_count >= 2
-            and frequency in {"weekly", "fortnightly", "monthly"}
-            and typical_gap_days
-            and not pd.isna(end_date)
-        ):
-            predicted_next_income_date = end_date + pd.Timedelta(days=int(typical_gap_days))
-
-        summary_rows.append(
-            {
-                "finv_category": first_non_null(group["finv_category"]),
-                "stream_id": first_non_null(group["stream_id"]),
-                "bank_account_id": first_non_null(group["bank_account_id"]),
-                "account_type": first_non_null(group["account_type"]) if "account_type" in group.columns else np.nan,
-                "application_id": first_non_null(group["application_id"])
-                if "application_id" in group.columns
-                else np.nan,
-                "bank": first_non_null(group["bank"]) if "bank" in group.columns else np.nan,
-                "credit_limit": first_non_null(group["credit_limit"]) if "credit_limit" in group.columns else np.nan,
-                "counterparty": first_non_null(group["counterparty"]),
-                "centrelink_payment_type": first_non_null(group["centrelink_payment_type"]),
-                "transaction_start_date": start_date.date() if not pd.isna(start_date) else np.nan,
-                "transaction_end_date": end_date.date() if not pd.isna(end_date) else np.nan,
-                "status": status,
-                "transaction_count": transaction_count,
-                "total_income_amount": float(group["amount_num"].sum()),
-                "average_income_amount": float(group["amount_num"].mean()),
-                "median_income_amount": float(median_income_amount) if not pd.isna(median_income_amount) else np.nan,
-                "latest_income_amount": float(latest_income_amount) if not pd.isna(latest_income_amount) else np.nan,
-                "estimated_monthly_income": float(estimated_monthly_income)
-                if not pd.isna(estimated_monthly_income)
-                else np.nan,
-                "frequency": frequency,
-                "frequency_day": frequency_day,
-                "predicted_next_income_date": (
-                    predicted_next_income_date.date() if not pd.isna(predicted_next_income_date) else np.nan
-                ),
-            }
-        )
-
-    return pd.DataFrame(summary_rows, columns=INCOME_SUMMARY_COLUMNS).sort_values(
-        ["finv_category", "stream_id"]
-    ).reset_index(drop=True)
-
-
-def add_income_stream_outputs(result_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    attrs = result_df.attrs.copy()
-    out = result_df.copy()
-    out["counterparty"] = out.apply(derive_counterparty, axis=1)
-    out["_income_stream_group_key"] = out.apply(build_income_stream_group_key, axis=1)
-    out["stream_id"] = ""
-    out = assign_income_stream_ids(out)
-    summary_df = build_income_summary(out)
-    out = out.drop(columns=["_income_stream_group_key"])
-    out.attrs.update(attrs)
-    return out, summary_df
 
 
 # =============================================================================
@@ -1328,156 +992,3 @@ def reorder_output_columns(result: pd.DataFrame, original_cols: List[str]) -> pd
         if col not in original_cols and col not in important_cols
     ]
     return result[original_cols + important_cols + remaining_cols]
-
-
-def print_optional_validation(df: pd.DataFrame) -> None:
-    if "category" not in df.columns:
-        return
-
-    label = df["category"].astype(str).str.lower().str.strip().eq("wages").astype(int)
-    pred = df["is_wages_pred"].astype(int)
-
-    tp = int(((pred == 1) & (label == 1)).sum())
-    fp = int(((pred == 1) & (label == 0)).sum())
-    fn = int(((pred == 0) & (label == 1)).sum())
-    tn = int(((pred == 0) & (label == 0)).sum())
-
-    precision = tp / (tp + fp) if (tp + fp) else np.nan
-    recall = tp / (tp + fn) if (tp + fn) else np.nan
-
-    print("\nOptional validation against category == 'Wages'")
-    print("Important: category is only used here for validation, not for prediction.")
-    print(f"TP={tp}, FP={fp}, FN={fn}, TN={tn}")
-    print(f"Precision={precision:.4f}" if not np.isnan(precision) else "Precision=NA")
-    print(f"Recall={recall:.4f}" if not np.isnan(recall) else "Recall=NA")
-
-
-def print_income_type_summary(df: pd.DataFrame) -> None:
-    if "income_type_pred" not in df.columns:
-        return
-
-    print("\nIncome type summary")
-    counts = df["income_type_pred"].value_counts(dropna=False)
-    for income_type, count in counts.items():
-        print(f"{income_type}: {int(count)}")
-
-    if "centrelink_payment_type" in df.columns:
-        centrelink = df[df["income_type_pred"].eq("centrelink")]
-        if len(centrelink) > 0:
-            print("\nCentrelink payment type summary")
-            for payment_type, count in centrelink["centrelink_payment_type"].value_counts(dropna=False).items():
-                print(f"{payment_type}: {int(count)}")
-
-
-# =============================================================================
-# Main pipeline
-# =============================================================================
-
-def read_input_csv(input_path: str | Path) -> pd.DataFrame:
-    try:
-        return pd.read_csv(input_path)
-    except pd.errors.ParserError as exc:
-        print(f"Standard CSV parser failed for {input_path}: {exc}")
-
-    with open(input_path, "r", encoding="utf-8-sig", newline="") as f:
-        header = next(csv.reader(f))
-
-    expected_fields = len(header)
-    adjusted_extra_field_rows = 0
-
-    def repair_bad_line(bad_line: List[str]) -> List[str]:
-        nonlocal adjusted_extra_field_rows
-        adjusted_extra_field_rows += 1
-        return bad_line[: expected_fields - 1] + [",".join(bad_line[expected_fields - 1 :])]
-
-    repaired_df = pd.read_csv(
-        input_path,
-        engine="python",
-        on_bad_lines=repair_bad_line,
-    )
-    print(
-        "Loaded CSV with fallback parser; "
-        f"merged extra columns into text for {adjusted_extra_field_rows} malformed rows."
-    )
-    return repaired_df
-
-
-def detect_income(
-    input_path: str | Path,
-    output_path: Optional[str | Path] = None,
-    include_centrelink_payment_type: bool = False,
-    save_csv: bool = True,
-) -> pd.DataFrame:
-    print(f"Loading input CSV: {input_path}")
-    raw_df = read_input_csv(input_path)
-    print("Preparing input data")
-    df = prepare_input(raw_df)
-    original_cols = list(df.columns)
-
-    print("Building wages features")
-    result = add_wages_features(df)
-    print("Applying wages rules")
-    result = apply_wages_rules(result)
-    print("Applying income type rules")
-    result = add_income_type_rules(
-        result,
-        include_centrelink_payment_type=include_centrelink_payment_type,
-    )
-    print("Building income stream outputs")
-    result, income_summary = add_income_stream_outputs(result)
-    print("Reordering output columns")
-    result = reorder_output_columns(result, original_cols)
-    result.attrs["original_columns"] = original_cols
-    result.attrs["income_summary"] = income_summary
-
-    if save_csv:
-        if output_path is None:
-            raise ValueError("output_path is required when save_csv=True")
-        print(f"Saving result CSV: {output_path}")
-        result.to_csv(output_path, index=False, encoding="utf-8-sig")
-        print(f"Saved result to: {output_path}")
-    print(f"Predicted wages rows: {int(result['is_wages_pred'].sum())}")
-    print(f"Predicted income rows: {int(result['is_income_pred'].sum())}")
-    print_income_type_summary(result)
-    print_optional_validation(result)
-    return result
-
-
-def detect_wages(
-    input_path: str | Path,
-    output_path: Optional[str | Path] = None,
-    include_centrelink_detail: bool = False,
-    save_csv: bool = True,
-) -> pd.DataFrame:
-    """Backward-compatible wrapper for the previous public API name."""
-    return detect_income(
-        input_path=input_path,
-        output_path=output_path,
-        include_centrelink_payment_type=include_centrelink_detail,
-        save_csv=save_csv,
-    )
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Rule-based income detector with wages classification.")
-    parser.add_argument("--input", required=True, help="Input CSV path")
-    parser.add_argument("--output", default="output/income_predictions.csv", help="Output CSV path")
-    parser.add_argument(
-        "--include-centrelink-detail",
-        action="store_true",
-        help="Populate Centrelink payment subtypes in the row-level CSV output.",
-    )
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
-    detect_income(
-        args.input,
-        args.output,
-        include_centrelink_payment_type=args.include_centrelink_detail,
-    )
-
-
-if __name__ == "__main__":
-    main()

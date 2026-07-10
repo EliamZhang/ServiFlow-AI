@@ -1,4 +1,4 @@
-"""Build loan-level summary output sheets."""
+"""Build liability summary output rows."""
 
 from __future__ import annotations
 
@@ -11,14 +11,8 @@ import re
 
 import pandas as pd
 
-from export import (
-    LOAN_SUMMARY_SHEET_NAME,
-    TRANSACTION_SHEET_NAME,
-    write_workbook,
-)
-
 SUMMARY_COLUMNS = [
-    "final_product_type",
+    "finv_category",
     "stream_id",
     "bank_account_id",
     "bank",
@@ -61,7 +55,7 @@ PERSONAL_LOAN_PRODUCT_TYPES = [
 SUMMARY_GROUP_COLUMNS = [
     "application_id",
     "counterparty",
-    "final_product_type",
+    "finv_category",
     "stream_id",
 ]
 PLACEHOLDER_METRIC_VALUE = "-"
@@ -136,7 +130,7 @@ def stream_base(stream_id: object) -> str:
     return re.sub(r"_\d+$", "", text)
 
 
-def derive_final_product_type(product_type: object, stream_id: object) -> object:
+def derive_finv_category(product_type: object, stream_id: object) -> object:
     product = normalize_text(product_type)
     base = stream_base(stream_id)
     if not product or not base:
@@ -147,11 +141,11 @@ def derive_final_product_type(product_type: object, stream_id: object) -> object
     return f"{product}_{base}"
 
 
-def ensure_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
+def ensure_finv_category(df: pd.DataFrame) -> pd.DataFrame:
     output = df.copy()
-    if "final_product_type" not in output.columns:
-        output["final_product_type"] = [
-            derive_final_product_type(product_type, stream_id)
+    if "finv_category" not in output.columns:
+        output["finv_category"] = [
+            derive_finv_category(product_type, stream_id)
             for product_type, stream_id in zip(
                 output.get("product_type", pd.Series(index=output.index)),
                 output.get("stream_id", pd.Series(index=output.index)),
@@ -255,7 +249,7 @@ def calculate_frequency_day(
 
 
 def prepare_summary_input(df: pd.DataFrame) -> pd.DataFrame:
-    output = ensure_final_product_type(df)
+    output = ensure_finv_category(df)
     output["_row_order"] = range(len(output))
     output["_transaction_date"] = pd.to_datetime(
         output["transaction_date"],
@@ -283,11 +277,11 @@ def empty_summary() -> pd.DataFrame:
 
 def filter_product_streams(
     df: pd.DataFrame,
-    final_product_type: str,
+    finv_category: str,
 ) -> pd.DataFrame:
     return df[
-        df["final_product_type"].astype("string").str.casefold().eq(
-            final_product_type.casefold()
+        df["finv_category"].astype("string").str.casefold().eq(
+            finv_category.casefold()
         )
         & df["stream_id"].notna()
         & df["stream_id"].astype("string").str.strip().ne("")
@@ -520,11 +514,9 @@ def build_bnpl_summary(
     limits: pd.DataFrame | None = None,
     as_of_date: date | None = None,
 ) -> pd.DataFrame:
-    """Return one BNPL summary row per final_product_type + stream_id."""
+    """Return one BNPL summary row per finv_category + stream_id."""
 
-    output = prepare_summary_input(df)
-
-    bnpl = filter_product_streams(output, "bnpl")
+    bnpl = filter_product_streams(df, "bnpl")
 
     if bnpl.empty:
         return empty_summary()
@@ -539,7 +531,7 @@ def build_bnpl_summary(
 
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, final_product_type, stream_id_value), group in bnpl.groupby(
+    for (_, _, finv_category, stream_id_value), group in bnpl.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
@@ -567,7 +559,7 @@ def build_bnpl_summary(
 
         summary_rows.append(
             {
-                "final_product_type": final_product_type,
+                "finv_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -630,10 +622,9 @@ def build_bnpl_summary(
 
 
 def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one wage-advance summary row per final_product_type + stream_id."""
+    """Return one wage-advance summary row per finv_category + stream_id."""
 
-    output = prepare_summary_input(df)
-    wage_advance = filter_product_streams(output, "wage_advance")
+    wage_advance = filter_product_streams(df, "wage_advance")
 
     if wage_advance.empty:
         return empty_summary()
@@ -641,7 +632,7 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
     due_date_columns = get_due_date_columns(wage_advance)
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, final_product_type, stream_id_value), group in wage_advance.groupby(
+    for (_, _, finv_category, stream_id_value), group in wage_advance.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
@@ -675,7 +666,7 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "final_product_type": final_product_type,
+                "finv_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -707,13 +698,12 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per personal-loan non-sacc/sacc stream."""
 
-    output = prepare_summary_input(df)
-    personal_loans = output[
-        output["final_product_type"].astype("string").isin(
+    personal_loans = df[
+        df["finv_category"].astype("string").isin(
             PERSONAL_LOAN_PRODUCT_TYPES
         )
-        & output["stream_id"].notna()
-        & output["stream_id"].astype("string").str.strip().ne("")
+        & df["stream_id"].notna()
+        & df["stream_id"].astype("string").str.strip().ne("")
     ].copy()
 
     if personal_loans.empty:
@@ -722,7 +712,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     due_date_columns = get_due_date_columns(personal_loans)
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, final_product_type, stream_id_value), group in personal_loans.groupby(
+    for (_, _, finv_category, stream_id_value), group in personal_loans.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
@@ -784,7 +774,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "final_product_type": final_product_type,
+                "finv_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -816,22 +806,21 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per bank stream."""
 
-    output = prepare_summary_input(df)
-    bank = filter_product_streams(output, "bank")
+    bank = filter_product_streams(df, "bank")
 
     if bank.empty:
         return empty_summary()
 
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, final_product_type, stream_id_value), group in bank.groupby(
+    for (_, _, finv_category, stream_id_value), group in bank.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
     ):
         summary_rows.append(
             {
-                "final_product_type": final_product_type,
+                "finv_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -858,22 +847,21 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per contract-loan stream."""
 
-    output = prepare_summary_input(df)
-    contract_loan = filter_product_streams(output, "contract_loan")
+    contract_loan = filter_product_streams(df, "contract_loan")
 
     if contract_loan.empty:
         return empty_summary()
 
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, final_product_type, stream_id_value), group in contract_loan.groupby(
+    for (_, _, finv_category, stream_id_value), group in contract_loan.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
     ):
         summary_rows.append(
             {
-                "final_product_type": final_product_type,
+                "finv_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -900,22 +888,21 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per LOC stream."""
 
-    output = prepare_summary_input(df)
-    loc = filter_product_streams(output, "loc")
+    loc = filter_product_streams(df, "loc")
 
     if loc.empty:
         return empty_summary()
 
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, final_product_type, stream_id_value), group in loc.groupby(
+    for (_, _, finv_category, stream_id_value), group in loc.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
     ):
         summary_rows.append(
             {
-                "final_product_type": final_product_type,
+                "finv_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -942,22 +929,21 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per unknown personal-loan stream."""
 
-    output = prepare_summary_input(df)
-    unknown = filter_product_streams(output, "personal_loan_unknown")
+    unknown = filter_product_streams(df, "personal_loan_unknown")
 
     if unknown.empty:
         return empty_summary()
 
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, final_product_type, stream_id_value), group in unknown.groupby(
+    for (_, _, finv_category, stream_id_value), group in unknown.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
     ):
         summary_rows.append(
             {
-                "final_product_type": final_product_type,
+                "finv_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -981,34 +967,23 @@ def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     return summary[SUMMARY_COLUMNS]
 
 
-def build_loan_summary(
+def build_summary(
     df: pd.DataFrame,
     limits_file: str | Path = "resources/bnpl_maximum_limits.csv",
 ) -> pd.DataFrame:
+    prepared = prepare_summary_input(df)
     limits = load_bnpl_maximum_limits(limits_file)
     summaries = [
-        build_bnpl_summary(df, limits=limits),
-        build_wage_advance_summary(df),
-        build_personal_loan_summary(df),
-        build_bank_summary(df),
-        build_contract_loan_summary(df),
-        build_loc_summary(df),
-        build_unknown_summary(df),
+        build_bnpl_summary(prepared, limits=limits),
+        build_wage_advance_summary(prepared),
+        build_personal_loan_summary(prepared),
+        build_bank_summary(prepared),
+        build_contract_loan_summary(prepared),
+        build_loc_summary(prepared),
+        build_unknown_summary(prepared),
     ]
     summaries = [summary for summary in summaries if not summary.empty]
     if not summaries:
         return empty_summary()
 
     return pd.concat(summaries, ignore_index=True)[SUMMARY_COLUMNS]
-
-
-def write_loan_summary_workbook_from_dataframe(
-    transactions: pd.DataFrame,
-    workbook_file: str | Path,
-    limits_file: str | Path = "resources/bnpl_maximum_limits.csv",
-) -> None:
-    """Create or update the standard output workbook from transactions data."""
-
-    transactions = ensure_final_product_type(transactions)
-    summary = build_loan_summary(transactions, limits_file=limits_file)
-    write_workbook(transactions, summary, workbook_file)

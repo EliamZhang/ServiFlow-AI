@@ -89,7 +89,7 @@ def candidate_rule_keys(row):
     return keys
 
 
-def load_cc_rules(rules_file):
+def load_credit_card_rules(rules_file):
     indexed_rules = {
         "regex": {},
         "prefix": {},
@@ -184,7 +184,7 @@ def iter_matching_rules(row, rules):
                     yield rule
 
 
-def match_cc_rule(row, rules):
+def match_credit_card_rule(row, rules):
     for rule in iter_matching_rules(row, rules):
         return rule["counterparty"], rule["product_type"]
     return None
@@ -210,12 +210,12 @@ def apply_counterparty_rules(df, rules_file):
     return output
 
 
-def apply_cc_rules(df, rules_file):
-    rules = load_cc_rules(rules_file)
+def apply_credit_card_rules(df, rules_file):
+    rules = load_credit_card_rules(rules_file)
     output = df.copy()
 
     for row_id, row in output.iterrows():
-        match = match_cc_rule(row, rules)
+        match = match_credit_card_rule(row, rules)
         if match is None:
             continue
 
