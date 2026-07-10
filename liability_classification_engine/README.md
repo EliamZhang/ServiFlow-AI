@@ -4,6 +4,25 @@ The liability engine is a first-class package. It implements the shared engine
 protocol directly in `engine.py` and can also run independently through its
 package CLI.
 
+## Package layout
+
+```text
+liability_classification_engine/
+├─ cli.py
+├─ engine.py
+├─ pipeline.py
+├─ domain/
+│  ├─ counterparty.py
+│  ├─ dishonours.py
+│  ├─ special_rules.py
+│  ├─ streams.py
+│  └─ summary.py
+├─ presentation/
+│  ├─ dashboard.py
+│  └─ reporting.py
+└─ resources/
+```
+
 ## Domain flow
 
 ```mermaid

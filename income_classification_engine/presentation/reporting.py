@@ -8,7 +8,7 @@ import pandas as pd
 from serviflow.excel import format_sheets
 from serviflow.models import PipelineResult
 
-from .summary import build_summary
+from ..domain.summary import build_summary
 
 
 TRANSACTIONS_SHEET_NAME = "transactions"

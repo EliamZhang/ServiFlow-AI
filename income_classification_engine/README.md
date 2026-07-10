@@ -2,6 +2,20 @@
 
 Rule-based income and wages classification for bank transactions.
 
+## Package layout
+
+```text
+income_classification_engine/
+├─ cli.py
+├─ engine.py
+├─ pipeline.py
+├─ domain/
+│  ├─ classification.py
+│  └─ summary.py
+└─ presentation/
+   └─ reporting.py
+```
+
 ## Main CLI
 
 Build the production Excel workbook:

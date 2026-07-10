@@ -6,10 +6,10 @@ import pandas as pd
 
 from serviflow.models import PipelineResult
 
-from .dashboard import build_html, dataframe_to_records
+from .domain.summary import build_summary
 from .pipeline import DEFAULT_RESOURCES_DIR, ENGINE_DIR, run_pipeline
-from .reporting import write_report
-from .summary import build_summary
+from .presentation.dashboard import build_html, dataframe_to_records
+from .presentation.reporting import write_report
 
 
 DEFAULT_INPUT = ENGINE_DIR / "sample.csv"

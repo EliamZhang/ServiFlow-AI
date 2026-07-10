@@ -12,8 +12,8 @@ from serviflow.models import (
 )
 from serviflow.transaction_keys import filter_to_transaction_keys
 
+from .domain.summary import build_summary
 from .pipeline import DEFAULT_RESOURCES_DIR, run_pipeline
-from .summary import build_summary
 
 
 class LiabilityEngine:

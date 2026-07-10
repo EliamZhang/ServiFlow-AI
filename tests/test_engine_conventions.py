@@ -1,15 +1,45 @@
 from __future__ import annotations
 
 import unittest
+from pathlib import Path
 
 import income_classification_engine as income
 import liability_classification_engine as liability
-from income_classification_engine import reporting as income_reporting
-from liability_classification_engine import reporting as liability_reporting
+from income_classification_engine.presentation import reporting as income_reporting
+from liability_classification_engine.presentation import reporting as liability_reporting
 from serviflow.models import PipelineResult
 
 
 class EngineConventionTests(unittest.TestCase):
+    def test_top_level_python_files_are_identical(self) -> None:
+        project_root = Path(__file__).resolve().parent.parent
+        expected = {
+            "__init__.py",
+            "__main__.py",
+            "cli.py",
+            "engine.py",
+            "pipeline.py",
+        }
+        for package_name in (
+            "income_classification_engine",
+            "liability_classification_engine",
+        ):
+            package_root = project_root / package_name
+            actual = {path.name for path in package_root.glob("*.py")}
+            self.assertEqual(actual, expected)
+
+    def test_both_packages_have_domain_and_presentation_layers(self) -> None:
+        project_root = Path(__file__).resolve().parent.parent
+        for package_name in (
+            "income_classification_engine",
+            "liability_classification_engine",
+        ):
+            package_root = project_root / package_name
+            self.assertTrue((package_root / "domain" / "__init__.py").is_file())
+            self.assertTrue(
+                (package_root / "presentation" / "__init__.py").is_file()
+            )
+
     def test_both_packages_expose_the_same_public_api(self) -> None:
         common_api = {
             "PipelineResult",

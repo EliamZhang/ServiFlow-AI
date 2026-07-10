@@ -7,8 +7,8 @@ import pandas as pd
 from serviflow.excel import format_sheets
 from serviflow.models import PipelineResult
 
-from .pipeline import DEFAULT_RESOURCES_DIR
-from .summary import build_summary, ensure_finv_category
+from ..domain.summary import build_summary, ensure_finv_category
+from ..pipeline import DEFAULT_RESOURCES_DIR
 
 
 TRANSACTIONS_SHEET_NAME = "transactions"
@@ -68,4 +68,3 @@ def _prepare_transactions(transactions: pd.DataFrame) -> pd.DataFrame:
             if column in transactions.columns
         ],
     )
-

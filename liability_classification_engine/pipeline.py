@@ -6,10 +6,10 @@ import pandas as pd
 
 from serviflow.models import PipelineResult
 
-from .counterparty import apply_credit_card_rules, apply_counterparty_rules
-from .dishonours import apply_dishonour_rules
-from .special_rules import apply_special_rules
-from .streams import add_finv_category, identify_streams
+from .domain.counterparty import apply_credit_card_rules, apply_counterparty_rules
+from .domain.dishonours import apply_dishonour_rules
+from .domain.special_rules import apply_special_rules
+from .domain.streams import add_finv_category, identify_streams
 
 
 ENGINE_DIR = Path(__file__).resolve().parent

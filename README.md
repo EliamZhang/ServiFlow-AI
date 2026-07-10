@@ -38,8 +38,9 @@ Both engines use the same public structure and API:
 | `cli.py` / `__main__.py` | Independent command-line entry point |
 | `engine.py` | Implements the shared engine contract |
 | `pipeline.py` | Returns `PipelineResult` from `run_pipeline()` |
-| `summary.py` | Builds the engine summary with `build_summary()` |
-| `reporting.py` | Writes the standalone report with `write_report()` |
+| `domain/` | Classification rules, streams, and summary calculations |
+| `presentation/` | Excel reporting and optional dashboard |
+| `resources/` | External rule/configuration files when required |
 
 ## Independent engines
 

@@ -3,12 +3,12 @@ from pathlib import Path
 
 import pandas as pd
 
-from .reporting import write_report
-from .pipeline import (
-    run_pipeline,
+from .domain.classification import (
     print_income_type_summary,
     print_optional_validation,
 )
+from .pipeline import run_pipeline
+from .presentation.reporting import write_report
 
 
 ENGINE_DIR = Path(__file__).resolve().parent
