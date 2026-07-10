@@ -38,8 +38,7 @@ flowchart LR
     G --> H["PipelineResult"]
 ```
 
-`PipelineResult` contains the classified transactions and
-explicit stream diagnostics.
+`PipelineResult` contains the classified transactions and original columns.
 
 The public API follows the shared convention: `run_pipeline()`,
 `build_summary()`, and `write_report()`.

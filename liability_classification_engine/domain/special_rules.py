@@ -17,7 +17,7 @@ def parse_amount(row):
         return None
 
 
-def apply_rules(row):
+def resolve_product_type_override(row):
     counterparty = normalize_text(row.get("counterparty", ""))
     text = normalize_text(row.get("text")).lower()
     amount = parse_amount(row)
@@ -31,24 +31,25 @@ def apply_rules(row):
         and amount is not None
         and 50 <= amount <= 200
     ):
-        row["product_type"] = "wage_advance"
+        return "wage_advance"
 
     if counterparty == "Credit Corp":
         if "wizit" in text or "wizitca" in text:
-            row["product_type"] = "bnpl"
-        elif "pup" in text:
-            row["product_type"] = "loc"
-        elif "ccc" in text:
-            row["product_type"] = "personal_loan"
+            return "bnpl"
+        if "pup" in text:
+            return "loc"
+        if "ccc" in text:
+            return "personal_loan"
+
+    return None
 
 
 def apply_special_rules(df):
     output = df.copy()
     for row_id, row in output.iterrows():
-        updated_row = row.to_dict()
-        apply_rules(updated_row)
-        for column, value in updated_row.items():
-            output.at[row_id, column] = value
+        product_type_override = resolve_product_type_override(row)
+        if product_type_override is not None:
+            output.at[row_id, "product_type"] = product_type_override
 
     required_columns = {
         "counterparty",

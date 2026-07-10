@@ -33,13 +33,9 @@ def run_pipeline(
         resources_path / "dishonours_rules.csv",
     )
     output = apply_special_rules(output)
-    output, stream_counts = identify_streams(output, reset_stream_ids=True)
+    output = identify_streams(output, reset_stream_ids=True)
     output = add_finv_category(output)
     return PipelineResult(
         transactions=output,
-        diagnostics={
-            "predicted_liability_rows": int(output["finv_category"].notna().sum()),
-            "stream_counts": stream_counts,
-        },
         original_columns=tuple(transactions.columns),
     )

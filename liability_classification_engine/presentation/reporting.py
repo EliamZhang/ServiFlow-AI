@@ -7,7 +7,7 @@ import pandas as pd
 from classification_core.excel import format_sheets
 from classification_core.models import PipelineResult
 
-from ..domain.summary import build_summary, ensure_finv_category
+from ..domain.summary import build_summary
 from ..pipeline import DEFAULT_RESOURCES_DIR
 
 
@@ -28,7 +28,7 @@ def write_report(
     workbook_path = Path(output_path)
     workbook_path.parent.mkdir(parents=True, exist_ok=True)
 
-    transactions = ensure_finv_category(result.transactions)
+    transactions = result.transactions
     summary = build_summary(
         transactions,
         limits_file=DEFAULT_RESOURCES_DIR / "bnpl_maximum_limits.csv",

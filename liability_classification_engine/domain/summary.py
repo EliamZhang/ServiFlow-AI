@@ -516,9 +516,7 @@ def build_bnpl_summary(
 ) -> pd.DataFrame:
     """Return one BNPL summary row per finv_category + stream_id."""
 
-    output = prepare_summary_input(df)
-
-    bnpl = filter_product_streams(output, "bnpl")
+    bnpl = filter_product_streams(df, "bnpl")
 
     if bnpl.empty:
         return empty_summary()
@@ -626,8 +624,7 @@ def build_bnpl_summary(
 def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one wage-advance summary row per finv_category + stream_id."""
 
-    output = prepare_summary_input(df)
-    wage_advance = filter_product_streams(output, "wage_advance")
+    wage_advance = filter_product_streams(df, "wage_advance")
 
     if wage_advance.empty:
         return empty_summary()
@@ -701,13 +698,12 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per personal-loan non-sacc/sacc stream."""
 
-    output = prepare_summary_input(df)
-    personal_loans = output[
-        output["finv_category"].astype("string").isin(
+    personal_loans = df[
+        df["finv_category"].astype("string").isin(
             PERSONAL_LOAN_PRODUCT_TYPES
         )
-        & output["stream_id"].notna()
-        & output["stream_id"].astype("string").str.strip().ne("")
+        & df["stream_id"].notna()
+        & df["stream_id"].astype("string").str.strip().ne("")
     ].copy()
 
     if personal_loans.empty:
@@ -810,8 +806,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per bank stream."""
 
-    output = prepare_summary_input(df)
-    bank = filter_product_streams(output, "bank")
+    bank = filter_product_streams(df, "bank")
 
     if bank.empty:
         return empty_summary()
@@ -852,8 +847,7 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per contract-loan stream."""
 
-    output = prepare_summary_input(df)
-    contract_loan = filter_product_streams(output, "contract_loan")
+    contract_loan = filter_product_streams(df, "contract_loan")
 
     if contract_loan.empty:
         return empty_summary()
@@ -894,8 +888,7 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per LOC stream."""
 
-    output = prepare_summary_input(df)
-    loc = filter_product_streams(output, "loc")
+    loc = filter_product_streams(df, "loc")
 
     if loc.empty:
         return empty_summary()
@@ -936,8 +929,7 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per unknown personal-loan stream."""
 
-    output = prepare_summary_input(df)
-    unknown = filter_product_streams(output, "personal_loan_unknown")
+    unknown = filter_product_streams(df, "personal_loan_unknown")
 
     if unknown.empty:
         return empty_summary()
@@ -979,15 +971,16 @@ def build_summary(
     df: pd.DataFrame,
     limits_file: str | Path = "resources/bnpl_maximum_limits.csv",
 ) -> pd.DataFrame:
+    prepared = prepare_summary_input(df)
     limits = load_bnpl_maximum_limits(limits_file)
     summaries = [
-        build_bnpl_summary(df, limits=limits),
-        build_wage_advance_summary(df),
-        build_personal_loan_summary(df),
-        build_bank_summary(df),
-        build_contract_loan_summary(df),
-        build_loc_summary(df),
-        build_unknown_summary(df),
+        build_bnpl_summary(prepared, limits=limits),
+        build_wage_advance_summary(prepared),
+        build_personal_loan_summary(prepared),
+        build_bank_summary(prepared),
+        build_contract_loan_summary(prepared),
+        build_loc_summary(prepared),
+        build_unknown_summary(prepared),
     ]
     summaries = [summary for summary in summaries if not summary.empty]
     if not summaries:
