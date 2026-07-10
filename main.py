@@ -14,7 +14,7 @@ from classification_core.config import (
 )
 from classification_core.models import ClassificationRunResult
 from classification_core.orchestrator import ClassificationOrchestrator
-from classification_core.reporting import write_report, write_transactions_csv
+from classification_core.reporting import write_report
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -37,10 +37,6 @@ def parse_args() -> argparse.Namespace:
         help="Unified Excel report path.",
     )
     parser.add_argument(
-        "--transactions-csv",
-        help="Optional unified row-level CSV output path.",
-    )
-    parser.add_argument(
         "--config",
         default=str(DEFAULT_PIPELINE_CONFIG),
         help="Pipeline JSON configuration path.",
@@ -58,14 +54,12 @@ def run_classification(
     output_file: str | Path = DEFAULT_OUTPUT,
     config_file: str | Path = DEFAULT_PIPELINE_CONFIG,
     category_catalog_file: str | Path = DEFAULT_CATEGORY_CATALOG,
-    transactions_csv: str | Path | None = None,
 ) -> ClassificationRunResult:
     result, _ = _execute_classification(
         input_file=input_file,
         output_file=output_file,
         config_file=config_file,
         category_catalog_file=category_catalog_file,
-        transactions_csv=transactions_csv,
     )
     return result
 
@@ -75,7 +69,6 @@ def _execute_classification(
     output_file: str | Path,
     config_file: str | Path,
     category_catalog_file: str | Path,
-    transactions_csv: str | Path | None,
 ) -> tuple[ClassificationRunResult, dict[str, float]]:
     total_started = perf_counter()
 
@@ -93,8 +86,6 @@ def _execute_classification(
 
     stage_started = perf_counter()
     write_report(result, output_file)
-    if transactions_csv is not None:
-        write_transactions_csv(result, transactions_csv)
     output_seconds = perf_counter() - stage_started
 
     return result, {
@@ -112,7 +103,6 @@ def main() -> None:
         output_file=args.output,
         config_file=args.config,
         category_catalog_file=args.category_catalog,
-        transactions_csv=args.transactions_csv,
     )
     print(
         f"Timing | read {timings['read']:.2f}s | "

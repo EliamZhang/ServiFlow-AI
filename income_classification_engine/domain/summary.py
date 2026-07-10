@@ -25,7 +25,6 @@ SUMMARY_COLUMNS = [
     "bank",
     "credit_limit",
     "counterparty",
-    "centrelink_payment_type",
     "transaction_start_date",
     "transaction_end_date",
     "status",
@@ -59,12 +58,11 @@ def derive_counterparty(row: pd.Series) -> str:
         return ""
 
     income_type = str(row.get("income_type_pred", "")).strip()
-    centrelink_type = str(row.get("centrelink_payment_type", "")).strip()
     payer_key = clean_counterparty(row.get("payer_key_from_text", ""))
     text_clean = clean_counterparty(row.get("text_clean", ""))
 
     if income_type == "centrelink":
-        return f"CENTRELINK {centrelink_type.upper()}".strip()
+        return "CENTRELINK"
     return payer_key or text_clean
 
 
@@ -76,7 +74,6 @@ def build_stream_group_key(row: pd.Series) -> Optional[str]:
         str(row.get("bank_account_id", "")).strip(),
         str(row.get("finv_category", "")).strip(),
         str(row.get("counterparty", "")).strip(),
-        str(row.get("centrelink_payment_type", "")).strip(),
     ]
     if not all(values[:3]):
         return None
@@ -251,9 +248,6 @@ def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
                 if "credit_limit" in group.columns
                 else np.nan,
                 "counterparty": first_non_null(group["counterparty"]),
-                "centrelink_payment_type": first_non_null(
-                    group["centrelink_payment_type"]
-                ),
                 "transaction_start_date": start_date.date()
                 if not pd.isna(start_date)
                 else np.nan,

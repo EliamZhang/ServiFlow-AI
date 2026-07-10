@@ -10,6 +10,7 @@ from classification_core.models import (
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
+from classification_core.reasons import format_classification_reason
 from classification_core.transaction_keys import filter_to_transaction_keys
 
 from .domain.summary import build_summary
@@ -39,8 +40,16 @@ class LiabilityEngine:
         predictions["rule_id"] = matched["product_type"].map(
             lambda value: f"liability_product:{value}"
         ).values
-        predictions["reason"] = matched["product_type"].map(
-            lambda value: f"Matched liability product type {value}"
+        predictions["reason"] = matched.apply(
+            lambda row: format_classification_reason(
+                category=row["finv_category"],
+                rule=f"liability_product:{row['product_type']}",
+                evidence=[
+                    f"product_type={row['product_type']}",
+                    f"counterparty={row['counterparty']}",
+                ],
+            ),
+            axis=1,
         ).values
         return EngineResult(
             predictions=predictions,
