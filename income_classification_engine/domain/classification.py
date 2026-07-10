@@ -36,6 +36,8 @@ from typing import Iterable, List
 import numpy as np
 import pandas as pd
 
+from classification_core.reasons import format_classification_reason
+
 
 # =============================================================================
 # Config
@@ -777,62 +779,42 @@ def choose_rule_name(df: pd.DataFrame) -> pd.Series:
 
 
 def build_wages_reason(row: pd.Series) -> str:
-    reasons = [
-        f"matched rule: {row.get('wages_rule_name', '')}"
-        if row.get("is_wages_pred", 0) == 1
-        else f"not wages: {row.get('wages_rule_name', '')}",
-        "credit transaction" if row.get("is_credit", 0) == 1 else "not credit",
+    category = "wages" if row.get("is_wages_pred", 0) == 1 else "not_wages"
+    evidence = [
+        "credit" if row.get("is_credit", 0) == 1 else "not_credit",
+        (
+            "strong_wage_keyword"
+            if row.get("has_strong_wage_keyword", 0) == 1
+            else ""
+        ),
+        (
+            "medium_income_keyword"
+            if row.get("has_medium_income_keyword", 0) == 1
+            else ""
+        ),
+        (
+            "repeat_payer"
+            if row.get("same_payer_credit_count", 0) >= 2
+            else ""
+        ),
+        (
+            "regular_cycle"
+            if row.get("has_regular_salary_cycle", 0) == 1
+            else ""
+        ),
+        "stable_amount" if row.get("has_stable_amount", 0) == 1 else "",
+        (
+            "negative_keyword"
+            if row.get("has_hard_negative_keyword", 0) == 1
+            or row.get("has_soft_negative_keyword", 0) == 1
+            else ""
+        ),
     ]
-
-    checks = [
-        (row.get("has_strong_wage_keyword", 0) == 1, "salary/payroll/wage keyword"),
-        (row.get("has_medium_income_keyword", 0) == 1, "direct credit/deposit keyword"),
-        (row.get("is_common_wage_amount", 0) == 1, "common wage amount range"),
-        (
-            row.get("is_common_wage_amount", 0) != 1 and row.get("is_possible_wage_amount", 0) == 1,
-            "possible wage amount range",
-        ),
-        (
-            row.get("is_common_wage_amount", 0) != 1 and row.get("is_possible_wage_amount", 0) != 1,
-            "amount outside normal wage range",
-        ),
-        (row.get("same_payer_credit_count", 0) >= 2, "same payer appears repeatedly"),
-        (row.get("has_regular_salary_cycle", 0) == 1, "regular weekly/fortnightly/monthly cycle"),
-        (row.get("has_stable_amount", 0) == 1, "stable repeated amount"),
-        (
-            row.get("rule_transfer_strong_wage_keyword", 0) == 1,
-            "transfer/osko style credit but explicit wage keyword and valid payer",
-        ),
-        (
-            row.get("rule_repeat_employer_like_payment", 0) == 1,
-            "repeated stable employer-like payment text without negative markers",
-        ),
-        (row.get("rule_medium_income_high_repeat", 0) == 1, "repeated direct credits within possible wage amount range"),
-        (row.get("rule_stable_payer_without_keywords", 0) == 1, "stable repeated payer without explicit wage keyword"),
-        (
-            row.get("rule_soft_negative_alias_to_known_wage_payer", 0) == 1,
-            f"payer overlaps with known wage payer: {row.get('matched_known_wage_payer_key', '')}",
-        ),
-        (
-            row.get("rule_small_amount_alias_to_known_wage_payer", 0) == 1,
-            f"small amount but payer overlaps with known wage payer: {row.get('matched_known_wage_payer_key', '')}",
-        ),
-        (
-            row.get("rule_small_amount_medium_income_high_repeat", 0) == 1,
-            "small repeated direct credit from high-frequency payer",
-        ),
-        (
-            row.get("rule_small_amount_same_known_wage_payer", 0) == 1,
-            "small direct credit from payer already strongly linked to wages",
-        ),
-        (row.get("small_amount_wage_history_override", 0) == 1, "same payer previously detected as wages"),
-        (row.get("has_wage_advance_keyword", 0) == 1, "earned wage advance / short-term credit keyword"),
-        (row.get("has_return_like_keyword", 0) == 1, "return / value date / dishonour style credit"),
-        (row.get("has_hard_negative_keyword", 0) == 1, "hard negative keyword, e.g. return/loan/refund/interest"),
-        (row.get("has_soft_negative_keyword", 0) == 1, "soft negative keyword, e.g. transfer"),
-    ]
-    reasons.extend(reason for matched, reason in checks if matched)
-    return "; ".join(reasons)
+    return format_classification_reason(
+        category=category,
+        rule=row.get("wages_rule_name", ""),
+        evidence=evidence,
+    )
 
 
 def apply_wages_rules(df: pd.DataFrame) -> pd.DataFrame:
@@ -955,34 +937,44 @@ def build_income_type_reason(row: pd.Series) -> str:
     rule_name = row.get("income_type_rule_name", "")
 
     if income_type == "non_income":
-        reasons = ["not classified as income", f"rule: {rule_name}"]
-        if row.get("is_credit", 0) != 1:
-            reasons.append("not credit")
-        if row.get("known_non_income_type_pred", ""):
-            reasons.append(f"known_non_income_type={row.get('known_non_income_type_pred', '')}")
-        if row.get("has_gig_exclusion_keyword", 0) == 1:
-            reasons.append("contains transfer/refund/loan/tax/investment exclusion keyword")
-        if row.get("has_hard_negative_keyword", 0) == 1:
-            reasons.append("contains hard negative wage keyword")
-        elif row.get("has_soft_negative_keyword", 0) == 1:
-            reasons.append("contains soft negative wage keyword")
-        return "; ".join(reasons)
-
-    reasons = [f"income_type={income_type}", f"matched rule: {rule_name}", "credit transaction"]
+        evidence = [
+            "not_credit" if row.get("is_credit", 0) != 1 else "",
+            (
+                f"known_non_income={row.get('known_non_income_type_pred', '')}"
+                if row.get("known_non_income_type_pred", "")
+                else ""
+            ),
+            (
+                "exclusion_keyword"
+                if row.get("has_gig_exclusion_keyword", 0) == 1
+                or row.get("has_hard_negative_keyword", 0) == 1
+                or row.get("has_soft_negative_keyword", 0) == 1
+                else ""
+            ),
+        ]
+        return format_classification_reason(
+            category=income_type,
+            rule=rule_name,
+            evidence=evidence,
+        )
 
     checks = [
-        (row.get("has_salary_packaging_keyword", 0) == 1, "salary packaging / accesspay / salary sacrifice keyword"),
-        (row.get("has_centrelink_keyword", 0) == 1, "centrelink / government benefit keyword"),
-        (row.get("is_wages_pred", 0) == 1, "wages detector matched"),
-        (row.get("has_strong_wage_keyword", 0) == 1, "salary/payroll/wage keyword"),
-        (row.get("has_medium_income_keyword", 0) == 1, "direct credit/deposit keyword"),
-        (row.get("same_payer_credit_count", 0) >= 2, "same payer appears repeatedly"),
-        (row.get("has_regular_salary_cycle", 0) == 1, "regular weekly/fortnightly/monthly cycle"),
-        (row.get("has_stable_amount", 0) == 1, "stable repeated amount"),
-        (row.get("has_self_employed_gig_keyword", 0) == 1, "gig platform / invoice / contractor / business payment keyword"),
+        (row.get("is_credit", 0) == 1, "credit"),
+        (row.get("has_salary_packaging_keyword", 0) == 1, "salary_packaging_keyword"),
+        (row.get("has_centrelink_keyword", 0) == 1, "centrelink_keyword"),
+        (row.get("is_wages_pred", 0) == 1, "wages_detector"),
+        (row.get("has_strong_wage_keyword", 0) == 1, "strong_wage_keyword"),
+        (row.get("has_medium_income_keyword", 0) == 1, "medium_income_keyword"),
+        (row.get("same_payer_credit_count", 0) >= 2, "repeat_payer"),
+        (row.get("has_regular_salary_cycle", 0) == 1, "regular_cycle"),
+        (row.get("has_stable_amount", 0) == 1, "stable_amount"),
+        (row.get("has_self_employed_gig_keyword", 0) == 1, "gig_keyword"),
     ]
-    reasons.extend(reason for matched, reason in checks if matched)
-    return "; ".join(reasons)
+    return format_classification_reason(
+        category=income_type,
+        rule=rule_name,
+        evidence=(reason for matched, reason in checks if matched),
+    )
 
 
 # =============================================================================
