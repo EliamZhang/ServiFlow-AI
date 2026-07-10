@@ -14,11 +14,6 @@ TRANSACTION_INTERNAL_COLUMNS = [
     "is_dishonours",
     "stream_id",
 ]
-EXPORT_COLUMN_RENAMES = {
-    "final_product_type": "finv_category",
-}
-
-
 def write_workbook(
     transactions: pd.DataFrame,
     summary: pd.DataFrame,
@@ -60,11 +55,11 @@ def _prepare_transactions_export(transactions: pd.DataFrame) -> pd.DataFrame:
             for column in TRANSACTION_INTERNAL_COLUMNS
             if column in transactions.columns
         ],
-    ).rename(columns=EXPORT_COLUMN_RENAMES)
+    )
 
 
 def _prepare_summary_export(summary: pd.DataFrame) -> pd.DataFrame:
-    return summary.rename(columns=EXPORT_COLUMN_RENAMES)
+    return summary.copy()
 
 
 def _format_generated_sheets(workbook, sheet_names: list[str]) -> None:

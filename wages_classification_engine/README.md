@@ -7,19 +7,27 @@ Rule-based income and wages classification for bank transactions.
 Build the production Excel workbook:
 
 ```powershell
-python model_main.py --input sample.csv --output output/income_report.xlsx
+python -m wages_classification_engine.model_main `
+  --input wages_classification_engine/sample.csv `
+  --output wages_classification_engine/output/income_report.xlsx
 ```
 
 Build the full audit workbook:
 
 ```powershell
-python model_main.py --input sample.csv --output output/income_report_full.xlsx --report-mode full
+python -m wages_classification_engine.model_main `
+  --input wages_classification_engine/sample.csv `
+  --output wages_classification_engine/output/income_report_full.xlsx `
+  --full
 ```
 
 Optionally save row-level prediction CSV output:
 
 ```powershell
-python model_main.py --input sample.csv --output output/income_report.xlsx --predictions-csv output/income_predictions.csv
+python -m wages_classification_engine.model_main `
+  --input wages_classification_engine/sample.csv `
+  --output wages_classification_engine/output/income_report.xlsx `
+  --predictions-csv wages_classification_engine/output/income_predictions.csv
 ```
 
 ## Report Modes
@@ -29,8 +37,8 @@ python model_main.py --input sample.csv --output output/income_report.xlsx --pre
 
 ## Python API
 
-- `detect_income(...)` is the primary detection entry point.
-- `detect_wages(...)` is retained as a backward-compatible wrapper.
+- `classify_income_transactions(...)` returns an explicit
+  `IncomeClassificationResult` containing transactions, summary, and original
+  columns.
 - `build_income_workbook(...)` is the primary Excel report builder.
-- `build_income_report(...)` is retained as a backward-compatible wrapper.
-
+- `IncomeEngine` implements the project-wide engine protocol directly.

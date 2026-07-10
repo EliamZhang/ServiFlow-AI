@@ -38,18 +38,22 @@ Important restrictions:
 - Do NOT use category as decision logic. It is only used for optional validation.
 - Do NOT use a numeric score. Final result is based on yes/no business rules.
 
-Usage:
-    python wages_detector.py --input sample.csv --output output/income_predictions.csv
+The package CLI is exposed by ``wages_classification_engine.model_main``.
 """
 
-import argparse
-import csv
 import re
-from pathlib import Path
+from dataclasses import dataclass
 from typing import Iterable, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
+
+
+@dataclass(frozen=True)
+class IncomeClassificationResult:
+    transactions: pd.DataFrame
+    summary: pd.DataFrame
+    original_columns: tuple[str, ...]
 
 
 # =============================================================================
@@ -941,7 +945,6 @@ def apply_wages_rules(df: pd.DataFrame) -> pd.DataFrame:
 def add_income_type_rules(
     df: pd.DataFrame,
     include_centrelink_payment_type: bool = True,
-    compute_centrelink: Optional[bool] = None,
 ) -> pd.DataFrame:
     """
     Add income classification fields.
@@ -959,12 +962,7 @@ def add_income_type_rules(
     - centrelink is intentionally separated from wages.
     - self_employed_gig excludes obvious internal transfers, refunds, loans, tax,
       investment income and other non-income credits.
-    - compute_centrelink is retained as a legacy alias for
-      include_centrelink_payment_type.
     """
-    if compute_centrelink is not None:
-        include_centrelink_payment_type = compute_centrelink
-
     out = df.copy()
     credit = out["is_credit"] == 1
 
@@ -1301,7 +1299,6 @@ def build_income_summary(result_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def add_income_stream_outputs(result_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    attrs = result_df.attrs.copy()
     out = result_df.copy()
     out["counterparty"] = out.apply(derive_counterparty, axis=1)
     out["_income_stream_group_key"] = out.apply(build_income_stream_group_key, axis=1)
@@ -1309,7 +1306,6 @@ def add_income_stream_outputs(result_df: pd.DataFrame) -> tuple[pd.DataFrame, pd
     out = assign_income_stream_ids(out)
     summary_df = build_income_summary(out)
     out = out.drop(columns=["_income_stream_group_key"])
-    out.attrs.update(attrs)
     return out, summary_df
 
 
@@ -1369,115 +1365,24 @@ def print_income_type_summary(df: pd.DataFrame) -> None:
                 print(f"{payment_type}: {int(count)}")
 
 
-# =============================================================================
-# Main pipeline
-# =============================================================================
-
-def read_input_csv(input_path: str | Path) -> pd.DataFrame:
-    try:
-        return pd.read_csv(input_path)
-    except pd.errors.ParserError as exc:
-        print(f"Standard CSV parser failed for {input_path}: {exc}")
-
-    with open(input_path, "r", encoding="utf-8-sig", newline="") as f:
-        header = next(csv.reader(f))
-
-    expected_fields = len(header)
-    adjusted_extra_field_rows = 0
-
-    def repair_bad_line(bad_line: List[str]) -> List[str]:
-        nonlocal adjusted_extra_field_rows
-        adjusted_extra_field_rows += 1
-        return bad_line[: expected_fields - 1] + [",".join(bad_line[expected_fields - 1 :])]
-
-    repaired_df = pd.read_csv(
-        input_path,
-        engine="python",
-        on_bad_lines=repair_bad_line,
-    )
-    print(
-        "Loaded CSV with fallback parser; "
-        f"merged extra columns into text for {adjusted_extra_field_rows} malformed rows."
-    )
-    return repaired_df
-
-
-def detect_income(
-    input_path: str | Path,
-    output_path: Optional[str | Path] = None,
+def classify_income_transactions(
+    raw_df: pd.DataFrame,
     include_centrelink_payment_type: bool = False,
-    save_csv: bool = True,
-) -> pd.DataFrame:
-    print(f"Loading input CSV: {input_path}")
-    raw_df = read_input_csv(input_path)
-    print("Preparing input data")
+) -> IncomeClassificationResult:
+    """Classify an in-memory transaction dataframe and build its summary."""
     df = prepare_input(raw_df)
     original_cols = list(df.columns)
 
-    print("Building wages features")
     result = add_wages_features(df)
-    print("Applying wages rules")
     result = apply_wages_rules(result)
-    print("Applying income type rules")
     result = add_income_type_rules(
         result,
         include_centrelink_payment_type=include_centrelink_payment_type,
     )
-    print("Building income stream outputs")
     result, income_summary = add_income_stream_outputs(result)
-    print("Reordering output columns")
     result = reorder_output_columns(result, original_cols)
-    result.attrs["original_columns"] = original_cols
-    result.attrs["income_summary"] = income_summary
-
-    if save_csv:
-        if output_path is None:
-            raise ValueError("output_path is required when save_csv=True")
-        print(f"Saving result CSV: {output_path}")
-        result.to_csv(output_path, index=False, encoding="utf-8-sig")
-        print(f"Saved result to: {output_path}")
-    print(f"Predicted wages rows: {int(result['is_wages_pred'].sum())}")
-    print(f"Predicted income rows: {int(result['is_income_pred'].sum())}")
-    print_income_type_summary(result)
-    print_optional_validation(result)
-    return result
-
-
-def detect_wages(
-    input_path: str | Path,
-    output_path: Optional[str | Path] = None,
-    include_centrelink_detail: bool = False,
-    save_csv: bool = True,
-) -> pd.DataFrame:
-    """Backward-compatible wrapper for the previous public API name."""
-    return detect_income(
-        input_path=input_path,
-        output_path=output_path,
-        include_centrelink_payment_type=include_centrelink_detail,
-        save_csv=save_csv,
+    return IncomeClassificationResult(
+        transactions=result,
+        summary=income_summary,
+        original_columns=tuple(original_cols),
     )
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Rule-based income detector with wages classification.")
-    parser.add_argument("--input", required=True, help="Input CSV path")
-    parser.add_argument("--output", default="output/income_predictions.csv", help="Output CSV path")
-    parser.add_argument(
-        "--include-centrelink-detail",
-        action="store_true",
-        help="Populate Centrelink payment subtypes in the row-level CSV output.",
-    )
-    return parser.parse_args()
-
-
-def main() -> None:
-    args = parse_args()
-    detect_income(
-        args.input,
-        args.output,
-        include_centrelink_payment_type=args.include_centrelink_detail,
-    )
-
-
-if __name__ == "__main__":
-    main()

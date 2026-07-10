@@ -1,0 +1,65 @@
+# ServiFlow AI
+
+ServiFlow classifies bank transactions into two production fields:
+`counterparty` and `finv_category`. Engines execute in configured priority
+order, so a transaction claimed by a higher-priority engine cannot be
+classified again by a later engine.
+
+## Unified pipeline
+
+The default order is income, then liability. Configure it in
+`configs/pipeline.json`; category ownership is defined in
+`configs/category_catalog.json`.
+
+```powershell
+python model_main.py `
+  --input wages_classification_engine/sample.csv `
+  --output output/serviflow_report.xlsx
+```
+
+Optionally write row-level CSV output:
+
+```powershell
+python model_main.py `
+  --input wages_classification_engine/sample.csv `
+  --output output/serviflow_report.xlsx `
+  --transactions-csv output/serviflow_transactions.csv
+```
+
+The workbook contains `transactions`, one summary sheet per engine, and
+`run_summary`.
+
+## Independent engines
+
+Each engine is a first-class package and can run independently.
+
+Income:
+
+```powershell
+python -m wages_classification_engine.model_main `
+  --input wages_classification_engine/sample.csv `
+  --output wages_classification_engine/output/income_report.xlsx
+```
+
+Liability:
+
+```powershell
+python -m liability_classification_engine.model_main
+```
+
+## Adding an engine
+
+1. Implement the common engine interface in the engine package's `engine.py`.
+2. Register its factory in `serviflow/registry.py`.
+3. Add its categories to `configs/category_catalog.json`.
+4. Add its priority to `configs/pipeline.json`.
+5. Add contract and integration tests.
+
+Engines return proposals. Only `ClassificationOrchestrator` commits the final
+core fields, which enforces cross-engine priority and category ownership.
+
+## Tests
+
+```powershell
+python -m unittest discover -s tests -v
+```

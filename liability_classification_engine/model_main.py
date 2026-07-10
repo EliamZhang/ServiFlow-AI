@@ -4,47 +4,36 @@ from pathlib import Path
 
 import pandas as pd
 
-from apply_special_rules import apply_special_rules
-from detect_dishonours import apply_dishonour_rules
-from loan_dashboard import build_html, dataframe_to_records
-from loan_summary import build_loan_summary, write_loan_summary_workbook_from_dataframe
-from match_counterparty import apply_cc_rules, apply_counterparty_rules
-from match_stream import add_final_product_type, identify_streams
+from .loan_dashboard import build_html, dataframe_to_records
+from .loan_summary import build_loan_summary, write_loan_summary_workbook_from_dataframe
+from .pipeline import (
+    DEFAULT_RESOURCES_DIR,
+    ENGINE_DIR,
+    classify_liability_transactions,
+)
 
 
-FINAL_WORKBOOK = Path("output/sample_with_counterparty.xlsx")
-FINAL_DASHBOARD = Path("output/loan_dashboard.html")
+DEFAULT_INPUT = ENGINE_DIR / "sample.csv"
+DEFAULT_WORKBOOK = ENGINE_DIR / "output" / "sample_with_counterparty.xlsx"
+DEFAULT_DASHBOARD = ENGINE_DIR / "output" / "loan_dashboard.html"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run liability classification output generation."
     )
+    parser.add_argument("--input", default=str(DEFAULT_INPUT))
+    parser.add_argument("--output", default=str(DEFAULT_WORKBOOK))
     parser.add_argument(
         "--with-dashboard",
         action="store_true",
         help="Also generate the HTML dashboard after writing Excel.",
     )
+    parser.add_argument(
+        "--dashboard-output",
+        default=str(DEFAULT_DASHBOARD),
+    )
     return parser.parse_args()
-
-
-def build_transactions() -> pd.DataFrame:
-    transactions = pd.read_csv("sample.csv", encoding="utf-8-sig")
-    transactions = apply_counterparty_rules(
-        transactions,
-        "resources/counterparty_keyword_rules.csv",
-    )
-    transactions = apply_cc_rules(
-        transactions,
-        "resources/cc_rules.csv",
-    )
-    transactions = apply_dishonour_rules(
-        transactions,
-        "resources/dishonours_rules.csv",
-    )
-    transactions = apply_special_rules(transactions)
-    transactions = identify_streams(transactions, reset_stream_ids=True)
-    return add_final_product_type(transactions)
 
 
 def build_dashboard_data(
@@ -75,16 +64,25 @@ def write_dashboard_html(
     dashboard_file.write_text(html, encoding="utf-8")
 
 
-def main(with_dashboard: bool = False) -> None:
-    transactions = build_transactions()
+def main() -> None:
+    args = parse_args()
+    input_file = Path(args.input)
+    output_file = Path(args.output)
+    transactions = pd.read_csv(input_file, encoding="utf-8-sig")
+    result = classify_liability_transactions(transactions)
+    transactions = result.transactions
     write_loan_summary_workbook_from_dataframe(
         transactions,
-        FINAL_WORKBOOK,
+        output_file,
+        limits_file=DEFAULT_RESOURCES_DIR / "bnpl_maximum_limits.csv",
     )
-    if with_dashboard:
-        write_dashboard_html(transactions, FINAL_WORKBOOK, FINAL_DASHBOARD)
+    if args.with_dashboard:
+        write_dashboard_html(
+            transactions,
+            output_file,
+            Path(args.dashboard_output),
+        )
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    main(with_dashboard=args.with_dashboard)
+    main()

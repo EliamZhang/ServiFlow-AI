@@ -592,12 +592,11 @@ def assign_personal_loan_rule(
             output.loc[funding.row_indices, "stream_id"] = stream_id
             stream_count += 1
 
-    dishonour_count = assign_dishonour_credits(
+    assign_dishonour_credits(
         output,
         eligible_mask,
         group_columns,
     )
-    output.attrs["dishonour_credit_assigned_count"] = dishonour_count
 
     output.drop(
         columns=["_row_id", "_transaction_date", "_is_dishonour_credit"],
@@ -1873,20 +1872,6 @@ def merge_sacc_streams_into_loc(
         inplace=True,
     )
 
-    output.attrs["special_loc_groups_identified"] = loc_group_count
-    output.attrs["loc_rows_updated"] = updated_row_count
-    output.attrs["sacc_streams_merged"] = merged_sacc_stream_count
-    output.attrs["revolving_loc_groups_identified"] = revolving_loc_group_count
-    output.attrs["revolving_loc_rows_updated"] = revolving_loc_rows_updated
-    output.attrs["single_funding_loc_groups_identified"] = (
-        single_funding_loc_group_count
-    )
-    output.attrs["single_funding_loc_rows_updated"] = (
-        single_funding_loc_rows_updated
-    )
-    output.attrs["orphan_sacc_rows_merged_to_loc"] = orphan_sacc_rows_merged
-    output.attrs["orphan_sacc_streams_merged_to_loc"] = orphan_sacc_streams_merged
-    output.attrs["loc_rows_consolidated"] = loc_rows_consolidated
     return (
         loc_group_count
         + revolving_loc_group_count
@@ -1916,7 +1901,6 @@ def identify_loc_streams(
         group_columns,
     )
 
-    output.attrs["direct_loc_streams_identified"] = direct_loc_count
     return direct_loc_count + special_loc_count
 
 
@@ -2031,7 +2015,6 @@ def merge_periodic_remaining_unknown_streams(
         output.loc[update_index, "stream_id"] = target_stream_id
         updated_count += len(update_index)
 
-    output.attrs["periodic_unknown_stream_rows_merged"] = updated_count
     return updated_count
 
 
@@ -2181,7 +2164,6 @@ def refine_unknown_personal_loan_streams(
         inplace=True,
         errors="ignore",
     )
-    output.attrs["unknown_personal_loan_streams_refined"] = updated_count
     return updated_count
 
 
@@ -2272,7 +2254,6 @@ def apply_special_counterparty_stream_overrides(
             output.loc[update_index, "stream_id"] = target_stream_id
             updated_count += len(update_index)
 
-    output.attrs["special_counterparty_stream_rows_updated"] = updated_count
     return updated_count
 
 
@@ -2342,7 +2323,7 @@ def identify_streams(
     df: pd.DataFrame,
     group_columns: list[str] | None = None,
     reset_stream_ids: bool = True,
-) -> pd.DataFrame:
+) -> tuple[pd.DataFrame, dict[str, int]]:
     """Run all product rules in priority order."""
 
     group_columns = group_columns or DEFAULT_GROUP_COLUMNS
@@ -2374,12 +2355,7 @@ def identify_streams(
     stream_counts["special_counterparty_stream_overrides"] = (
         apply_special_counterparty_stream_overrides(output, group_columns)
     )
-    output.attrs["stream_counts"] = stream_counts
-    output.attrs["personal_loan_streams_identified"] = stream_counts.get(
-        PERSONAL_LOAN,
-        0,
-    )
-    return renumber_stream_ids_by_application(output)
+    return renumber_stream_ids_by_application(output), stream_counts
 
 
 # ---------------------------------------------------------------------------
@@ -2404,7 +2380,7 @@ def validate_columns(df: pd.DataFrame, group_columns: list[str]) -> None:
         )
 
 
-def add_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
+def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
     output = df.copy()
     product_type = output["product_type"].astype("string").str.strip()
     stream_base = (
@@ -2420,8 +2396,8 @@ def add_final_product_type(df: pd.DataFrame) -> pd.DataFrame:
         & stream_base.notna()
         & stream_base.ne("")
     )
-    output["final_product_type"] = pd.NA
-    output.loc[valid_mask, "final_product_type"] = [
+    output["finv_category"] = pd.NA
+    output.loc[valid_mask, "finv_category"] = [
         (
             base
             if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan"}

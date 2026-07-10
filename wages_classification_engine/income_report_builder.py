@@ -5,6 +5,8 @@ from pathlib import Path
 
 import pandas as pd
 
+from .wages_detector import IncomeClassificationResult
+
 
 PUBLISHED_TRANSACTION_SHEET_NAME = "transactions"
 INCOME_DETAIL_SHEET_NAME = "transactions_detail"
@@ -58,34 +60,20 @@ AUDIT_DETAIL_COLUMNS = [
     "wages_pred_reason",
 ]
 
-# Backward-compatible constant names for any external imports.
-DETAIL_SHEET_NAME = INCOME_DETAIL_SHEET_NAME
-FULL_DETAIL_COLUMNS = AUDIT_DETAIL_COLUMNS
-
-
 def _require_columns(df: pd.DataFrame, columns: list[str], context: str) -> None:
     missing = [col for col in columns if col not in df.columns]
     if missing:
         raise ValueError(f"{context} missing required column(s): {', '.join(missing)}")
 
 
-def _get_original_columns(result_df: pd.DataFrame) -> list[str]:
-    original_columns = result_df.attrs.get("original_columns")
-    if not isinstance(original_columns, list) or not original_columns:
-        raise ValueError("result_df must include attrs['original_columns']; use detect_wages() output.")
-    return [col for col in original_columns if col in result_df.columns]
-
-
-def _get_income_summary(result_df: pd.DataFrame) -> pd.DataFrame:
-    summary_df = result_df.attrs.get("income_summary")
-    if not isinstance(summary_df, pd.DataFrame):
-        raise ValueError("result_df must include attrs['income_summary']; use detect_wages() output.")
-    return summary_df.copy()
-
-
-def _select_transaction_columns(result_df: pd.DataFrame) -> pd.DataFrame:
+def _select_transaction_columns(
+    result_df: pd.DataFrame,
+    original_columns: tuple[str, ...],
+) -> pd.DataFrame:
     _require_columns(result_df, PUBLISHED_TRANSACTION_EXTRA_COLUMNS, "transactions sheet")
-    selected_columns = _get_original_columns(result_df)
+    selected_columns = [
+        column for column in original_columns if column in result_df.columns
+    ]
     for column in PUBLISHED_TRANSACTION_EXTRA_COLUMNS:
         if column not in selected_columns:
             selected_columns.append(column)
@@ -131,18 +119,23 @@ def _write_income_detail_sheets(writer: pd.ExcelWriter, income_detail_df: pd.Dat
 
 
 def build_income_workbook(
-    result_df: pd.DataFrame, output_path: str | Path, include_full_detail: bool = False
+    result: IncomeClassificationResult,
+    output_path: str | Path,
+    include_full_detail: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     summary_df = _format_summary_columns(
-        _get_income_summary(result_df),
+        result.summary,
         include_centrelink_detail=include_full_detail,
     )
 
     if not include_full_detail:
-        transactions_df = _select_transaction_columns(result_df)
+        transactions_df = _select_transaction_columns(
+            result.transactions,
+            result.original_columns,
+        )
 
         with pd.ExcelWriter(output_path) as writer:
             transactions_df.to_excel(writer, sheet_name=PUBLISHED_TRANSACTION_SHEET_NAME, index=False)
@@ -154,7 +147,9 @@ def build_income_workbook(
         )
         return transactions_df, summary_df
 
-    income_detail_df = _filter_report_detail_rows(_select_audit_detail_columns(result_df))
+    income_detail_df = _filter_report_detail_rows(
+        _select_audit_detail_columns(result.transactions)
+    )
 
     with pd.ExcelWriter(output_path) as writer:
         summary_df.to_excel(writer, sheet_name=SUMMARY_SHEET_NAME, index=False)
@@ -166,14 +161,3 @@ def build_income_workbook(
     )
 
     return income_detail_df, summary_df
-
-
-def build_income_report(
-    result_df: pd.DataFrame, output_path: str | Path, summary_only: bool = True
-) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Backward-compatible wrapper for the previous report API."""
-    return build_income_workbook(
-        result_df=result_df,
-        output_path=output_path,
-        include_full_detail=not summary_only,
-    )

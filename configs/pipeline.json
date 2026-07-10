@@ -1,0 +1,18 @@
+{
+  "pipeline": [
+    {
+      "engine": "income",
+      "priority": 100,
+      "enabled": true
+    },
+    {
+      "engine": "liability",
+      "priority": 200,
+      "enabled": true
+    }
+  ],
+  "execution": {
+    "on_engine_error": "fail_batch",
+    "unclassified_category": "unclassified"
+  }
+}

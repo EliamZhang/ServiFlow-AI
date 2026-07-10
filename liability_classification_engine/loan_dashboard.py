@@ -1637,7 +1637,7 @@ HTML_TEMPLATE = r'''<!doctype html>
           <div class="kpi-grid" id="kpiContainer"></div>
           <div class="distribution-grid">
             <div class="dist-card">
-              <div class="dist-title">final_product_type Distribution</div>
+              <div class="dist-title">finv_category Distribution</div>
               <div class="chips" id="productDistribution"></div>
             </div>
             <div class="dist-card">
@@ -1658,7 +1658,7 @@ HTML_TEMPLATE = r'''<!doctype html>
         <section class="panel" id="streamFlatSection">
           <div class="section-title">
             <h2><span class="icon-dot">≡</span>Loan Stream Summary <span class="count-badge" id="streamGroupCount">0</span></h2>
-            <span class="hint">Grouped by final_product_type and stream_id. Each stream shows its summary followed by its own transaction details.</span>
+            <span class="hint">Grouped by finv_category and stream_id. Each stream shows its summary followed by its own transaction details.</span>
           </div>
           <div class="stream-groups" id="groupedLoanStreams"></div>
         </section>
@@ -1683,7 +1683,7 @@ HTML_TEMPLATE = r'''<!doctype html>
               <select id="allTxStreamFilter"></select>
             </div>
             <div>
-              <label for="allTxProductFilter">final_product_type</label>
+              <label for="allTxProductFilter">finv_category</label>
               <select id="allTxProductFilter"></select>
             </div>
             <div>
@@ -1720,7 +1720,7 @@ HTML_TEMPLATE = r'''<!doctype html>
 
     const overviewColumns = [
       { key: 'counterparty', label: 'counterparty', type: 'streamJump' },
-      { key: 'final_product_type', label: 'final_product_type', type: 'product' },
+      { key: 'finv_category', label: 'finv_category', type: 'product' },
       { key: 'stream_id', label: 'stream_id', type: 'tag' },
       { key: 'bank_account_id', label: 'bank_account_id', type: 'tag' },
       { key: 'account_type', label: 'account_type' },
@@ -1744,7 +1744,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       { key: 'account_type', label: 'account_type' },
       { key: 'bank', label: 'bank' },
       { key: 'credit_limit', label: 'credit_limit', type: 'amount' },
-      { key: 'final_product_type', label: 'final_product_type', type: 'product' },
+      { key: 'finv_category', label: 'finv_category', type: 'product' },
       { key: 'counterparty', label: 'counterparty' },
       { key: 'transaction_start_date', label: 'transaction_start_date', type: 'date' },
       { key: 'transaction_end_date', label: 'transaction_end_date', type: 'date' },
@@ -1764,7 +1764,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       { key: 'counterparty', label: 'counterparty' },
       { key: 'dr_cr', label: 'dr_cr', type: 'drcr' },
       { key: 'category', label: 'category' },
-      { key: 'final_product_type', label: 'final_product_type', type: 'product' },
+      { key: 'finv_category', label: 'finv_category', type: 'product' },
       { key: 'stream_id', label: 'stream_id', type: 'tag' },
       { key: 'bank_account_id', label: 'bank_account_id', type: 'tag' },
       { key: 'account_type', label: 'account_type' },
@@ -1844,7 +1844,7 @@ HTML_TEMPLATE = r'''<!doctype html>
         row.counterparty,
         row.category,
         row.product_type,
-        row.final_product_type,
+        row.finv_category,
         row.stream_id
       ].map(value => norm(value).toLowerCase()).join(' | ');
     }
@@ -1960,7 +1960,7 @@ HTML_TEMPLATE = r'''<!doctype html>
         const streamId = norm(row.stream_id);
         if (!streamId) return escapeHtml(text);
         const targetId = safeAnchorId('stream', streamId);
-        const cls = tagClass(row.final_product_type, 'product');
+        const cls = tagClass(row.finv_category, 'product');
         return `<a class="table-jump-link tag ${cls}" href="#${targetId}">${escapeHtml(text)}</a>`;
       }
       if (col.type === 'text') {
@@ -2048,7 +2048,7 @@ HTML_TEMPLATE = r'''<!doctype html>
         </div>
       `).join('');
 
-      renderDistribution('productDistribution', baseRows, 'final_product_type', 'product');
+      renderDistribution('productDistribution', baseRows, 'finv_category', 'product');
       renderDistribution('statusDistribution', loans, 'status', 'status');
 
       document.getElementById('miniSummary').innerHTML = [
@@ -2086,7 +2086,7 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function loanProductRank(row) {
-      return isPersonalLoanUnknown(row.final_product_type) ? 1 : 0;
+      return isPersonalLoanUnknown(row.finv_category) ? 1 : 0;
     }
 
     function sortRows(rows, columns, sortState, tableKind) {
@@ -2209,7 +2209,7 @@ HTML_TEMPLATE = r'''<!doctype html>
         if (!streamMap.has(sid)) {
           streamMap.set(sid, {
             stream_id: sid,
-            final_product_type: '',
+            finv_category: '',
             loans: [],
             txs: []
           });
@@ -2220,8 +2220,8 @@ HTML_TEMPLATE = r'''<!doctype html>
       loans.forEach(row => {
         const group = ensureStream(row.stream_id);
         group.loans.push(row);
-        if (!group.final_product_type && norm(row.final_product_type)) {
-          group.final_product_type = norm(row.final_product_type);
+        if (!group.finv_category && norm(row.finv_category)) {
+          group.finv_category = norm(row.finv_category);
         }
       });
 
@@ -2231,8 +2231,8 @@ HTML_TEMPLATE = r'''<!doctype html>
       });
 
       streamMap.forEach(group => {
-        if (!group.final_product_type) {
-          group.final_product_type = mostCommonValue(group.txs, 'final_product_type') || 'Unknown product type';
+        if (!group.finv_category) {
+          group.finv_category = mostCommonValue(group.txs, 'finv_category') || 'Unknown product type';
         }
       });
 
@@ -2243,7 +2243,7 @@ HTML_TEMPLATE = r'''<!doctype html>
 
       const productMap = new Map();
       visibleGroups.forEach(group => {
-        const product = group.final_product_type || 'Unknown product type';
+        const product = group.finv_category || 'Unknown product type';
         if (!productMap.has(product)) productMap.set(product, []);
         productMap.get(product).push(group);
       });
@@ -2519,7 +2519,7 @@ HTML_TEMPLATE = r'''<!doctype html>
                 <span class="stream-counterparty-title">${escapeHtml(counterparty)}</span>
                 <span class="stream-status-badge ${statusVisualClass(primaryStatus)}">${escapeHtml(status)}</span>
                 ${riskBadge}
-                <span class="tag ${tagClass(group.final_product_type, 'product')}">${escapeHtml(group.final_product_type)}</span>
+                <span class="tag ${tagClass(group.finv_category, 'product')}">${escapeHtml(group.finv_category)}</span>
               </div>
               <div class="stream-id-line">
                 <span>stream_id: <strong>${escapeHtml(group.stream_id)}</strong></span>
@@ -2652,7 +2652,7 @@ HTML_TEMPLATE = r'''<!doctype html>
     function getAllTxFilters() {
       return {
         stream_id: document.getElementById('allTxStreamFilter').value,
-        final_product_type: document.getElementById('allTxProductFilter').value,
+        finv_category: document.getElementById('allTxProductFilter').value,
         dr_cr: document.getElementById('allTxDrCrFilter').value,
         category: document.getElementById('allTxCategoryFilter').value,
         counterparty: document.getElementById('allTxCounterpartyFilter').value,
@@ -2668,7 +2668,7 @@ HTML_TEMPLATE = r'''<!doctype html>
 
     function rowMatchesAllTxFilters(row, filters, excludeKey = null) {
       if (excludeKey !== 'stream_id' && filters.stream_id && norm(row.stream_id) !== filters.stream_id) return false;
-      if (excludeKey !== 'final_product_type' && filters.final_product_type && norm(row.final_product_type) !== filters.final_product_type) return false;
+      if (excludeKey !== 'finv_category' && filters.finv_category && norm(row.finv_category) !== filters.finv_category) return false;
       if (excludeKey !== 'dr_cr' && filters.dr_cr && norm(row.dr_cr) !== filters.dr_cr) return false;
       if (excludeKey !== 'category' && filters.category && norm(row.category) !== filters.category) return false;
       if (excludeKey !== 'counterparty' && filters.counterparty && norm(row.counterparty) !== filters.counterparty) return false;
@@ -2685,7 +2685,7 @@ HTML_TEMPLATE = r'''<!doctype html>
     function rowMatchesQuickFilter(row) {
       const filter = activeQuickFilter;
       const drCr = norm(row.dr_cr).toLowerCase();
-      const product = norm(row.final_product_type || row.product_type).toLowerCase();
+      const product = norm(row.finv_category || row.product_type).toLowerCase();
       if (filter === 'all') return true;
       if (filter === 'dishonours') return truthyFlag(row.is_dishonours);
       if (filter === 'debits') return drCr.startsWith('d');
@@ -2706,7 +2706,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       const filters = getAllTxFilters();
       const config = [
         { id: 'allTxStreamFilter', key: 'stream_id', label: 'All stream_id' },
-        { id: 'allTxProductFilter', key: 'final_product_type', label: 'All final_product_type' },
+        { id: 'allTxProductFilter', key: 'finv_category', label: 'All finv_category' },
         { id: 'allTxDrCrFilter', key: 'dr_cr', label: 'All dr_cr' },
         { id: 'allTxCategoryFilter', key: 'category', label: 'All category' },
         { id: 'allTxCounterpartyFilter', key: 'counterparty', label: 'All counterparty' }
