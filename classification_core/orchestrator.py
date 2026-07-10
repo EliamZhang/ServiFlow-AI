@@ -21,8 +21,8 @@ from .registry import build_engine
 PREDICTION_REQUIRED_COLUMNS = {
     *TRANSACTION_KEY_COLUMNS,
     "matched",
-    "proposed_counterparty",
-    "proposed_finv_category",
+    "counterparty",
+    "finv_category",
 }
 
 
@@ -128,15 +128,6 @@ class ClassificationOrchestrator:
 
     def _initialize_output(self, original: pd.DataFrame) -> pd.DataFrame:
         output = original.copy()
-        for column in ("counterparty", "finv_category"):
-            if column in output.columns:
-                source_column = f"source_{column}"
-                if source_column in output.columns:
-                    raise ValueError(
-                        f"Cannot preserve input {column!r}: {source_column!r} already exists."
-                    )
-                output = output.rename(columns={column: source_column})
-
         output["counterparty"] = pd.NA
         output["finv_category"] = self.config.unclassified_category
         output["classification_status"] = "unclassified"
@@ -186,8 +177,8 @@ class ClassificationOrchestrator:
                 "outside its candidate set."
             )
 
-        blank_core = _is_blank(predictions["proposed_counterparty"]) | _is_blank(
-            predictions["proposed_finv_category"]
+        blank_core = _is_blank(predictions["counterparty"]) | _is_blank(
+            predictions["finv_category"]
         )
         if blank_core.any():
             raise ValueError(
@@ -195,7 +186,7 @@ class ClassificationOrchestrator:
                 f"{int(blank_core.sum())} matched transaction(s)."
             )
 
-        categories = predictions["proposed_finv_category"].astype(str)
+        categories = predictions["finv_category"].astype(str)
         invalid_categories = sorted(
             {
                 category
@@ -227,12 +218,8 @@ class ClassificationOrchestrator:
                 raise RuntimeError(
                     f"Transaction {key} was already claimed before commit."
                 )
-            output.at[row_index, "counterparty"] = prediction[
-                "proposed_counterparty"
-            ]
-            output.at[row_index, "finv_category"] = prediction[
-                "proposed_finv_category"
-            ]
+            output.at[row_index, "counterparty"] = prediction["counterparty"]
+            output.at[row_index, "finv_category"] = prediction["finv_category"]
             output.at[row_index, "classification_status"] = "classified"
             output.at[row_index, "classification_engine"] = engine.engine_id
             output.at[row_index, "classification_engine_version"] = (
@@ -240,10 +227,10 @@ class ClassificationOrchestrator:
             )
             output.at[row_index, "classification_priority"] = priority
             output.at[row_index, "classification_rule_id"] = prediction.get(
-                "rule_id", pd.NA
+                "classification_rule_id", pd.NA
             )
             output.at[row_index, "classification_reason"] = prediction.get(
-                "reason", pd.NA
+                "classification_reason", pd.NA
             )
             output.at[row_index, "stream_id"] = prediction.get(
                 "stream_id", pd.NA

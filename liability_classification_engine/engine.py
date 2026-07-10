@@ -34,13 +34,13 @@ class LiabilityEngine:
         matched = details[category.notna() & category.ne("")].copy()
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
         predictions["matched"] = True
-        predictions["proposed_counterparty"] = matched["counterparty"].values
-        predictions["proposed_finv_category"] = matched["finv_category"].values
+        predictions["counterparty"] = matched["counterparty"].values
+        predictions["finv_category"] = matched["finv_category"].values
         predictions["stream_id"] = matched["stream_id"].values
-        predictions["rule_id"] = matched["product_type"].map(
+        predictions["classification_rule_id"] = matched["product_type"].map(
             lambda value: f"liability_product:{value}"
         ).values
-        predictions["reason"] = matched.apply(
+        predictions["classification_reason"] = matched.apply(
             lambda row: format_classification_reason(
                 category=row["finv_category"],
                 rule=f"liability_product:{row['product_type']}",

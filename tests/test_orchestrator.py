@@ -30,10 +30,10 @@ class FakeEngine:
         ].copy()
         predictions = matched[["application_id", "transaction_id"]].copy()
         predictions["matched"] = True
-        predictions["proposed_counterparty"] = self.engine_id.upper()
-        predictions["proposed_finv_category"] = self.category
-        predictions["rule_id"] = f"{self.engine_id}_rule"
-        predictions["reason"] = "test"
+        predictions["counterparty"] = self.engine_id.upper()
+        predictions["finv_category"] = self.category
+        predictions["classification_rule_id"] = f"{self.engine_id}_rule"
+        predictions["classification_reason"] = "test"
         return EngineResult(predictions, matched)
 
     def summarize(
