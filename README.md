@@ -1,85 +1,49 @@
 # ServiFlow AI
 
-ServiFlow classifies bank transactions into two production fields:
-`counterparty` and `finv_category`. Engines execute in configured priority
-order, so a transaction claimed by a higher-priority engine cannot be
-classified again by a later engine.
+ServiFlow runs one unified transaction-classification pipeline and produces one
+Excel deliverable: `output/classification_report.xlsx`.
 
-## Unified pipeline
-
-The default order is income, then liability. Configure it in
-`configs/pipeline.json`; category ownership is defined in
+Income runs before liability by default. A transaction claimed by an earlier
+engine cannot be classified again by a later engine. Engine order is configured
+in `configs/pipeline.json`, and category ownership is configured in
 `configs/category_catalog.json`.
+
+## Run
 
 ```powershell
 python main.py
 ```
 
-By default this reads the root `sample.csv` and writes
-`output/classification_report.xlsx`.
-
-Optionally write row-level CSV output:
+Optional paths can be supplied to the same unified entry point:
 
 ```powershell
 python main.py `
   --input another_input.csv `
   --output output/classification_report.xlsx `
-  --transactions-csv output/classification_transactions.csv
+  --config configs/pipeline.json `
+  --category-catalog configs/category_catalog.json
 ```
 
-The workbook contains `transactions`, one summary sheet per engine, and
-`run_summary`.
+The workbook contains:
 
-## Engine package convention
+- `transactions`: unified row-level classifications;
+- `income_summary`: accepted income classifications;
+- `liability_summary`: accepted liability classifications; and
+- `run_summary`: per-engine run statistics.
 
-Both engines use the same public structure and API:
+## Architecture
 
-| Module | Responsibility |
-| --- | --- |
-| `cli.py` / `__main__.py` | Independent command-line entry point |
-| `engine.py` | Implements the shared engine contract |
-| `pipeline.py` | Returns `PipelineResult` from `run_pipeline()` |
-| `domain/` | Classification rules, streams, and summary calculations |
-| `presentation/` | Excel reporting and optional dashboard |
-| `resources/` | External rule/configuration files when required |
-
-Shared orchestration infrastructure lives in `classification_core/`. The root
-`main.py` is the only project-level CLI and exposes `run_classification()` for
-Python callers.
-
-```python
-from main import run_classification
-
-result = run_classification()
+```text
+main.py
+`- ClassificationOrchestrator
+   |- IncomeEngine
+   |- LiabilityEngine
+   `- classification_core.reporting.write_report
 ```
 
-## Independent engines
-
-Each engine is a first-class package and can run independently.
-
-Income:
-
-```powershell
-python -m income_classification_engine `
-  --output income_classification_engine/output/income_report.xlsx
-```
-
-Liability:
-
-```powershell
-python -m liability_classification_engine
-```
-
-## Adding an engine
-
-1. Implement the common engine interface in the engine package's `engine.py`.
-2. Register its factory in `classification_core/registry.py`.
-3. Add its categories to `configs/category_catalog.json`.
-4. Add its priority to `configs/pipeline.json`.
-5. Add contract and integration tests.
-
-Engines return proposals. Only `ClassificationOrchestrator` commits the final
-core fields, which enforces cross-engine priority and category ownership.
+The engine packages contain only logic used by this flow: their shared engine
+adapter, in-memory pipeline, domain rules, and required resources. They do not
+provide separate CLIs or report/dashboard writers.
 
 ## Tests
 

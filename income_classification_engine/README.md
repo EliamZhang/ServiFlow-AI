@@ -1,57 +1,25 @@
 # Income Classification Engine
 
-Rule-based income and wages classification for bank transactions.
+This package is the income stage of the unified ServiFlow classification
+pipeline. It is not a standalone application.
 
-The independent CLI reads the project root `sample.csv` by default.
+`classification_core.registry` creates `IncomeEngine`, and the root
+orchestrator uses its proposals and accepted `income_summary` artifact when
+building the unified result.
+
+The only runnable entry point and report writer live at the project root:
+
+```powershell
+python main.py
+```
+
+That command writes `output/classification_report.xlsx`.
 
 ## Package layout
 
 ```text
 income_classification_engine/
-├─ cli.py
-├─ engine.py
-├─ pipeline.py
-├─ domain/
-│  ├─ classification.py
-│  └─ summary.py
-└─ presentation/
-   └─ reporting.py
+|- engine.py       # shared engine contract implementation
+|- pipeline.py     # in-memory income classification flow
+`- domain/         # classification and summary logic
 ```
-
-## Main CLI
-
-Build the production Excel workbook:
-
-```powershell
-python -m income_classification_engine `
-  --output income_classification_engine/output/income_report.xlsx
-```
-
-Build the full audit workbook:
-
-```powershell
-python -m income_classification_engine `
-  --output income_classification_engine/output/income_report_full.xlsx `
-  --full
-```
-
-Optionally save row-level prediction CSV output:
-
-```powershell
-python -m income_classification_engine `
-  --output income_classification_engine/output/income_report.xlsx `
-  --predictions-csv income_classification_engine/output/income_predictions.csv
-```
-
-## Report modes
-
-- Default: writes `transactions` plus `income_summary`.
-- `--full`: writes `income_summary` plus income transaction audit detail.
-
-## Python API
-
-- `run_pipeline(...)` returns an explicit
-  `PipelineResult` containing transactions and original columns.
-- `build_summary(...)` builds `income_summary`.
-- `write_report(...)` writes the standalone Excel report.
-- `IncomeEngine` implements the project-wide engine protocol directly.

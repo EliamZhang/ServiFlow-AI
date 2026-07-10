@@ -12,9 +12,7 @@ from .domain.special_rules import apply_special_rules
 from .domain.streams import add_finv_category, identify_streams
 
 
-ENGINE_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = ENGINE_DIR.parent
-DEFAULT_RESOURCES_DIR = ENGINE_DIR / "resources"
+DEFAULT_RESOURCES_DIR = Path(__file__).resolve().parent / "resources"
 
 
 def run_pipeline(

@@ -27,7 +27,7 @@ Important restrictions:
 - Do NOT use category as decision logic. It is only used for optional validation.
 - Do NOT use a numeric score. Final result is based on yes/no business rules.
 
-The package CLI is exposed by ``python -m income_classification_engine``.
+This module is invoked by the unified engine pipeline.
 """
 
 import re

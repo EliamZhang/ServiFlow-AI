@@ -26,12 +26,3 @@ def write_report(
             artifact.data.to_excel(writer, sheet_name=sheet_name, index=False)
             sheet_names.add(sheet_name)
         format_sheets(writer.book, sheet_names)
-
-
-def write_transactions_csv(
-    result: ClassificationRunResult,
-    output_path: str | Path,
-) -> None:
-    path = Path(output_path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    result.transactions.to_csv(path, index=False, encoding="utf-8-sig")

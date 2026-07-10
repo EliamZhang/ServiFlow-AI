@@ -1,1 +1,0 @@
-"""Income report presentation layer."""
