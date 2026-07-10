@@ -3,23 +3,23 @@ from pathlib import Path
 
 import pandas as pd
 
-from .income_report_builder import build_income_workbook
-from .wages_detector import (
-    classify_income_transactions,
+from .reporting import write_report
+from .pipeline import (
+    run_pipeline,
     print_income_type_summary,
     print_optional_validation,
 )
 
 
 ENGINE_DIR = Path(__file__).resolve().parent
-DEFAULT_INPUT_CSV = ENGINE_DIR / "sample.csv"
-DEFAULT_OUTPUT_XLSX = ENGINE_DIR / "output" / "income_report.xlsx"
+DEFAULT_INPUT = ENGINE_DIR / "sample.csv"
+DEFAULT_OUTPUT = ENGINE_DIR / "output" / "income_report.xlsx"
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run income classification and build the Excel income report.")
-    parser.add_argument("--input", default=str(DEFAULT_INPUT_CSV), help="Input transaction CSV path.")
-    parser.add_argument("--output", default=str(DEFAULT_OUTPUT_XLSX), help="Output Excel workbook path.")
+    parser.add_argument("--input", default=str(DEFAULT_INPUT), help="Input transaction CSV path.")
+    parser.add_argument("--output", default=str(DEFAULT_OUTPUT), help="Output Excel workbook path.")
     parser.add_argument(
         "--full",
         action="store_true",
@@ -34,20 +34,19 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    input_csv = Path(args.input)
-    output_xlsx = Path(args.output)
-    include_full_detail = args.full
+    input_file = Path(args.input)
+    output_file = Path(args.output)
     predictions_csv = Path(args.predictions_csv) if args.predictions_csv else None
 
-    output_xlsx.parent.mkdir(parents=True, exist_ok=True)
+    output_file.parent.mkdir(parents=True, exist_ok=True)
     print(
-        f"Running income detection for: {input_csv} "
-        f"(report_mode={'full' if include_full_detail else 'summary'})"
+        f"Running income classification for: {input_file} "
+        f"(output_mode={'full' if args.full else 'compact'})"
     )
-    raw_df = pd.read_csv(input_csv, encoding="utf-8-sig")
-    result = classify_income_transactions(
-        raw_df,
-        include_centrelink_payment_type=include_full_detail,
+    transactions = pd.read_csv(input_file, encoding="utf-8-sig")
+    result = run_pipeline(
+        transactions,
+        include_centrelink_payment_type=args.full,
     )
     print(f"Predicted wages rows: {int(result.transactions['is_wages_pred'].sum())}")
     print(f"Predicted income rows: {int(result.transactions['is_income_pred'].sum())}")
@@ -61,13 +60,13 @@ def main() -> None:
             encoding="utf-8-sig",
         )
         print(f"Saved row-level predictions to: {predictions_csv}")
-    print(f"Building income report: {output_xlsx}")
-    build_income_workbook(
+    print(f"Building income report: {output_file}")
+    write_report(
         result,
-        output_xlsx,
-        include_full_detail=include_full_detail,
+        output_file,
+        full=args.full,
     )
-    print(f"Saved income report to: {output_xlsx}")
+    print(f"Saved income report to: {output_file}")
 
 
 if __name__ == "__main__":

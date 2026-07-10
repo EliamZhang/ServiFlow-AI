@@ -195,7 +195,7 @@ HTML_TEMPLATE = r'''<!doctype html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Loan Detection Review Dashboard</title>
+  <title>Liability Classification Review Dashboard</title>
   <style>
     :root {
       --bg: #f4f7fb;
@@ -947,7 +947,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       margin-bottom: 0;
     }
 
-    #loanOverviewSection,
+    #liabilityOverviewSection,
     #streamFlatSection,
     #allBankTransactionsSection {
       scroll-margin-top: 18px;
@@ -1583,8 +1583,8 @@ HTML_TEMPLATE = r'''<!doctype html>
     <header class="hero">
       <div class="hero-top">
         <div>
-          <div class="eyebrow">● Loan Analytics</div>
-          <h1>Loan Detection Review</h1>
+          <div class="eyebrow">● Liability Analytics</div>
+          <h1>Liability Classification Review</h1>
           <p id="metaInfo">Credit review workspace by application_id</p>
         </div>
         <div class="hero-meta">
@@ -1593,8 +1593,8 @@ HTML_TEMPLATE = r'''<!doctype html>
             <div class="value" id="heroApplicationCount">-</div>
           </div>
           <div class="hero-stat">
-            <div class="label">Loan Summary Rows</div>
-            <div class="value" id="heroLoanRows">-</div>
+            <div class="label">Liability Summary Rows</div>
+            <div class="value" id="heroLiabilityRows">-</div>
           </div>
           <div class="hero-stat">
             <div class="label">Transaction Rows</div>
@@ -1629,9 +1629,9 @@ HTML_TEMPLATE = r'''<!doctype html>
       <aside class="stream-directory dashboard-directory" id="streamDirectory"></aside>
 
       <main class="dashboard-main">
-        <section class="panel" id="loanOverviewSection">
+        <section class="panel" id="liabilityOverviewSection">
           <div class="section-title">
-            <h2><span class="icon-dot">↗</span>Loan Overview</h2>
+            <h2><span class="icon-dot">↗</span>Liability Overview</h2>
             <span class="hint" id="overviewSubtitle"></span>
           </div>
           <div class="kpi-grid" id="kpiContainer"></div>
@@ -1647,26 +1647,26 @@ HTML_TEMPLATE = r'''<!doctype html>
           </div>
           <div class="overview-table-block">
             <div class="overview-table-header">
-              <div class="overview-table-title">Application Loan Summary</div>
-              <div class="overview-table-hint">Mirrors the loan_summary sheet for the selected application. One row per detected stream.</div>
+              <div class="overview-table-title">Application Liability Summary</div>
+              <div class="overview-table-hint">Mirrors the liability_summary sheet for the selected application. One row per detected stream.</div>
             </div>
-            <div id="loanOverviewTable"></div>
+            <div id="liabilityOverviewTable"></div>
           </div>
           <div class="mini-summary" id="miniSummary"></div>
         </section>
 
         <section class="panel" id="streamFlatSection">
           <div class="section-title">
-            <h2><span class="icon-dot">≡</span>Loan Stream Summary <span class="count-badge" id="streamGroupCount">0</span></h2>
+            <h2><span class="icon-dot">≡</span>Liability Stream Summary <span class="count-badge" id="streamGroupCount">0</span></h2>
             <span class="hint">Grouped by finv_category and stream_id. Each stream shows its summary followed by its own transaction details.</span>
           </div>
-          <div class="stream-groups" id="groupedLoanStreams"></div>
+          <div class="stream-groups" id="groupedLiabilityStreams"></div>
         </section>
 
         <section class="panel" id="allBankTransactionsSection">
           <div class="section-title">
             <h2><span class="icon-dot">≋</span>All Bank Transactions <span class="count-badge" id="allTxRowCount">0</span></h2>
-            <span class="hint">All transactions_detail rows for the selected application. This includes transactions that are not attached to any loan stream.</span>
+            <span class="hint">All transaction rows for the selected application, including rows not attached to a liability stream.</span>
           </div>
           <div class="quick-filter-row" id="allTxQuickFilters">
             <button class="quick-filter-btn active" type="button" data-quick-filter="all">All</button>
@@ -1738,7 +1738,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       { key: 'predicted_closing_date', label: 'predicted_closing_date', type: 'date' }
     ];
 
-    const loanColumns = [
+    const summaryColumns = [
       { key: 'stream_id', label: 'stream_id', type: 'tag' },
       { key: 'bank_account_id', label: 'bank_account_id', type: 'tag' },
       { key: 'account_type', label: 'account_type' },
@@ -1777,7 +1777,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       { key: 'product_type', label: 'product_type', type: 'product' }
     ];
 
-    const loanSort = { key: 'stream_id', dir: 'asc' };
+    const summarySort = { key: 'stream_id', dir: 'asc' };
     const txSort = { key: 'transaction_date', dir: 'desc' };
     const EMPTY_LABEL = 'N/A';
 
@@ -1788,12 +1788,12 @@ HTML_TEMPLATE = r'''<!doctype html>
     let scrollSpyTargetsCache = [];
     let directoryLinksCache = [];
     let lastActiveDirectoryTarget = '';
-    let activeLoans = [];
+    let activeLiabilities = [];
     let activeTxs = [];
     let applicationIdSet = new Set();
-    let loanRowsByApplication = new Map();
+    let liabilityRowsByApplication = new Map();
     let txRowsByApplication = new Map();
-    let activeLoanStatusByStream = new Map();
+    let activeLiabilityStatusByStream = new Map();
     const SCROLL_SPY_DELAY_MS = 160;
 
     function norm(value) {
@@ -1850,11 +1850,11 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function buildDataIndexes() {
-      loanRowsByApplication = new Map();
+      liabilityRowsByApplication = new Map();
       txRowsByApplication = new Map();
       applicationIdSet = new Set();
 
-      DATA.loanSummary.forEach(row => addRowToAppIndex(loanRowsByApplication, row));
+      DATA.liabilitySummary.forEach(row => addRowToAppIndex(liabilityRowsByApplication, row));
       DATA.transactions.forEach(row => {
         row.__search_text = buildAllTxSearchText(row);
         addRowToAppIndex(txRowsByApplication, row);
@@ -1862,25 +1862,25 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function rebuildActiveRows() {
-      activeLoans = loanRowsByApplication.get(activeApplicationId) || [];
+      activeLiabilities = liabilityRowsByApplication.get(activeApplicationId) || [];
       activeTxs = txRowsByApplication.get(activeApplicationId) || [];
 
       const rowsByStream = new Map();
-      activeLoans.forEach(row => {
+      activeLiabilities.forEach(row => {
         const sid = norm(row.stream_id);
         if (!sid) return;
         if (!rowsByStream.has(sid)) rowsByStream.set(sid, []);
         rowsByStream.get(sid).push(row);
       });
 
-      activeLoanStatusByStream = new Map();
+      activeLiabilityStatusByStream = new Map();
       rowsByStream.forEach((rows, sid) => {
-        activeLoanStatusByStream.set(sid, mostCommonValue(rows, 'status'));
+        activeLiabilityStatusByStream.set(sid, mostCommonValue(rows, 'status'));
       });
     }
 
-    function getLoanRowsForApp() {
-      return activeLoans;
+    function getLiabilityRowsForApp() {
+      return activeLiabilities;
     }
 
     function getTxRowsForApp() {
@@ -2019,26 +2019,26 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function renderKpis() {
-      const loans = getLoanRowsForApp();
+      const liabilities = getLiabilityRowsForApp();
       const txs = getTxRowsForApp();
-      const baseRows = loans.length ? loans : txs;
+      const baseRows = liabilities.length ? liabilities : txs;
       const streamCount = countDistinct(baseRows, 'stream_id');
-      const counterpartyCount = countDistinct(loans.concat(txs), 'counterparty');
+      const counterpartyCount = countDistinct(liabilities.concat(txs), 'counterparty');
       const hasDishonours = txs.some(row => truthyFlag(row.is_dishonours));
 
       const cards = [
-        { label: 'Loan Stream Count', value: formatInteger(streamCount), note: 'distinct stream_id', cls: 'purple' },
+        { label: 'Liability Stream Count', value: formatInteger(streamCount), note: 'distinct stream_id', cls: 'purple' },
         { label: 'Counterparty Count', value: formatInteger(counterpartyCount), note: 'distinct counterparty', cls: '' },
-        { label: 'Total funded_amount', value: formatAmount(sumBy(loans, 'funded_amount')), note: 'loan_summary total', cls: 'money' },
-        { label: 'Total repaid_amount', value: formatAmount(sumBy(loans, 'repaid_amount')), note: 'loan_summary total', cls: 'money' },
-        { label: 'recent_fn_repay_amount', value: formatAmount(sumBy(loans, 'recent_fn_repay_amount')), note: 'recent repayment total', cls: 'money' },
+        { label: 'Total funded_amount', value: formatAmount(sumBy(liabilities, 'funded_amount')), note: 'liability_summary total', cls: 'money' },
+        { label: 'Total repaid_amount', value: formatAmount(sumBy(liabilities, 'repaid_amount')), note: 'liability_summary total', cls: 'money' },
+        { label: 'recent_fn_repay_amount', value: formatAmount(sumBy(liabilities, 'recent_fn_repay_amount')), note: 'recent repayment total', cls: 'money' },
         { label: 'Has Dishonours', value: hasDishonours ? 'Yes' : 'No', note: 'from transaction details', cls: hasDishonours ? 'danger' : 'money' },
-        { label: 'Loan Start Date', value: minDate(loans, 'transaction_start_date'), note: 'earliest transaction_start_date', cls: '' },
-        { label: 'Loan End Date', value: maxDate(loans, 'transaction_end_date'), note: 'latest transaction_end_date', cls: '' }
+        { label: 'Liability Start Date', value: minDate(liabilities, 'transaction_start_date'), note: 'earliest transaction_start_date', cls: '' },
+        { label: 'Liability End Date', value: maxDate(liabilities, 'transaction_end_date'), note: 'latest transaction_end_date', cls: '' }
       ];
 
       document.getElementById('overviewSubtitle').textContent =
-        `loan_summary: ${formatInteger(loans.length)} rows / transactions_detail: ${formatInteger(txs.length)} rows`;
+        `liability_summary: ${formatInteger(liabilities.length)} rows / transactions: ${formatInteger(txs.length)} rows`;
 
       document.getElementById('kpiContainer').innerHTML = cards.map(card => `
         <div class="kpi-card ${card.cls}">
@@ -2049,7 +2049,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       `).join('');
 
       renderDistribution('productDistribution', baseRows, 'finv_category', 'product');
-      renderDistribution('statusDistribution', loans, 'status', 'status');
+      renderDistribution('statusDistribution', liabilities, 'status', 'status');
 
       document.getElementById('miniSummary').innerHTML = [
         { label: 'Application ID', value: activeApplicationId || EMPTY_LABEL },
@@ -2085,7 +2085,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       return norm(a).localeCompare(norm(b), undefined, { numeric: true });
     }
 
-    function loanProductRank(row) {
+    function liabilityProductRank(row) {
       return isPersonalLoanUnknown(row.finv_category) ? 1 : 0;
     }
 
@@ -2093,10 +2093,10 @@ HTML_TEMPLATE = r'''<!doctype html>
       const col = columns.find(c => c.key === sortState.key);
       const multiplier = sortState.dir === 'asc' ? 1 : -1;
       return [...rows].sort((a, b) => {
-        // Loan Stream Summary should always keep personal_loan_unknown at the bottom.
-        if (tableKind === 'loan') {
-          const ar = loanProductRank(a);
-          const br = loanProductRank(b);
+        // Liability Stream Summary should always keep personal_loan_unknown at the bottom.
+        if (tableKind === 'liability') {
+          const ar = liabilityProductRank(a);
+          const br = liabilityProductRank(b);
           if (ar !== br) return ar - br;
         }
 
@@ -2171,7 +2171,7 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function getStreamAccountMeta(group) {
-      const rows = group.loans.concat(group.txs);
+      const rows = group.liabilities.concat(group.txs);
       return {
         bankAccountId: nonEmptyJoined(rows, 'bank_account_id', 2),
         accountType: nonEmptyJoined(rows, 'account_type', 2),
@@ -2181,14 +2181,14 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
 
-    function renderLoanOverviewTable() {
-      const loans = getLoanRowsForApp();
-      const subtitle = loans.length
-        ? `${formatInteger(loans.length)} loan_summary rows for application_id ${activeApplicationId}`
-        : `No loan_summary rows for application_id ${activeApplicationId || EMPTY_LABEL}`;
+    function renderLiabilityOverviewTable() {
+      const liabilities = getLiabilityRowsForApp();
+      const subtitle = liabilities.length
+        ? `${formatInteger(liabilities.length)} liability_summary rows for application_id ${activeApplicationId}`
+        : `No liability_summary rows for application_id ${activeApplicationId || EMPTY_LABEL}`;
 
       document.querySelector('.overview-table-hint').textContent = subtitle;
-      document.getElementById('loanOverviewTable').innerHTML = tableHtml(loans, overviewColumns, loanSort, 'loan', true);
+      document.getElementById('liabilityOverviewTable').innerHTML = tableHtml(liabilities, overviewColumns, summarySort, 'liability', true);
     }
 
     function safeAnchorId(prefix, value) {
@@ -2200,7 +2200,7 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function getGroupedStreamsForApp() {
-      const loans = getLoanRowsForApp();
+      const liabilities = getLiabilityRowsForApp();
       const txs = getTxRowsForApp();
       const streamMap = new Map();
 
@@ -2210,16 +2210,16 @@ HTML_TEMPLATE = r'''<!doctype html>
           streamMap.set(sid, {
             stream_id: sid,
             finv_category: '',
-            loans: [],
+            liabilities: [],
             txs: []
           });
         }
         return streamMap.get(sid);
       }
 
-      loans.forEach(row => {
+      liabilities.forEach(row => {
         const group = ensureStream(row.stream_id);
-        group.loans.push(row);
+        group.liabilities.push(row);
         if (!group.finv_category && norm(row.finv_category)) {
           group.finv_category = norm(row.finv_category);
         }
@@ -2236,7 +2236,7 @@ HTML_TEMPLATE = r'''<!doctype html>
         }
       });
 
-      // Keep the Loan Stream Summary focused on real detected loan streams.
+      // Keep the Liability Stream Summary focused on real detected liability streams.
       // Transactions without stream_id are still available in the All Bank Transactions section,
       // but are not shown as an artificial "Unknown product type / NO_STREAM_ID" group.
       const visibleGroups = Array.from(streamMap.values()).filter(group => norm(group.stream_id) !== 'NO_STREAM_ID');
@@ -2253,14 +2253,14 @@ HTML_TEMPLATE = r'''<!doctype html>
         productMap.get(product).sort((a, b) => norm(a.stream_id).localeCompare(norm(b.stream_id), undefined, { numeric: true }));
       });
 
-      return { products, productMap, totalStreams: visibleGroups.length, loanRows: loans.length, txRows: txs.length };
+      return { products, productMap, totalStreams: visibleGroups.length, liabilityRows: liabilities.length, txRows: txs.length };
     }
 
     function getStreamDisplayMeta(group) {
       const accountMeta = getStreamAccountMeta(group);
       return {
-        counterparty: nonEmptyJoined(group.loans.concat(group.txs), 'counterparty', 2),
-        status: nonEmptyJoined(group.loans, 'status', 2),
+        counterparty: nonEmptyJoined(group.liabilities.concat(group.txs), 'counterparty', 2),
+        status: nonEmptyJoined(group.liabilities, 'status', 2),
         accountMeta
       };
     }
@@ -2270,7 +2270,7 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function groupPrimaryStatus(group) {
-      return mostCommonValue(group.loans, 'status') || '';
+      return mostCommonValue(group.liabilities, 'status') || '';
     }
 
     function statusVisualClass(status) {
@@ -2313,7 +2313,7 @@ HTML_TEMPLATE = r'''<!doctype html>
           <span class="small">${formatInteger(totalStreams)} streams</span>
         </div>
         <div class="directory-actions">
-          <a href="#loanOverviewSection" data-nav-target="loanOverviewSection" data-section-nav="loanOverviewSection">Loan Overview</a>
+          <a href="#liabilityOverviewSection" data-nav-target="liabilityOverviewSection" data-section-nav="liabilityOverviewSection">Liability Overview</a>
           <a href="#streamFlatSection" data-nav-target="streamFlatSection" data-section-nav="streamFlatSection">Top of streams</a>
           <a href="#allBankTransactionsSection" data-nav-target="allBankTransactionsSection" data-section-nav="allBankTransactionsSection">All Bank Transactions</a>
         </div>
@@ -2407,7 +2407,7 @@ HTML_TEMPLATE = r'''<!doctype html>
 
     function refreshScrollSpyTargets() {
       const targetElements = [
-        document.getElementById('loanOverviewSection'),
+        document.getElementById('liabilityOverviewSection'),
         document.getElementById('streamFlatSection'),
         ...Array.from(document.querySelectorAll('.product-group')),
         ...Array.from(document.querySelectorAll('.stream-card')),
@@ -2544,15 +2544,15 @@ HTML_TEMPLATE = r'''<!doctype html>
               </div>
             </div>
             <div class="stream-stats">
-              <span class="stream-stat-pill">Summary rows: ${formatInteger(group.loans.length)}</span>
+              <span class="stream-stat-pill">Summary rows: ${formatInteger(group.liabilities.length)}</span>
               <span class="stream-stat-pill">Debit: ${formatAmount(debitTotal)}</span>
               <span class="stream-stat-pill">Credit: ${formatAmount(creditTotal)}</span>
               <span class="stream-stat-pill ${hasDishonours ? 'danger' : ''}">Dishonours: ${hasDishonours ? 'Yes' : 'No'}</span>
             </div>
           </div>
           <div class="stream-body">
-            <div class="subsection-label">Loan Summary</div>
-            ${tableHtml(group.loans, loanColumns, loanSort, 'loan', true)}
+            <div class="subsection-label">Liability Summary</div>
+            ${tableHtml(group.liabilities, summaryColumns, summarySort, 'liability', true)}
             <div class="subsection-label">Transaction Details</div>
             ${tableHtml(group.txs, txColumns, txSort, 'tx')}
           </div>
@@ -2560,12 +2560,12 @@ HTML_TEMPLATE = r'''<!doctype html>
       `;
     }
 
-    function renderGroupedLoanStreams() {
+    function renderGroupedLiabilityStreams() {
       const grouped = getGroupedStreamsForApp();
       document.getElementById('streamGroupCount').textContent = `${formatInteger(grouped.totalStreams)} streams`;
       renderStreamDirectory(grouped.products, grouped.productMap);
 
-      const container = document.getElementById('groupedLoanStreams');
+      const container = document.getElementById('groupedLiabilityStreams');
       if (!grouped.products.length) {
         container.innerHTML = '<div class="empty">No stream data for this application</div>';
         initDirectoryNavigation();
@@ -2606,7 +2606,7 @@ HTML_TEMPLATE = r'''<!doctype html>
       document.getElementById('applicationSearch').value = activeApplicationId;
       document.getElementById('activeApplicationPill').textContent = activeApplicationId || '-';
       document.getElementById('heroApplicationCount').textContent = formatInteger(allApplicationIds.length);
-      document.getElementById('heroLoanRows').textContent = formatInteger(DATA.meta.loanSummaryRows);
+      document.getElementById('heroLiabilityRows').textContent = formatInteger(DATA.meta.liabilitySummaryRows);
       document.getElementById('heroTxRows').textContent = formatInteger(DATA.meta.transactionRows);
     }
 
@@ -2679,7 +2679,7 @@ HTML_TEMPLATE = r'''<!doctype html>
     function streamStatusForTxRow(row) {
       const sid = norm(row.stream_id);
       if (!sid) return '';
-      return activeLoanStatusByStream.get(sid) || '';
+      return activeLiabilityStatusByStream.get(sid) || '';
     }
 
     function rowMatchesQuickFilter(row) {
@@ -2758,16 +2758,16 @@ HTML_TEMPLATE = r'''<!doctype html>
     }
 
     function renderAll() {
-      const loans = getLoanRowsForApp();
+      const liabilities = getLiabilityRowsForApp();
       const txs = getTxRowsForApp();
 
       renderKpis();
-      renderLoanOverviewTable();
-      renderGroupedLoanStreams();
+      renderLiabilityOverviewTable();
+      renderGroupedLiabilityStreams();
       renderAllBankTransactions();
       updateFixedSidebarPosition();
       document.getElementById('overviewSubtitle').textContent =
-        `loan_summary: ${formatInteger(loans.length)} rows / transactions_detail: ${formatInteger(txs.length)} rows`;
+        `liability_summary: ${formatInteger(liabilities.length)} rows / transactions: ${formatInteger(txs.length)} rows`;
       scheduleDirectoryScrollSpy();
     }
 

@@ -5,14 +5,14 @@ from pathlib import Path
 
 import pandas as pd
 
-from serviflow.config import (
+from .config import (
     DEFAULT_CATEGORY_CATALOG,
     DEFAULT_PIPELINE_CONFIG,
     load_category_owners,
     load_pipeline_config,
 )
-from serviflow.orchestrator import ClassificationOrchestrator
-from serviflow.reporting import write_excel_report, write_transactions_csv
+from .orchestrator import ClassificationOrchestrator
+from .reporting import write_report, write_transactions_csv
 
 
 DEFAULT_OUTPUT = Path("output") / "serviflow_report.xlsx"
@@ -58,7 +58,7 @@ def run_pipeline(
         category_owners=load_category_owners(category_catalog_file),
     )
     result = orchestrator.run(transactions)
-    write_excel_report(result, output_file)
+    write_report(result, output_file)
     if transactions_csv is not None:
         write_transactions_csv(result, transactions_csv)
     return result

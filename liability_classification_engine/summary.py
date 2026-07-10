@@ -1,4 +1,4 @@
-"""Build loan-level summary output sheets."""
+"""Build liability summary output rows."""
 
 from __future__ import annotations
 
@@ -10,12 +10,6 @@ from pathlib import Path
 import re
 
 import pandas as pd
-
-from .export import (
-    LOAN_SUMMARY_SHEET_NAME,
-    TRANSACTION_SHEET_NAME,
-    write_workbook,
-)
 
 SUMMARY_COLUMNS = [
     "finv_category",
@@ -981,7 +975,7 @@ def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     return summary[SUMMARY_COLUMNS]
 
 
-def build_loan_summary(
+def build_summary(
     df: pd.DataFrame,
     limits_file: str | Path = "resources/bnpl_maximum_limits.csv",
 ) -> pd.DataFrame:
@@ -1000,15 +994,3 @@ def build_loan_summary(
         return empty_summary()
 
     return pd.concat(summaries, ignore_index=True)[SUMMARY_COLUMNS]
-
-
-def write_loan_summary_workbook_from_dataframe(
-    transactions: pd.DataFrame,
-    workbook_file: str | Path,
-    limits_file: str | Path = "resources/bnpl_maximum_limits.csv",
-) -> None:
-    """Create or update the standard output workbook from transactions data."""
-
-    transactions = ensure_finv_category(transactions)
-    summary = build_loan_summary(transactions, limits_file=limits_file)
-    write_workbook(transactions, summary, workbook_file)

@@ -1,16 +1,16 @@
 {
   "categories": {
-    "salary_packaging": {"owner": "income", "active": true},
-    "centrelink": {"owner": "income", "active": true},
-    "salary_payg": {"owner": "income", "active": true},
-    "self_employed_gig": {"owner": "income", "active": true},
-    "bnpl": {"owner": "liability", "active": true},
-    "wage_advance": {"owner": "liability", "active": true},
-    "bank": {"owner": "liability", "active": true},
-    "contract_loan": {"owner": "liability", "active": true},
-    "personal_loan_sacc": {"owner": "liability", "active": true},
-    "personal_loan_non_sacc": {"owner": "liability", "active": true},
-    "personal_loan_unknown": {"owner": "liability", "active": true},
-    "loc": {"owner": "liability", "active": true}
+    "salary_packaging": {"owner_engine_id": "income", "active": true},
+    "centrelink": {"owner_engine_id": "income", "active": true},
+    "salary_payg": {"owner_engine_id": "income", "active": true},
+    "self_employed_gig": {"owner_engine_id": "income", "active": true},
+    "bnpl": {"owner_engine_id": "liability", "active": true},
+    "wage_advance": {"owner_engine_id": "liability", "active": true},
+    "bank": {"owner_engine_id": "liability", "active": true},
+    "contract_loan": {"owner_engine_id": "liability", "active": true},
+    "personal_loan_sacc": {"owner_engine_id": "liability", "active": true},
+    "personal_loan_non_sacc": {"owner_engine_id": "liability", "active": true},
+    "personal_loan_unknown": {"owner_engine_id": "liability", "active": true},
+    "loc": {"owner_engine_id": "liability", "active": true}
   }
 }

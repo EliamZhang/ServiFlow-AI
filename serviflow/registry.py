@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from income_classification_engine.engine import IncomeEngine
 from liability_classification_engine.engine import LiabilityEngine
-from wages_classification_engine.engine import IncomeEngine
 
 from .engine import ClassificationEngine
 

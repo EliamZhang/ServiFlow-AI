@@ -4,18 +4,17 @@ from pathlib import Path
 
 import pandas as pd
 
-from .loan_dashboard import build_html, dataframe_to_records
-from .loan_summary import build_loan_summary, write_loan_summary_workbook_from_dataframe
-from .pipeline import (
-    DEFAULT_RESOURCES_DIR,
-    ENGINE_DIR,
-    classify_liability_transactions,
-)
+from serviflow.models import PipelineResult
+
+from .dashboard import build_html, dataframe_to_records
+from .pipeline import DEFAULT_RESOURCES_DIR, ENGINE_DIR, run_pipeline
+from .reporting import write_report
+from .summary import build_summary
 
 
 DEFAULT_INPUT = ENGINE_DIR / "sample.csv"
-DEFAULT_WORKBOOK = ENGINE_DIR / "output" / "sample_with_counterparty.xlsx"
-DEFAULT_DASHBOARD = ENGINE_DIR / "output" / "loan_dashboard.html"
+DEFAULT_OUTPUT = ENGINE_DIR / "output" / "liability_report.xlsx"
+DEFAULT_DASHBOARD = ENGINE_DIR / "output" / "liability_dashboard.html"
 
 
 def parse_args() -> argparse.Namespace:
@@ -23,7 +22,7 @@ def parse_args() -> argparse.Namespace:
         description="Run liability classification output generation."
     )
     parser.add_argument("--input", default=str(DEFAULT_INPUT))
-    parser.add_argument("--output", default=str(DEFAULT_WORKBOOK))
+    parser.add_argument("--output", default=str(DEFAULT_OUTPUT))
     parser.add_argument(
         "--with-dashboard",
         action="store_true",
@@ -37,28 +36,32 @@ def parse_args() -> argparse.Namespace:
 
 
 def build_dashboard_data(
-    transactions: pd.DataFrame,
+    result: PipelineResult,
     source_file: Path,
 ) -> dict[str, object]:
-    summary = build_loan_summary(transactions)
+    transactions = result.transactions
+    summary = build_summary(
+        transactions,
+        limits_file=DEFAULT_RESOURCES_DIR / "bnpl_maximum_limits.csv",
+    )
     return {
-        "loanSummary": dataframe_to_records(summary),
+        "liabilitySummary": dataframe_to_records(summary),
         "transactions": dataframe_to_records(transactions),
         "meta": {
             "sourceFile": source_file.name,
             "generatedAt": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "loanSummaryRows": len(summary),
+            "liabilitySummaryRows": len(summary),
             "transactionRows": len(transactions),
         },
     }
 
 
-def write_dashboard_html(
-    transactions: pd.DataFrame,
+def write_dashboard(
+    result: PipelineResult,
     workbook_file: Path,
     dashboard_file: Path,
 ) -> None:
-    data = build_dashboard_data(transactions, workbook_file)
+    data = build_dashboard_data(result, workbook_file)
     html = build_html(data)
     dashboard_file.parent.mkdir(parents=True, exist_ok=True)
     dashboard_file.write_text(html, encoding="utf-8")
@@ -69,16 +72,11 @@ def main() -> None:
     input_file = Path(args.input)
     output_file = Path(args.output)
     transactions = pd.read_csv(input_file, encoding="utf-8-sig")
-    result = classify_liability_transactions(transactions)
-    transactions = result.transactions
-    write_loan_summary_workbook_from_dataframe(
-        transactions,
-        output_file,
-        limits_file=DEFAULT_RESOURCES_DIR / "bnpl_maximum_limits.csv",
-    )
+    result = run_pipeline(transactions)
+    write_report(result, output_file)
     if args.with_dashboard:
-        write_dashboard_html(
-            transactions,
+        write_dashboard(
+            result,
             output_file,
             Path(args.dashboard_output),
         )

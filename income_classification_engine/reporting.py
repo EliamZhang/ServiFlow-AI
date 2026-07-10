@@ -5,11 +5,14 @@ from pathlib import Path
 
 import pandas as pd
 
-from .wages_detector import IncomeClassificationResult
+from serviflow.excel import format_sheets
+from serviflow.models import PipelineResult
+
+from .summary import build_summary
 
 
-PUBLISHED_TRANSACTION_SHEET_NAME = "transactions"
-INCOME_DETAIL_SHEET_NAME = "transactions_detail"
+TRANSACTIONS_SHEET_NAME = "transactions"
+DETAIL_SHEET_NAME = "transactions_detail"
 SUMMARY_SHEET_NAME = "income_summary"
 EXCEL_MAX_ROWS = 1_048_576
 EXCEL_DATA_ROWS_PER_SHEET = EXCEL_MAX_ROWS - 1
@@ -102,7 +105,7 @@ def _format_summary_columns(summary_df: pd.DataFrame, include_centrelink_detail:
 
 def _write_income_detail_sheets(writer: pd.ExcelWriter, income_detail_df: pd.DataFrame) -> None:
     if len(income_detail_df) <= EXCEL_DATA_ROWS_PER_SHEET:
-        income_detail_df.to_excel(writer, sheet_name=INCOME_DETAIL_SHEET_NAME, index=False)
+        income_detail_df.to_excel(writer, sheet_name=DETAIL_SHEET_NAME, index=False)
         return
 
     sheet_count = math.ceil(len(income_detail_df) / EXCEL_DATA_ROWS_PER_SHEET)
@@ -118,28 +121,32 @@ def _write_income_detail_sheets(writer: pd.ExcelWriter, income_detail_df: pd.Dat
     )
 
 
-def build_income_workbook(
-    result: IncomeClassificationResult,
+def write_report(
+    result: PipelineResult,
     output_path: str | Path,
-    include_full_detail: bool = False,
+    full: bool = False,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     summary_df = _format_summary_columns(
-        result.summary,
-        include_centrelink_detail=include_full_detail,
+        build_summary(result.transactions),
+        include_centrelink_detail=full,
     )
 
-    if not include_full_detail:
+    if not full:
         transactions_df = _select_transaction_columns(
             result.transactions,
             result.original_columns,
         )
 
-        with pd.ExcelWriter(output_path) as writer:
-            transactions_df.to_excel(writer, sheet_name=PUBLISHED_TRANSACTION_SHEET_NAME, index=False)
+        with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
+            transactions_df.to_excel(writer, sheet_name=TRANSACTIONS_SHEET_NAME, index=False)
             summary_df.to_excel(writer, sheet_name=SUMMARY_SHEET_NAME, index=False)
+            format_sheets(
+                writer.book,
+                [TRANSACTIONS_SHEET_NAME, SUMMARY_SHEET_NAME],
+            )
 
         print(
             f"Income report workbook saved with {len(summary_df)} summary rows and "
@@ -151,9 +158,13 @@ def build_income_workbook(
         _select_audit_detail_columns(result.transactions)
     )
 
-    with pd.ExcelWriter(output_path) as writer:
+    with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
         summary_df.to_excel(writer, sheet_name=SUMMARY_SHEET_NAME, index=False)
         _write_income_detail_sheets(writer, income_detail_df)
+        detail_sheets = [
+            name for name in writer.book.sheetnames if name != SUMMARY_SHEET_NAME
+        ]
+        format_sheets(writer.book, [SUMMARY_SHEET_NAME, *detail_sheets])
 
     print(
         f"Income report workbook saved with {len(summary_df)} summary rows and "

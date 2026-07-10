@@ -4,21 +4,22 @@ import pandas as pd
 
 from serviflow.models import (
     EngineContext,
-    PredictionBatch,
+    EngineResult,
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
 from serviflow.transaction_keys import filter_to_transaction_keys
 
-from .wages_detector import build_income_summary, classify_income_transactions
+from .pipeline import run_pipeline
+from .summary import build_summary
 
 
 class IncomeEngine:
     engine_id = "income"
     engine_version = "1.0"
 
-    def classify(self, context: EngineContext) -> PredictionBatch:
-        result = classify_income_transactions(
+    def classify(self, context: EngineContext) -> EngineResult:
+        result = run_pipeline(
             context.candidates,
             include_centrelink_payment_type=True,
         )
@@ -31,29 +32,26 @@ class IncomeEngine:
         predictions["stream_id"] = matched["stream_id"].values
         predictions["rule_id"] = matched["income_type_rule_name"].values
         predictions["reason"] = matched["income_type_pred_reason"].values
-        return PredictionBatch(
+        return EngineResult(
             predictions=predictions,
-            details=details,
-            diagnostics={
-                "predicted_income_rows": int(details["is_income_pred"].sum()),
-                "predicted_wages_rows": int(details["is_wages_pred"].sum()),
-            },
+            transactions=details,
+            diagnostics=result.diagnostics,
         )
 
     def summarize(
         self,
         context: EngineContext,
-        batch: PredictionBatch,
+        result: EngineResult,
         accepted_predictions: pd.DataFrame,
     ) -> list[SummaryArtifact]:
         accepted_details = filter_to_transaction_keys(
-            batch.details,
+            result.transactions,
             accepted_predictions,
         )
         return [
             SummaryArtifact(
                 "income_summary",
                 "1.0",
-                build_income_summary(accepted_details),
+                build_summary(accepted_details),
             )
         ]

@@ -12,7 +12,7 @@ DEFAULT_CATEGORY_CATALOG = PROJECT_ROOT / "configs" / "category_catalog.json"
 
 @dataclass(frozen=True)
 class EngineSpec:
-    engine: str
+    engine_id: str
     priority: int
     enabled: bool = True
 
@@ -42,7 +42,7 @@ def load_pipeline_config(path: str | Path = DEFAULT_PIPELINE_CONFIG) -> Pipeline
     payload = _load_json(path)
     engines = tuple(
         EngineSpec(
-            engine=str(item["engine"]),
+            engine_id=str(item["engine_id"]),
             priority=int(item["priority"]),
             enabled=bool(item.get("enabled", True)),
         )
@@ -53,9 +53,9 @@ def load_pipeline_config(path: str | Path = DEFAULT_PIPELINE_CONFIG) -> Pipeline
     if not any(spec.enabled for spec in engines):
         raise ValueError("Pipeline configuration must enable at least one engine.")
 
-    engine_names = [spec.engine for spec in engines]
-    if len(engine_names) != len(set(engine_names)):
-        raise ValueError("Pipeline engine names must be unique.")
+    engine_ids = [spec.engine_id for spec in engines]
+    if len(engine_ids) != len(set(engine_ids)):
+        raise ValueError("Pipeline engine IDs must be unique.")
 
     enabled_priorities = [spec.priority for spec in engines if spec.enabled]
     if len(enabled_priorities) != len(set(enabled_priorities)):
@@ -83,9 +83,11 @@ def load_category_owners(
     for category, definition in payload.get("categories", {}).items():
         if not definition.get("active", True):
             continue
-        owner = str(definition.get("owner", "")).strip()
+        owner = str(definition.get("owner_engine_id", "")).strip()
         if not owner:
-            raise ValueError(f"Category {category!r} does not define an owner.")
+            raise ValueError(
+                f"Category {category!r} does not define owner_engine_id."
+            )
         owners[str(category)] = owner
     if not owners:
         raise ValueError("Category catalog must contain at least one active category.")

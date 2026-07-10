@@ -10,6 +10,13 @@ TRANSACTION_KEY_COLUMNS = ("application_id", "transaction_id")
 
 
 @dataclass(frozen=True)
+class PipelineResult:
+    transactions: pd.DataFrame
+    diagnostics: dict[str, Any] = field(default_factory=dict)
+    original_columns: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class EngineContext:
     run_id: str
     all_transactions: pd.DataFrame
@@ -18,9 +25,9 @@ class EngineContext:
 
 
 @dataclass
-class PredictionBatch:
+class EngineResult:
     predictions: pd.DataFrame
-    details: pd.DataFrame
+    transactions: pd.DataFrame
     diagnostics: dict[str, Any] = field(default_factory=dict)
 
 

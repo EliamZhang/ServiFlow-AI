@@ -11,7 +11,7 @@ from .models import (
     ClassificationRunResult,
     EngineContext,
     EngineExecution,
-    PredictionBatch,
+    EngineResult,
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
@@ -57,7 +57,7 @@ class ClassificationOrchestrator:
         executions: list[EngineExecution] = []
 
         for spec in self.config.enabled_engines:
-            engine = self.engine_factory(spec.engine)
+            engine = self.engine_factory(spec.engine_id)
             unclaimed_mask = output["classification_status"].eq("unclassified")
             context = EngineContext(
                 run_id=run_id,
@@ -74,8 +74,8 @@ class ClassificationOrchestrator:
                 ].copy(),
             )
 
-            batch = engine.classify(context)
-            accepted = self._validate_predictions(engine, context, batch)
+            engine_result = engine.classify(context)
+            accepted = self._validate_predictions(engine, context, engine_result)
             self._commit(
                 output=output,
                 key_to_index=key_to_index,
@@ -84,7 +84,7 @@ class ClassificationOrchestrator:
                 run_id=run_id,
                 predictions=accepted,
             )
-            engine_summaries = engine.summarize(context, batch, accepted)
+            engine_summaries = engine.summarize(context, engine_result, accepted)
             summaries.extend(engine_summaries)
             executions.append(
                 EngineExecution(
@@ -92,9 +92,9 @@ class ClassificationOrchestrator:
                     engine_version=engine.engine_version,
                     priority=spec.priority,
                     candidate_count=len(context.candidates),
-                    prediction_count=len(batch.predictions),
+                    prediction_count=len(engine_result.predictions),
                     accepted_count=len(accepted),
-                    diagnostics=batch.diagnostics,
+                    diagnostics=engine_result.diagnostics,
                 )
             )
 
@@ -155,13 +155,13 @@ class ClassificationOrchestrator:
         self,
         engine: ClassificationEngine,
         context: EngineContext,
-        batch: PredictionBatch,
+        result: EngineResult,
     ) -> pd.DataFrame:
-        if not isinstance(batch, PredictionBatch):
+        if not isinstance(result, EngineResult):
             raise TypeError(
-                f"Engine {engine.engine_id!r} must return PredictionBatch."
+                f"Engine {engine.engine_id!r} must return EngineResult."
             )
-        predictions = batch.predictions.copy()
+        predictions = result.predictions.copy()
         missing = sorted(PREDICTION_REQUIRED_COLUMNS.difference(predictions.columns))
         if missing:
             raise ValueError(
@@ -266,7 +266,7 @@ class ClassificationOrchestrator:
         }
         rows = [
             {
-                "engine": execution.engine_id,
+                "engine_id": execution.engine_id,
                 "engine_version": execution.engine_version,
                 "priority": execution.priority,
                 "candidate_count": execution.candidate_count,

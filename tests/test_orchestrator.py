@@ -5,7 +5,7 @@ import unittest
 import pandas as pd
 
 from serviflow.config import EngineSpec, PipelineConfig
-from serviflow.models import EngineContext, PredictionBatch, SummaryArtifact
+from serviflow.models import EngineContext, EngineResult, SummaryArtifact
 from serviflow.orchestrator import ClassificationOrchestrator
 
 
@@ -22,7 +22,7 @@ class FakeEngine:
         self.category = category
         self.matching_transaction_ids = matching_transaction_ids
 
-    def classify(self, context: EngineContext) -> PredictionBatch:
+    def classify(self, context: EngineContext) -> EngineResult:
         matched = context.candidates[
             context.candidates["transaction_id"].isin(
                 self.matching_transaction_ids
@@ -34,16 +34,16 @@ class FakeEngine:
         predictions["proposed_finv_category"] = self.category
         predictions["rule_id"] = f"{self.engine_id}_rule"
         predictions["reason"] = "test"
-        return PredictionBatch(predictions, matched)
+        return EngineResult(predictions, matched)
 
     def summarize(
         self,
         context: EngineContext,
-        batch: PredictionBatch,
+        result: EngineResult,
         accepted_predictions: pd.DataFrame,
     ) -> list[SummaryArtifact]:
         summary = pd.DataFrame(
-            [{"engine": self.engine_id, "count": len(accepted_predictions)}]
+            [{"engine_id": self.engine_id, "count": len(accepted_predictions)}]
         )
         return [SummaryArtifact(f"{self.engine_id}_summary", "test", summary)]
 

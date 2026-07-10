@@ -1,4 +1,4 @@
-# Liability Classification Engine Architecture
+# Liability Classification Engine
 
 The liability engine is a first-class package. It implements the shared engine
 protocol directly in `engine.py` and can also run independently through its
@@ -9,21 +9,24 @@ package CLI.
 ```mermaid
 flowchart LR
     A["Transaction DataFrame"] --> B["apply_counterparty_rules"]
-    B --> C["apply_cc_rules"]
+    B --> C["apply_credit_card_rules"]
     C --> D["apply_dishonour_rules"]
     D --> E["apply_special_rules"]
     E --> F["identify_streams"]
     F --> G["add_finv_category"]
-    G --> H["LiabilityClassificationResult"]
+    G --> H["PipelineResult"]
 ```
 
-`LiabilityClassificationResult` contains the classified transactions and
+`PipelineResult` contains the classified transactions and
 explicit stream diagnostics.
+
+The public API follows the shared convention: `run_pipeline()`,
+`build_summary()`, and `write_report()`.
 
 ## Independent CLI
 
 ```powershell
-python -m liability_classification_engine.model_main
+python -m liability_classification_engine
 ```
 
 The CLI accepts `--input`, `--output`, `--with-dashboard`, and
@@ -40,6 +43,6 @@ contract, and the project orchestrator commits accepted classifications.
 | File | Purpose |
 | --- | --- |
 | `resources/counterparty_keyword_rules.csv` | Counterparty and product rules |
-| `resources/cc_rules.csv` | Credit-card and bank repayment overrides |
+| `resources/credit_card_rules.csv` | Credit-card and bank repayment overrides |
 | `resources/dishonours_rules.csv` | Dishonour keyword and regex rules |
 | `resources/bnpl_maximum_limits.csv` | BNPL summary assumptions |

@@ -10,7 +10,7 @@ from serviflow.orchestrator import ClassificationOrchestrator
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SAMPLE_FILE = PROJECT_ROOT / "wages_classification_engine" / "sample.csv"
+SAMPLE_FILE = PROJECT_ROOT / "income_classification_engine" / "sample.csv"
 
 
 class CurrentSampleIntegrationTests(unittest.TestCase):

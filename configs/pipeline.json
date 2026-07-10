@@ -1,12 +1,12 @@
 {
   "pipeline": [
     {
-      "engine": "income",
+      "engine_id": "income",
       "priority": 100,
       "enabled": true
     },
     {
-      "engine": "liability",
+      "engine_id": "liability",
       "priority": 200,
       "enabled": true
     }

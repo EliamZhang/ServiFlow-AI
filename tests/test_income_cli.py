@@ -4,7 +4,7 @@ import sys
 import unittest
 from unittest.mock import patch
 
-from wages_classification_engine.model_main import parse_args
+from income_classification_engine.cli import parse_args
 
 
 class IncomeCliTests(unittest.TestCase):

@@ -6,14 +6,14 @@ import pandas as pd
 
 from serviflow.models import (
     EngineContext,
-    PredictionBatch,
+    EngineResult,
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
 from serviflow.transaction_keys import filter_to_transaction_keys
 
-from .loan_summary import build_loan_summary
-from .pipeline import DEFAULT_RESOURCES_DIR, classify_liability_transactions
+from .pipeline import DEFAULT_RESOURCES_DIR, run_pipeline
+from .summary import build_summary
 
 
 class LiabilityEngine:
@@ -23,8 +23,8 @@ class LiabilityEngine:
     def __init__(self, resources_dir: str | Path = DEFAULT_RESOURCES_DIR) -> None:
         self.resources_dir = Path(resources_dir)
 
-    def classify(self, context: EngineContext) -> PredictionBatch:
-        result = classify_liability_transactions(
+    def classify(self, context: EngineContext) -> EngineResult:
+        result = run_pipeline(
             context.candidates,
             resources_dir=self.resources_dir,
         )
@@ -42,26 +42,23 @@ class LiabilityEngine:
         predictions["reason"] = matched["product_type"].map(
             lambda value: f"Matched liability product type {value}"
         ).values
-        return PredictionBatch(
+        return EngineResult(
             predictions=predictions,
-            details=details,
-            diagnostics={
-                "stream_counts": result.diagnostics,
-                "predicted_liability_rows": int(len(matched)),
-            },
+            transactions=details,
+            diagnostics=result.diagnostics,
         )
 
     def summarize(
         self,
         context: EngineContext,
-        batch: PredictionBatch,
+        result: EngineResult,
         accepted_predictions: pd.DataFrame,
     ) -> list[SummaryArtifact]:
         accepted_details = filter_to_transaction_keys(
-            batch.details,
+            result.transactions,
             accepted_predictions,
         )
-        summary = build_loan_summary(
+        summary = build_summary(
             accepted_details,
             limits_file=self.resources_dir / "bnpl_maximum_limits.csv",
         )

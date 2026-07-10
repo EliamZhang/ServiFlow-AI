@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Rule-based income detector for bank transactions.
+Rule-based income classification pipeline for bank transactions.
 
 Main output fields:
 - finv_category: production income category used by downstream FInv output.
@@ -38,22 +38,18 @@ Important restrictions:
 - Do NOT use category as decision logic. It is only used for optional validation.
 - Do NOT use a numeric score. Final result is based on yes/no business rules.
 
-The package CLI is exposed by ``wages_classification_engine.model_main``.
+The package CLI is exposed by ``python -m income_classification_engine``.
 """
 
 import re
-from dataclasses import dataclass
 from typing import Iterable, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 
+from serviflow.models import PipelineResult
 
-@dataclass(frozen=True)
-class IncomeClassificationResult:
-    transactions: pd.DataFrame
-    summary: pd.DataFrame
-    original_columns: tuple[str, ...]
+from .summary import add_income_streams
 
 
 # =============================================================================
@@ -252,40 +248,6 @@ REGULAR_GAP_RANGES = ((6, 8), (13, 16), (27, 33))
 HIGH_REPEAT_PAYER_COUNT_MIN = 4
 VERY_HIGH_REPEAT_PAYER_COUNT_MIN = 8
 STABLE_PAYER_REPEAT_COUNT_MIN = 6
-
-WEEKDAY_NAMES = {
-    0: "Monday",
-    1: "Tuesday",
-    2: "Wednesday",
-    3: "Thursday",
-    4: "Friday",
-    5: "Saturday",
-    6: "Sunday",
-}
-
-INCOME_SUMMARY_COLUMNS = [
-    "finv_category",
-    "stream_id",
-    "bank_account_id",
-    "account_type",
-    "application_id",
-    "bank",
-    "credit_limit",
-    "counterparty",
-    "centrelink_payment_type",
-    "transaction_start_date",
-    "transaction_end_date",
-    "status",
-    "transaction_count",
-    "total_income_amount",
-    "average_income_amount",
-    "median_income_amount",
-    "latest_income_amount",
-    "estimated_monthly_income",
-    "frequency",
-    "frequency_day",
-    "predicted_next_income_date",
-]
 
 IMPORTANT_OUTPUT_COLUMNS = [
     # New income classification fields
@@ -1082,234 +1044,6 @@ def build_income_type_reason(row: pd.Series) -> str:
 
 
 # =============================================================================
-# Income stream summarisation
-# =============================================================================
-
-def first_non_null(series: pd.Series):
-    non_null = series.dropna()
-    if non_null.empty:
-        return np.nan
-    return non_null.iloc[0]
-
-
-def clean_counterparty(value) -> str:
-    if pd.isna(value):
-        return ""
-    text = str(value).strip().upper()
-    return text[:80]
-
-
-def derive_counterparty(row: pd.Series) -> str:
-    if int(row.get("is_income_pred", 0)) != 1:
-        return ""
-
-    income_type = str(row.get("income_type_pred", "")).strip()
-    centrelink_payment_type = str(row.get("centrelink_payment_type", "")).strip()
-    payer_key = clean_counterparty(row.get("payer_key_from_text", ""))
-    text_clean = clean_counterparty(row.get("text_clean", ""))
-
-    if income_type == "centrelink":
-        return f"CENTRELINK {centrelink_payment_type.upper()}".strip()
-    if payer_key:
-        return payer_key
-    return text_clean
-
-
-def build_income_stream_group_key(row: pd.Series) -> Optional[str]:
-    if int(row.get("is_income_pred", 0)) != 1:
-        return None
-
-    bank_account_id = str(row.get("bank_account_id", "")).strip()
-    finv_category = str(row.get("finv_category", "")).strip()
-    counterparty = str(row.get("counterparty", "")).strip()
-    centrelink_payment_type = str(row.get("centrelink_payment_type", "")).strip()
-    if not bank_account_id or not finv_category or not counterparty:
-        return None
-    return "||".join([bank_account_id, finv_category, counterparty, centrelink_payment_type])
-
-
-def summarize_frequency(dates: pd.Series) -> tuple[str, Optional[int], str]:
-    valid_dates = pd.to_datetime(dates, errors="coerce").dropna().sort_values()
-    if len(valid_dates) <= 1:
-        weekday_name = WEEKDAY_NAMES.get(valid_dates.iloc[-1].weekday(), "") if len(valid_dates) == 1 else ""
-        return "one_off", None, weekday_name
-
-    gaps = valid_dates.diff().dt.days.dropna()
-    if gaps.empty:
-        weekday_name = WEEKDAY_NAMES.get(valid_dates.iloc[-1].weekday(), "")
-        return "one_off", None, weekday_name
-
-    median_gap = float(gaps.median())
-    rounded_gap = int(round(median_gap))
-
-    if 6 <= median_gap <= 8:
-        frequency = "weekly"
-        typical_gap_days = 7
-    elif 13 <= median_gap <= 16:
-        frequency = "fortnightly"
-        typical_gap_days = 14
-    elif 27 <= median_gap <= 33:
-        frequency = "monthly"
-        typical_gap_days = 30
-    else:
-        frequency = "irregular"
-        typical_gap_days = rounded_gap if rounded_gap > 0 else None
-
-    weekday_mode = valid_dates.dt.weekday.mode()
-    weekday_name = WEEKDAY_NAMES.get(int(weekday_mode.iloc[0]), "") if not weekday_mode.empty else ""
-    return frequency, typical_gap_days, weekday_name
-
-
-def estimate_monthly_income(frequency: str, typical_amount: float) -> float:
-    if pd.isna(typical_amount):
-        return np.nan
-    if frequency == "weekly":
-        return typical_amount * 52.0 / 12.0
-    if frequency == "fortnightly":
-        return typical_amount * 26.0 / 12.0
-    if frequency == "monthly":
-        return typical_amount
-    return np.nan
-
-
-def derive_stream_status(
-    transaction_count: int,
-    frequency: str,
-    typical_gap_days: Optional[int],
-    last_date: pd.Timestamp,
-    global_last_date: pd.Timestamp,
-) -> str:
-    if pd.isna(last_date):
-        return "unknown"
-    if transaction_count <= 1:
-        return "single_transaction"
-    if frequency not in {"weekly", "fortnightly", "monthly"} or not typical_gap_days:
-        return "irregular"
-
-    days_since_last = (global_last_date - last_date).days
-    allowed_gap = int(round(typical_gap_days * 1.75))
-    return "active" if days_since_last <= allowed_gap else "inactive"
-
-
-def assign_income_stream_ids(result_df: pd.DataFrame) -> pd.DataFrame:
-    out = result_df.copy()
-    income_mask = out["is_income_pred"].eq(1)
-    income_df = out[income_mask].copy()
-    if income_df.empty:
-        return out
-
-    stream_order = (
-        income_df.groupby("_income_stream_group_key", dropna=False)
-        .agg(
-            finv_category=("finv_category", first_non_null),
-            bank_account_id=("bank_account_id", first_non_null),
-            counterparty=("counterparty", first_non_null),
-            first_txn_date=("txn_date", "min"),
-        )
-        .sort_values(["finv_category", "bank_account_id", "counterparty", "first_txn_date"], na_position="last")
-        .reset_index()
-    )
-
-    stream_id_map = {}
-    counters: dict[str, int] = {}
-    for _, row in stream_order.iterrows():
-        income_type = str(row["finv_category"])
-        counters[income_type] = counters.get(income_type, 0) + 1
-        stream_id_map[row["_income_stream_group_key"]] = f"{income_type}_{counters[income_type]:03d}"
-
-    out.loc[income_mask, "stream_id"] = out.loc[income_mask, "_income_stream_group_key"].map(stream_id_map).fillna("")
-    return out
-
-
-def build_income_summary(result_df: pd.DataFrame) -> pd.DataFrame:
-    income_df = result_df[result_df["is_income_pred"].eq(1)].copy()
-    if income_df.empty:
-        return pd.DataFrame(columns=INCOME_SUMMARY_COLUMNS)
-
-    income_df["txn_date"] = pd.to_datetime(income_df["txn_date"], errors="coerce")
-    income_df["amount_num"] = pd.to_numeric(income_df["amount_num"], errors="coerce")
-    global_last_date = income_df["txn_date"].max()
-    group_column = "_income_stream_group_key" if "_income_stream_group_key" in income_df.columns else "stream_id"
-
-    summary_rows = []
-    grouped = income_df.groupby(group_column, dropna=False)
-
-    for _, group in grouped:
-        group = group.sort_values("txn_date")
-        frequency, typical_gap_days, frequency_day = summarize_frequency(group["txn_date"])
-        transaction_count = int(len(group))
-        start_date = group["txn_date"].min()
-        end_date = group["txn_date"].max()
-        latest_row = group.iloc[-1]
-        latest_income_amount = latest_row.get("amount_num", np.nan)
-        median_income_amount = group["amount_num"].median()
-        estimated_monthly_income = estimate_monthly_income(frequency, median_income_amount)
-        status = derive_stream_status(
-            transaction_count=transaction_count,
-            frequency=frequency,
-            typical_gap_days=typical_gap_days,
-            last_date=end_date,
-            global_last_date=global_last_date,
-        )
-
-        predicted_next_income_date = pd.NaT
-        if (
-            transaction_count >= 2
-            and frequency in {"weekly", "fortnightly", "monthly"}
-            and typical_gap_days
-            and not pd.isna(end_date)
-        ):
-            predicted_next_income_date = end_date + pd.Timedelta(days=int(typical_gap_days))
-
-        summary_rows.append(
-            {
-                "finv_category": first_non_null(group["finv_category"]),
-                "stream_id": first_non_null(group["stream_id"]),
-                "bank_account_id": first_non_null(group["bank_account_id"]),
-                "account_type": first_non_null(group["account_type"]) if "account_type" in group.columns else np.nan,
-                "application_id": first_non_null(group["application_id"])
-                if "application_id" in group.columns
-                else np.nan,
-                "bank": first_non_null(group["bank"]) if "bank" in group.columns else np.nan,
-                "credit_limit": first_non_null(group["credit_limit"]) if "credit_limit" in group.columns else np.nan,
-                "counterparty": first_non_null(group["counterparty"]),
-                "centrelink_payment_type": first_non_null(group["centrelink_payment_type"]),
-                "transaction_start_date": start_date.date() if not pd.isna(start_date) else np.nan,
-                "transaction_end_date": end_date.date() if not pd.isna(end_date) else np.nan,
-                "status": status,
-                "transaction_count": transaction_count,
-                "total_income_amount": float(group["amount_num"].sum()),
-                "average_income_amount": float(group["amount_num"].mean()),
-                "median_income_amount": float(median_income_amount) if not pd.isna(median_income_amount) else np.nan,
-                "latest_income_amount": float(latest_income_amount) if not pd.isna(latest_income_amount) else np.nan,
-                "estimated_monthly_income": float(estimated_monthly_income)
-                if not pd.isna(estimated_monthly_income)
-                else np.nan,
-                "frequency": frequency,
-                "frequency_day": frequency_day,
-                "predicted_next_income_date": (
-                    predicted_next_income_date.date() if not pd.isna(predicted_next_income_date) else np.nan
-                ),
-            }
-        )
-
-    return pd.DataFrame(summary_rows, columns=INCOME_SUMMARY_COLUMNS).sort_values(
-        ["finv_category", "stream_id"]
-    ).reset_index(drop=True)
-
-
-def add_income_stream_outputs(result_df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
-    out = result_df.copy()
-    out["counterparty"] = out.apply(derive_counterparty, axis=1)
-    out["_income_stream_group_key"] = out.apply(build_income_stream_group_key, axis=1)
-    out["stream_id"] = ""
-    out = assign_income_stream_ids(out)
-    summary_df = build_income_summary(out)
-    out = out.drop(columns=["_income_stream_group_key"])
-    return out, summary_df
-
-
-# =============================================================================
 # Output and validation
 # =============================================================================
 
@@ -1365,24 +1099,27 @@ def print_income_type_summary(df: pd.DataFrame) -> None:
                 print(f"{payment_type}: {int(count)}")
 
 
-def classify_income_transactions(
-    raw_df: pd.DataFrame,
+def run_pipeline(
+    transactions: pd.DataFrame,
     include_centrelink_payment_type: bool = False,
-) -> IncomeClassificationResult:
-    """Classify an in-memory transaction dataframe and build its summary."""
-    df = prepare_input(raw_df)
-    original_cols = list(df.columns)
+) -> PipelineResult:
+    """Classify an in-memory transaction dataframe."""
+    output = prepare_input(transactions)
+    original_columns = list(output.columns)
 
-    result = add_wages_features(df)
-    result = apply_wages_rules(result)
-    result = add_income_type_rules(
-        result,
+    output = add_wages_features(output)
+    output = apply_wages_rules(output)
+    output = add_income_type_rules(
+        output,
         include_centrelink_payment_type=include_centrelink_payment_type,
     )
-    result, income_summary = add_income_stream_outputs(result)
-    result = reorder_output_columns(result, original_cols)
-    return IncomeClassificationResult(
-        transactions=result,
-        summary=income_summary,
-        original_columns=tuple(original_cols),
+    output = add_income_streams(output)
+    output = reorder_output_columns(output, original_columns)
+    return PipelineResult(
+        transactions=output,
+        diagnostics={
+            "predicted_income_rows": int(output["is_income_pred"].sum()),
+            "predicted_wages_rows": int(output["is_wages_pred"].sum()),
+        },
+        original_columns=tuple(original_columns),
     )

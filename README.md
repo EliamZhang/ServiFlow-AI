@@ -12,22 +12,34 @@ The default order is income, then liability. Configure it in
 `configs/category_catalog.json`.
 
 ```powershell
-python model_main.py `
-  --input wages_classification_engine/sample.csv `
+python -m serviflow `
+  --input income_classification_engine/sample.csv `
   --output output/serviflow_report.xlsx
 ```
 
 Optionally write row-level CSV output:
 
 ```powershell
-python model_main.py `
-  --input wages_classification_engine/sample.csv `
+python -m serviflow `
+  --input income_classification_engine/sample.csv `
   --output output/serviflow_report.xlsx `
   --transactions-csv output/serviflow_transactions.csv
 ```
 
 The workbook contains `transactions`, one summary sheet per engine, and
 `run_summary`.
+
+## Engine package convention
+
+Both engines use the same public structure and API:
+
+| Module | Responsibility |
+| --- | --- |
+| `cli.py` / `__main__.py` | Independent command-line entry point |
+| `engine.py` | Implements the shared engine contract |
+| `pipeline.py` | Returns `PipelineResult` from `run_pipeline()` |
+| `summary.py` | Builds the engine summary with `build_summary()` |
+| `reporting.py` | Writes the standalone report with `write_report()` |
 
 ## Independent engines
 
@@ -36,15 +48,15 @@ Each engine is a first-class package and can run independently.
 Income:
 
 ```powershell
-python -m wages_classification_engine.model_main `
-  --input wages_classification_engine/sample.csv `
-  --output wages_classification_engine/output/income_report.xlsx
+python -m income_classification_engine `
+  --input income_classification_engine/sample.csv `
+  --output income_classification_engine/output/income_report.xlsx
 ```
 
 Liability:
 
 ```powershell
-python -m liability_classification_engine.model_main
+python -m liability_classification_engine
 ```
 
 ## Adding an engine
