@@ -3,10 +3,6 @@ from pathlib import Path
 
 import pandas as pd
 
-from .domain.classification import (
-    print_income_type_summary,
-    print_optional_validation,
-)
 from .pipeline import ENGINE_DIR, PROJECT_ROOT, run_pipeline
 from .presentation.reporting import write_report
 
@@ -38,19 +34,11 @@ def main() -> None:
     predictions_csv = Path(args.predictions_csv) if args.predictions_csv else None
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    print(
-        f"Running income classification for: {input_file} "
-        f"(output_mode={'full' if args.full else 'compact'})"
-    )
     transactions = pd.read_csv(input_file, encoding="utf-8-sig")
     result = run_pipeline(
         transactions,
         include_centrelink_payment_type=args.full,
     )
-    print(f"Predicted wages rows: {int(result.transactions['is_wages_pred'].sum())}")
-    print(f"Predicted income rows: {int(result.transactions['is_income_pred'].sum())}")
-    print_income_type_summary(result.transactions)
-    print_optional_validation(result.transactions)
     if predictions_csv is not None:
         predictions_csv.parent.mkdir(parents=True, exist_ok=True)
         result.transactions.to_csv(
@@ -58,14 +46,11 @@ def main() -> None:
             index=False,
             encoding="utf-8-sig",
         )
-        print(f"Saved row-level predictions to: {predictions_csv}")
-    print(f"Building income report: {output_file}")
     write_report(
         result,
         output_file,
         full=args.full,
     )
-    print(f"Saved income report to: {output_file}")
 
 
 if __name__ == "__main__":

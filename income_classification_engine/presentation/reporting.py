@@ -115,11 +115,6 @@ def _write_income_detail_sheets(writer: pd.ExcelWriter, income_detail_df: pd.Dat
         sheet_name = f"detail_{idx + 1:02d}"
         income_detail_df.iloc[start:end].to_excel(writer, sheet_name=sheet_name, index=False)
 
-    print(
-        "Detail report exceeded Excel row limit; "
-        f"split income transaction detail across {sheet_count} sheets."
-    )
-
 
 def write_report(
     result: PipelineResult,
@@ -148,10 +143,6 @@ def write_report(
                 [TRANSACTIONS_SHEET_NAME, SUMMARY_SHEET_NAME],
             )
 
-        print(
-            f"Income report workbook saved with {len(summary_df)} summary rows and "
-            f"{len(transactions_df)} transaction rows."
-        )
         return transactions_df, summary_df
 
     income_detail_df = _filter_report_detail_rows(
@@ -165,10 +156,5 @@ def write_report(
             name for name in writer.book.sheetnames if name != SUMMARY_SHEET_NAME
         ]
         format_sheets(writer.book, [SUMMARY_SHEET_NAME, *detail_sheets])
-
-    print(
-        f"Income report workbook saved with {len(summary_df)} summary rows and "
-        f"{len(income_detail_df)} income-detail rows."
-    )
 
     return income_detail_df, summary_df

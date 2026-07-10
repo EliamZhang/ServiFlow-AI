@@ -62,6 +62,13 @@ class CurrentSampleIntegrationTests(unittest.TestCase):
         self.assertFalse(classified["counterparty"].isna().any())
         self.assertFalse(classified["finv_category"].isna().any())
 
+    def test_run_id_is_metadata_not_a_transaction_column(self) -> None:
+        self.assertTrue(self.result.run_id)
+        self.assertNotIn(
+            "classification_run_id",
+            self.result.transactions.columns,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

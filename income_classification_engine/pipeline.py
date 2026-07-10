@@ -38,9 +38,5 @@ def run_pipeline(
     output = reorder_output_columns(output, original_columns)
     return PipelineResult(
         transactions=output,
-        diagnostics={
-            "predicted_income_rows": int(output["is_income_pred"].sum()),
-            "predicted_wages_rows": int(output["is_wages_pred"].sum()),
-        },
         original_columns=tuple(original_columns),
     )

@@ -52,7 +52,7 @@ python -m income_classification_engine `
 ## Python API
 
 - `run_pipeline(...)` returns an explicit
-  `PipelineResult` containing transactions, diagnostics, and original columns.
+  `PipelineResult` containing transactions and original columns.
 - `build_summary(...)` builds `income_summary`.
 - `write_report(...)` writes the standalone Excel report.
 - `IncomeEngine` implements the project-wide engine protocol directly.

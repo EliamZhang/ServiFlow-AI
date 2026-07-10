@@ -51,7 +51,6 @@ class ClassificationOrchestrator:
         original = self._prepare_input(transactions)
         run_id = str(uuid4())
         output = self._initialize_output(original)
-        output["classification_run_id"] = run_id
         key_to_index = dict(zip(_key_tuples(original), output.index))
         summaries: list[SummaryArtifact] = []
         executions: list[EngineExecution] = []
@@ -81,7 +80,6 @@ class ClassificationOrchestrator:
                 key_to_index=key_to_index,
                 engine=engine,
                 priority=spec.priority,
-                run_id=run_id,
                 predictions=accepted,
             )
             engine_summaries = engine.summarize(context, engine_result, accepted)
@@ -148,7 +146,6 @@ class ClassificationOrchestrator:
         output["classification_rule_id"] = pd.NA
         output["classification_reason"] = pd.NA
         output["stream_id"] = pd.NA
-        output["classification_run_id"] = pd.NA
         return output
 
     def _validate_predictions(
@@ -219,7 +216,6 @@ class ClassificationOrchestrator:
         key_to_index: dict[tuple[str, str], int],
         engine: ClassificationEngine,
         priority: int,
-        run_id: str,
         predictions: pd.DataFrame,
     ) -> None:
         for (_, prediction), key in zip(
@@ -252,7 +248,6 @@ class ClassificationOrchestrator:
             output.at[row_index, "stream_id"] = prediction.get(
                 "stream_id", pd.NA
             )
-            output.at[row_index, "classification_run_id"] = run_id
 
     @staticmethod
     def _build_run_summary(
