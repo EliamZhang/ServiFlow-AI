@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+from time import perf_counter
 
 import pandas as pd
 
@@ -59,34 +60,65 @@ def run_classification(
     category_catalog_file: str | Path = DEFAULT_CATEGORY_CATALOG,
     transactions_csv: str | Path | None = None,
 ) -> ClassificationRunResult:
+    result, _ = _execute_classification(
+        input_file=input_file,
+        output_file=output_file,
+        config_file=config_file,
+        category_catalog_file=category_catalog_file,
+        transactions_csv=transactions_csv,
+    )
+    return result
+
+
+def _execute_classification(
+    input_file: str | Path,
+    output_file: str | Path,
+    config_file: str | Path,
+    category_catalog_file: str | Path,
+    transactions_csv: str | Path | None,
+) -> tuple[ClassificationRunResult, dict[str, float]]:
+    total_started = perf_counter()
+
+    stage_started = perf_counter()
     transactions = pd.read_csv(input_file, encoding="utf-8-sig")
+    read_seconds = perf_counter() - stage_started
+
+    stage_started = perf_counter()
     orchestrator = ClassificationOrchestrator(
         config=load_pipeline_config(config_file),
         category_owners=load_category_owners(category_catalog_file),
     )
     result = orchestrator.run(transactions)
+    classify_seconds = perf_counter() - stage_started
+
+    stage_started = perf_counter()
     write_report(result, output_file)
     if transactions_csv is not None:
         write_transactions_csv(result, transactions_csv)
-    return result
+    output_seconds = perf_counter() - stage_started
+
+    return result, {
+        "read": read_seconds,
+        "classify": classify_seconds,
+        "output": output_seconds,
+        "total": perf_counter() - total_started,
+    }
 
 
 def main() -> None:
     args = parse_args()
-    result = run_classification(
+    _, timings = _execute_classification(
         input_file=args.input,
         output_file=args.output,
         config_file=args.config,
         category_catalog_file=args.category_catalog,
         transactions_csv=args.transactions_csv,
     )
-    print(f"Classification run: {result.run_id}")
-    for execution in result.executions:
-        print(
-            f"{execution.engine_id}: candidates={execution.candidate_count}, "
-            f"accepted={execution.accepted_count}"
-        )
-    print(f"Saved unified report to: {args.output}")
+    print(
+        f"Timing | read {timings['read']:.2f}s | "
+        f"classify {timings['classify']:.2f}s | "
+        f"output {timings['output']:.2f}s | total {timings['total']:.2f}s"
+    )
 
 
 if __name__ == "__main__":
