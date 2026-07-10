@@ -18,17 +18,6 @@ Main output fields:
     Values:
         wage_advance
         blank for other rows
-- centrelink_payment_type: subtype for Centrelink / government benefit income.
-    Values:
-        pension
-        family_benefit
-        youth_allowance
-        jobseeker
-        parenting_payment
-        carer_payment
-        disability_support
-        other_centrelink
-        blank for non-centrelink rows
 - income_type_rule_name: the income classification rule that matched.
 - income_type_pred_reason: readable reason for income classification.
 
@@ -42,7 +31,7 @@ The package CLI is exposed by ``python -m income_classification_engine``.
 """
 
 import re
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, List
 
 import numpy as np
 import pandas as pd
@@ -123,24 +112,6 @@ CENTRELINK_PATTERNS = [
     r"\bPARENTING\s*PAYMENT\b",
     r"\bCARER\s*PAYMENT\b",
     r"\bDISABILITY\s*SUPPORT\b",
-]
-
-CENTRELINK_PAYMENT_TYPE_PATTERNS: List[Tuple[str, List[str]]] = [
-    ("pension", [r"\bPENSION\b"]),
-    (
-        "family_benefit",
-        [
-            r"\bFAMILY\s*ALLOWANCE\b",
-            r"\bFAMILY\s*PAYMENT\b",
-            r"\bFAMILY\s*TAX\s*BENEFIT\b",
-            r"\bFTB\b",
-        ],
-    ),
-    ("youth_allowance", [r"\bYOUTH\s*ALLOWANCE\b", r"\bYTH\s*ALL\b"]),
-    ("jobseeker", [r"\bJOB\s*SEEKER\b", r"\bJOBSEEKER\b"]),
-    ("parenting_payment", [r"\bPARENTING\s*PAYMENT\b"]),
-    ("carer_payment", [r"\bCARER\s*PAYMENT\b"]),
-    ("disability_support", [r"\bDISABILITY\s*SUPPORT\b", r"\bDSP\b"]),
 ]
 
 SELF_EMPLOYED_GIG_PATTERNS = [
@@ -253,7 +224,6 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "income_type_pred",
     "known_non_income_type_pred",
     "known_non_income_rule_name",
-    "centrelink_payment_type",
     "income_type_rule_name",
     "income_type_pred_reason",
     "is_income_pred",
@@ -335,10 +305,6 @@ HARD_NEGATIVE_REGEX = compile_patterns(HARD_NEGATIVE_PATTERNS)
 SOFT_NEGATIVE_REGEX = compile_patterns(SOFT_NEGATIVE_PATTERNS)
 NEGATIVE_REGEX = compile_patterns(NEGATIVE_PATTERNS)
 GIG_EXCLUSION_REGEX = compile_patterns(GIG_EXCLUSION_PATTERNS)
-CENTRELINK_PAYMENT_TYPE_REGEX: List[Tuple[str, List[re.Pattern]]] = [
-    (payment_type, compile_patterns(patterns))
-    for payment_type, patterns in CENTRELINK_PAYMENT_TYPE_PATTERNS
-]
 
 
 def clean_text(value) -> str:
@@ -353,15 +319,6 @@ def count_matches(text: str, patterns: List[re.Pattern]) -> int:
     if not text:
         return 0
     return sum(1 for pattern in patterns if pattern.search(text))
-
-
-def classify_centrelink_payment_type(text: str) -> str:
-    if not text:
-        return "other_centrelink"
-    for payment_type, patterns in CENTRELINK_PAYMENT_TYPE_REGEX:
-        if count_matches(text, patterns) > 0:
-            return payment_type
-    return "other_centrelink"
 
 
 def make_payer_key(text: str) -> str:
@@ -900,10 +857,7 @@ def apply_wages_rules(df: pd.DataFrame) -> pd.DataFrame:
 # Income type classification
 # =============================================================================
 
-def add_income_type_rules(
-    df: pd.DataFrame,
-    include_centrelink_payment_type: bool = True,
-) -> pd.DataFrame:
+def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
     """
     Add income classification fields.
 
@@ -992,13 +946,6 @@ def add_income_type_rules(
         default="",
     )
 
-    out["centrelink_payment_type"] = ""
-    if include_centrelink_payment_type:
-        is_centrelink = out["income_type_pred"].eq("centrelink")
-        out.loc[is_centrelink, "centrelink_payment_type"] = out.loc[is_centrelink, "text_clean"].apply(
-            classify_centrelink_payment_type
-        )
-
     out["income_type_pred_reason"] = out.apply(build_income_type_reason, axis=1)
     return out
 
@@ -1026,7 +973,6 @@ def build_income_type_reason(row: pd.Series) -> str:
     checks = [
         (row.get("has_salary_packaging_keyword", 0) == 1, "salary packaging / accesspay / salary sacrifice keyword"),
         (row.get("has_centrelink_keyword", 0) == 1, "centrelink / government benefit keyword"),
-        (row.get("centrelink_payment_type", "") != "", f"centrelink_payment_type={row.get('centrelink_payment_type', '')}"),
         (row.get("is_wages_pred", 0) == 1, "wages detector matched"),
         (row.get("has_strong_wage_keyword", 0) == 1, "salary/payroll/wage keyword"),
         (row.get("has_medium_income_keyword", 0) == 1, "direct credit/deposit keyword"),

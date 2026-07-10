@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--full",
         action="store_true",
-        help="Write income audit detail and Centrelink subtypes instead of the compact transaction report.",
+        help="Write income audit detail instead of the compact transaction report.",
     )
     parser.add_argument(
         "--predictions-csv",
@@ -35,10 +35,7 @@ def main() -> None:
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
     transactions = pd.read_csv(input_file, encoding="utf-8-sig")
-    result = run_pipeline(
-        transactions,
-        include_centrelink_payment_type=args.full,
-    )
+    result = run_pipeline(transactions)
     if predictions_csv is not None:
         predictions_csv.parent.mkdir(parents=True, exist_ok=True)
         result.transactions.to_csv(

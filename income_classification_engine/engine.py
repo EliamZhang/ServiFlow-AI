@@ -19,10 +19,7 @@ class IncomeEngine:
     engine_version = "1.0"
 
     def classify(self, context: EngineContext) -> EngineResult:
-        result = run_pipeline(
-            context.candidates,
-            include_centrelink_payment_type=True,
-        )
+        result = run_pipeline(context.candidates)
         details = result.transactions
         matched = details[details["is_income_pred"].eq(1)].copy()
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()

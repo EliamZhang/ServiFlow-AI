@@ -46,8 +46,7 @@ python -m income_classification_engine `
 ## Report modes
 
 - Default: writes `transactions` plus `income_summary`.
-- `--full`: writes `income_summary` plus income transaction audit detail and
-  Centrelink payment subtypes.
+- `--full`: writes `income_summary` plus income transaction audit detail.
 
 ## Python API
 

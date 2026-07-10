@@ -52,7 +52,6 @@ AUDIT_DETAIL_COLUMNS = [
     "text",
     "counterparty",
     "income_type_pred",
-    "centrelink_payment_type",
     "is_income_pred",
     "is_wages_pred",
     "stream_id",
@@ -93,11 +92,8 @@ def _filter_report_detail_rows(detail_output: pd.DataFrame) -> pd.DataFrame:
     return detail_output[detail_output["is_income_pred"].eq(1)].copy()
 
 
-def _format_summary_columns(summary_df: pd.DataFrame, include_centrelink_detail: bool) -> pd.DataFrame:
+def _format_summary_columns(summary_df: pd.DataFrame) -> pd.DataFrame:
     output = summary_df.copy()
-    if not include_centrelink_detail:
-        output = output.drop(columns=["centrelink_payment_type"], errors="ignore")
-
     required_columns = [col for col in SUMMARY_PRIORITY_COLUMNS if col in output.columns]
     remaining_columns = [col for col in output.columns if col not in required_columns]
     return output[required_columns + remaining_columns]
@@ -124,10 +120,7 @@ def write_report(
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    summary_df = _format_summary_columns(
-        build_summary(result.transactions),
-        include_centrelink_detail=full,
-    )
+    summary_df = _format_summary_columns(build_summary(result.transactions))
 
     if not full:
         transactions_df = _select_transaction_columns(
