@@ -11,6 +11,8 @@
     "personal_loan_sacc": {"owner_engine_id": "liability", "active": true},
     "personal_loan_non_sacc": {"owner_engine_id": "liability", "active": true},
     "personal_loan_unknown": {"owner_engine_id": "liability", "active": true},
-    "loc": {"owner_engine_id": "liability", "active": true}
+    "loc": {"owner_engine_id": "liability", "active": true},
+    "internal transfer": {"owner_engine_id": "transfer", "active": true},
+    "external transfer": {"owner_engine_id": "transfer", "active": true}
   }
 }
