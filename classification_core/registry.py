@@ -4,6 +4,7 @@ from collections.abc import Callable
 
 from income_classification_engine import IncomeEngine
 from liability_classification_engine import LiabilityEngine
+from transfer_classification_engine import TransferEngine
 
 from .engine import ClassificationEngine
 
@@ -11,6 +12,7 @@ from .engine import ClassificationEngine
 ENGINE_FACTORIES: dict[str, Callable[[], ClassificationEngine]] = {
     "income": IncomeEngine,
     "liability": LiabilityEngine,
+    "transfer": TransferEngine,
 }
 
 
