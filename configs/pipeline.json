@@ -9,6 +9,11 @@
       "engine_id": "liability",
       "priority": 200,
       "enabled": true
+    },
+    {
+      "engine_id": "transfer",
+      "priority": 300,
+      "enabled": true
     }
   ],
   "execution": {
