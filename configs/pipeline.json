@@ -1,6 +1,11 @@
 {
   "pipeline": [
     {
+      "engine_id": "initial",
+      "priority": 50,
+      "enabled": true
+    },
+    {
       "engine_id": "income",
       "priority": 100,
       "enabled": true

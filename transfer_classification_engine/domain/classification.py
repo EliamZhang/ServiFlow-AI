@@ -3,8 +3,7 @@
 Rule-based transfer classification for bank transactions.
 
 Classifies transactions into:
-- internal transfer
-- external transfer
+- transfer
 
 Uses ~70 regex rules in priority order (high confidence → medium confidence).
 Rules support optional dr_cr direction constraints for P0 accuracy.
@@ -39,106 +38,113 @@ from classification_core.reasons import format_classification_reason
 
 HIGH_CONFIDENCE_RULES = [
     # -------------------------------------------------------------------------
-    # External transfer: well-defined merchant/payment patterns (P0 additions)
+    # Transfer: well-defined merchant/payment patterns (P0 additions)
     # -------------------------------------------------------------------------
-    ("external_direct_debit_generic", "external transfer", r"^direct debit$", "debit"),
-    ("external_eftpos", "external transfer", r"\beftpos\b", None),
-    ("external_visa_purchase", "external transfer", r"\bvisa purchase\b", None),
-    ("external_bpay", "external transfer", r"\bbpay\b", None),
-    ("external_transferwise_sydney", "external transfer", r"\btransferwise sydney\b", None),
-    ("external_debit_card_wise_taptap", "external transfer", r"^debit card purchase (wise|taptap send) sydney", None),
-    ("external_fast_pymt_in", "external transfer", r"^fast pymt in", None),
-    ("external_withdrawal_westpac_cho_loan", "external transfer", r"^withdrawal mobile \d+ tfr westpac cho loan$", None),
-
-    # -------------------------------------------------------------------------
-    # External transfer: named mobile/online payments and well-defined syntax
-    # -------------------------------------------------------------------------
-    ("external_anz_mobile_payment_to_name", "external transfer", r"^anz mobile banking payment \d+ to [a-z].*$", None),
-    ("external_sav_mobile", "external transfer", r"^transfer (to|from) sav \d+ mobile#\d+$", None),
-    ("external_sav_ref", "external transfer", r"^transfer (to|from) sav \d+ ref#\d+$", None),
-    ("external_sav_ref_xxx", "external transfer", r"^transfer from sav \d+xxx ref#\d+$", None),
-    ("external_anz_mbank_masked", "external transfer", r"^anz m-banking funds tfer transfer \d+ to \d+xxxxxxxx\d{4}$", None),
-    ("external_statement_or_savings_account", "external transfer", r"^(statement account|savings account)$", None),
-    ("external_transfer_name_code", "external transfer", r"^transfer (debit|credit) [a-z][a-z .'-]*[a-z] [a-z]\d{10,}$", None),
-    ("external_transfer_name_code_compact", "external transfer", r"^transfer (debit|credit) [a-z][a-z .'-]+[a-z]\d{10,}$", None),
-    ("external_credit_adjustment", "external transfer", r"^credit adjustment$", None),
-    ("external_misc_credit_v", "external transfer", r"^miscellaneous credit v\d{4}$", None),
-    ("external_payid_osko", "external transfer", r"\b(payid|osko|npp)\b", None),
-    ("external_fast_transfer", "external transfer", r"\bfast transfer\b", None),
-    ("external_paypal_worldremit", "external transfer", r"\b(paypal australia|worldremit)\b", None),
-    ("external_interbank_credit", "external transfer", r"\binter-bank credit\b", None),
-    ("external_commbank_name", "external transfer", r"\btransfer (to|from) [a-z][a-z .'-]+ commbank app\b", None),
-
-    # External transfer: stable merchant/payment patterns confirmed by extraction.
-    ("external_paypal_direct_debit", "external transfer", r"^direct debit \d+ paypal australia \d+$", None),
-    ("external_paypal_authority", "external transfer", r"^payment by authority to paypal australia \d+$", None),
-    ("external_paypal_payment", "external transfer", r"^payment to paypal australia \d+$", None),
-    ("external_paypal_account", "external transfer", r"^paypal australia \d+$", None),
-    ("external_tfr_from_s_mob", "external transfer", r"^tfr from \d+s\d+ mob$", None),
-    ("external_tfr_from_long_mob", "external transfer", r"^tfr from \d+ mob$", None),
-    ("external_worldwide_wallet", "external transfer", r"^deposit online \d+ \d+ tfr worldwide wallet$", None),
-    ("external_wu", "external transfer", r"^wu \d+$", None),
-    ("external_transfer_funds_trns", "external transfer", r"^transfer debit internet transfer funds trns$", None),
-    ("external_wise_card", "external transfer", r"^wise sydney au aus card xx\d{4} value date: \d+/\d+/\d+$", None),
-    ("external_taptap_send", "external transfer", r"^taptap send sydney aus card xx\d{4} value date: \d+/\d+/\d+$", None),
-    ("external_online_withdrawal_worldwide_wallet", "external transfer", r"^withdrawal online \d+ \d+ tfr worldwide wallet$", None),
+    ("external_direct_debit_generic", "transfer", r"^direct debit$", "debit"),
+    ("external_eftpos", "transfer", r"\beftpos\b", None),
+    ("external_visa_purchase", "transfer", r"\bvisa purchase\b", None),
+    ("external_bpay", "transfer", r"\bbpay\b", None),
+    ("external_transferwise_sydney", "transfer", r"\btransferwise sydney\b", None),
+    ("external_debit_card_wise_taptap", "transfer", r"^debit card purchase (wise|taptap send) sydney", None),
+    ("external_fast_pymt_in", "transfer", r"^fast pymt in", None),
+    ("external_withdrawal_westpac_cho_loan", "transfer", r"^withdrawal mobile \d+ tfr westpac cho loan$", None),
 
     # -------------------------------------------------------------------------
-    # Internal transfer: high-confidence patterns (P0: promoted from medium)
+    # Transfer: named mobile/online payments and well-defined syntax
+    # -------------------------------------------------------------------------
+    ("external_anz_mobile_payment_to_name", "transfer", r"^anz mobile banking payment \d+ to [a-z].*$", None),
+    ("external_sav_mobile", "transfer", r"^transfer (to|from) sav \d+ mobile#\d+$", None),
+    ("external_sav_ref", "transfer", r"^transfer (to|from) sav \d+ ref#\d+$", None),
+    ("external_sav_ref_xxx", "transfer", r"^transfer from sav \d+xxx ref#\d+$", None),
+    ("external_anz_mbank_masked", "transfer", r"^anz m-banking funds tfer transfer \d+ to \d+xxxxxxxx\d{4}$", None),
+    ("external_statement_or_savings_account", "transfer", r"^(statement account|savings account)$", None),
+    ("external_transfer_name_code", "transfer", r"^transfer (debit|credit) [a-z][a-z .'-]*[a-z] [a-z]\d{10,}$", None),
+    ("external_transfer_name_code_compact", "transfer", r"^transfer (debit|credit) [a-z][a-z .'-]+[a-z]\d{10,}$", None),
+    ("external_credit_adjustment", "transfer", r"^credit adjustment$", None),
+    ("external_misc_credit_v", "transfer", r"^miscellaneous credit v\d{4}$", None),
+    ("external_payid_osko", "transfer", r"\b(payid|osko|npp)\b", None),
+    ("external_fast_transfer", "transfer", r"\bfast transfer\b", None),
+    ("external_paypal_worldremit", "transfer", r"\b(paypal australia|worldremit)\b", None),
+    ("external_interbank_credit", "transfer", r"\binter-bank credit\b", None),
+    ("external_commbank_name", "transfer", r"\btransfer (to|from) [a-z][a-z .'-]+ commbank app\b", None),
+
+    # Transfer: stable merchant/payment patterns confirmed by extraction.
+    ("external_paypal_direct_debit", "transfer", r"^direct debit \d+ paypal australia \d+$", None),
+    ("external_paypal_authority", "transfer", r"^payment by authority to paypal australia \d+$", None),
+    ("external_paypal_payment", "transfer", r"^payment to paypal australia \d+$", None),
+    ("external_paypal_account", "transfer", r"^paypal australia \d+$", None),
+    ("external_tfr_from_s_mob", "transfer", r"^tfr from \d+s\d+ mob$", None),
+    ("external_tfr_from_long_mob", "transfer", r"^tfr from \d+ mob$", None),
+    ("external_worldwide_wallet", "transfer", r"^deposit online \d+ \d+ tfr worldwide wallet$", None),
+    ("external_wu", "transfer", r"^wu \d+$", None),
+    ("external_transfer_funds_trns", "transfer", r"^transfer debit internet transfer funds trns$", None),
+    ("external_wise_card", "transfer", r"^wise sydney au aus card xx\d{4} value date: \d+/\d+/\d+$", None),
+    ("external_taptap_send", "transfer", r"^taptap send sydney aus card xx\d{4} value date: \d+/\d+/\d+$", None),
+    ("external_online_withdrawal_worldwide_wallet", "transfer", r"^withdrawal online \d+ \d+ tfr worldwide wallet$", None),
+
+    # Mobile transfers to/from individuals.
+    ("external_mobile_transfer", "transfer", r"\btfr (to|from) .*\b(mob|mobile)\b", None),
+    ("external_withdrawal_mobile_pymt", "transfer", r"\bwithdrawal mobile\b.*\bpymt\b", None),
+
+    # -------------------------------------------------------------------------
+    # Transfer: high-confidence patterns (P0: promoted from medium)
     # -------------------------------------------------------------------------
 
-    # Westpac deposit patterns: always credit, 95-98% internal.
-    ("internal_deposit_westpac_cho", "internal transfer", r"^deposit online \d+ tfr westpac cho", "credit"),
-    ("internal_deposit_westpac_lif", "internal transfer", r"^deposit online \d+ tfr westpac lif", "credit"),
-    ("internal_deposit_westpac_esa", "internal transfer", r"^deposit online \d+ tfr westpac esa", "credit"),
+    # Westpac deposit patterns: always credit, 95-98% transfer.
+    ("internal_deposit_westpac_cho", "transfer", r"^deposit online \d+ tfr westpac cho", "credit"),
+    ("internal_deposit_westpac_lif", "transfer", r"^deposit online \d+ tfr westpac lif", "credit"),
+    ("internal_deposit_westpac_esa", "transfer", r"^deposit online \d+ tfr westpac esa", "credit"),
 
-    # Commbank app masked account with descriptive suffixes: 92-98% internal.
-    ("internal_commbank_from_suffix", "internal transfer", r"^transfer from xx\d{4} commbank app (allowance|rent|savings|transfer|food|bill|shop)$", None),
-    ("internal_commbank_from_value_date", "internal transfer", r"^transfer from xx\d{4} commbank app value date: \d+/\d+/\d+$", None),
+    # Commbank app masked account with descriptive suffixes: 92-98% transfer.
+    ("internal_commbank_from_suffix", "transfer", r"^transfer from xx\d{4} commbank app (allowance|rent|savings|transfer|food|bill|shop)$", None),
+    ("internal_commbank_from_value_date", "transfer", r"^transfer from xx\d{4} commbank app value date: \d+/\d+/\d+$", None),
 
-    # Standard internal transfer narratives.
-    ("internal_phrase", "internal transfer", r"\binternal transfer\b", None),
-    ("internal_linked_acc", "internal transfer", r"\b(linked acc|linked account|acc trns|acc transfer)\b", None),
-    ("internal_anz_funds_tfer", "internal transfer", r"\banz internet banking funds tfer\b", None),
-    ("internal_anz_mbank_to_long", "internal transfer", r"^anz m-banking funds tfer transfer \d+ to \d+$", None),
-    ("internal_anz_mbank_from_long", "internal transfer", r"^anz m-banking funds tfer transfer \d+ from \d+$", None),
-    ("internal_ib_tfr_to_long", "internal transfer", r"^ib tfr \d+ to \d+$", None),
-    ("internal_mb_transfer_from", "internal transfer", r"^mb transfer from \d+$", None),
-    ("internal_mb_transfer_to", "internal transfer", r"^mb transfer to \d+$", None),
-    ("internal_orange_everyday_to", "internal transfer", r"^internal transfer - receipt \d+ - to orange everyday$", None),
-    ("internal_orange_everyday_from", "internal transfer", r"^internal transfer - receipt \d+ - from orange everyday$", None),
-    ("internal_savings_maximiser", "internal transfer", r"^internal transfer - internal transfer - receipt \d+ savings maximiser \d+$", None),
-    ("internal_ibank_mobile_banking", "internal transfer", r"^ibank trf ref: \d+ transferred to \d+ mobile banking$", None),
+    # Standard transfer narratives.
+    ("internal_phrase", "transfer", r"\binternal transfer\b", None),
+    ("internal_linked_acc", "transfer", r"\b(linked acc|linked account|acc trns|acc transfer)\b", None),
+    ("internal_anz_funds_tfer", "transfer", r"\banz internet banking funds tfer\b", None),
+    ("internal_anz_mbank_to_long", "transfer", r"^anz m-banking funds tfer transfer \d+ to \d+$", None),
+    ("internal_anz_mbank_from_long", "transfer", r"^anz m-banking funds tfer transfer \d+ from \d+$", None),
+    ("internal_ib_tfr_to_long", "transfer", r"^ib tfr \d+ to \d+$", None),
+    ("internal_mb_transfer_from", "transfer", r"^mb transfer from \d+$", None),
+    ("internal_mb_transfer_to", "transfer", r"^mb transfer to \d+$", None),
+    ("internal_orange_everyday_to", "transfer", r"^internal transfer - receipt \d+ - to orange everyday$", None),
+    ("internal_orange_everyday_from", "transfer", r"^internal transfer - receipt \d+ - from orange everyday$", None),
+    ("internal_savings_maximiser", "transfer", r"^internal transfer - internal transfer - receipt \d+ savings maximiser \d+$", None),
+    ("internal_ibank_mobile_banking", "transfer", r"^ibank trf ref: \d+ transferred to \d+ mobile banking$", None),
+
+    # Internet banking withdrawal to own account (deposit direction excluded — too ambiguous).
+    ("internal_internet_banking", "transfer", r"\binternet withdrawal\b.*\bto \d{7,}\b", None),
 ]
 
 MEDIUM_CONFIDENCE_RULES = [
-    # External transfer medium patterns.
-    ("external_transferred_to_digits", "external transfer", r"\btransferred to \d{3,6} \d+\b", None),
-    ("external_sav_net", "external transfer", r"^transfer (to|from) sav \d+ net#\d+$", None),
-    ("external_scheduled_cba_account", "external transfer", r"^scheduled payment to a cba account \d+ \d+$", None),
-    ("external_anz_mbank_transfer_from", "external transfer", r"^anz m-banking transfer \d+ from \d+$", None),
+    # Transfer medium patterns.
+    ("external_transferred_to_digits", "transfer", r"\btransferred to \d{3,6} \d+\b", None),
+    ("external_sav_net", "transfer", r"^transfer (to|from) sav \d+ net#\d+$", None),
+    ("external_scheduled_cba_account", "transfer", r"^scheduled payment to a cba account \d+ \d+$", None),
+    ("external_anz_mbank_transfer_from", "transfer", r"^anz m-banking transfer \d+ from \d+$", None),
 
-    # Internal transfer medium patterns.
-    ("internal_internet_transfer_credit", "internal transfer", r"^internet transfer credit from \d+ ref no \d+$", None),
-    ("internal_internet_transfer_debit", "internal transfer", r"^internet transfer debit to \d+ reference no \d+$", None),
-    ("internal_ib_transfer_tfd", "internal transfer", r"^ib transfer \d+ to \d{3}-\d{3}-\d+ \d+:\d+(?:am|pm) tfd$", None),
-    ("internal_ib_transfer_tfc", "internal transfer", r"^ib transfer \d+ from \d{3}-\d{3}-\d+ \d+:\d+(?:am|pm) tfc$", None),
-    ("internal_transfer_to_cba_ac", "internal transfer", r"^transfer to cba a/c commbank app$", None),
-    ("internal_transfer_from_commbank", "internal transfer", r"^transfer from commbank app$", None),
-    ("internal_masked_commbank", "internal transfer", r"\btransfer (to|from) xx\d{4}\b", None),
-    # Westpac withdrawal patterns: debit direction, still mostly internal (92-98%).
-    ("internal_westpac_family", "internal transfer", r"\b(tfr westpac|westpac lif|maximiser)\b", None),
-    ("internal_from_account", "internal transfer", r"\bfrom account \d+ .* internal transfer\b", None),
-    ("internal_tfd", "internal transfer", r"^\. tfd$", None),
-    ("internal_tfc", "internal transfer", r"^\. tfc$", None),
-    ("internal_me_tfd", "internal transfer", r"^me tfd$", None),
-    ("internal_x_tfc", "internal transfer", r"^x tfc$", None),
-    ("internal_save_tfc", "internal transfer", r"^save tfc$", None),
-    ("internal_j_tfd", "internal transfer", r"^j tfd$", None),
+    # Transfer medium patterns (continued).
+    ("internal_internet_transfer_credit", "transfer", r"^internet transfer credit from \d+ ref no \d+$", None),
+    ("internal_internet_transfer_debit", "transfer", r"^internet transfer debit to \d+ reference no \d+$", None),
+    ("internal_ib_transfer_tfd", "transfer", r"^ib transfer \d+ to \d{3}-\d{3}-\d+ \d+:\d+(?:am|pm) tfd$", None),
+    ("internal_ib_transfer_tfc", "transfer", r"^ib transfer \d+ from \d{3}-\d{3}-\d+ \d+:\d+(?:am|pm) tfc$", None),
+    ("internal_transfer_to_cba_ac", "transfer", r"^transfer to cba a/c commbank app$", None),
+    ("internal_transfer_from_commbank", "transfer", r"^transfer from commbank app$", None),
+    ("internal_masked_commbank", "transfer", r"\btransfer (to|from) xx\d{4}\b", None),
+    # Westpac withdrawal patterns: debit direction, still mostly transfer (92-98%).
+    ("internal_westpac_family", "transfer", r"\b(tfr westpac|westpac lif|maximiser)\b", None),
+    ("internal_from_account", "transfer", r"\bfrom account \d+ .* internal transfer\b", None),
+    ("internal_tfd", "transfer", r"^\. tfd$", None),
+    ("internal_tfc", "transfer", r"^\. tfc$", None),
+    ("internal_me_tfd", "transfer", r"^me tfd$", None),
+    ("internal_x_tfc", "transfer", r"^x tfc$", None),
+    ("internal_save_tfc", "transfer", r"^save tfc$", None),
+    ("internal_j_tfd", "transfer", r"^j tfd$", None),
 
     # Relaxed name+code: allows extra text after the transaction code.
-    # Precision ~95.3% — kept as medium due to some internal lookalikes.
-    ("external_transfer_name_code_relaxed", "external transfer", r"^transfer (debit|credit) (?!online )[a-z].*?[a-z]\d{10,}", None),
+    # Precision ~95.3% — kept as medium due to some lookalikes.
+    ("external_transfer_name_code_relaxed", "transfer", r"^transfer (debit|credit) (?!online )[a-z].*?[a-z]\d{10,}", None),
 ]
 
 
@@ -242,6 +248,15 @@ class FixedRuleClassifier:
 # Pipeline entry point
 # =============================================================================
 
+# Patterns for account-aware deposit matching.
+_WITHDRAWAL_ACCOUNT_RE = re.compile(
+    r"\binternet withdrawal\b.*\bto (\d{7,})\b", re.IGNORECASE
+)
+_DEPOSIT_ACCOUNT_RE = re.compile(
+    r"\binternet deposit\b.*\bfrom (\d{7,})\b", re.IGNORECASE
+)
+
+
 def classify_transfers(df: pd.DataFrame) -> pd.DataFrame:
     """Apply transfer classification rules and produce output columns."""
     classifier = FixedRuleClassifier()
@@ -255,11 +270,14 @@ def classify_transfers(df: pd.DataFrame) -> pd.DataFrame:
     )
     output["finv_category"] = output["predicted_category"].fillna("")
 
+    # ── post-processing: extend deposit matches via known internal accounts ──
+    output = _match_deposit_to_known_accounts(output)
+
     # ── counterparty ──
     output["counterparty"] = _derive_counterparty(output)
 
     # ── rule metadata ──
-    output["transfer_rule_name"] = output["prediction_rule"].fillna("")
+    output["transfer_rule_name"] = _build_transfer_rule_name(output)
     output["transfer_pred_reason"] = output.apply(_build_reason, axis=1)
 
     # ── stream id ──
@@ -268,6 +286,74 @@ def classify_transfers(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     return output
+
+
+def _match_deposit_to_known_accounts(df: pd.DataFrame) -> pd.DataFrame:
+    """Reclassify internet deposit rows whose counterparty account is already
+    known from a withdrawal match (i.e. the user has transferred money TO that
+    account before, so it is likely their own account).
+
+    Known accounts are scoped per bank_account_id to avoid cross-user leakage."""
+
+    output = df.copy()
+
+    # Collect known internal accounts per bank_account_id from withdrawal matches.
+    bank_account_col = (
+        "bank_account_id" if "bank_account_id" in output.columns else None
+    )
+    known_by_bank: dict[str, set[str]] = {}
+
+    for _, row in output[output["is_transfer_pred"] == 1].iterrows():
+        match = _WITHDRAWAL_ACCOUNT_RE.search(str(row.get("text_norm", "")))
+        if not match:
+            continue
+        bank = (
+            str(row[bank_account_col])
+            if bank_account_col and pd.notna(row.get(bank_account_col))
+            else "__global__"
+        )
+        known_by_bank.setdefault(bank, set()).add(match.group(1))
+
+    if not known_by_bank:
+        return output
+
+    # Scan unclassified rows for deposit patterns with known accounts.
+    unclassified_mask = output["is_transfer_pred"] == 0
+    for idx in output[unclassified_mask].index:
+        text = str(output.at[idx, "text_norm"])
+        match = _DEPOSIT_ACCOUNT_RE.search(text)
+        if not match:
+            continue
+        account = match.group(1)
+        bank = (
+            str(output.at[idx, bank_account_col])
+            if bank_account_col and pd.notna(output.at[idx, bank_account_col])
+            else "__global__"
+        )
+        known = known_by_bank.get(bank, set()) | known_by_bank.get("__global__", set())
+        if account not in known:
+            continue
+
+        output.at[idx, "is_transfer_pred"] = 1
+        output.at[idx, "finv_category"] = "transfer"
+        output.at[idx, "predicted_category"] = "transfer"
+        output.at[idx, "prediction_confidence"] = "high"
+        output.at[idx, "prediction_rule"] = (
+            "internal_internet_deposit_known_account"
+        )
+        output.at[idx, "prediction_dr_cr_used"] = False
+
+    return output
+
+
+def _build_transfer_rule_name(df: pd.DataFrame) -> pd.Series:
+    """Use prediction_rule when available, otherwise transfer_rule_name."""
+    if "transfer_rule_name" in df.columns:
+        return df["transfer_rule_name"].where(
+            df["transfer_rule_name"].notna() & (df["transfer_rule_name"] != ""),
+            df["prediction_rule"].fillna(""),
+        )
+    return df["prediction_rule"].fillna("")
 
 
 # =============================================================================

@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from income_classification_engine import IncomeEngine
+from initial_classification_engine import InitialClassificationEngine
 from liability_classification_engine import LiabilityEngine
 from transfer_classification_engine import TransferEngine
 
@@ -10,6 +11,7 @@ from .engine import ClassificationEngine
 
 
 ENGINE_FACTORIES: dict[str, Callable[[], ClassificationEngine]] = {
+    "initial": InitialClassificationEngine,
     "income": IncomeEngine,
     "liability": LiabilityEngine,
     "transfer": TransferEngine,
