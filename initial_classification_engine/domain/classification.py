@@ -218,7 +218,7 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> KeywordAutomaton:
     global _cached_automaton, _cached_kb_path, _DEFAULT_KB_PATH
     if _DEFAULT_KB_PATH is None:
         _DEFAULT_KB_PATH = str(
-            Path(__file__).resolve().parent.parent / "merchant_kb.csv"
+            Path(__file__).resolve().parent.parent / "sample_merchant_kb.csv"
         )
     resolved = str(kb_path or _DEFAULT_KB_PATH)
     if _cached_automaton is None or _cached_kb_path != resolved:

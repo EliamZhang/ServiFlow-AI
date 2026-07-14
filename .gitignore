@@ -3,3 +3,4 @@ __pycache__/
 .pytest_cache/
 .coverage
 output/
+initial_classification_engine/merchant_kb.csv
