@@ -357,15 +357,348 @@ def _build_transfer_rule_name(df: pd.DataFrame) -> pd.Series:
 
 
 # =============================================================================
-# Helpers
+# Counterparty extraction
 # =============================================================================
+#
+# Produces standardized counterparty labels matching the third_party naming
+# convention observed in the sample data:
+#
+#   Internal Transfer  →  "Internal Transfer Debit" / "Internal Transfer Credit"
+#   External Transfer  →  "<PaymentSystemOrBank> <Category>"
+#
+# Patterns are ordered by specificity — first match wins.
+
+# ── Payment system / service identifiers ──
+
+_OSKO_RE = re.compile(r"\bosko\b", re.IGNORECASE)
+_NPP_RE = re.compile(r"\b(npp|payid)\b", re.IGNORECASE)
+_BPAY_RE = re.compile(r"\bbpay\b", re.IGNORECASE)
+_PAYPAL_RE = re.compile(r"\bpaypal\b", re.IGNORECASE)
+_WISE_RE = re.compile(r"\bwise\b", re.IGNORECASE)
+_WORLDREMIT_RE = re.compile(r"\bworldremit\b", re.IGNORECASE)
+_WU_RE = re.compile(r"\bwestern\s+union\b", re.IGNORECASE)
+_WORLDWIDE_WALLET_RE = re.compile(r"\bworldwide\s+wallet\b", re.IGNORECASE)
+_IMT_RTGS_RE = re.compile(r"\b(imt|rtgs|swift)\b", re.IGNORECASE)
+_RMTLY_RE = re.compile(r"\brmtly\b", re.IGNORECASE)
+_AUTOMATIC_PAYMENT_RE = re.compile(r"^automatic\s+payment$", re.IGNORECASE)
+_DIRECT_DEBIT_STANDALONE_RE = re.compile(r"^direct\s+debit$", re.IGNORECASE)
+
+# ── Bank-specific text markers ──
+
+_COMMBANK_APP_RE = re.compile(r"\bcommbank\s+app\b", re.IGNORECASE)
+# "Fast Transfer" is CBA's branding for Osko/NPP payments.
+_FAST_TRANSFER_RE = re.compile(r"^fast\s+transfer\s+(?:from|to)\b", re.IGNORECASE)
+# CommBank internet banking: "Internet Withdrawal/Deposit ... To/From ..."
+_INTERNET_BANKING_RE = re.compile(r"^internet\s+(?:withdrawal|deposit)\b", re.IGNORECASE)
+_ANZ_BANKING_RE = re.compile(r"\banz\b", re.IGNORECASE)
+_WESTPAC_RE = re.compile(r"\bwestpac\b", re.IGNORECASE)
+_ING_RE = re.compile(r"\b(?:orange\s+everyday|orange\s+one|savings\s+maximiser)\b", re.IGNORECASE)
+# ING internal transfer format: "Internal Transfer - Receipt 123456 - ... Orange Everyday"
+_ING_INTERNAL_FMT_RE = re.compile(
+    r"internal\s+transfer\s+.*\b(?:orange\s+(?:everyday|one)|savings\s+maximiser)\b",
+    re.IGNORECASE,
+)
+_GREATER_BANK_RE = re.compile(r"\b(?:ibank\s+trf|wdl\s+thpar)\b", re.IGNORECASE)
+_BANKWEST_PAYID_RE = re.compile(r"^to\s+(?:phone|email)\b", re.IGNORECASE)
+_SUNCORP_RE = re.compile(r"\bsuncorp\b", re.IGNORECASE)
+_HERITAGE_RE = re.compile(r"\bheritage\b", re.IGNORECASE)
+_BENDIGO_RE = re.compile(r"\bbendigo\s+bank\b", re.IGNORECASE)
+
+# ── Service / merchant identifiers ──
+
+_BIZ_CORE_RE = re.compile(r"\bbiz\s+core\b", re.IGNORECASE)
+_DBS_XPLOR_RE = re.compile(r"\bdbs\s+xplor\b", re.IGNORECASE)
+_ROCKET_REMIT_RE = re.compile(r"\brocket\s+remit\b", re.IGNORECASE)
+_ZEPTO_RE = re.compile(r"\bzepto\b", re.IGNORECASE)
+_LIVE_PAYMENTS_RE = re.compile(r"\blive\s+payments\b", re.IGNORECASE)
+
+# ── Short/internal code patterns ("b TFC", "b TFD", "NECTR", etc.) ──
+
+_SHORT_CODE_RE = re.compile(
+    r"^(?:[a-z]\s+)?(?:tfc|tfd|nectr)$", re.IGNORECASE,
+)
+
+# ── "DEPOSIT-OSKO PAYMENT" → Osko (some banks prefix Osko with "DEPOSIT-") ──
+
+_DEPOSIT_OSKO_RE = re.compile(r"^deposit-osko\s+payment\b", re.IGNORECASE)
+
+# ── NAB direct transfer markers ──
+
+_NAB_TRANSFER_CREDIT_DEBIT_RE = re.compile(
+    r"^transfer\s+(?:credit|debit)\s+(?!online\b)",
+    re.IGNORECASE,
+)
+
+# ── CommBank generic transfer markers ──
+
+_CBA_TRANSFER_TO_FROM_RE = re.compile(
+    r"^transfer\s+(?:to|from)\b",
+    re.IGNORECASE,
+)
+
+# ── Other bank transfer pattern (TFR to/from ... MOB) ──
+
+_TFR_MOB_RE = re.compile(r"\btfr\s+(?:to|from)\b", re.IGNORECASE)
+
+# ── Internal transfer markers (used for fallback detection) ──
+
+_INTERNAL_MARKER_RE = re.compile(
+    r"\b(?:linked\s+acc|internal\s+transfer|acc\s+trns|acc\s+transfer)\b",
+    re.IGNORECASE,
+)
+
+
+def _is_internal_transfer(row: pd.Series) -> bool:
+    """Determine if a row represents an internal transfer for counterparty labelling.
+
+    Uses the classification rule name as the primary signal, with exclusions
+    for rules that predominantly match external transfers:
+
+    ================================ ========== ===========================
+    Rule pattern                     Decision   Reason
+    ================================ ========== ===========================
+    internal_anz_funds_tfer          external   ANZ external funds transfers
+    internal_commbank_from_value_date external  Mostly CBA external transfers
+    internal_phrase                  external   ING internal-format (external)
+    internal_transfer_to_cba_ac      external   CBA external transfers
+    internal_transfer_from_commbank  external   CBA external transfers
+    all other internal_*             internal   Predominantly own-account
+    ================================ ========== ===========================
+    """
+    rule = str(row.get("prediction_rule", "") or "")
+    if not rule.startswith("internal_"):
+        return False
+
+    # These internal_* rules predominantly match external transfers.
+    if rule in (
+        "internal_anz_funds_tfer",
+        "internal_commbank_from_value_date",
+        "internal_phrase",                 # ING "Internal Transfer - Receipt ..."
+        "internal_transfer_to_cba_ac",
+        "internal_transfer_from_commbank",
+    ):
+        return False
+
+    return True
+
+
+def _extract_counterparty_from_text(
+    text: str, dr_cr: str = "", is_internal: bool = False,
+) -> str:
+    """Extract a standardized counterparty label matching third_party convention.
+
+    Parameters
+    ----------
+    text : str
+        The raw transaction text.
+    dr_cr : str
+        Debit/credit direction (for internal transfer labels).
+    is_internal : bool
+        Whether the row was classified as an internal transfer.
+
+    Returns
+    -------
+    str
+        A counterparty label following third_party naming conventions.
+    """
+    if not text or pd.isna(text):
+        return ""
+
+    text_str = str(text).strip()
+    text_lower = text_str.lower()
+
+    # ═══════════════════════════════════════════════════════════════════
+    # Internal Transfer
+    # ═══════════════════════════════════════════════════════════════════
+    if is_internal:
+        direction = "Debit" if str(dr_cr).strip().lower() == "debit" else "Credit"
+        return f"Internal Transfer {direction}"
+
+    # ═══════════════════════════════════════════════════════════════════
+    # External Transfer — payment system / service identifiers (priority)
+    # ═══════════════════════════════════════════════════════════════════
+
+    # 1. Osko (including "DEPOSIT-OSKO PAYMENT" variant)
+    if _OSKO_RE.search(text_lower) or _DEPOSIT_OSKO_RE.search(text_lower):
+        return "Osko"
+
+    # 2. BPAY with specific biller → extract biller name
+    m = re.search(r"bill\s*pay\s+(\S+(?:\s+\S+){0,2})", text_lower)
+    if m:
+        biller = m.group(1).strip()
+        biller_lower = biller.lower()
+        if "biz core" in biller_lower:
+            return "Biz Core"
+        if "dbs" in biller_lower or "xplor" in biller_lower:
+            return "Debitsuccess Transfer"
+        return biller.title()
+
+    # 3. Debitsuccess via BPAY DBS XPLOR (may appear without "BILL PAY" prefix)
+    if _DBS_XPLOR_RE.search(text_lower):
+        return "Debitsuccess Transfer"
+
+    # 4. Generic BPAY (no recognizable biller name)
+    if _BPAY_RE.search(text_lower):
+        return "BPAY Transfer"
+
+    # 5. PayPal
+    if _PAYPAL_RE.search(text_lower):
+        return "Paypal Transfer"
+
+    # 6. Wise
+    if _WISE_RE.search(text_lower):
+        return "Wise"
+
+    # 7. WorldRemit
+    if _WORLDREMIT_RE.search(text_lower):
+        return "WorldRemit"
+
+    # 8. Western Union
+    if _WU_RE.search(text_lower):
+        return "Western Union"
+
+    # 9. Rocket Remit
+    if _ROCKET_REMIT_RE.search(text_lower):
+        return "Rocket Remit"
+
+    # 10. Zepto
+    if _ZEPTO_RE.search(text_lower):
+        return "Zepto Payment"
+
+    # 11. IMT / RTGS / SWIFT
+    if _IMT_RTGS_RE.search(text_lower):
+        return "Money Transfer Services"
+
+    # 12. RMTLY / money transfer services
+    if _RMTLY_RE.search(text_lower):
+        return "Money Transfers"
+
+    # 13. Live Payments
+    if _LIVE_PAYMENTS_RE.search(text_lower):
+        return "Live Payments Transfer"
+
+    # 14. Automatic Payment
+    if _AUTOMATIC_PAYMENT_RE.search(text_lower):
+        return "Automatic Transfers Credit"
+
+    # 15. Standalone Direct Debit
+    if _DIRECT_DEBIT_STANDALONE_RE.search(text_lower):
+        return "Direct Debit Transfer"
+
+    # ═══════════════════════════════════════════════════════════════════
+    # External Transfer — bank identification from text
+    # ═══════════════════════════════════════════════════════════════════
+
+    # NOTE: Westpac must precede Worldwide Wallet / Travel Money because
+    # some Westpac texts contain "TFR WORLDWIDE WALLET".
+
+    # 17. Westpac (before Travel Money to avoid WORLDWIDE WALLET hijack)
+    if _WESTPAC_RE.search(text_lower):
+        return "WESTPAC Funds Transfer"
+
+    # 18. CommBank app → CBA Funds Transfer
+    if _COMMBANK_APP_RE.search(text_lower):
+        return "CBA Funds Transfer"
+
+    # 19. Fast Transfer From/To (CBA's Osko/NPP branding)
+    if _FAST_TRANSFER_RE.search(text_lower):
+        return "CBA Funds Transfer"
+
+    # 20. ANZ
+    if _ANZ_BANKING_RE.search(text_lower):
+        return "ANZ Funds Transfer"
+
+    # 21. ING (Orange Everyday / Savings Maximiser) — also matches
+    #     "Internal Transfer - Receipt ... - ... Orange Everyday" format
+    if _ING_RE.search(text_lower) or _ING_INTERNAL_FMT_RE.search(text_lower):
+        return "ING Funds Transfer"
+
+    # 22. Greater Bank
+    if _GREATER_BANK_RE.search(text_lower):
+        return "GREATER Funds Transfer"
+
+    # 23. BANKWEST (PayID to phone/email)
+    if _BANKWEST_PAYID_RE.search(text_lower):
+        return "BANKWEST Funds Transfer"
+
+    # 24. SUNCORP
+    if _SUNCORP_RE.search(text_lower):
+        return "SUNCORP Funds Transfer"
+
+    # 25. Heritage Bank
+    if _HERITAGE_RE.search(text_lower):
+        return "HERITAGE Funds Transfer"
+
+    # 26. Bendigo Bank
+    if _BENDIGO_RE.search(text_lower):
+        return "Other Transfers"
+
+    # ═══════════════════════════════════════════════════════════════════
+    # External Transfer — generic patterns
+    # ═══════════════════════════════════════════════════════════════════
+
+    # 27. Worldwide Wallet (after bank checks to avoid Westpac hijack)
+    if _WORLDWIDE_WALLET_RE.search(text_lower):
+        return "Travel Money"
+
+    # 28. Short internal codes: "b TFC", "b TFD", "NECTR", etc.
+    if _SHORT_CODE_RE.search(text_lower):
+        return "Other Transfers"
+
+    # 29. NPP / PayID (without specific bank marker)
+    if _NPP_RE.search(text_lower):
+        return "Funds Related Transfer"
+
+    # 30. Internet banking withdrawal/deposit (CommBank internet banking)
+    if _INTERNET_BANKING_RE.search(text_lower):
+        return "Funds Transfer"
+
+    # 31. NAB-style direct transfer credit/debit
+    if _NAB_TRANSFER_CREDIT_DEBIT_RE.search(text_lower):
+        return "Miscellaneous Funds Transfer"
+
+    # 32. CommBank generic transfer (Transfer To/From... no "CommBank app")
+    if _CBA_TRANSFER_TO_FROM_RE.search(text_lower):
+        return "Funds Transfer"
+
+    # 33. TFR to/from ... MOB (other bank mobile transfers)
+    if _TFR_MOB_RE.search(text_lower):
+        return "Other Funds Transfer"
+
+    # 34. "Transferred to" pattern
+    if re.search(r"\btransferred\s+to\b", text_lower):
+        return "Funds Transfer"
+
+    # 35. Generic fallback for external transfers
+    return "External Transfers"
+
 
 def _derive_counterparty(df: pd.DataFrame) -> pd.Series:
-    """Extract a short counterparty label from the transaction text."""
+    """Extract a counterparty label matching third_party naming conventions.
+
+    For internal transfers the label is ``"Internal Transfer Debit"`` /
+    ``"Internal Transfer Credit"`` based on dr_cr direction.
+
+    For external transfers the label identifies the payment system, bank,
+    or service (e.g. ``"Osko"``, ``"CBA Funds Transfer"``, ``"Biz Core"``).
+    """
     text_col = df.get("text_norm", df.get("text", pd.Series("", index=df.index)))
-    return (
-        text_col.fillna("").astype(str).str.strip().str.upper().str[:80]
-    )
+    dr_cr_col = df.get(
+        "dr_cr", pd.Series("", index=df.index)
+    ).fillna("").astype(str)
+
+    results = []
+    for idx in df.index:
+        text = str(text_col.loc[idx] if idx in text_col.index else "").strip()
+        dr_cr = str(dr_cr_col.loc[idx] if idx in dr_cr_col.index else "")
+        row = df.loc[idx]
+        is_internal = _is_internal_transfer(row)
+        counterparty = _extract_counterparty_from_text(
+            text, dr_cr, is_internal=is_internal,
+        )
+        results.append(counterparty)
+
+    return pd.Series(results, index=df.index)
 
 
 def _build_reason(row: pd.Series) -> str:

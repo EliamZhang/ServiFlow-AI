@@ -1,5 +1,6 @@
 {
   "categories": {
+    "fee": {"owner_engine_id": "fee", "active": true},
     "Dining Out": {"owner_engine_id": "initial", "active": true},
     "Retail": {"owner_engine_id": "initial", "active": true},
     "Groceries": {"owner_engine_id": "initial", "active": true},

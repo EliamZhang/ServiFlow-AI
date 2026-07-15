@@ -192,6 +192,8 @@ def load_merchant_kb(kb_path: str | Path) -> KeywordAutomaton:
                 kw = clean_text(variant)
                 if len(kw) < _MIN_KEYWORD_LEN:  # skip very short / meaningless tokens
                     continue
+                if kw in _STOPWORDS:  # skip generic banking-artifact tokens
+                    continue
                 key = (kw, merchant, category)
                 if key not in seen:
                     seen.add(key)
@@ -218,7 +220,7 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> KeywordAutomaton:
     global _cached_automaton, _cached_kb_path, _DEFAULT_KB_PATH
     if _DEFAULT_KB_PATH is None:
         _DEFAULT_KB_PATH = str(
-            Path(__file__).resolve().parent.parent / "sample_merchant_kb.csv"
+            Path(__file__).resolve().parent.parent / "merchant_kb.csv"
         )
     resolved = str(kb_path or _DEFAULT_KB_PATH)
     if _cached_automaton is None or _cached_kb_path != resolved:
@@ -234,6 +236,125 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> KeywordAutomaton:
 _MIN_KEYWORD_LEN = 4
 _MAX_VARIANTS_PER_MERCHANT = 50  # cap to guard against KB entries with hundreds of
                                 # unrelated generic keywords (data-quality issue)
+
+# Generic banking-artifact tokens that appear in the *text* of almost every
+# transaction (e.g. "... AUS Card xx9327 Value Date: 10/01/2026"). If any of
+# these is admitted into the automaton as a standalone keyword, it matches
+# nearly every row and drowns out the real merchant signal — that is exactly
+# how the junk KB row `Card | CARD PTY LTD -> Retail` ended up tagging ~12% of
+# a sample as counterparty "Card". We never insert a single-token keyword that
+# is one of these. Multi-word phrases that merely *contain* one of these tokens
+# (e.g. "AUSSIE CARD SERVICES") are still kept — only the bare token is dropped.
+# All entries are stored post-`clean_text` (uppercase, alphanumerics only).
+_STOPWORDS: frozenset[str] = frozenset(
+    {
+        # --- card / payment-instrument artifacts ---
+        "CARD",
+        "CARDS",
+        "VISA",
+        "MASTERCARD",
+        "AMEX",
+        "EFTPOS",
+        "ATM",
+        "PAYWAVE",
+        "PAYPASS",
+        "CONTACTLESS",
+        "CHIP",
+        # --- payment rails / scheme names ---
+        "BPAY",
+        "OSKO",
+        "PAYID",
+        "PAYTO",
+        "NPP",
+        "DIRECT",
+        "DEBIT",
+        "CREDIT",
+        "AUTOPAY",
+        "RECURRING",
+        # --- transaction-type / ledger words ---
+        "PAYMENT",
+        "PAYMENTS",
+        "PYMT",
+        "PYMNT",
+        "PURCHASE",
+        "PURCHASES",
+        "TRANSFER",
+        "TRANSFERS",
+        "XFER",
+        "WITHDRAWAL",
+        "WITHDRAW",
+        "DEPOSIT",
+        "DEPOSITS",
+        "REFUND",
+        "REVERSAL",
+        "REVERSED",
+        "REBATE",
+        "ADJUSTMENT",
+        "CHARGE",
+        "CHARGES",
+        "TRANSACTION",
+        "TRANS",
+        "SETTLEMENT",
+        "PENDING",
+        "CLEARED",
+        "AUTHORISATION",
+        "AUTHORIZATION",
+        # --- fees / interest ---
+        "FEE",
+        "FEES",
+        "INTEREST",
+        "OVERDRAWN",
+        "OVERDRAFT",
+        "SURCHARGE",
+        # --- channel words ---
+        "ONLINE",
+        "INTERNET",
+        "MOBILE",
+        "BANKING",
+        "BRANCH",
+        "COUNTER",
+        "TELLER",
+        "PHONE",
+        # --- currency / geography generic ---
+        "AUS",
+        "AUD",
+        "AUSTRALIA",
+        "AUSTRALIAN",
+        "INTERNATIONAL",
+        "OVERSEAS",
+        "FOREIGN",
+        "CONVERSION",
+        # --- date / reference scaffolding ---
+        "VALUE",
+        "DATE",
+        "REFERENCE",
+        "RECEIPT",
+        "INVOICE",
+        "ORDER",
+        "NUMBER",
+        # --- generic filler nouns ---
+        "MISCELLANEOUS",
+        "SUNDRY",
+        "GENERAL",
+        "OTHER",
+        "PAYEE",
+        "MERCHANT",
+        "STORE",
+        "RETAIL",
+        "ACCOUNT",
+        "FUNDS",
+        "CASH",
+        "MONEY",
+        # --- generic company suffixes (>= _MIN_KEYWORD_LEN chars) ---
+        "LIMITED",
+        "GROUP",
+        "HOLDINGS",
+        "COMPANY",
+        "CORPORATION",
+        "ENTERPRISES",
+        "SERVICES",
+    }
+)
 
 
 def _is_whole_word(keyword: str, text: str) -> bool:
@@ -285,12 +406,10 @@ def match_transactions(
             best_kw, best_merchant, best_cat = max(
                 whole_word_hits, key=lambda h: len(h[0])
             )
-            # Use the matched keyword as counterparty rather than merchant_name
-            # because many KB merchant_name fields are cryptic abbreviations
-            # (e.g. "Aba", "3HB", "Cen") while the keyword itself is the
-            # meaningful text fragment that actually appeared in the transaction.
+            # Use the KB merchant_name directly — the source CSV has been
+            # pre-cleaned (see clean_merchant_kb.py).
             matched_flags.append(True)
-            counterparties.append(best_kw.title())
+            counterparties.append(best_merchant)
             categories.append(best_cat)
             matched_keywords.append(best_kw)
             rule_ids.append("merchant_kb_match")

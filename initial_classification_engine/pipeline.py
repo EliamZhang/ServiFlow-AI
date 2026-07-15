@@ -13,7 +13,7 @@ from classification_core.models import PipelineResult
 
 from .domain.classification import get_cached_automaton, match_transactions
 
-DEFAULT_KB_PATH = Path(__file__).resolve().parent / "sample_merchant_kb.csv"
+DEFAULT_KB_PATH = Path(__file__).resolve().parent / "merchant_kb.csv"
 
 
 def run_pipeline(
