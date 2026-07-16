@@ -11,11 +11,6 @@
       "enabled": true
     },
     {
-      "engine_id": "transfer",
-      "priority": 60,
-      "enabled": true
-    },
-    {
       "engine_id": "income",
       "priority": 100,
       "enabled": true
@@ -23,6 +18,11 @@
     {
       "engine_id": "liability",
       "priority": 200,
+      "enabled": true
+    },
+    {
+      "engine_id": "transfer",
+      "priority": 300,
       "enabled": true
     }
   ],
@@ -32,7 +32,7 @@
   },
   "field_policy": {
     "finv_category": {
-      "description": "分类标签。fee/income/liability/transfer 设置后锁定；initial 设置后仍可被后续引擎覆盖，先到先得",
+      "description": "分类标签。fee/income/liability/transfer 设置后锁定；initial 的 finv_category 可被后续引擎覆盖",
       "immutable_when_set_by": ["fee", "income", "liability", "transfer"]
     },
     "counterparty": {

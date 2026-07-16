@@ -41,9 +41,6 @@ HIGH_CONFIDENCE_RULES = [
     # Transfer: well-defined merchant/payment patterns (P0 additions)
     # -------------------------------------------------------------------------
     ("external_direct_debit_generic", "transfer", r"^direct debit$", "debit"),
-    ("external_eftpos", "transfer", r"\beftpos\b", None),
-    ("external_visa_purchase", "transfer", r"\bvisa purchase\b", None),
-    ("external_bpay", "transfer", r"\bbpay\b", None),
     ("external_transferwise_sydney", "transfer", r"\btransferwise sydney\b", None),
     ("external_debit_card_wise_taptap", "transfer", r"^debit card purchase (wise|taptap send) sydney", None),
     ("external_fast_pymt_in", "transfer", r"^fast pymt in", None),
@@ -59,13 +56,11 @@ HIGH_CONFIDENCE_RULES = [
     ("external_anz_mbank_masked", "transfer", r"^anz m-banking funds tfer transfer \d+ to \d+xxxxxxxx\d{4}$", None),
     ("external_statement_or_savings_account", "transfer", r"^(statement account|savings account)$", None),
     ("external_transfer_name_code", "transfer", r"^transfer (debit|credit) [a-z][a-z .'-]*[a-z] [a-z]\d{10,}$", None),
-    ("external_transfer_name_code_compact", "transfer", r"^transfer (debit|credit) [a-z][a-z .'-]+[a-z]\d{10,}$", None),
     ("external_credit_adjustment", "transfer", r"^credit adjustment$", None),
     ("external_misc_credit_v", "transfer", r"^miscellaneous credit v\d{4}$", None),
     ("external_payid_osko", "transfer", r"\b(payid|osko|npp)\b", None),
     ("external_fast_transfer", "transfer", r"\bfast transfer\b", None),
     ("external_paypal_worldremit", "transfer", r"\b(paypal australia|worldremit)\b", None),
-    ("external_interbank_credit", "transfer", r"\binter-bank credit\b", None),
     ("external_commbank_name", "transfer", r"\btransfer (to|from) [a-z][a-z .'-]+ commbank app\b", None),
 
     # Transfer: stable merchant/payment patterns confirmed by extraction.
@@ -134,9 +129,6 @@ HIGH_CONFIDENCE_RULES = [
 
     # ── Transferred to/from + numeric reference ──
     ("external_transferred_to_from_num", "transfer", r"\btransferred (?:to|from) \d", None),
-
-    # ── Inbound transfer FROM external sources (exclude masked xx accounts) ──
-    ("external_transfer_from_inbound", "transfer", r"^transfer from (?!xx)\w+", None),
 ]
 
 MEDIUM_CONFIDENCE_RULES = [
@@ -351,6 +343,10 @@ def _detect_internal_transfers(
     Groups by (application_id, transaction_date, amount).  If a group
     contains at least one ``debit`` AND at least one ``credit``, every
     candidate row in that group is marked as **Internal Transfer**.
+
+    Pairs are excluded when any row in the group contains known gambling,
+    payday-lender, or BNPL keywords — those are external transactions that
+    happen to match the pairing rule by coincidence.
     """
     output = df.copy()
 
@@ -371,8 +367,14 @@ def _detect_internal_transfers(
 
     for _key, grp in groups:
         dr_cr_set = set(grp["dr_cr"].dropna().str.lower())
-        if dr_cr_set == {"debit", "credit"}:
-            internal_indices.update(grp.index.intersection(candidate_idx))
+        if dr_cr_set != {"debit", "credit"}:
+            continue
+
+        # ── exclude groups containing gambling / lender keywords ──
+        if _contains_excluded_keywords(grp):
+            continue
+
+        internal_indices.update(grp.index.intersection(candidate_idx))
 
     if internal_indices:
         internal_mask = pd.Series(False, index=output.index)
@@ -384,6 +386,64 @@ def _detect_internal_transfers(
         output.loc[internal_mask, "prediction_rule"] = "internal_pairing_rule"
 
     return output
+
+
+# ── Keywords that indicate external transactions, NOT internal transfers ──
+# These are checked against the full text of every row in a candidate pair
+# group.  If ANY row matches, the entire group is skipped.
+
+_EXCLUDED_PAIRING_PATTERNS: list[re.Pattern] = [
+    # ── Gambling / betting operators ──
+    re.compile(r"\bsportsbet\b", re.IGNORECASE),
+    re.compile(r"\bladbrokes\b", re.IGNORECASE),
+    re.compile(r"\balventa\b", re.IGNORECASE),          # Malta gambling processor
+    re.compile(r"\bfrvn\b", re.IGNORECASE),             # Limassol gambling (Cyprus)
+    re.compile(r"\bvxtrx\b", re.IGNORECASE),            # Limassol gambling (Cyprus)
+    re.compile(r"\bbet365\b", re.IGNORECASE),
+    re.compile(r"\bbetfair\b", re.IGNORECASE),
+    re.compile(r"\bpointsbet\b", re.IGNORECASE),
+    re.compile(r"\bunibet\b", re.IGNORECASE),
+    re.compile(r"\bplayup\b", re.IGNORECASE),
+    re.compile(r"\bbluebet\b", re.IGNORECASE),
+    re.compile(r"\bcrownbet\b", re.IGNORECASE),
+    re.compile(r"\bdraftkings\b", re.IGNORECASE),
+    re.compile(r"\btab\b", re.IGNORECASE),              # TAB sports betting
+    re.compile(r"\bclassicbet\b", re.IGNORECASE),
+    re.compile(r"\bbetchain\b", re.IGNORECASE),
+    re.compile(r"\bpalmerbet\b", re.IGNORECASE),
+    re.compile(r"\btopbetta\b", re.IGNORECASE),
+    re.compile(r"\bmadbookie\b", re.IGNORECASE),
+    re.compile(r"\btatts\b", re.IGNORECASE),            # Tatts Group (lotteries/betting)
+    re.compile(r"\btattsbet\b", re.IGNORECASE),
+    re.compile(r"\b(?:neds|betr)\b", re.IGNORECASE),    # Australian betting apps
+    # ── Payday lenders / wage advance / BNPL (external, not internal transfer) ──
+    re.compile(r"\b(?:afterpay|zip\s*pay|zipmoney)\b", re.IGNORECASE),
+    re.compile(r"\b(?:wagepay|wagetap|wage\s*advance)\b", re.IGNORECASE),
+    re.compile(r"\b(?:mypaynow|nextpayday|beforepay|press\s*pay)\b", re.IGNORECASE),
+    re.compile(r"\b(?:cash\s*converters|rapid\s*loans|cash\s*pal|cash\s*train)\b", re.IGNORECASE),
+    re.compile(r"\b(?:nimble|moneyme|money3|cash\s*now|cash\s*n\s*go)\b", re.IGNORECASE),
+    re.compile(r"\b(?:payday\s*advance|payday\s*loans|sure\s*cash|sunshine\s*loans)\b", re.IGNORECASE),
+    re.compile(r"\b(?:credit\s*corp|fair\s*go\s*finance|swoosh\s*finance)\b", re.IGNORECASE),
+    re.compile(r"\b(?:spotter\s*loans?|fundo\s*loans?|jacaranda\s*finance)\b", re.IGNORECASE),
+    re.compile(r"\b(?:flash\s*money|cash\s*stop|money\s*spot|cigno)\b", re.IGNORECASE),
+    re.compile(r"\b(?:wallet\s*wizard|cash\s*converters)\b", re.IGNORECASE),
+    # ── Generic lender/phrase patterns that indicate borrowing ──
+    re.compile(r"\b(?:loan\s*repaid|loan\s*return|loan\s*repayment|wage\s*advance\s*repayment)\b", re.IGNORECASE),
+    re.compile(r"\b(?:pay\s*in\s*4|payin4)\b", re.IGNORECASE),  # PayPal BNPL
+]
+
+
+def _contains_excluded_keywords(grp: pd.DataFrame) -> bool:
+    """Return True if any row in the group matches excluded keyword patterns."""
+    text_col = grp.get("text", pd.Series("", index=grp.index))
+    for _, text in text_col.items():
+        if pd.isna(text) or not str(text).strip():
+            continue
+        text_str = str(text)
+        for pattern in _EXCLUDED_PAIRING_PATTERNS:
+            if pattern.search(text_str):
+                return True
+    return False
 
 
 def _detect_external_transfers(df: pd.DataFrame) -> pd.DataFrame:
