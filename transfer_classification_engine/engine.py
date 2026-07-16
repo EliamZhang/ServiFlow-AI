@@ -19,7 +19,10 @@ class TransferEngine:
     engine_version = "1.0"
 
     def classify(self, context: EngineContext) -> EngineResult:
-        result = run_pipeline(context.candidates)
+        result = run_pipeline(
+            context.candidates,
+            all_rows=context.all_transactions,
+        )
         details = result.transactions
         matched = details[details["is_transfer_pred"].eq(1)].copy()
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()

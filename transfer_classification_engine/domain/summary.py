@@ -11,18 +11,19 @@ SUMMARY_COLUMNS = [
 
 
 def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
-    """Build a simple aggregate summary for transfers."""
+    """Build an aggregate summary for transfers, split by finv_category."""
     transfer = transactions[transactions["is_transfer_pred"].eq(1)]
     if transfer.empty:
         return pd.DataFrame(columns=SUMMARY_COLUMNS)
 
-    return pd.DataFrame(
-        [
+    rows = []
+    for category, group in transfer.groupby("finv_category"):
+        rows.append(
             {
-                "finv_category": "transfer",
-                "stream_id": "transfer",
-                "transaction_count": int(len(transfer)),
+                "finv_category": category,
+                "stream_id": category,
+                "transaction_count": int(len(group)),
             }
-        ],
-        columns=SUMMARY_COLUMNS,
-    )
+        )
+
+    return pd.DataFrame(rows, columns=SUMMARY_COLUMNS)

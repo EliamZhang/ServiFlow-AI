@@ -115,9 +115,34 @@ HIGH_CONFIDENCE_RULES = [
 
     # Internet banking withdrawal to own account (deposit direction excluded — too ambiguous).
     ("internal_internet_banking", "transfer", r"\binternet withdrawal\b.*\bto \d{7,}\b", None),
+
+    # ── NAB direct transfer credit/debit (P0: counterparty patterns promoted) ──
+    ("external_nab_transfer_credit", "transfer", r"^transfer credit (?!online\b)", None),
+    ("external_nab_transfer_debit", "transfer", r"^transfer debit (?!online\b)", None),
+
+    # ── Internet banking transfers ──
+    ("external_internet_banking", "transfer", r"^internet (?:withdrawal|deposit)\b", None),
+
+    # ── TFR to/from (bank transfers) ──
+    ("external_tfr_to_from", "transfer", r"\btfr (?:to|from)\b", None),
+
+    # ── Nabpay (NAB BPAY variant) ──
+    ("external_nabpay", "transfer", r"\bnabpay\d+", None),
+
+    # ── Phone/Internet banking transfer ──
+    ("external_phone_internet_tfr", "transfer", r"\bphone/internet tfr\b", None),
+
+    # ── Transferred to/from + numeric reference ──
+    ("external_transferred_to_from_num", "transfer", r"\btransferred (?:to|from) \d", None),
+
+    # ── Inbound transfer FROM external sources (exclude masked xx accounts) ──
+    ("external_transfer_from_inbound", "transfer", r"^transfer from (?!xx)\w+", None),
 ]
 
 MEDIUM_CONFIDENCE_RULES = [
+    # Westpac truncated text (text cut off at "Westpa c" instead of "Westpac Choice").
+    ("external_westpac_truncated", "transfer", r"\bwestpa\s", None),
+
     # Transfer medium patterns.
     ("external_transferred_to_digits", "transfer", r"\btransferred to \d{3,6} \d+\b", None),
     ("external_sav_net", "transfer", r"^transfer (to|from) sav \d+ net#\d+$", None),
@@ -257,20 +282,46 @@ _DEPOSIT_ACCOUNT_RE = re.compile(
 )
 
 
-def classify_transfers(df: pd.DataFrame) -> pd.DataFrame:
-    """Apply transfer classification rules and produce output columns."""
-    classifier = FixedRuleClassifier()
-    result = classifier.predict_frame(df)
+def classify_transfers(
+    df: pd.DataFrame, *, all_rows: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    """Apply transfer classification rules and produce output columns.
 
-    output = result.copy()
+    Pipeline:
+    1. Internal Transfer — purely data-driven via pairing rule
+       (same application_id + transaction_date + amount, both debit & credit).
+    2. External Transfers — regex rules on remaining unclassified rows.
+    3. Known-account deposit matching — extends External Transfers.
 
-    # ── core classification flags ──
-    output["is_transfer_pred"] = (
-        output["predicted_category"].notna().astype(int)
-    )
-    output["finv_category"] = output["predicted_category"].fillna("")
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Candidate rows the engine may write to.
+    all_rows : pd.DataFrame or None
+        Full dataset (including rows already claimed by other engines).
+        Used for Internal Transfer pairing so pairs are detected even when
+        one side has been classified by an earlier pipeline stage.
+    """
+    output = df.copy()
 
-    # ── post-processing: extend deposit matches via known internal accounts ──
+    # ── initialize columns ──
+    raw_text = output.get("text", pd.Series("", index=output.index))
+    output["text_norm"] = raw_text.apply(normalize_text)
+    output["is_transfer_pred"] = 0
+    output["finv_category"] = ""
+    output["predicted_category"] = ""
+    output["prediction_confidence"] = ""
+    output["prediction_rule"] = ""
+    output["prediction_dr_cr_used"] = False
+
+    # ── Step 1: Internal Transfer — pairing logic on ALL rows ──
+    pairing_pool = all_rows if all_rows is not None else output
+    output = _detect_internal_transfers(output, pairing_pool)
+
+    # ── Step 2: External Transfers — regex on remaining rows ──
+    output = _detect_external_transfers(output)
+
+    # ── Step 3: extend via known internal accounts (also External Transfers) ──
     output = _match_deposit_to_known_accounts(output)
 
     # ── counterparty ──
@@ -284,6 +335,83 @@ def classify_transfers(df: pd.DataFrame) -> pd.DataFrame:
     output["stream_id"] = output["finv_category"].where(
         output["is_transfer_pred"].eq(1), ""
     )
+
+    return output
+
+
+def _detect_internal_transfers(
+    df: pd.DataFrame, pairing_pool: pd.DataFrame,
+) -> pd.DataFrame:
+    """Detect Internal Transfers purely by the pairing rule.
+
+    Pairs are detected across *pairing_pool* (typically the full dataset
+    including rows already claimed by earlier pipeline engines), but only
+    rows in *df* (the current engine's candidates) are marked.
+
+    Groups by (application_id, transaction_date, amount).  If a group
+    contains at least one ``debit`` AND at least one ``credit``, every
+    candidate row in that group is marked as **Internal Transfer**.
+    """
+    output = df.copy()
+
+    # Merge extra rows from pairing_pool that aren't in df for full context.
+    extra_rows = pairing_pool[~pairing_pool.index.isin(df.index)]
+    if len(extra_rows) == 0:
+        combined = df
+    else:
+        combined = pd.concat([df, extra_rows])
+
+    groups = combined.groupby(
+        ["application_id", "transaction_date", "amount"], dropna=True,
+    )
+
+    # Only mark rows that belong to *df* (candidates).
+    candidate_idx = set(df.index)
+    internal_indices: set = set()
+
+    for _key, grp in groups:
+        dr_cr_set = set(grp["dr_cr"].dropna().str.lower())
+        if dr_cr_set == {"debit", "credit"}:
+            internal_indices.update(grp.index.intersection(candidate_idx))
+
+    if internal_indices:
+        internal_mask = pd.Series(False, index=output.index)
+        internal_mask.loc[list(internal_indices)] = True
+        output.loc[internal_mask, "is_transfer_pred"] = 1
+        output.loc[internal_mask, "finv_category"] = "Internal Transfer"
+        output.loc[internal_mask, "predicted_category"] = "Internal Transfer"
+        output.loc[internal_mask, "prediction_confidence"] = "high"
+        output.loc[internal_mask, "prediction_rule"] = "internal_pairing_rule"
+
+    return output
+
+
+def _detect_external_transfers(df: pd.DataFrame) -> pd.DataFrame:
+    """Apply regex rules to detect External Transfers.
+
+    Only runs on rows that have NOT already been classified (is_transfer_pred == 0).
+    Matched rows receive finv_category = "External Transfers".
+    """
+    output = df.copy()
+    remaining_mask = output["is_transfer_pred"] == 0
+
+    if not remaining_mask.any():
+        return output
+
+    remaining = output.loc[remaining_mask]
+    classifier = FixedRuleClassifier()
+    classified = classifier.predict_frame(remaining)
+
+    # Copy predictions back to output for matched rows.
+    matched = classified["predicted_category"].notna()
+    if matched.any():
+        matched_idx = classified.index[matched]
+        output.loc[matched_idx, "is_transfer_pred"] = 1
+        output.loc[matched_idx, "finv_category"] = "External Transfers"
+        output.loc[matched_idx, "predicted_category"] = classified.loc[matched, "predicted_category"]
+        output.loc[matched_idx, "prediction_confidence"] = classified.loc[matched, "prediction_confidence"]
+        output.loc[matched_idx, "prediction_rule"] = classified.loc[matched, "prediction_rule"]
+        output.loc[matched_idx, "prediction_dr_cr_used"] = classified.loc[matched, "prediction_dr_cr_used"]
 
     return output
 
@@ -335,8 +463,8 @@ def _match_deposit_to_known_accounts(df: pd.DataFrame) -> pd.DataFrame:
             continue
 
         output.at[idx, "is_transfer_pred"] = 1
-        output.at[idx, "finv_category"] = "transfer"
-        output.at[idx, "predicted_category"] = "transfer"
+        output.at[idx, "finv_category"] = "External Transfers"
+        output.at[idx, "predicted_category"] = "External Transfers"
         output.at[idx, "prediction_confidence"] = "high"
         output.at[idx, "prediction_rule"] = (
             "internal_internet_deposit_known_account"
@@ -451,35 +579,12 @@ _INTERNAL_MARKER_RE = re.compile(
 def _is_internal_transfer(row: pd.Series) -> bool:
     """Determine if a row represents an internal transfer for counterparty labelling.
 
-    Uses the classification rule name as the primary signal, with exclusions
-    for rules that predominantly match external transfers:
-
-    ================================ ========== ===========================
-    Rule pattern                     Decision   Reason
-    ================================ ========== ===========================
-    internal_anz_funds_tfer          external   ANZ external funds transfers
-    internal_commbank_from_value_date external  Mostly CBA external transfers
-    internal_phrase                  external   ING internal-format (external)
-    internal_transfer_to_cba_ac      external   CBA external transfers
-    internal_transfer_from_commbank  external   CBA external transfers
-    all other internal_*             internal   Predominantly own-account
-    ================================ ========== ===========================
+    Uses the finv_category set by _separate_internal_external, which detects
+    internal transfers via the pairing rule: same application_id + transaction_date
+    + amount, with both debit and credit rows present.
     """
-    rule = str(row.get("prediction_rule", "") or "")
-    if not rule.startswith("internal_"):
-        return False
-
-    # These internal_* rules predominantly match external transfers.
-    if rule in (
-        "internal_anz_funds_tfer",
-        "internal_commbank_from_value_date",
-        "internal_phrase",                 # ING "Internal Transfer - Receipt ..."
-        "internal_transfer_to_cba_ac",
-        "internal_transfer_from_commbank",
-    ):
-        return False
-
-    return True
+    finv_category = str(row.get("finv_category", "") or "")
+    return finv_category == "Internal Transfer"
 
 
 def _extract_counterparty_from_text(
