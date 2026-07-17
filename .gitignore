@@ -1,5 +1,6 @@
 __pycache__/
 *.py[cod]
+*.pickle
 .pytest_cache/
 .coverage
 output/

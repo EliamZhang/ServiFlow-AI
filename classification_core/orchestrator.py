@@ -307,12 +307,10 @@ class ClassificationOrchestrator:
                 "outside its candidate set."
             )
 
-        blank_core = _is_blank(predictions["counterparty"]) | _is_blank(
-            predictions["finv_category"]
-        )
+        blank_core = _is_blank(predictions["counterparty"])
         if blank_core.any():
             raise ValueError(
-                f"Engine {engine.engine_id!r} returned blank core fields for "
+                f"Engine {engine.engine_id!r} returned blank counterparty for "
                 f"{int(blank_core.sum())} matched transaction(s)."
             )
 
@@ -321,7 +319,8 @@ class ClassificationOrchestrator:
             {
                 category
                 for category in categories
-                if self.category_owners.get(category) != engine.engine_id
+                if category
+                and self.category_owners.get(category) != engine.engine_id
             }
         )
         if invalid_categories:

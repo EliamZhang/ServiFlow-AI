@@ -1,142 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-Merchant keyword matching via pure-Python Aho-Corasick automaton.
+Merchant keyword matching via pyahocorasick (C-extension) automaton.
 
-Loads merchant_kb.csv in chunks, builds a trie from all keyword variants of
-categorised rows, then scans transaction text in a single pass per row.
+Loads merchant_kb.csv in chunks, builds a trie from all keyword variants,
+then scans transaction text in a single pass per row.
 
 Performance characteristics
 ---------------------------
-- Build: O(total keyword characters) — one-off cost.
-- Search: O(text length + number of matches) per transaction.
-- Memory: ~10 MB for the automaton (~30k keywords from ~9k rows).
+- Build: O(total keyword characters) — one-off cost (C level).
+- Search: O(text length + number of matches) per transaction (C level).
 """
 
 from __future__ import annotations
 
+import math
+import pickle
 import re
-from collections import deque
+from collections import defaultdict
 from pathlib import Path
-from typing import Any
 
+import ahocorasick
 import numpy as np
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason
-
-# ---------------------------------------------------------------------------
-# Aho-Corasick automaton (pure Python)
-# ---------------------------------------------------------------------------
-
-type _Value = tuple[str, str]  # (merchant_name, category)
-
-
-class _TrieNode:
-    __slots__ = ("children", "fail", "outputs")
-
-    def __init__(self) -> None:
-        self.children: dict[str, _TrieNode] = {}
-        self.fail: _TrieNode | None = None
-        self.outputs: list[tuple[str, _Value]] = []  # (keyword, (merchant, cat))
-
-
-class KeywordAutomaton:
-    """Case-insensitive Aho-Corasick automaton.
-
-    Usage
-    -----
-    >>> automaton = KeywordAutomaton()
-    >>> automaton.add_word("PIZZAHUT", "Pizza Hut", "Dining Out")
-    >>> automaton.add_word("PIZZA HUT", "Pizza Hut", "Dining Out")
-    >>> automaton.build()
-    >>> automaton.search("PAID AT PIZZAHUT SYDNEY")
-    [('PIZZAHUT', 'Pizza Hut', 'Dining Out')]
-    """
-
-    def __init__(self) -> None:
-        self.root = _TrieNode()
-        self.root.fail = self.root  # root fails to itself
-        self._built = False
-        self._keyword_count = 0
-
-    # ------------------------------------------------------------------
-    # Construction
-    # ------------------------------------------------------------------
-
-    def add_word(self, keyword: str, merchant_name: str, category: str) -> None:
-        """Insert one keyword variant into the trie."""
-        if self._built:
-            raise RuntimeError("Cannot add words after build().")
-        if not keyword:
-            return
-        node = self.root
-        for char in keyword:
-            if char not in node.children:
-                node.children[char] = _TrieNode()
-            node = node.children[char]
-        node.outputs.append((keyword, (merchant_name, category)))
-        self._keyword_count += 1
-
-    def build(self) -> None:
-        """BFS to compute failure links and propagate output sets."""
-        if self._built:
-            return
-        queue: deque[_TrieNode] = deque()
-
-        # Depth-1 children fail to root.
-        for child in self.root.children.values():
-            child.fail = self.root
-            queue.append(child)
-
-        # BFS for deeper levels.
-        while queue:
-            current = queue.popleft()
-            for char, child in current.children.items():
-                queue.append(child)
-
-                # Walk failure links to find the deepest node whose child
-                # matches `char`.
-                fail = current.fail
-                while fail is not self.root and char not in fail.children:
-                    fail = fail.fail
-                if char in fail.children and fail.children[char] is not child:
-                    child.fail = fail.children[char]
-                else:
-                    child.fail = self.root
-
-                # Inherit outputs from the failure node so we don't need to
-                # walk the failure chain at search time.
-                child.outputs.extend(child.fail.outputs)
-
-        self._built = True
-
-    # ------------------------------------------------------------------
-    # Search
-    # ------------------------------------------------------------------
-
-    def search(self, text: str) -> list[tuple[str, str, str]]:
-        """Return all matches as ``(keyword, merchant_name, category)`` tuples.
-
-        An empty list means no keyword was found in *text*.
-        When multiple keywords match, the caller should pick the longest.
-        """
-        if not self._built or not text:
-            return []
-        matches: list[tuple[str, str, str]] = []
-        node = self.root
-        for char in text:
-            while node is not self.root and char not in node.children:
-                node = node.fail
-            if char in node.children:
-                node = node.children[char]
-            for kw, (merchant, category) in node.outputs:
-                matches.append((kw, merchant, category))
-        return matches
-
-    @property
-    def keyword_count(self) -> int:
-        return self._keyword_count
-
 
 # ---------------------------------------------------------------------------
 # Text cleaning
@@ -144,6 +31,13 @@ class KeywordAutomaton:
 
 # Keep only A-Z, 0-9 and spaces — matches how keywords are normalised.
 _CLEAN_RE = re.compile(r"[^A-Z0-9]+")
+
+# Payment-channel prefixes that should not be treated as merchant names.
+# Stripped from the beginning of transaction text before keyword matching so the
+# actual counterparty name can be matched at position 0.  Applied only to
+# transaction text, never to keywords — a KB entry named "Bill Pay Services"
+# would still have its keywords inserted as-is.
+_CHANNEL_PREFIX_RE = re.compile(r"^BILL\s*PAY(MENT)?\s+", re.IGNORECASE)
 
 
 def clean_text(value: object) -> str:
@@ -155,18 +49,58 @@ def clean_text(value: object) -> str:
     return " ".join(text.split())  # collapse whitespace
 
 
+def _clean_transaction_text(value: object) -> str:
+    """Normalise transaction text and strip payment-channel prefixes."""
+    text = clean_text(value)
+    text = _CHANNEL_PREFIX_RE.sub("", text)
+    return text
+
+
+# ---------------------------------------------------------------------------
+# Automaton wrapper
+# ---------------------------------------------------------------------------
+
+class _Automaton:
+    """Thin wrapper around ``ahocorasick.Automaton`` with keyword metadata.
+
+    ``pyahocorasick`` C-extension objects do not support ad-hoc attribute
+    assignment, so we wrap the automaton to carry *keyword_count* (and any
+    future metadata) alongside it.  ``.iter()`` delegates directly to the
+    underlying C automaton for zero-overhead search.
+    """
+
+    __slots__ = ("_a", "keyword_count")
+
+    def __init__(self, automaton: ahocorasick.Automaton, keyword_count: int) -> None:
+        self._a = automaton
+        self.keyword_count = keyword_count
+
+    def iter(self, text: str):
+        """Yield ``(end_pos, value)`` tuples from the underlying automaton."""
+        return self._a.iter(text)
+
+    def search(self, text: str) -> list[tuple[str, str, str]]:
+        """Return ``(keyword, merchant, category)`` tuples — compatible with the
+        legacy pure-Python automaton API used by downstream engines (e.g. income)."""
+        return [
+            (kw, merchant, cat)
+            for _, (kw, merchant, cat, _p) in self._a.iter(text)
+        ]
+
+
 # ---------------------------------------------------------------------------
 # KB loader
 # ---------------------------------------------------------------------------
 
-def load_merchant_kb(kb_path: str | Path) -> KeywordAutomaton:
+def load_merchant_kb(kb_path: str | Path) -> _Automaton:
     """Chunk-read *kb_path* and return a ready-to-use automaton.
 
-    Only rows with a non-empty *category* are indexed.  Each pipe-separated
-    variant in the *keywords* column is inserted as an independent keyword.
+    All rows are indexed regardless of whether *category* is populated.
+    Each pipe-separated variant in the *keywords* column is inserted as an
+    independent keyword.
     """
     kb_path = Path(kb_path)
-    automaton = KeywordAutomaton()
+    automaton = ahocorasick.Automaton()
     seen: set[tuple[str, str, str]] = set()  # (keyword_upper, merchant, cat)
 
     chunks = pd.read_csv(
@@ -178,44 +112,86 @@ def load_merchant_kb(kb_path: str | Path) -> KeywordAutomaton:
     )
 
     for chunk in chunks:
-        valid = chunk[
-            chunk["category"].notna() & (chunk["category"].str.strip() != "")
+        # Drop rows with empty keywords.
+        chunk = chunk[
+            chunk["keywords"].notna() & (chunk["keywords"].str.strip() != "")
         ]
-        for _, row in valid.iterrows():
-            merchant = str(row["merchant_name"]).strip()
-            category = str(row["category"]).strip()
-            raw_keywords = str(row["keywords"])
-            variant_count = 0
-            for variant in raw_keywords.split("|"):
-                if variant_count >= _MAX_VARIANTS_PER_MERCHANT:
-                    break
-                kw = clean_text(variant)
-                if len(kw) < _MIN_KEYWORD_LEN:  # skip very short / meaningless tokens
-                    continue
-                if kw in _STOPWORDS:  # skip generic banking-artifact tokens
-                    continue
-                key = (kw, merchant, category)
-                if key not in seen:
-                    seen.add(key)
-                    automaton.add_word(kw, merchant, category)
-                variant_count += 1
+        if chunk.empty:
+            continue
 
-    automaton.build()
-    return automaton
+        # Split pipe-separated keywords and cap variants per merchant
+        # (vectorized — avoids Python-level per-row split loop).
+        kw_lists = chunk["keywords"].str.split("|").str[:_MAX_VARIANTS_PER_MERCHANT]
+
+        # Explode: one row per keyword variant.  Handled at C level by pandas
+        # instead of Python-level iterrows.
+        exploded = chunk[["merchant_name", "category"]].copy()
+        exploded["_kw_raw"] = kw_lists
+        exploded = exploded.explode("_kw_raw").dropna(subset=["_kw_raw"])
+
+        # Clean keywords.
+        exploded["_kw_clean"] = exploded["_kw_raw"].apply(clean_text)
+
+        # Filter: minimum length.
+        exploded = exploded[
+            exploded["_kw_clean"].str.len() >= _MIN_KEYWORD_LEN
+        ]
+
+        # Filter: stopwords.
+        exploded = exploded[~exploded["_kw_clean"].isin(_STOPWORDS)]
+
+        if exploded.empty:
+            continue
+
+        # Dedup within chunk (most duplicates eliminated here at C level).
+        exploded = exploded.drop_duplicates(
+            subset=["_kw_clean", "merchant_name", "category"]
+        )
+
+        # Cross-chunk dedup (collect, automaton built after purity calc).
+        for _, row in exploded.iterrows():
+            kw = row["_kw_clean"]
+            merchant = str(row["merchant_name"]).strip()
+            category = (
+                str(row["category"]).strip() if pd.notna(row["category"]) else ""
+            )
+            key = (kw, merchant, category)
+            if key not in seen:
+                seen.add(key)
+
+    # Compute per-keyword merchant count for uniqueness scoring.
+    # More distinct merchants sharing a keyword → more generic → lower purity.
+    _kw_merchants: dict[str, set[str]] = defaultdict(set)
+    for kw, merchant, _cat in seen:
+        _kw_merchants[kw].add(merchant)
+
+    total = len(seen)
+    for kw, merchant, cat in seen:
+        uniqueness = math.log(total / len(_kw_merchants[kw]))
+        completeness = 2.0 if cat else 1.0
+        purity = uniqueness * completeness
+        automaton.add_word(kw, (kw, merchant, cat, purity))
+
+    automaton.make_automaton()
+    return _Automaton(automaton, total)
 
 
 # Module-level cache so that downstream engines (e.g. income) can reuse the
 # same automaton without reloading the 395 MB CSV.
-_cached_automaton: KeywordAutomaton | None = None
+_cached_automaton: _Automaton | None = None
 _cached_kb_path: str | None = None
 _DEFAULT_KB_PATH: str | None = None
 
 
-def get_cached_automaton(kb_path: str | Path | None = None) -> KeywordAutomaton:
+def get_cached_automaton(kb_path: str | Path | None = None) -> _Automaton:
     """Return a cached automaton, building it on first call.
 
-    The first call triggers a full load + build (~30-60 s for 395 MB CSV).
-    Subsequent calls return the cached instance instantly.
+    Caching is two-tier:
+    1. **Disk** — a pickle file (``merchant_kb.csv.pickle``) is written after
+       the first build.  On subsequent runs the automaton is loaded from disk
+       in seconds, provided the CSV has not been modified since.
+    2. **Memory** — within the same process the automaton is reused across
+       engine invocations.
     """
     global _cached_automaton, _cached_kb_path, _DEFAULT_KB_PATH
     if _DEFAULT_KB_PATH is None:
@@ -223,9 +199,34 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> KeywordAutomaton:
             Path(__file__).resolve().parent.parent / "merchant_kb.csv"
         )
     resolved = str(kb_path or _DEFAULT_KB_PATH)
-    if _cached_automaton is None or _cached_kb_path != resolved:
-        _cached_automaton = load_merchant_kb(resolved)
-        _cached_kb_path = resolved
+
+    # In-memory cache hit.
+    if _cached_automaton is not None and _cached_kb_path == resolved:
+        return _cached_automaton
+
+    # Disk cache: load from pickle if newer than the source CSV.
+    cache_path = resolved + ".pickle"
+    try:
+        kb_mtime = Path(resolved).stat().st_mtime
+        if Path(cache_path).stat().st_mtime > kb_mtime:
+            with open(cache_path, "rb") as fh:
+                _cached_automaton = pickle.load(fh)
+            _cached_kb_path = resolved
+            return _cached_automaton
+    except (FileNotFoundError, pickle.UnpicklingError, EOFError, OSError):
+        pass  # No cache, corrupted, or inaccessible — build from scratch.
+
+    # Build from scratch (one-off per CSV version).
+    _cached_automaton = load_merchant_kb(resolved)
+    _cached_kb_path = resolved
+
+    # Persist to disk for next run.
+    try:
+        with open(cache_path, "wb") as fh:
+            pickle.dump(_cached_automaton, fh)
+    except OSError:
+        pass  # Non-critical — next run will just rebuild.
+
     return _cached_automaton
 
 
@@ -261,6 +262,7 @@ _STOPWORDS: frozenset[str] = frozenset(
         "CONTACTLESS",
         "CHIP",
         # --- payment rails / scheme names ---
+        "BILL",
         "BPAY",
         "OSKO",
         "PAYID",
@@ -376,7 +378,7 @@ def _is_whole_word(keyword: str, text: str) -> bool:
 
 def match_transactions(
     transactions: pd.DataFrame,
-    automaton: KeywordAutomaton,
+    automaton: _Automaton,
 ) -> pd.DataFrame:
     """Add *counterparty*, *finv_category* and match metadata columns.
 
@@ -385,54 +387,66 @@ def match_transactions(
     protocol.
     """
     out = transactions.copy()
-    out["_text_clean"] = out["text"].apply(clean_text)
+    out["_text_clean"] = out["text"].apply(_clean_transaction_text)
 
-    counterparties: list[str] = []
-    categories: list[str] = []
-    matched_flags: list[bool] = []
-    matched_keywords: list[str] = []
-    rule_ids: list[str] = []
-    reasons: list[str] = []
+    def _classify_one(text_clean: str) -> tuple[bool, str, str, str, str, str]:
+        """Classify a single cleaned text via purity × position scoring.
 
-    for _, row in out.iterrows():
-        text_clean = str(row["_text_clean"])
-        hits = automaton.search(text_clean)
-        # Keep only whole-word matches.
-        whole_word_hits = [
-            h for h in hits if _is_whole_word(h[0], text_clean)
-        ]
-        if whole_word_hits:
-            # Longest keyword = most specific match.
-            best_kw, best_merchant, best_cat = max(
-                whole_word_hits, key=lambda h: len(h[0])
-            )
-            # Use the KB merchant_name directly — the source CSV has been
-            # pre-cleaned (see clean_merchant_kb.py).
-            matched_flags.append(True)
-            counterparties.append(best_merchant)
-            categories.append(best_cat)
-            matched_keywords.append(best_kw)
-            rule_ids.append("merchant_kb_match")
-            reasons.append(
-                format_classification_reason(
-                    category=best_cat,
-                    rule="merchant_kb_match",
-                    evidence=[f"keyword={best_kw}", f"merchant={best_merchant}"],
-                )
-            )
-        else:
-            matched_flags.append(False)
-            counterparties.append("")
-            categories.append("")
-            matched_keywords.append("")
-            rule_ids.append("")
-            reasons.append("")
+        Returns (matched, counterparty, category, keyword, rule_id, reason).
+        """
+        text_clean = str(text_clean)
+        if not text_clean:
+            return (False, "", "", "", "", "")
 
-    out["matched"] = matched_flags
-    out["counterparty"] = counterparties
-    out["finv_category"] = categories
-    out["_matched_keyword"] = matched_keywords
-    out["classification_rule_id"] = rule_ids
-    out["classification_reason"] = reasons
+        text_len = max(len(text_clean), 1)
+        scored: list[tuple[float, str, str, str]] = []  # (score, kw, merchant, cat)
+
+        # pyahocorasick.iter() yields (end_pos, (kw, merchant, cat, purity)).
+        for _, (kw, merchant, cat, purity) in automaton.iter(text_clean):
+            if not _is_whole_word(kw, text_clean):
+                continue
+            pos = text_clean.find(kw)
+            position_weight = 1.0 - pos / text_len
+            score = purity * position_weight
+            scored.append((score, kw, merchant, cat))
+
+        if not scored:
+            return (False, "", "", "", "", "")
+
+        # Prefer categorised matches; fall back to uncategorised if none exist.
+        cat_hits = [h for h in scored if h[3]]
+        pick_from = cat_hits if cat_hits else scored
+        best_score, best_kw, best_merchant, best_cat = max(
+            pick_from, key=lambda h: h[0]
+        )
+
+        reason = format_classification_reason(
+            category=best_cat,
+            rule="merchant_kb_match",
+            evidence=[
+                f"keyword={best_kw}",
+                f"merchant={best_merchant}",
+                f"purity={best_score:.2f}",
+            ],
+        )
+        return (
+            True,
+            best_merchant,
+            best_cat,
+            best_kw,
+            "merchant_kb_match",
+            reason,
+        )
+
+    # apply() uses C-level iteration — much faster than iterrows().
+    results = out["_text_clean"].apply(_classify_one)
+    (
+        out["matched"],
+        out["counterparty"],
+        out["finv_category"],
+        out["_matched_keyword"],
+        out["classification_rule_id"],
+        out["classification_reason"],
+    ) = zip(*results)
 
     return out.drop(columns=["_text_clean"])
