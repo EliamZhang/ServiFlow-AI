@@ -49,8 +49,8 @@ WAGE_ADVANCE_RECENT_REPAY_RATE = Decimal("0.05")
 WEEKLY = "weekly"
 MONTHLY = "monthly"
 PERSONAL_LOAN_PRODUCT_TYPES = [
-    "personal_loan_non_sacc",
-    "personal_loan_sacc",
+    "Non SACC Loans",
+    "SACC Loans",
 ]
 SUMMARY_GROUP_COLUMNS = [
     "application_id",
@@ -136,9 +136,14 @@ def derive_finv_category(product_type: object, stream_id: object) -> object:
     if not product or not base:
         return pd.NA
 
-    if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan"}:
-        return base
-    return f"{product}_{base}"
+    if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan", "home_loan"}:
+        key = base
+    else:
+        key = f"{product}_{base}"
+
+    from .streams import FINV_CATEGORY_MAP  # noqa: E402
+
+    return FINV_CATEGORY_MAP.get(key, key)
 
 
 def ensure_finv_category(df: pd.DataFrame) -> pd.DataFrame:
@@ -516,7 +521,7 @@ def build_bnpl_summary(
 ) -> pd.DataFrame:
     """Return one BNPL summary row per finv_category + stream_id."""
 
-    bnpl = filter_product_streams(df, "bnpl")
+    bnpl = filter_product_streams(df, "BNPL")
 
     if bnpl.empty:
         return empty_summary()
@@ -539,23 +544,66 @@ def build_bnpl_summary(
         failed_repayments = mark_failed_repayments(group)
 
         debit_mask = group["dr_cr"].astype("string").str.casefold().eq("debit")
-        valid_debits = group.loc[debit_mask & ~failed_repayments]
-
-        repaid_amount = round_money(sum(
-            (
-                amount
-                for amount in valid_debits["amount"].map(parse_absolute_amount)
-                if amount is not None
-            ),
-            Decimal("0"),
-        ))
-
-        frequency_day_date = calculate_frequency_day(
-            sorted_stream_transactions(valid_debits),
-            due_date_columns,
+        valid_debits = group.loc[debit_mask & ~failed_repayments].copy()
+        valid_debits["_amount_decimal"] = valid_debits["amount"].map(
+            parse_absolute_amount
         )
+        valid_debits = valid_debits[
+            valid_debits["_amount_decimal"].map(
+                lambda amount: amount is not None and amount.is_finite()
+            )
+        ]
+
+        if valid_debits.empty:
+            repaid_amount = Decimal("0")
+            frequency_day_date = None
+        else:
+            repaid_amount = round_money(
+                sum(valid_debits["_amount_decimal"], Decimal("0"))
+            )
+            frequency_day_date = calculate_frequency_day(
+                sorted_stream_transactions(valid_debits),
+                due_date_columns,
+            )
 
         sample_datetime = group["_sample_datetime"].max()
+        transaction_end_date = group["_transaction_date"].max()
+        as_of_datetime = (
+            sample_datetime
+            if not pd.isna(sample_datetime)
+            else transaction_end_date
+        )
+        recent_30_debit_amount = Decimal("0")
+        raw_recent_fn = Decimal("0")
+
+        if not valid_debits.empty and not pd.isna(as_of_datetime):
+            as_of_day = pd.Timestamp(as_of_datetime).normalize()
+            transaction_days = valid_debits["_transaction_date"].dt.normalize()
+            recent_30_mask = transaction_days.between(
+                as_of_day - pd.Timedelta(days=30),
+                as_of_day,
+                inclusive="both",
+            )
+            recent_60_mask = transaction_days.between(
+                as_of_day - pd.Timedelta(days=60),
+                as_of_day,
+                inclusive="both",
+            )
+            recent_30_debit_amount = round_money(
+                sum(
+                    valid_debits.loc[recent_30_mask, "_amount_decimal"],
+                    Decimal("0"),
+                )
+            )
+            recent_60_debit_amount = round_money(
+                sum(
+                    valid_debits.loc[recent_60_mask, "_amount_decimal"],
+                    Decimal("0"),
+                )
+            )
+            raw_recent_fn = round_money(
+                recent_60_debit_amount * Decimal("6") / Decimal("26")
+            )
 
         summary_rows.append(
             {
@@ -565,7 +613,7 @@ def build_bnpl_summary(
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
+                "transaction_end_date": transaction_end_date,
                 "status": "Closed",
                 "funded_amount": 0,
                 "repaid_amount": decimal_to_output(repaid_amount),
@@ -575,6 +623,8 @@ def build_bnpl_summary(
                 "frequency_day": frequency_day_date,
                 "predicted_closing_date": None,
                 "_sample_datetime": sample_datetime,
+                "_recent_30_debit_amount": recent_30_debit_amount,
+                "_raw_recent_fn": raw_recent_fn,
             }
         )
 
@@ -605,12 +655,17 @@ def build_bnpl_summary(
         counterparty_key = normalize_match_key(row["counterparty"])
         limit_amount = limits_by_counterparty.get(counterparty_key)
 
-        if row["status"] == "Closed":
+        if (
+            row["status"] == "Closed"
+            or row["_recent_30_debit_amount"] < Decimal("1.00")
+        ):
             recent_fn_repay_amount = Decimal("0")
-        elif limit_amount is not None:
-            recent_fn_repay_amount = limit_amount
         else:
-            recent_fn_repay_amount = None
+            recent_fn_repay_amount = row["_raw_recent_fn"]
+            if limit_amount is not None:
+                recent_fn_repay_amount = min(recent_fn_repay_amount, limit_amount)
+
+        recent_fn_repay_amount = round_money(recent_fn_repay_amount)
 
         numeric_recent = decimal_to_output(recent_fn_repay_amount)
         summary.at[row_id, "recent_fn_repay_amount"] = numeric_recent
@@ -624,7 +679,7 @@ def build_bnpl_summary(
 def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one wage-advance summary row per finv_category + stream_id."""
 
-    wage_advance = filter_product_streams(df, "wage_advance")
+    wage_advance = filter_product_streams(df, "Wage Advance")
 
     if wage_advance.empty:
         return empty_summary()
@@ -806,7 +861,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per bank stream."""
 
-    bank = filter_product_streams(df, "bank")
+    bank = filter_product_streams(df, "Credit Card Repayment")
 
     if bank.empty:
         return empty_summary()
@@ -844,10 +899,51 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
     return summary[SUMMARY_COLUMNS]
 
 
+def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
+    """Return one placeholder summary row per home-loan stream."""
+
+    home_loan = filter_product_streams(df, "Home Loan")
+
+    if home_loan.empty:
+        return empty_summary()
+
+    summary_rows: list[dict[str, object]] = []
+
+    for (_, _, finv_category, stream_id_value), group in home_loan.groupby(
+        SUMMARY_GROUP_COLUMNS,
+        dropna=False,
+        sort=False,
+    ):
+        summary_rows.append(
+            {
+                "finv_category": finv_category,
+                "stream_id": stream_id_value,
+                **stream_detail_fields(group),
+                "application_id": normalize_text(group["application_id"].iloc[0]),
+                "counterparty": normalize_text(group["counterparty"].iloc[0]),
+                "transaction_start_date": group["_transaction_date"].min(),
+                "transaction_end_date": group["_transaction_date"].max(),
+                "status": PLACEHOLDER_METRIC_VALUE,
+                "funded_amount": PLACEHOLDER_METRIC_VALUE,
+                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
+                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
+                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
+                "frequency": PLACEHOLDER_METRIC_VALUE,
+                "frequency_day": PLACEHOLDER_METRIC_VALUE,
+                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+            }
+        )
+
+    summary = pd.DataFrame(summary_rows, columns=SUMMARY_COLUMNS)
+    summary["transaction_start_date"] = summary["transaction_start_date"].dt.date
+    summary["transaction_end_date"] = summary["transaction_end_date"].dt.date
+    return summary[SUMMARY_COLUMNS]
+
+
 def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per contract-loan stream."""
 
-    contract_loan = filter_product_streams(df, "contract_loan")
+    contract_loan = filter_product_streams(df, "Contract Loans")
 
     if contract_loan.empty:
         return empty_summary()
@@ -888,7 +984,7 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per LOC stream."""
 
-    loc = filter_product_streams(df, "loc")
+    loc = filter_product_streams(df, "LOC")
 
     if loc.empty:
         return empty_summary()
@@ -929,7 +1025,7 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per unknown personal-loan stream."""
 
-    unknown = filter_product_streams(df, "personal_loan_unknown")
+    unknown = filter_product_streams(df, "Personal Loan Unknown")
 
     if unknown.empty:
         return empty_summary()
@@ -976,6 +1072,7 @@ def build_summary(
     summaries = [
         build_bnpl_summary(prepared, limits=limits),
         build_wage_advance_summary(prepared),
+        build_home_loan_summary(prepared),
         build_personal_loan_summary(prepared),
         build_bank_summary(prepared),
         build_contract_loan_summary(prepared),

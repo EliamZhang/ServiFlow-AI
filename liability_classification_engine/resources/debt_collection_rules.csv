@@ -1,0 +1,122 @@
+counterparty,product_type,rule_id,match_type,keyword
+Revenue NSW Debt,Debt Collection,DC_KW_001,keyword,revenuensw debt
+State Debt Recovery,Debt Collection,DC_KW_002,keyword,state debt recovery
+Credit Corp,Debt Collection,DC_KW_004,keyword,creditcorpgroup
+InDebted,Debt Collection,DC_KW_005,keyword,indebted
+Pioneer Credit,Debt Collection,DC_KW_006,keyword,pioneercredit
+Pioneer Credit,Debt Collection,DC_KW_007,keyword,pioneer credit
+Panthera Finance,Debt Collection,DC_KW_008,keyword,panthera finance
+ARMA Group,Debt Collection,DC_KW_009,keyword,arma group
+Recoveries Corp,Debt Collection,DC_KW_010,keyword,recoveries corp
+Recoveries Corp,Debt Collection,DC_KW_011,keyword,recoveries corporation
+PRA Australia,Debt Collection,DC_KW_012,keyword,pra australia
+Complete Credit,Debt Collection,DC_KW_013,keyword,complete credit
+Credit Solutions,Debt Collection,DC_KW_014,keyword,credit solutions
+Collection House,Debt Collection,DC_KW_015,keyword,collection house
+Francom Group,Debt Collection,DC_KW_016,keyword,francom
+Probe Group,Debt Collection,DC_KW_017,keyword,probe
+Australian Recoveries,Debt Collection,DC_KW_018,keyword,australian recoveries
+Australian Debt Recovery,Debt Collection,DC_KW_019,keyword,australian debt recove
+Lion Finance,Debt Collection,DC_KW_020,keyword,lion finance
+Baycorp,Debt Collection,DC_KW_021,keyword,baycorp
+Charter Mercantile,Debt Collection,DC_KW_022,keyword,charter merc
+Strategic Collections,Debt Collection,DC_KW_023,keyword,strategic collections
+Strategic Receivables,Debt Collection,DC_KW_024,keyword,strategic receivables
+Stoneink,Debt Collection,DC_KW_025,keyword,stoneink
+Standard8,Debt Collection,DC_KW_026,keyword,standard8
+CCSG,Debt Collection,DC_KW_027,keyword,ccsg
+CCS Sydney,Debt Collection,DC_KW_028,keyword,ccs sydney
+CCS Direct Debit,Debt Collection,DC_KW_029,keyword,ccs direct debit
+National Credit Management,Debt Collection,DC_KW_030,keyword,national credit
+Aust Receivables,Debt Collection,DC_KW_031,keyword,aust receivables
+AU Receivables,Debt Collection,DC_KW_032,keyword,au receivables
+Australian Receivables,Debt Collection,DC_KW_033,keyword,australian receivables
+TAS Collection,Debt Collection,DC_KW_034,keyword,tas collection
+George Laurens,Debt Collection,DC_KW_035,keyword,george laurens
+Solved Group,Debt Collection,DC_KW_036,keyword,solved group
+Black Collections,Debt Collection,DC_KW_037,keyword,black collections
+Intercoll Ledger,Debt Collection,DC_KW_038,keyword,intercoll ledger
+Access Collections,Debt Collection,DC_KW_039,keyword,access collections
+Access Mercantile,Debt Collection,DC_KW_040,keyword,access mercantile
+State Mercantile,Debt Collection,DC_KW_041,keyword,state mercantile
+National Mercantile,Debt Collection,DC_KW_042,keyword,national mercantile
+Prushka Mercantile,Debt Collection,DC_KW_043,keyword,prushka mercantile
+ARL,Debt Collection,DC_KW_044,keyword,arl
+Just Budget,Debt Collection,DC_KW_045,keyword,just budget
+Marshall Freeman,Debt Collection,DC_KW_046,keyword,marshall freeman
+Betterway Financials,Debt Collection,DC_KW_047,keyword,betterwayfinancials
+Betterway Financials,Debt Collection,DC_KW_048,keyword,betterway financials
+Ampac Debt Recovery,Debt Collection,DC_KW_049,keyword,ampac debt recov
+Ecollect,Debt Collection,DC_KW_050,keyword,ecollect
+Bill Chaser,Debt Collection,DC_KW_051,keyword,bill chaser
+Safe Debt Management,Debt Collection,DC_KW_052,keyword,safe debt management
+Milton Graham,Debt Collection,DC_KW_053,keyword,milton graham
+Credit Collect,Debt Collection,DC_KW_054,keyword,creditcollect
+Debtworks,Debt Collection,DC_KW_055,keyword,debtworks
+CCC Financial Solution,Debt Collection,DC_KW_056,keyword,ccc financial soluti
+Credit Corp,Debt Collection,DC_KW_057,keyword,credit corp group
+Charter Mercantile,Debt Collection,DC_KW_058,keyword,chartermerc
+Charter Mercantile,Debt Collection,DC_KW_059,keyword,chartermercantil
+Strategic Collections,Debt Collection,DC_KW_060,keyword,stratcol
+Strategic Collections,Debt Collection,DC_KW_061,keyword,strategic collec
+ADRS,Debt Collection,DC_KW_062,keyword,adrs
+ADRS,Debt Collection,DC_KW_063,keyword,adr
+Recoveries Corp,Debt Collection,DC_KW_064,keyword,recoverie corp
+Recoveries Corp,Debt Collection,DC_KW_065,keyword,recovries crp
+Recoveries Corp,Debt Collection,DC_KW_066,keyword,recoveriescorp
+Collection House,Debt Collection,DC_KW_067,keyword,collectionhouselimited
+Credit Solutions,Debt Collection,DC_KW_068,keyword,aucreditsolution
+Australian Recoveries,Debt Collection,DC_KW_069,keyword,ausnatrecoveries
+Revenue NSW Debt,Debt Collection,DC_KW_070,keyword,revenue nsw debt
+Australian Recoveries,Debt Collection,DC_KW_071,keyword,australian recoverie
+Australian Recoveries,Debt Collection,DC_KW_072,keyword,australian national recoveri
+Safe Debt Management,Debt Collection,DC_KW_073,keyword,safe debt managment
+Impact Financial Services,Debt Collection,DC_KW_074,keyword,impact financial ser
+Commercial Credit Control,Debt Collection,DC_KW_075,keyword,commercial credit cont
+Betterway Financials,Debt Collection,DC_KW_076,keyword,betterwayfinance
+Bill Chaser,Debt Collection,DC_KW_077,keyword,billchaser
+Panthera Finance,Debt Collection,DC_KW_078,keyword,panthera financ
+Pioneer Credit,Debt Collection,DC_KW_079,keyword,pioneer cr
+Aust Receivables,Debt Collection,DC_KW_080,keyword,aust recei
+National Credit Management,Debt Collection,DC_KW_081,keyword,national credit mgt
+National Credit Management,Debt Collection,DC_KW_082,keyword,ncml
+State Mercantile,Debt Collection,DC_KW_083,keyword,s r m c
+State Mercantile,Debt Collection,DC_KW_084,keyword,srmc
+ICM Partners,Debt Collection,DC_KW_085,keyword,icm partne
+Professional Collections,Debt Collection,DC_KW_086,keyword,professionalcoll
+Freedom Collections,Debt Collection,DC_KW_087,keyword,freedomcollectio
+Debt Busters,Debt Collection,DC_KW_088,keyword,debt busters
+State Debt Recovery,Debt Collection,DC_KW_089,keyword,state debt recover
+Credit Solutions,Debt Collection,DC_KW_090,keyword,credit solution
+Local Recoveries,Debt Collection,DC_KW_091,keyword,local recoveries
+TAS Collection,Debt Collection,DC_KW_092,keyword,tas coll agency
+ARMA Group,Debt Collection,DC_KW_093,keyword,transfer to arma
+ARMA Group,Debt Collection,DC_KW_094,keyword,npp transfer to arma
+Waterman Receivables,Debt Collection,DC_KW_095,keyword,waterman receivabl
+Access Collections,Debt Collection,DC_KW_096,keyword,access collection
+LCollect,Debt Collection,DC_KW_097,keyword,lcollect
+Debt Recoveries Australia,Debt Collection,DC_KW_098,keyword,debt recoveries australia
+Black Collections,Debt Collection,DC_KW_099,keyword,black collect
+BCA Debt,Debt Collection,DC_KW_100,keyword,bca debt
+National Credit Management,Debt Collection,DC_KW_101,keyword,ncm
+CollectAU,Debt Collection,DC_KW_102,keyword,collectau
+Ampac Debt Recovery,Debt Collection,DC_KW_103,keyword,ampac debt rec
+Revenue NSW Debt,Debt Collection,DC_KW_104,keyword,revenuensw finesdebt
+Revenue NSW Debt,Debt Collection,DC_KW_105,keyword,revenue nsw finesdebt
+Australian National Recoveries,Debt Collection,DC_KW_106,keyword,anr mpn
+Illion Australia,Debt Collection,DC_KW_107,keyword,illion australia
+InCredit,Debt Collection,DC_KW_108,keyword,incredit
+Professional Collection Services,Debt Collection,DC_KW_109,keyword,profcoll
+Professional Collection Services,Debt Collection,DC_KW_110,keyword,profcoll p
+Prushka,Debt Collection,DC_KW_111,keyword,prushka
+Tasmanian Collection Service,Debt Collection,DC_KW_112,keyword,tasmanian collection serv
+Oceanic Mercantile,Debt Collection,DC_KW_113,keyword,oceanic mercantile
+Australian Receivables,Debt Collection,DC_KW_114,keyword,aus receivables
+Australian Receivables,Debt Collection,DC_KW_115,keyword,australia receivable
+Australian National Recoveries,Debt Collection,DC_KW_116,keyword,anr slc
+ARMA Group,Debt Collection,DC_KW_117,keyword,arma netbank
+ARMA Group,Debt Collection,DC_KW_118,keyword,arma trust accou
+ARMA Group,Debt Collection,DC_KW_119,keyword,bpay arma
+Collection House,Debt Collection,DC_KW_120,keyword,collectionhouselimit
+Solved Group,Debt Collection,DC_KW_121,keyword,solved gro
+Waterman Collections,Debt Collection,DC_KW_122,keyword,waterman collections
