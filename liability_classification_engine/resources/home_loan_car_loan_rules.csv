@@ -1,0 +1,33 @@
+rule_id,target_field,rule_name,match_scope,match_type,pattern,account_type,dr_cr,bank,amount_gt,priority,enabled
+HL001,is_home_loan,Home Loan,text,keyword,home loan,*,*,*,,100,1
+HL002,is_home_loan,HomeLoan,text,keyword,homeloan,*,*,*,,100,1
+HL003,is_home_loan,Home_Loan,text,keyword,home_loan,*,*,*,,100,1
+HL004,is_home_loan,HLoan,text,keyword,hloan,*,*,*,,100,1
+HL005,is_home_loan,Mortgage,text,keyword,mortgage,*,*,*,,100,1
+HL006,is_home_loan,Housing Loan,text,keyword,housing loan,*,*,*,,100,1
+HL007,is_home_loan,Mortgage,text,keyword,mtge,*,*,*,,100,1
+HL008,is_home_loan,Property Loan,text,keyword,property loan,*,*,*,,100,1
+HL009,is_home_loan,Home loan account credit,all,always,,home loan,credit,*,0,100,1
+CL001,is_car_loan,Car Loan,text,keyword,car loan,*,*,*,,100,1
+CL002,is_car_loan,Auto Loan,text,keyword,auto loan,*,*,*,,100,1
+CL003,is_car_loan,New Start Auto Loans,text_or_counterparty,regex,new\s*start\s*auto\s*loans,*,*,*,,90,1
+CL004,is_car_loan,Auto Finance Loans,text_or_counterparty,regex,auto\s*finance\s*loans,*,*,*,,90,1
+CL005,is_car_loan,Toyota Finance,text_or_counterparty,regex,toyota\s*finance,*,*,*,,90,1
+CL006,is_car_loan,Volkswagen Financial,text_or_counterparty,regex,volkswagen\s*financial,*,*,*,,90,1
+CL007,is_car_loan,BMW Finance,text_or_counterparty,regex,bmw\s*finance,*,*,*,,90,1
+CL008,is_car_loan,Lexus Finance,text_or_counterparty,regex,lexus\s*finance,*,*,*,,90,1
+CL009,is_car_loan,Nissan Finance,text_or_counterparty,regex,nissan\s*finance,*,*,*,,90,1
+CL010,is_car_loan,Mazda Finance,text_or_counterparty,regex,mazda\s*finance,*,*,*,,90,1
+CL011,is_car_loan,Audi Finance,text_or_counterparty,regex,audi\s*finance,*,*,*,,90,1
+CL012,is_car_loan,Suzuki Finance,text_or_counterparty,regex,suzuki\s*finance,*,*,*,,90,1
+CL013,is_car_loan,Subaru Finance,text_or_counterparty,regex,subaru\s*finance,*,*,*,,90,1
+CL014,is_car_loan,Mercedes-Benz Financial,text_or_counterparty,regex,mercedes[-\s]*benz(?:\s+financial)?(?:\s+services)?,*,*,*,,90,1
+CL015,is_car_loan,Taurus Motor Finance,text_or_counterparty,regex,taurus\s*motor\s*finance,*,*,*,,90,1
+CL016,is_car_loan,Green Light Auto Finance,text_or_counterparty,regex,green\s*light\s*auto\s*finance,*,*,*,,90,1
+CL017,is_car_loan,Go Car Finance,text_or_counterparty,regex,go\s*car\s*finance,*,*,*,,90,1
+CL018,is_car_loan,ANZ Asset Finance,text_or_counterparty,regex,anz\s*asset\s*finance,*,*,*,,90,1
+CL019,is_car_loan,A1 Cars Finance,text_or_counterparty,regex,a1\s*cars\s*finance,*,*,*,,90,1
+CL020,is_car_loan,Motor Trade Finance,text_or_counterparty,regex,motor\s*trade\s*finance,*,*,*,,90,1
+CL021,is_car_loan,Cars On Terms,text_or_counterparty,regex,cars\s*on\s*terms,*,*,*,,90,1
+CL022,is_car_loan,RACV Finance,text_or_counterparty,regex,racv\s*finance,*,*,*,,90,1
+CL023,is_car_loan,RACQ Finance,text_or_counterparty,regex,racq\s*finance,*,*,*,,90,1

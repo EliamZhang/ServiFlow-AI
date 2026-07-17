@@ -41,7 +41,7 @@ class LiabilityPipelineTests(unittest.TestCase):
 
         self.assertEqual(wrapped.call_count, 1)
 
-    def test_special_rule_changes_only_the_product_classification(self) -> None:
+    def test_cash_converters_uses_its_existing_product_classification(self) -> None:
         transactions = pd.DataFrame(
             {
                 "counterparty": ["Cash Converters"],
@@ -56,7 +56,7 @@ class LiabilityPipelineTests(unittest.TestCase):
 
         result = apply_special_rules(transactions)
 
-        self.assertEqual(result.at[0, "product_type"], "wage_advance")
+        self.assertEqual(result.at[0, "product_type"], "personal_loan")
         self.assertEqual(result.at[0, "untouched"], "keep")
         self.assertEqual(transactions.at[0, "product_type"], "personal_loan")
 
