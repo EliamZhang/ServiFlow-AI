@@ -23,6 +23,12 @@ def run_pipeline(
     """Classify transactions via keyword matching against the merchant KB."""
     automaton = get_cached_automaton(kb_path)
     output = match_transactions(transactions, automaton)
+
+    # Debt Collection / Debt Consolidation are now owned by the liability engine.
+    # Clear them here so the initial engine does not fail ownership validation.
+    _liability_owned = output["finv_category"].isin(["Debt Collection", "Debt Consolidation"])
+    output.loc[_liability_owned, "finv_category"] = ""
+
     return PipelineResult(
         transactions=output,
         original_columns=tuple(transactions.columns),

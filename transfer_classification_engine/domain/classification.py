@@ -284,6 +284,8 @@ def classify_transfers(
        (same application_id + transaction_date + amount, both debit & credit).
     2. External Transfers — regex rules on remaining unclassified rows.
     3. Known-account deposit matching — extends External Transfers.
+    3.5 Cross-date internal transfer — account numbers seen in both
+       withdrawal and deposit directions are reclassified as Internal.
 
     Parameters
     ----------
@@ -315,6 +317,9 @@ def classify_transfers(
 
     # ── Step 3: extend via known internal accounts (also External Transfers) ──
     output = _match_deposit_to_known_accounts(output)
+
+    # ── Step 3.5: cross-date internal transfer via account-number matching ──
+    output = _reclassify_cross_date_internal_transfers(output)
 
     # ── counterparty ──
     output["counterparty"] = _derive_counterparty(output)
@@ -430,6 +435,13 @@ _EXCLUDED_PAIRING_PATTERNS: list[re.Pattern] = [
     # ── Generic lender/phrase patterns that indicate borrowing ──
     re.compile(r"\b(?:loan\s*repaid|loan\s*return|loan\s*repayment|wage\s*advance\s*repayment)\b", re.IGNORECASE),
     re.compile(r"\b(?:pay\s*in\s*4|payin4)\b", re.IGNORECASE),  # PayPal BNPL
+    # ── External payment networks (not internal transfers) ──
+    # Osko / NPP / PayID transactions go through the external New Payments
+    # Platform and should never be classified as Internal Transfer, even when
+    # they happen to form same-day same-amount debit-credit pairs.
+    re.compile(r"\bosko\b", re.IGNORECASE),
+    re.compile(r"\bpayid\b", re.IGNORECASE),
+    re.compile(r"\bnpp\b", re.IGNORECASE),              # New Payments Platform
 ]
 
 
@@ -530,6 +542,95 @@ def _match_deposit_to_known_accounts(df: pd.DataFrame) -> pd.DataFrame:
             "internal_internet_deposit_known_account"
         )
         output.at[idx, "prediction_dr_cr_used"] = False
+
+    return output
+
+
+def _reclassify_cross_date_internal_transfers(df: pd.DataFrame) -> pd.DataFrame:
+    """Reclassify External Transfers → Internal Transfer when matching account
+    numbers appear in both withdrawal (To) and deposit (From) directions.
+
+    The pairing rule (:func:`_detect_internal_transfers`) requires matching
+    ``transaction_date``, so transfers between the same two accounts on
+    *different* dates are missed.  This step catches them by observing that
+    an account number used as a withdrawal destination is also used as a
+    deposit source — a strong signal that both belong to the same user.
+
+    To reduce false positives, an account must appear **at least twice in
+    each direction** (≥2 withdrawals *to* the account AND ≥2 deposits *from*
+    the account) before it is considered internal.
+    Matching is scoped per ``bank_account_id`` to avoid cross-user leakage.
+    """
+    output = df.copy()
+
+    et_mask = (
+        (output["is_transfer_pred"] == 1)
+        & (output["finv_category"] == "External Transfers")
+    )
+    if not et_mask.any():
+        return output
+
+    text_col = output.get("text_norm", pd.Series("", index=output.index))
+    bank_col = (
+        output["bank_account_id"]
+        if "bank_account_id" in output.columns
+        else pd.Series("__global__", index=output.index)
+    )
+
+    # ── Collect account numbers from both directions ──
+    to_by_bank: dict[str, dict[str, int]] = {}    # "Internet Withdrawal … To N" → count
+    from_by_bank: dict[str, dict[str, int]] = {}  # "Internet Deposit  … From N" → count
+
+    for idx in output[et_mask].index:
+        text = str(text_col.get(idx, ""))
+        bank_val = bank_col.get(idx)
+        bank = str(bank_val) if pd.notna(bank_val) else "__global__"
+
+        m = _WITHDRAWAL_ACCOUNT_RE.search(text)
+        if m:
+            d = to_by_bank.setdefault(bank, {})
+            d[m.group(1)] = d.get(m.group(1), 0) + 1
+
+        m = _DEPOSIT_ACCOUNT_RE.search(text)
+        if m:
+            d = from_by_bank.setdefault(bank, {})
+            d[m.group(1)] = d.get(m.group(1), 0) + 1
+
+    # ── Internal accounts: appear in BOTH directions, ≥2 in each direction ──
+    MIN_PER_DIRECTION = 2
+    internal_by_bank: dict[str, set[str]] = {}
+    for bank in set(to_by_bank.keys()) | set(from_by_bank.keys()):
+        to_counts = to_by_bank.get(bank, {})
+        from_counts = from_by_bank.get(bank, {})
+        common = set(to_counts.keys()) & set(from_counts.keys())
+        filtered = {
+            acct for acct in common
+            if to_counts.get(acct, 0) >= MIN_PER_DIRECTION
+            and from_counts.get(acct, 0) >= MIN_PER_DIRECTION
+        }
+        if filtered:
+            internal_by_bank[bank] = filtered
+
+    if not internal_by_bank:
+        return output
+
+    # ── Reclassify matching rows ──
+    for idx in output[et_mask].index:
+        text = str(text_col.get(idx, ""))
+        bank_val = bank_col.get(idx)
+        bank = str(bank_val) if pd.notna(bank_val) else "__global__"
+        known = internal_by_bank.get(bank, set())
+        if not known:
+            continue
+
+        m = _WITHDRAWAL_ACCOUNT_RE.search(text) or _DEPOSIT_ACCOUNT_RE.search(text)
+        if m and m.group(1) in known:
+            output.at[idx, "finv_category"] = "Internal Transfer"
+            output.at[idx, "predicted_category"] = "Internal Transfer"
+            output.at[idx, "prediction_confidence"] = "high"
+            output.at[idx, "prediction_rule"] = (
+                "internal_cross_date_account_match"
+            )
 
     return output
 

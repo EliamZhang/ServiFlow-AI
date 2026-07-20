@@ -28,40 +28,90 @@ SAMPLE_CSV = PROJECT_ROOT / "sample.csv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "classification_report.xlsx"
 DEFAULT_RESULT = PROJECT_ROOT / "output" / "compare_result.xlsx"
 
-# ── category name mapping: our finv_category → illion category ──────────
-# Only pairs where names differ; exact name matches work automatically.
+# ── category name mapping ──────────────────────────────────────────────
+#
+# Two mapping tables for human review:
+#   OUR_TO_ILLION  — our finv_category → illion category (drives agreement check)
+#   ILLION_TO_OUR  — illion category → our finv_category(s)  (reverse reference)
+#
+# Exact name matches work automatically and are omitted from OUR_TO_ILLION.
+# Categories in UNMAPPABLE_OUR_CATS have no illion equivalent and are
+# excluded from agreement-rate calculation.
 
 OUR_TO_ILLION: dict[str, str] = {
-    "fee":                "Fees",
-    "Internal Transfer":  "Internal Transfer",
-    "External Transfers": "External Transfers",
-    "salary_payg":        "Wages",
-    "salary_packaging":   "Wages",
-    "self_employed_gig":  "Wages",
-    "centrelink":         "Centrelink",
-    "bnpl":               "Non SACC Loans",
-    "wage_advance":       "Non SACC Loans",
-    "personal_loan_sacc": "SACC Loans",
-    "personal_loan_non_sacc": "Non SACC Loans",
-    "personal_loan_unknown":  "Non SACC Loans",
-    "contract_loan":      "Non SACC Loans",
-    "loc":                "Non SACC Loans",
-    "bank":               "Non SACC Loans",
+    # -- singular / plural --
+    "fee":                   "Fees",
+    "Credit Card Repayment": "Credit Card Repayments",
+
+    # -- case --
+    "centrelink":            "Centrelink",
+
+    # -- income: our fine-grained → illion "Wages" --
+    "salary_payg":           "Wages",
+    "salary_packaging":      "Wages",
+    "self_employed_gig":     "Wages",
+
+    # -- liability: our fine-grained → illion coarse-grained --
+    "BNPL":                  "Non SACC Loans",
+    "Wage Advance":          "Non SACC Loans",
+    "Personal Loan Unknown": "Non SACC Loans",
+    "Contract Loans":        "Non SACC Loans",
+    "LOC":                   "Non SACC Loans",
 }
 
-# Our categories that legitimately span MULTIPLE illion categories.
-OUR_TO_ILLION_MULTI: dict[str, frozenset[str]] = {
-    "Internal Transfer": frozenset({"Internal Transfer", "External Transfers",
-                                     "All Other Credits", "Credit Card Repayments"}),
-    "External Transfers": frozenset({"Internal Transfer", "External Transfers",
-                                      "All Other Credits",
-                                      "Credit Card Repayments"}),
-    "bnpl":     frozenset({"Non SACC Loans", "SACC Loans"}),
-    "bank":     frozenset({"Non SACC Loans", "SACC Loans",
-                            "Credit Card Repayments",
-                            "Internal Transfer", "External Transfers"}),
-    "personal_loan_non_sacc": frozenset({"Non SACC Loans", "SACC Loans"}),
-    "loc":      frozenset({"Non SACC Loans", "Credit Card Repayments"}),
+# Our categories that illion has NO equivalent for.
+# Rows with these labels are excluded from agreement-rate calculation.
+UNMAPPABLE_OUR_CATS: frozenset[str] = frozenset({
+    # "Home Loan",          # illion 无此类别，待有数据后确认
+    # "Debt Consolidation", # illion 无此类别，待有数据后确认
+})
+
+# ── reverse mapping (illion → our labels) for human review ─────────
+# 1:1 exact-name matches are marked as "[同名]" for readability.
+
+ILLION_TO_OUR: dict[str, list[str]] = {
+    # -- exact name match (1:1) --
+    "Internal Transfer":            ["[同名] Internal Transfer"],
+    "External Transfers":           ["[同名] External Transfers"],
+    "Dining Out":                   ["[同名] Dining Out"],
+    "Retail":                       ["[同名] Retail"],
+    "Groceries":                    ["[同名] Groceries"],
+    "Health":                       ["[同名] Health"],
+    "Automotive":                   ["[同名] Automotive"],
+    "Entertainment":                ["[同名] Entertainment"],
+    "Home Improvement":             ["[同名] Home Improvement"],
+    "Travel":                       ["[同名] Travel"],
+    "Information":                  ["[同名] Information"],
+    "Personal Care":                ["[同名] Personal Care"],
+    "Transport":                    ["[同名] Transport"],
+    "Education":                    ["[同名] Education"],
+    "Gambling":                     ["[同名] Gambling"],
+    "Gyms and other memberships":   ["[同名] Gyms and other memberships"],
+    "Pet Care":                     ["[同名] Pet Care"],
+    "Donations":                    ["[同名] Donations"],
+    "Utilities":                    ["[同名] Utilities"],
+    "Telecommunications":           ["[同名] Telecommunications"],
+    "Rent":                         ["[同名] Rent"],
+    "Department Stores":            ["[同名] Department Stores"],
+    "Insurance":                    ["[同名] Insurance"],
+    "Subscription TV":              ["[同名] Subscription TV"],
+    "Dishonours":                   ["[同名] Dishonours"],
+    "Debt Collection":              ["[同名] Debt Collection"],
+    "Overdrawn":                    ["[同名] Overdrawn"],
+    "SACC Loans":                   ["[同名] SACC Loans"],
+
+    # -- 1:1, different names --
+    "Fees":                         ["fee"],
+    "Centrelink":                   ["centrelink"],
+    "Credit Card Repayments":       ["Credit Card Repayment"],
+
+    # -- 1:N: illion lumps together our fine-grained categories --
+    "Wages":                        ["salary_payg", "salary_packaging", "self_employed_gig"],
+    "Non SACC Loans":               ["BNPL", "Wage Advance", "Non SACC Loans",
+                                     "Personal Loan Unknown", "Contract Loans", "LOC"],
+
+    # -- illion categories with no direct equivalent in our engine --
+    "All Other Credits":            [],   # 我们没有兜底收入类，可能分散在多个标签
 }
 
 # Columns to hide in the detail/confusion sheets.
@@ -90,14 +140,15 @@ def _map(our_cat: str) -> str:
     return OUR_TO_ILLION.get(c, c)
 
 
-def _agree(our: str, illion_cat: str) -> bool:
-    """True when our category is consistent with illion's category."""
+def _agree(our: str, illion_cat: str) -> bool | None:
+    """True when our mapped category matches illion's category exactly.
+
+    Returns None when our category has no illion equivalent (unmappable).
+    """
     our, illion_cat = str(our).strip(), str(illion_cat).strip()
-    if _map(our) == illion_cat:
-        return True
-    if our in OUR_TO_ILLION_MULTI and illion_cat in OUR_TO_ILLION_MULTI[our]:
-        return True
-    return False
+    if our in UNMAPPABLE_OUR_CATS:
+        return None
+    return _map(our) == illion_cat
 
 
 def _is_classified(series: pd.Series) -> pd.Series:
@@ -198,12 +249,25 @@ def run(
 
     # ── 2. Agreement summary ──────────────────────────────────────────────
     n_both = int(both_mask.sum())
-    agree_count = sum(
-        _agree(our_fc[i], illion_cat[i]) for i in df.index[both_mask]
-    )
+    # Exclude rows where our category has no illion equivalent.
+    comparable_mask = both_mask & ~our_fc.isin(UNMAPPABLE_OUR_CATS)
+    n_comparable = int(comparable_mask.sum())
+    n_unmappable = n_both - n_comparable
+
+    agree_results = [
+        _agree(our_fc[i], illion_cat[i])
+        for i in df.index[comparable_mask]
+    ]
+    agree_count = sum(1 for v in agree_results if v is True)
+    disagree_count = sum(1 for v in agree_results if v is False)
+
     agreement_rows = [
         {"指标": "双方都有标签的行", "值": f"{n_both:,}"},
-        {"指标": "一致 (含1:N映射)", "值": f"{agree_count:,} / {n_both:,} = {agree_count/n_both*100:.1f}%"},
+        {"指标": "  其中可比较 (illion有对应类别)", "值": f"{n_comparable:,}"},
+        {"指标": "  其中不可比较 (illion无对应类别)", "值": f"{n_unmappable:,}"},
+        {"指标": "一致 (映射后严格匹配)", "值": f"{agree_count:,} / {n_comparable:,} = {agree_count/n_comparable*100:.1f}%" if n_comparable > 0 else "—"},
+        {"指标": "不一致", "值": f"{disagree_count:,} / {n_comparable:,} = {disagree_count/n_comparable*100:.1f}%" if n_comparable > 0 else "—"},
+        {"指标": "一致 (vs 我们已分类总数)", "值": f"{agree_count:,} / {int(our_fc_ok.sum()):,} = {agree_count/our_fc_ok.sum()*100:.1f}%"},
     ]
     agreement_df = pd.DataFrame(agreement_rows)
 
@@ -211,16 +275,29 @@ def run(
     pivot_rows = []
     for our_cat_name in sorted(our_fc[our_fc_ok].unique()):
         mask = our_fc_ok & (our_fc == our_cat_name)
-        row: dict = {"finv_category": our_cat_name, "total": int(mask.sum())}
+        total_n = int(mask.sum())
         both_for_cat = mask & illion_ok
-        if both_for_cat.sum() > 0:
-            ag = sum(
-                _agree(our_cat_name, illion_cat[i])
-                for i in df.index[both_for_cat]
-            )
-            row["agree_pct"] = round(ag / both_for_cat.sum() * 100, 1)
+        illion_unclassified_n = int((mask & ~illion_ok).sum())
+
+        row: dict = {
+            "finv_category": our_cat_name,
+            "total": total_n,
+            "illion_unclassified": illion_unclassified_n,
+        }
+
+        if total_n > 0:
+            if our_cat_name in UNMAPPABLE_OUR_CATS:
+                row["agree_pct"] = None  # 不可比较：illion 无对应类别
+            else:
+                ag = sum(
+                    1 for i in df.index[both_for_cat]
+                    if _agree(our_cat_name, illion_cat[i]) is True
+                )
+                # 分母 = total（我们分的全部），illion 未覆盖的视为不一致
+                row["agree_pct"] = round(ag / total_n * 100, 1)
         else:
             row["agree_pct"] = None
+
         for illion_val, cnt in (
             df.loc[mask & illion_ok, "_illion_cat"].value_counts().items()
         ):
@@ -231,7 +308,7 @@ def run(
         .set_index("finv_category")
         .fillna(0)
     )
-    meta_cols = ["total", "agree_pct"]
+    meta_cols = ["total", "illion_unclassified", "agree_pct"]
     cat_cols = sorted(
         [c for c in pivot.columns if c not in meta_cols],
         key=lambda x: pivot[x].sum(),
@@ -242,6 +319,7 @@ def run(
     for c in cat_cols:
         pivot[c] = pivot[c].astype(int)
     pivot["total"] = pivot["total"].astype(int)
+    pivot["illion_unclassified"] = pivot["illion_unclassified"].astype(int)
 
     # ── 4. Counterparty comparison ────────────────────────────────────────
     cp_both = our_cp_ok & illion_cp_ok
@@ -270,12 +348,14 @@ def run(
     cat_summary_rows = []
     for our_cat_name in pivot.index:
         r = pivot.loc[our_cat_name]
-        agree_str = (
-            f"{r['agree_pct']:.0f}%"
-            if r["agree_pct"] and r["agree_pct"] > 0
-            else "—"
-        )
+        if our_cat_name in UNMAPPABLE_OUR_CATS:
+            agree_str = "N/A (illion无此类别)"
+        elif r["agree_pct"] and r["agree_pct"] > 0:
+            agree_str = f"{r['agree_pct']:.0f}%"
+        else:
+            agree_str = "—"
         total_n = int(r["total"])
+        unclassified_n = int(r.get("illion_unclassified", 0))
         illion_top = []
         for c in cat_cols:
             v = int(r[c])
@@ -286,19 +366,22 @@ def run(
         cat_summary_rows.append({
             "我们的分类": our_cat_name,
             "数量": total_n,
+            "illion未覆盖": unclassified_n,
             "一致率": agree_str,
             "illion对应标签 (top 3)": ", ".join(illion_top) if illion_top else "—",
         })
     cat_summary_df = pd.DataFrame(cat_summary_rows)
 
     # ── 7. Disagreement detail ────────────────────────────────────────────
-    disagree_mask = both_mask & ~pd.Series(
+    agree_series = pd.Series(
         [
             _agree(our_fc[i], illion_cat[i])
             for i in range(len(df))
         ],
         index=df.index,
     )
+    # exclude unmappable rows (None) — they are not disagreements
+    disagree_mask = both_mask & agree_series.eq(False)
     disagree_cols = [
         "user_id", "application_id", "transaction_date", "amount",
         "dr_cr", "text",
@@ -331,10 +414,19 @@ def run(
             _write_sheet(writer, "illion_only", illion_only.set_index("illion_category"))
         if len(disagree_df) > 0:
             _write_sheet(writer, "disagreement_detail", disagree_df)
+        # reverse mapping sheet for human review
+        illion_to_our_rows = [
+            {"illion_category": k, "our_labels": ", ".join(v) if v else "（无对应）"}
+            for k, v in ILLION_TO_OUR.items()
+        ]
+        _write_sheet(writer, "illion_to_our_mapping",
+                     pd.DataFrame(illion_to_our_rows).set_index("illion_category"))
 
     print(f"→ 对比报告已写入: {result_path}")
     print(f"  覆盖: 我们 {our_fc_ok.sum()/n*100:.1f}% | illion {illion_ok.sum()/n*100:.1f}%")
-    print(f"  一致率: {agree_count/n_both*100:.1f}% ({agree_count:,}/{n_both:,})")
+    print(f"  一致率: {agree_count/n_comparable*100:.1f}% ({agree_count:,}/{n_comparable:,})"
+          f"  [可比较行, 排除unmappable]")
+    print(f"  不一致: {disagree_count:,} 行")
     return result_path
 
 
