@@ -308,6 +308,14 @@ def identify_contract_loan_streams(
     assign_grouped_product_streams(output, eligible_mask, "contract_loan")
 
 
+def identify_home_loan_streams(
+    output: pd.DataFrame,
+    eligible_mask: pd.Series,
+    _: list[str],
+) -> None:
+    assign_grouped_product_streams(output, eligible_mask, "home_loan")
+
+
 # ---------------------------------------------------------------------------
 # Personal loan matching
 # ---------------------------------------------------------------------------
@@ -1866,12 +1874,24 @@ def identify_loc_streams(
 PRODUCT_RULES: tuple[ProductRule, ...] = (
     ProductRule(10, "bnpl", identify_bnpl_streams),
     ProductRule(20, "wage_advance", identify_wage_advance_streams),
+    ProductRule(25, "home_loan", identify_home_loan_streams),
     ProductRule(30, "bank", identify_bank_streams),
     ProductRule(35, "contract_loan", identify_contract_loan_streams),
     ProductRule(40, PERSONAL_LOAN, assign_personal_loan_rule),
     ProductRule(50, "loc", identify_loc_streams),
 )
 
+FINV_CATEGORY_MAP = {
+    "bank": "Credit Card Repayment",
+    "bnpl": "BNPL",
+    "wage_advance": "Wage Advance",
+    "personal_loan_sacc": "SACC Loans",
+    "personal_loan_unknown": "Personal Loan Unknown",
+    "personal_loan_non_sacc": "Non SACC Loans",
+    "contract_loan": "Contract Loans",
+    "loc": "LOC",
+    "home_loan": "Home Loan",
+}
 
 def parse_stream_id(value: object) -> tuple[str, int] | None:
     if pd.isna(value):
@@ -2327,11 +2347,12 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
         & stream_base.notna()
         & stream_base.ne("")
     )
+    existing = output.get("finv_category", pd.Series(index=output.index))
     output["finv_category"] = pd.NA
     output.loc[valid_mask, "finv_category"] = [
         (
             base
-            if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan"}
+            if base in {"bnpl", "wage_advance", "home_loan", "bank", "loc", "contract_loan"}
             else f"{product}_{base}"
         )
         for product, base in zip(
@@ -2339,4 +2360,16 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
             stream_base.loc[valid_mask],
         )
     ]
+    preserved_mask = (
+        output["finv_category"].isna()
+        & existing.notna()
+        & existing.astype("string").str.strip().ne("")
+    )
+    output.loc[preserved_mask, "finv_category"] = existing.loc[preserved_mask]
+    dishonour_mask = (
+        output["is_dishonours"].astype("string").str.lower().eq("yes")
+        & output["finv_category"].notna()
+    )
+    output.loc[dishonour_mask, "finv_category"] = "Dishonours"
+    output["finv_category"] = output["finv_category"].replace(FINV_CATEGORY_MAP)
     return output

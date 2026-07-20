@@ -215,6 +215,9 @@ def apply_credit_card_rules(df, rules_file):
     output = df.copy()
 
     for row_id, row in output.iterrows():
+        if _already_classified(row):
+            continue
+
         match = match_credit_card_rule(row, rules)
         if match is None:
             continue
@@ -226,3 +229,465 @@ def apply_credit_card_rules(df, rules_file):
             output.at[row_id, "product_type"] = product_type
 
     return output
+
+
+# ---------------------------------------------------------------------------
+# Generic flag-rule matching
+# ---------------------------------------------------------------------------
+
+
+def _load_flag_rules(rules_file):
+    """Load generic flag rules from a CSV file.
+
+    Auto-detects two CSV formats:
+
+    Format A (home_loan_car_loan):
+        Columns: target_field, match_scope, match_type, pattern,
+                 account_type, dr_cr, bank, amount_gt, priority
+    Format B (overdrawn / debt_collection / debt_consolidation):
+        Columns: keyword (or pattern), match_type, counterparty,
+                 product_type (optional)
+
+    Returns a dict keyed by match scope, each value a list of rule dicts.
+    """
+    with open(rules_file, encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = list(reader)
+
+    if not rows:
+        return {}
+
+    columns = set(rows[0].keys())
+
+    # Format A: has target_field + match_scope columns
+    if "target_field" in columns and "match_scope" in columns:
+        return _load_flag_rules_format_a(rows)
+
+    # Format B: simpler keyword/regex rules for single target
+    return _load_flag_rules_format_b(rows)
+
+
+def _load_flag_rules_format_a(rows):
+    """Load format-A rules with match_scope / account_type / dr_cr / bank indexing."""
+    indexed = {
+        "text_keyword": [],
+        "text_regex": [],
+        "text_or_counterparty_keyword": [],
+        "text_or_counterparty_regex": [],
+        "all_rules": [],
+    }
+
+    for row in rows:
+        target_field = normalize_rule_value(row.get("target_field", ""))
+        match_scope = normalize_rule_value(row.get("match_scope", "")) or "text"
+        match_type = normalize_rule_value(row.get("match_type", "")) or "keyword"
+        pattern = str(row.get("pattern", "")).strip()
+        enabled = str(row.get("enabled", "1")).strip()
+        if not target_field or enabled == "0":
+            continue
+        if not pattern and match_scope != "all":
+            continue
+
+        priority = parse_int(row.get("priority"), default=0)
+        amount_gt = parse_decimal(row.get("amount_gt"))
+        rule = {
+            "target_field": target_field,
+            "priority": priority,
+            "amount_gt": amount_gt,
+            "account_type": normalize_rule_value(row.get("account_type", "*")),
+            "dr_cr": normalize_rule_value(row.get("dr_cr", "*")),
+            "bank": normalize_rule_value(row.get("bank", "*")),
+        }
+
+        if match_scope == "all":
+            if match_type == "keyword":
+                rule["keywords"] = split_upper_terms(pattern)
+            else:
+                try:
+                    rule["pattern"] = re.compile(normalize_regex_pattern(pattern), re.IGNORECASE)
+                except re.error:
+                    continue
+            indexed["all_rules"].append(rule)
+            continue
+
+        bucket_key = f"{match_scope}_{match_type}"
+        if bucket_key not in indexed:
+            continue
+
+        if match_type == "regex":
+            try:
+                rule["pattern"] = re.compile(normalize_regex_pattern(pattern), re.IGNORECASE)
+            except re.error:
+                continue
+        else:
+            keywords = split_upper_terms(pattern)
+            if not keywords:
+                continue
+            rule["keywords"] = keywords
+
+        indexed[bucket_key].append(rule)
+
+    # Merge per-target keywords into a single compiled regex for each bucket key.
+    for bucket_key in list(indexed.keys()):
+        if "keyword" not in bucket_key:
+            indexed[bucket_key].sort(key=lambda r: -r["priority"])
+            continue
+        by_target = {}
+        for rule in indexed[bucket_key]:
+            target = rule["target_field"]
+            by_target.setdefault(target, []).extend(rule.get("keywords", []))
+        merged = []
+        for target, kws in sorted(by_target.items()):
+            if kws:
+                merged.append({
+                    "target_field": target,
+                    "pattern": re.compile(
+                        r"\b(?:" + "|".join(map(re.escape, sorted(set(kws)))) + r")\b",
+                        re.IGNORECASE,
+                    ),
+                })
+        indexed[bucket_key] = merged
+
+    indexed["all_rules"].sort(key=lambda r: (-r["priority"], r["target_field"]))
+    return indexed
+
+
+def _load_flag_rules_format_b(rows):
+    """Load format-B rules (simple keyword/regex on text field).
+
+    Keywords are merged by (counterparty, product_type) into a single
+    compiled regex so matching runs in one str.contains pass.
+    """
+    indexed = {
+        "text_keyword": [],
+        "text_regex": [],
+    }
+
+    kw_by_key = {}
+    for row in rows:
+        match_type = normalize_rule_value(row.get("match_type", "")) or "keyword"
+        pattern = row.get("keyword") or row.get("pattern") or ""
+        counterparty = normalize_rule_value(row.get("counterparty", ""))
+        product_type = normalize_rule_value(row.get("product_type", ""))
+        if not pattern.strip():
+            continue
+
+        if match_type == "regex":
+            try:
+                compiled = re.compile(pattern, re.IGNORECASE)
+            except re.error:
+                continue
+            indexed["text_regex"].append({
+                "pattern": compiled,
+                "counterparty": counterparty,
+                "product_type": product_type,
+            })
+        else:
+            key = (counterparty, product_type)
+            kw_by_key.setdefault(key, set()).update(split_upper_terms(pattern))
+
+    for (counterparty, product_type), kws in kw_by_key.items():
+        if kws:
+            indexed["text_keyword"].append({
+                "pattern": re.compile(
+                    r"\b(?:" + "|".join(map(re.escape, sorted(kws))) + r")\b",
+                    re.IGNORECASE,
+                ),
+                "counterparty": counterparty,
+                "product_type": product_type,
+            })
+
+    return indexed
+
+
+def _matches_all_conditions(row, rule):
+    """Check account_type / dr_cr / bank / amount_gt constraints."""
+    for field_name in ("account_type", "dr_cr", "bank"):
+        rule_value = rule.get(field_name, "*")
+        if rule_value == "*":
+            continue
+        row_value = normalize_rule_value(row.get(field_name, "")) or "-"
+        if rule_value != normalize_rule_value(row_value):
+            return False
+
+    amount_gt = rule.get("amount_gt")
+    if amount_gt is not None:
+        amount = parse_decimal(row.get("amount"))
+        if amount is None or abs(amount) <= amount_gt:
+            return False
+
+    return True
+
+
+def _apply_flag_rules(df, rules, output_columns, overwrite=False):
+    """Apply loaded flag rules to a dataframe.
+
+    Returns a copy of df with flag columns added (default 0, set to 1 on match).
+    """
+    if not rules:
+        return _ensure_flag_columns(df, output_columns)
+
+    output = df.copy()
+    output = _ensure_flag_columns(output, output_columns)
+
+    for col in output_columns:
+        if col not in output.columns:
+            output[col] = 0
+
+    text_col = output["text"].fillna("").astype(str)
+    counterparty_col = output.get("counterparty", pd.Series("", index=output.index))
+    counterparty_col = counterparty_col.fillna("").astype(str)
+
+    # -- text_keyword (vectorised) --
+    for rule in rules.get("text_keyword", []):
+        target = _resolve_target(rule, output_columns)
+        if not target:
+            continue
+        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+        if not mask.any():
+            continue
+        output.loc[mask, target] = 1
+        if overwrite:
+            _bulk_write_metadata(output, mask, rule, target)
+        else:
+            for row_id in output[mask].index:
+                if not _already_classified(output.loc[row_id]):
+                    _write_one_metadata(output, row_id, rule, target)
+
+    # -- text_regex (each rule has its own compiled pattern) --
+    for rule in rules.get("text_regex", []):
+        target = _resolve_target(rule, output_columns)
+        if not target:
+            continue
+        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+        if not mask.any():
+            continue
+        output.loc[mask, target] = 1
+        if overwrite:
+            _bulk_write_metadata(output, mask, rule, target)
+        else:
+            for row_id in output[mask].index:
+                if not _already_classified(output.loc[row_id]):
+                    _write_one_metadata(output, row_id, rule, target)
+
+    # -- text_or_counterparty_keyword --
+    for rule in rules.get("text_or_counterparty_keyword", []):
+        target = _resolve_target(rule, output_columns)
+        if not target:
+            continue
+        pattern = rule["pattern"]
+        hit_text = text_col.str.contains(pattern.pattern, na=False, regex=True)
+        hit_cp = counterparty_col.str.contains(pattern.pattern, na=False, regex=True)
+        mask = (hit_text | hit_cp) & output[target].eq(0)
+        if not mask.any():
+            continue
+        output.loc[mask, target] = 1
+        if overwrite:
+            _bulk_write_metadata(output, mask, rule, target)
+        else:
+            for row_id in output[mask].index:
+                if not _already_classified(output.loc[row_id]):
+                    _write_one_metadata(output, row_id, rule, target)
+
+    # -- text_or_counterparty_regex --
+    for rule in rules.get("text_or_counterparty_regex", []):
+        target = _resolve_target(rule, output_columns)
+        if not target:
+            continue
+        hit_text = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True)
+        hit_cp = counterparty_col.str.contains(rule["pattern"].pattern, na=False, regex=True)
+        mask = (hit_text | hit_cp) & output[target].eq(0)
+        if not mask.any():
+            continue
+        output.loc[mask, target] = 1
+        if overwrite:
+            _bulk_write_metadata(output, mask, rule, target)
+        else:
+            for row_id in output[mask].index:
+                if not _already_classified(output.loc[row_id]):
+                    _write_one_metadata(output, row_id, rule, target)
+
+    # -- all_rules --
+    for rule in rules.get("all_rules", []):
+        target = _resolve_target(rule, output_columns)
+        if not target:
+            continue
+        cond_mask = _get_all_rules_mask(output, rule)
+        if cond_mask is None or not cond_mask.any():
+            continue
+        if "pattern" in rule:
+            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+        elif "keywords" in rule:
+            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+        else:
+            mask = cond_mask & output[target].eq(0)
+        if not mask.any():
+            continue
+        output.loc[mask, target] = 1
+        if overwrite:
+            _bulk_write_metadata(output, mask, rule, target)
+        else:
+            for row_id in output[mask].index:
+                if not _already_classified(output.loc[row_id]):
+                    _write_one_metadata(output, row_id, rule, target)
+
+    return output
+
+
+def _get_all_rules_mask(output, rule):
+    """Build a boolean mask for all_rules condition checks (vectorised)."""
+    mask = pd.Series(True, index=output.index)
+    for field_name in ("account_type", "dr_cr", "bank"):
+        rule_value = rule.get(field_name, "*")
+        if rule_value == "*":
+            continue
+        col = output.get(field_name, pd.Series(index=output.index))
+        col = col.fillna("").astype(str).str.strip().str.lower()
+        mask &= col.eq(rule_value)
+    amount_gt = rule.get("amount_gt")
+    if amount_gt is not None and "amount" in output.columns:
+        amount = pd.to_numeric(output["amount"], errors="coerce").abs()
+        mask &= amount.gt(amount_gt)
+    return mask
+
+
+def _bulk_write_metadata(output, mask, rule, target):
+    """Bulk-assign counterparty/finv_category/product_type for hit rows."""
+    if target in _TARGET_METADATA_MAP:
+        meta = _TARGET_METADATA_MAP[target]
+        output.loc[mask, "counterparty"] = meta["counterparty"]
+        if meta.get("finv_category"):
+            output.loc[mask, "finv_category"] = meta["finv_category"]
+        if meta.get("product_type"):
+            output.loc[mask, "product_type"] = meta["product_type"]
+    elif counterparty := rule.get("counterparty", ""):
+        output.loc[mask, "counterparty"] = counterparty
+        product_type = rule.get("product_type", "")
+        if product_type:
+            output.loc[mask, "finv_category"] = product_type
+
+
+def _write_one_metadata(output, row_id, rule, target):
+    """Write metadata for a single row (used in non-overwrite mode)."""
+    if target in _TARGET_METADATA_MAP:
+        meta = _TARGET_METADATA_MAP[target]
+        output.at[row_id, "counterparty"] = meta["counterparty"]
+        if meta.get("finv_category"):
+            output.at[row_id, "finv_category"] = meta["finv_category"]
+        if meta.get("product_type"):
+            output.at[row_id, "product_type"] = meta["product_type"]
+    elif counterparty := rule.get("counterparty", ""):
+        output.at[row_id, "counterparty"] = counterparty
+        product_type = rule.get("product_type", "")
+        if product_type:
+            output.at[row_id, "finv_category"] = product_type
+
+
+def _resolve_target(rule, output_columns):
+    """Resolve the target flag column name from a rule dict."""
+    target = rule.get("target_field")
+    if target:
+        return target
+    # Format B rules don't have target_field; use the first output column
+    return output_columns[0] if output_columns else None
+
+
+def _already_classified(row):
+    """Check if a row already has counterparty or product_type assigned."""
+    cp = row.get("counterparty")
+    pt = row.get("product_type")
+    has_cp = not pd.isna(cp) and str(cp).strip() != ""
+    has_pt = not pd.isna(pt) and str(pt).strip() != ""
+    return has_cp or has_pt
+
+
+def _write_flag_metadata(output, row_id, rule, target, overwrite=False):
+    """Write counterparty / finv_category / product_type based on matched target.
+
+    If overwrite is False, only writes metadata for unclassified rows.
+    If overwrite is True, always writes, replacing any existing values.
+    """
+    row = output.loc[row_id]
+    if not overwrite and _already_classified(row):
+        return
+
+    if target in _TARGET_METADATA_MAP:
+        meta = _TARGET_METADATA_MAP[target]
+        output.at[row_id, "counterparty"] = meta["counterparty"]
+        if meta.get("finv_category"):
+            output.at[row_id, "finv_category"] = meta["finv_category"]
+        if meta.get("product_type"):
+            output.at[row_id, "product_type"] = meta["product_type"]
+    elif counterparty := rule.get("counterparty", ""):
+        output.at[row_id, "counterparty"] = counterparty
+        product_type = rule.get("product_type", "")
+        if product_type:
+            output.at[row_id, "finv_category"] = product_type
+
+
+_TARGET_METADATA_MAP = {
+    "is_home_loan": {
+        "counterparty": "Home Loan",
+        "finv_category": "Home Loan",
+        "product_type": "home_loan",
+    },
+    "is_overdrawn": {
+        "counterparty": "Overdrawn",
+        "finv_category": "Overdrawn",
+    },
+    "is_debt_collection": {
+        "counterparty": "Debt Collection",
+        "finv_category": "Debt Collection",
+    },
+    "is_debt_consolidation": {
+        "counterparty": "Debt Consolidation",
+        "finv_category": "Debt Consolidation",
+    },
+}
+
+
+def _ensure_flag_columns(df, output_columns):
+    """Ensure flag columns exist with default value 0."""
+    output = df.copy()
+    for col in output_columns:
+        if col not in output.columns:
+            output[col] = 0
+    return output
+
+
+def parse_decimal(value):
+    """Parse a value to Decimal, returning None on failure."""
+    from decimal import Decimal, InvalidOperation
+    if pd.isna(value):
+        return None
+    text = str(value).strip().replace(",", "")
+    if not text:
+        return None
+    try:
+        return Decimal(text)
+    except InvalidOperation:
+        return None
+
+
+def apply_home_loan_car_loan_flags(df, rules_file):
+    """Apply home loan / car loan flag rules."""
+    rules = _load_flag_rules(rules_file)
+    return _apply_flag_rules(df, rules, ["is_home_loan", "is_car_loan"], overwrite=True)
+
+
+def apply_overdrawn_flag(df, rules_file):
+    """Apply overdrawn flag rules."""
+    rules = _load_flag_rules(rules_file)
+    return _apply_flag_rules(df, rules, ["is_overdrawn"])
+
+
+def apply_debt_collection_flag(df, rules_file):
+    """Apply debt collection flag rules."""
+    rules = _load_flag_rules(rules_file)
+    return _apply_flag_rules(df, rules, ["is_debt_collection"])
+
+
+def apply_debt_consolidation_flag(df, rules_file):
+    """Apply debt consolidation flag rules."""
+    rules = _load_flag_rules(rules_file)
+    return _apply_flag_rules(df, rules, ["is_debt_consolidation"])
