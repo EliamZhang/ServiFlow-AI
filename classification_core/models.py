@@ -46,6 +46,7 @@ class EngineExecution:
     candidate_count: int
     prediction_count: int
     accepted_count: int
+    duration_seconds: float = 0.0
     diagnostics: dict[str, Any] = field(default_factory=dict)
 
 

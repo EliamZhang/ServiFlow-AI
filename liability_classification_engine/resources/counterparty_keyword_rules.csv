@@ -4,7 +4,6 @@ Wagepay; Wagepay: Instant Pay Advance; WAGEPAYCT,Wagepay,wage_advance,keyword
 Press Pay; PressPay,PressPay,wage_advance,keyword
 Payday Advance; Payday Loans,Payday Advance,wage_advance,keyword
 MyPayNow,MyPayNow,wage_advance,keyword
-Auto Finance Loans; Car Loan,Auto Finance Loans,car_loan,keyword
 Yamaha Motor Finance; Yamaha Motor Fin,Yamaha Motor Finance,personal_loan,keyword
 Wisr; Wisr-smarter money habits,Wisr,personal_loan,keyword
 Volkswagen Financial,Volkswagen Financial,personal_loan,keyword
@@ -62,7 +61,7 @@ Liberty Financial,Liberty Financial,personal_loan,keyword
 Latitude Financial; Latitude Motor,Latitude Financial,personal_loan,keyword
 JP Finance and Investment,JP Finance and Investment,personal_loan,keyword
 Jacaranda Finance; BetterCredit Jacaranda Finance; JacarandaFinance; Jacaranda,Jacaranda Finance,personal_loan,keyword
-
+,,,
 Harmoney,Harmoney,personal_loan,keyword
 Handout Loans,Handout Loans,personal_loan,keyword
 Green Light Auto Finance,Green Light Auto Finance,personal_loan,keyword

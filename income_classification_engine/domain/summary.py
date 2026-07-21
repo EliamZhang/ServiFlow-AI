@@ -58,11 +58,17 @@ def derive_counterparty(row: pd.Series) -> str:
         return ""
 
     income_type = str(row.get("income_type_pred", "")).strip()
-    payer_key = clean_counterparty(row.get("payer_key_from_text", ""))
-    text_clean = clean_counterparty(row.get("text_clean", ""))
 
     if income_type == "centrelink":
         return "CENTRELINK"
+
+    # Prefer merchant-KB match over regex-based payer extraction.
+    kb_match = row.get("_kb_counterparty")
+    if isinstance(kb_match, str) and kb_match.strip():
+        return kb_match.strip()
+
+    payer_key = clean_counterparty(row.get("payer_key_from_text", ""))
+    text_clean = clean_counterparty(row.get("text_clean", ""))
     return payer_key or text_clean
 
 

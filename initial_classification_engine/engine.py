@@ -1,3 +1,5 @@
+"""Initial-classification engine — merchant keyword matching via Aho-Corasick."""
+
 from __future__ import annotations
 
 import pandas as pd
@@ -11,31 +13,42 @@ from classification_core.models import (
 from classification_core.transaction_keys import filter_to_transaction_keys
 
 from .domain.summary import build_summary
-from .pipeline import run_pipeline
+from .pipeline import DEFAULT_KB_PATH, run_pipeline
 
 
-class TransferEngine:
-    engine_id = "transfer"
+class InitialClassificationEngine:
+    """Classify transactions by matching text against a merchant knowledge base.
+
+    The engine compares each transaction's ``text`` field against ~30k keyword
+    variants sourced from ~9k categorised merchant rows.  Matching uses a
+    pure-Python Aho-Corasick automaton — construction is a one-off cost and
+    per-text search is linear in text length.
+    """
+
+    engine_id = "initial"
     engine_version = "1.0"
 
+    # ------------------------------------------------------------------
+    # ClassificationEngine protocol
+    # ------------------------------------------------------------------
+
     def classify(self, context: EngineContext) -> EngineResult:
-        result = run_pipeline(
-            context.candidates,
-            all_rows=context.all_transactions,
-        )
+        result = run_pipeline(context.candidates, kb_path=DEFAULT_KB_PATH)
         details = result.transactions
-        matched = details[details["is_transfer_pred"].eq(1)].copy()
+
+        matched = details[details["matched"].eq(True)].copy()
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
         predictions["matched"] = True
         predictions["counterparty"] = matched["counterparty"].values
         predictions["finv_category"] = matched["finv_category"].values
-        predictions["stream_id"] = matched["stream_id"].values
+        predictions["stream_id"] = ""
         predictions["classification_rule_id"] = matched[
-            "transfer_rule_name"
+            "classification_rule_id"
         ].values
         predictions["classification_reason"] = matched[
-            "transfer_pred_reason"
+            "classification_reason"
         ].values
+
         return EngineResult(
             predictions=predictions,
             transactions=details,
@@ -54,7 +67,7 @@ class TransferEngine:
         )
         return [
             SummaryArtifact(
-                "transfer_summary",
+                "initial_summary",
                 "1.0",
                 build_summary(accepted_details),
             )

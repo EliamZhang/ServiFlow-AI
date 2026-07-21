@@ -98,17 +98,23 @@ def _execute_classification(
 
 def main() -> None:
     args = parse_args()
-    _, timings = _execute_classification(
+    result, timings = _execute_classification(
         input_file=args.input,
         output_file=args.output,
         config_file=args.config,
         category_catalog_file=args.category_catalog,
+    )
+    engine_times = " | ".join(
+        f"{execution.engine_id} {execution.duration_seconds:.2f}s"
+        for execution in result.executions
     )
     print(
         f"Timing | read {timings['read']:.2f}s | "
         f"classify {timings['classify']:.2f}s | "
         f"output {timings['output']:.2f}s | total {timings['total']:.2f}s"
     )
+    if engine_times:
+        print(f"Engines | {engine_times}")
 
 
 if __name__ == "__main__":

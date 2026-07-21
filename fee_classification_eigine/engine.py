@@ -8,34 +8,46 @@ from classification_core.models import (
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
-from classification_core.transaction_keys import filter_to_transaction_keys
 
-from .domain.summary import build_summary
 from .pipeline import run_pipeline
 
 
-class TransferEngine:
-    engine_id = "transfer"
+class FeeEngine:
+    """Classify fee transactions by matching text against regex patterns.
+
+    The engine examines each transaction's ``text`` field and matches against
+    ~70 ordered regex rules covering international transaction fees, ATM operator
+    fees, bank account fees, overdrawn/dishonour/late-payment fees, cash advance
+    fees, and third-party maintenance/membership fees.
+
+    This engine runs FIRST in the pipeline (priority 1) to ensure fee
+    transactions are claimed before the merchant keyword engine.
+    """
+
+    engine_id = "fee"
     engine_version = "1.0"
 
+    # ------------------------------------------------------------------
+    # ClassificationEngine protocol
+    # ------------------------------------------------------------------
+
     def classify(self, context: EngineContext) -> EngineResult:
-        result = run_pipeline(
-            context.candidates,
-            all_rows=context.all_transactions,
-        )
+        result = run_pipeline(context.candidates)
         details = result.transactions
-        matched = details[details["is_transfer_pred"].eq(1)].copy()
+
+        matched = details[details["is_fee_pred"].eq(1)].copy()
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
         predictions["matched"] = True
         predictions["counterparty"] = matched["counterparty"].values
         predictions["finv_category"] = matched["finv_category"].values
         predictions["stream_id"] = matched["stream_id"].values
         predictions["classification_rule_id"] = matched[
-            "transfer_rule_name"
+            "fee_rule_name"
         ].values
         predictions["classification_reason"] = matched[
-            "transfer_pred_reason"
+            "fee_pred_reason"
         ].values
+
         return EngineResult(
             predictions=predictions,
             transactions=details,
@@ -48,14 +60,5 @@ class TransferEngine:
         result: EngineResult,
         accepted_predictions: pd.DataFrame,
     ) -> list[SummaryArtifact]:
-        accepted_details = filter_to_transaction_keys(
-            result.transactions,
-            accepted_predictions,
-        )
-        return [
-            SummaryArtifact(
-                "transfer_summary",
-                "1.0",
-                build_summary(accepted_details),
-            )
-        ]
+        # Fee engine is simple — no detailed summary needed beyond counts.
+        return []

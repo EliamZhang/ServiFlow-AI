@@ -1,5 +1,28 @@
 {
   "categories": {
+    "fee": {"owner_engine_id": "fee", "active": true},
+    "Dining Out": {"owner_engine_id": "initial", "active": true},
+    "Retail": {"owner_engine_id": "initial", "active": true},
+    "Groceries": {"owner_engine_id": "initial", "active": true},
+    "Health": {"owner_engine_id": "initial", "active": true},
+    "Automotive": {"owner_engine_id": "initial", "active": true},
+    "Entertainment": {"owner_engine_id": "initial", "active": true},
+    "Home Improvement": {"owner_engine_id": "initial", "active": true},
+    "Travel": {"owner_engine_id": "initial", "active": true},
+    "Information": {"owner_engine_id": "initial", "active": true},
+    "Personal Care": {"owner_engine_id": "initial", "active": true},
+    "Transport": {"owner_engine_id": "initial", "active": true},
+    "Education": {"owner_engine_id": "initial", "active": true},
+    "Gambling": {"owner_engine_id": "initial", "active": true},
+    "Gyms and other memberships": {"owner_engine_id": "initial", "active": true},
+    "Pet Care": {"owner_engine_id": "initial", "active": true},
+    "Donations": {"owner_engine_id": "initial", "active": true},
+    "Utilities": {"owner_engine_id": "initial", "active": true},
+    "Telecommunications": {"owner_engine_id": "initial", "active": true},
+    "Rent": {"owner_engine_id": "initial", "active": true},
+    "Department Stores": {"owner_engine_id": "initial", "active": true},
+    "Insurance": {"owner_engine_id": "initial", "active": true},
+    "Subscription TV": {"owner_engine_id": "initial", "active": true},
     "salary_packaging": {"owner_engine_id": "income", "active": true},
     "centrelink": {"owner_engine_id": "income", "active": true},
     "salary_payg": {"owner_engine_id": "income", "active": true},
@@ -17,7 +40,7 @@
     "Debt Consolidation": {"owner_engine_id": "liability", "active": true},
     "Dishonours": {"owner_engine_id": "liability", "active": true},
     "Overdrawn": {"owner_engine_id": "liability", "active": true},
-    "internal transfer": {"owner_engine_id": "transfer", "active": true},
-    "external transfer": {"owner_engine_id": "transfer", "active": true}
+    "Internal Transfer": {"owner_engine_id": "transfer", "active": true},
+    "External Transfers": {"owner_engine_id": "transfer", "active": true}
   }
 }

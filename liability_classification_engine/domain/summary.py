@@ -1022,6 +1022,47 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
     return summary[SUMMARY_COLUMNS]
 
 
+def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
+    """Return one placeholder summary row per car-loan stream."""
+
+    car_loan = filter_product_streams(df, "Car Loan")
+
+    if car_loan.empty:
+        return empty_summary()
+
+    summary_rows: list[dict[str, object]] = []
+
+    for (_, _, finv_category, stream_id_value), group in car_loan.groupby(
+        SUMMARY_GROUP_COLUMNS,
+        dropna=False,
+        sort=False,
+    ):
+        summary_rows.append(
+            {
+                "finv_category": finv_category,
+                "stream_id": stream_id_value,
+                **stream_detail_fields(group),
+                "application_id": normalize_text(group["application_id"].iloc[0]),
+                "counterparty": normalize_text(group["counterparty"].iloc[0]),
+                "transaction_start_date": group["_transaction_date"].min(),
+                "transaction_end_date": group["_transaction_date"].max(),
+                "status": PLACEHOLDER_METRIC_VALUE,
+                "funded_amount": PLACEHOLDER_METRIC_VALUE,
+                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
+                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
+                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
+                "frequency": PLACEHOLDER_METRIC_VALUE,
+                "frequency_day": PLACEHOLDER_METRIC_VALUE,
+                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+            }
+        )
+
+    summary = pd.DataFrame(summary_rows, columns=SUMMARY_COLUMNS)
+    summary["transaction_start_date"] = summary["transaction_start_date"].dt.date
+    summary["transaction_end_date"] = summary["transaction_end_date"].dt.date
+    return summary[SUMMARY_COLUMNS]
+
+
 def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one placeholder summary row per unknown personal-loan stream."""
 
@@ -1073,6 +1114,7 @@ def build_summary(
         build_bnpl_summary(prepared, limits=limits),
         build_wage_advance_summary(prepared),
         build_home_loan_summary(prepared),
+        build_car_loan_summary(prepared),
         build_personal_loan_summary(prepared),
         build_bank_summary(prepared),
         build_contract_loan_summary(prepared),
