@@ -308,6 +308,14 @@ def identify_contract_loan_streams(
     assign_grouped_product_streams(output, eligible_mask, "contract_loan")
 
 
+def identify_car_loan_streams(
+    output: pd.DataFrame,
+    eligible_mask: pd.Series,
+    _: list[str],
+) -> None:
+    assign_grouped_product_streams(output, eligible_mask, "car_loan")
+
+
 def identify_home_loan_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
@@ -1875,6 +1883,7 @@ PRODUCT_RULES: tuple[ProductRule, ...] = (
     ProductRule(10, "bnpl", identify_bnpl_streams),
     ProductRule(20, "wage_advance", identify_wage_advance_streams),
     ProductRule(25, "home_loan", identify_home_loan_streams),
+    ProductRule(27, "car_loan", identify_car_loan_streams),
     ProductRule(30, "bank", identify_bank_streams),
     ProductRule(35, "contract_loan", identify_contract_loan_streams),
     ProductRule(40, PERSONAL_LOAN, assign_personal_loan_rule),
@@ -2349,6 +2358,9 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
     )
     existing = output.get("finv_category", pd.Series(index=output.index))
     output["finv_category"] = pd.NA
+
+    valid_mask = valid_mask & ~product_type.str.lower().eq("car_loan")
+
     output.loc[valid_mask, "finv_category"] = [
         (
             base
@@ -2360,6 +2372,9 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
             stream_base.loc[valid_mask],
         )
     ]
+    car_loan_mask = output["finv_category"].isna() & product_type.str.lower().eq("car_loan")
+    output.loc[car_loan_mask, "finv_category"] = "Car Loan"
+
     preserved_mask = (
         output["finv_category"].isna()
         & existing.notna()
