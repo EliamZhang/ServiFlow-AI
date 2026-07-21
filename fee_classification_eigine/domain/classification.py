@@ -3,12 +3,16 @@
 Rule-based fee classification for bank transactions.
 
 Classifies transactions into:
+- Overdrawn (checked first — overrides generic fee)
 - fee
 
 Uses regex rules in priority order to identify fee transactions from text alone.
-Fee types include: international transaction fees, ATM operator fees, bank account
-fees, overdrawn fees, dishonour fees, late payment fees, cash advance fees, and
-third-party maintenance/membership fees.
+Overdrawn-related fees (overdrawn, overlimit, overdraft, overdraw, debit excess
+interest) are checked FIRST so they override the generic "fee" category.
+
+Fee types include: overdrawn/overlimit fees, international transaction fees,
+ATM operator fees, bank account fees, dishonour fees, late payment fees,
+cash advance fees, and third-party maintenance/membership fees.
 
 This module is invoked by the unified engine pipeline as the FIRST engine,
 before initial classification.
@@ -35,6 +39,67 @@ from classification_core.reasons import format_classification_reason
 FeeRule = tuple[str, str, str, str]
 
 FEE_RULES: list[FeeRule] = [
+    # =========================================================================
+    # 0. OVERDRAWN / OVERLIMIT FEES — must run FIRST so Overdrawn category
+    #    overrides the generic "fee" category.
+    # =========================================================================
+    # "HONOUR/OVERDRAWN FEE"
+    (
+        "honour_overdrawn_fee",
+        "Overdrawn",
+        r"^HONOUR/OVERDRAWN\s+FEE",
+        "Overdrawn Fee",
+    ),
+    # "OVERLIMIT FEE"
+    (
+        "overlimit_fee",
+        "Overdrawn",
+        r"^OVERLIMIT\s+FEE",
+        "Overlimit Fee",
+    ),
+    # "Overdrawn Fee"
+    (
+        "overdrawn_fee",
+        "Overdrawn",
+        r"^Overdrawn\s+Fee",
+        "Overdrawn Fee",
+    ),
+    # "Overdraft Usage Fee"
+    (
+        "overdraft_usage_fee",
+        "Overdrawn",
+        r"^Overdraft\s+Usage\s+Fee",
+        "Overdraft Usage Fee",
+    ),
+    # "Overdraw Fee For exceeding available funds on 21 Nov"
+    (
+        "overdraw_fee",
+        "Overdrawn",
+        r"^Overdraw\s+Fee\s+",
+        "Overdrawn Fee",
+    ),
+    # "OVERDRAWN FEE 19-JANUARY-2026"
+    (
+        "overdrawn_fee_date",
+        "Overdrawn",
+        r"^OVERDRAWN\s+FEE\s+\d{1,2}-",
+        "Overdrawn Fee",
+    ),
+    # "Debit Excess Interest" — overdrawn interest charge
+    (
+        "debit_excess_interest",
+        "Overdrawn",
+        r"^Debit\s+Excess\s+Interest$",
+        "Overdrawn Fee",
+    ),
+    # "Debit Excess Int Adjusted Value Date: 01/11/2025"
+    (
+        "debit_excess_int_adjusted",
+        "Overdrawn",
+        r"^Debit\s+Excess\s+Int\s+Adjusted\s+Value\s+Date:\s+\d{2}/\d{2}/\d{4}",
+        "Overdrawn Fee",
+    ),
+
     # =========================================================================
     # 1. INTL TXN FEE — highly specific bank-generated format
     #    "FEES V2965 02/05 INTL TXN FEE-MC 24064666122"
@@ -345,52 +410,6 @@ FEE_RULES: list[FeeRule] = [
         "fee",
         r"^Cash\s+Advance\s+Fee",
         "Cash Advance Fee",
-    ),
-
-    # =========================================================================
-    # 9. Overdrawn / Overlimit Fees
-    # =========================================================================
-    # "HONOUR/OVERDRAWN FEE"
-    (
-        "honour_overdrawn_fee",
-        "fee",
-        r"^HONOUR/OVERDRAWN\s+FEE",
-        "Overdrawn Fee",
-    ),
-    # "OVERLIMIT FEE"
-    (
-        "overlimit_fee",
-        "fee",
-        r"^OVERLIMIT\s+FEE",
-        "Overlimit Fee",
-    ),
-    # "Overdrawn Fee"
-    (
-        "overdrawn_fee",
-        "fee",
-        r"^Overdrawn\s+Fee",
-        "Overdrawn Fee",
-    ),
-    # "Overdraft Usage Fee"
-    (
-        "overdraft_usage_fee",
-        "fee",
-        r"^Overdraft\s+Usage\s+Fee",
-        "Overdraft Usage Fee",
-    ),
-    # "Overdraw Fee For exceeding available funds on 21 Nov"
-    (
-        "overdraw_fee",
-        "fee",
-        r"^Overdraw\s+Fee\s+",
-        "Overdrawn Fee",
-    ),
-    # "OVERDRAWN FEE 19-JANUARY-2026"
-    (
-        "overdrawn_fee_date",
-        "fee",
-        r"^OVERDRAWN\s+FEE\s+\d{1,2}-",
-        "Overdrawn Fee",
     ),
 
     # =========================================================================

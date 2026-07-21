@@ -22,6 +22,8 @@ import argparse
 from pathlib import Path
 
 import pandas as pd
+from openpyxl.styles import Font, PatternFill
+from openpyxl.utils import get_column_letter
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 SAMPLE_CSV = PROJECT_ROOT / "sample.csv"
@@ -62,8 +64,9 @@ OUR_TO_ILLION: dict[str, str] = {
 # Our categories that illion has NO equivalent for.
 # Rows with these labels are excluded from agreement-rate calculation.
 UNMAPPABLE_OUR_CATS: frozenset[str] = frozenset({
-    # "Home Loan",          # illion 无此类别，待有数据后确认
-    # "Debt Consolidation", # illion 无此类别，待有数据后确认
+    "Home Loan",
+    "Car Loan",
+    "Debt Consolidation",
 })
 
 # ── reverse mapping (illion → our labels) for human review ─────────
@@ -188,6 +191,144 @@ def _hide_columns(worksheet) -> None:
             ].hidden = True
 
 
+# ── colour helpers ──────────────────────────────────────────────────────
+
+_AGREE_FILL = PatternFill(start_color="C6EFCE", end_color="C6EFCE", fill_type="solid")
+_DISAGREE_FILL = PatternFill(start_color="FFC7CE", end_color="FFC7CE", fill_type="solid")
+_WARN_FILL = PatternFill(start_color="FFEB9C", end_color="FFEB9C", fill_type="solid")
+_OUR_COL_FILL = PatternFill(start_color="F4B4C2", end_color="F4B4C2", fill_type="solid")
+_IL_COL_FILL = PatternFill(start_color="BDD7EE", end_color="BDD7EE", fill_type="solid")
+_HEADER_FILL = PatternFill(start_color="4472C4", end_color="4472C4", fill_type="solid")
+_HEADER_FONT = Font(color="FFFFFF", bold=True)
+
+
+def _style_header_row(worksheet) -> None:
+    """Apply dark-blue header with white bold text to row 1."""
+    for cell in worksheet[1]:
+        if cell.value is not None:
+            cell.fill = _HEADER_FILL
+            cell.font = _HEADER_FONT
+
+
+def _colour_confusion_pivot(worksheet, meta_cols: list[str]) -> None:
+    """Colour the confusion pivot: green for agreement cells, red for off-diagonal.
+
+    For each row (our category), the mapped illion category column receives
+    green; all other illion-category columns receive light red.
+    """
+    # Build a col-name → col-index map from the header row.
+    header: dict[str, int] = {}
+    for cell in worksheet[1]:
+        if cell.value is not None:
+            header[str(cell.value)] = cell.column
+
+    meta_col_names = set(meta_cols)
+    cat_cols = [
+        (col_name, col_idx)
+        for col_name, col_idx in header.items()
+        if col_name not in meta_col_names
+    ]
+
+    for row in range(2, worksheet.max_row + 1):
+        our_cat = str(worksheet.cell(row=row, column=1).value or "")
+        mapped = OUR_TO_ILLION.get(our_cat, our_cat)  # our → illion name
+
+        for col_name, col_idx in cat_cols:
+            cell = worksheet.cell(row=row, column=col_idx)
+            val = cell.value
+            if val is None:
+                continue
+            try:
+                n = int(val)
+            except (ValueError, TypeError):
+                continue
+            if n == 0:
+                continue
+            if col_name == mapped:
+                cell.fill = _AGREE_FILL
+            else:
+                cell.fill = _DISAGREE_FILL
+
+
+def _colour_category_summary(worksheet) -> None:
+    """Colour the agreement-rate column: green ≥80%, yellow 50-79%, red <50%."""
+    # Find the 一致率 column index.
+    rate_col: int | None = None
+    for cell in worksheet[1]:
+        if cell.value and "一致率" in str(cell.value):
+            rate_col = cell.column
+            break
+    if rate_col is None:
+        return
+
+    for row in range(2, worksheet.max_row + 1):
+        cell = worksheet.cell(row=row, column=rate_col)
+        val = str(cell.value or "")
+        if val in ("—", "") or "N/A" in val:
+            continue
+        try:
+            pct = float(val.rstrip("%"))
+        except ValueError:
+            continue
+        if pct >= 80:
+            cell.fill = _AGREE_FILL
+        elif pct >= 50:
+            cell.fill = _WARN_FILL
+        else:
+            cell.fill = _DISAGREE_FILL
+
+
+def _colour_disagreement_flow(worksheet) -> None:
+    """Colour flow rows: green when our mapped category matches illion, red otherwise.
+
+    Rows where our category has no illion equivalent (unmappable) are left uncoloured.
+    """
+    our_col: int | None = None
+    il_col: int | None = None
+    for cell in worksheet[1]:
+        if cell.value == "我们的分类":
+            our_col = cell.column
+        elif cell.value == "illion分类":
+            il_col = cell.column
+
+    if our_col is None or il_col is None:
+        return
+
+    for row in range(2, worksheet.max_row + 1):
+        our_cat = str(worksheet.cell(row=row, column=our_col).value or "")
+        il_cat = str(worksheet.cell(row=row, column=il_col).value or "")
+        if our_cat in UNMAPPABLE_OUR_CATS:
+            # unmappable — leave neutral (no colour)
+            continue
+        mapped = OUR_TO_ILLION.get(our_cat, our_cat)
+        if mapped == il_cat:
+            for col in range(1, worksheet.max_column + 1):
+                worksheet.cell(row=row, column=col).fill = _AGREE_FILL
+        else:
+            for col in range(1, worksheet.max_column + 1):
+                worksheet.cell(row=row, column=col).fill = _DISAGREE_FILL
+
+
+def _colour_disagreement_detail(worksheet) -> None:
+    """Colour our-category and illion-category columns differently."""
+    our_col: int | None = None
+    il_col: int | None = None
+    for cell in worksheet[1]:
+        if cell.value == "finv_category":
+            our_col = cell.column
+        elif cell.value and "illion_category" in str(cell.value):
+            il_col = cell.column
+
+    if our_col is None and il_col is None:
+        return
+
+    for row in range(2, worksheet.max_row + 1):
+        if our_col is not None:
+            worksheet.cell(row=row, column=our_col).fill = _OUR_COL_FILL
+        if il_col is not None:
+            worksheet.cell(row=row, column=il_col).fill = _IL_COL_FILL
+
+
 def _write_sheet(writer, name: str, df: pd.DataFrame) -> None:
     """Write a DataFrame as a sheet and apply basic formatting."""
     df.to_excel(writer, sheet_name=name, index=True)
@@ -223,6 +364,14 @@ def run(
 
     n = len(df)
     both_mask = our_fc_ok & illion_ok
+
+    # ── engine ownership: which engine produced each category ────────────
+    _cat_engine: dict[str, str] = {}
+    if "classification_engine" in df.columns:
+        for cat_name in our_fc[our_fc_ok].unique():
+            engines = df.loc[our_fc_ok & (our_fc == cat_name), "classification_engine"]
+            primary = engines.value_counts().index[0] if len(engines) > 0 else "?"
+            _cat_engine[cat_name] = primary
 
     # ── 1. Coverage stats ─────────────────────────────────────────────────
     coverage_rows = [
@@ -336,7 +485,31 @@ def run(
     ]
     counterparty_df = pd.DataFrame(counterparty_rows)
 
-    # ── 5. Coverage gaps ──────────────────────────────────────────────────
+    # ── 5. Disagreement flow ───────────────────────────────────────────────
+    # For each of our categories, show what illion calls the same transactions.
+    # Long-form table — easier to scan than the dense confusion pivot.
+    flow_rows: list[dict] = []
+    for our_cat_name in sorted(our_fc[our_fc_ok].unique()):
+        mask = our_fc_ok & (our_fc == our_cat_name) & illion_ok
+        total_n = int(mask.sum())
+        if total_n == 0:
+            continue
+        total_amt = df.loc[mask, "amount"].abs().sum()
+        for il_cat, cnt in df.loc[mask, "_illion_cat"].value_counts().items():
+            sub_mask = mask & (illion_cat == il_cat)
+            amt = df.loc[sub_mask, "amount"].abs().sum()
+            flow_rows.append({
+                "我们的分类": our_cat_name,
+                "illion分类": str(il_cat),
+                "笔数": cnt,
+                "行占比": round(cnt / total_n * 100, 1),
+                "金额合计": round(amt, 2),
+                "金额占比": round(amt / total_amt * 100, 1) if total_amt > 0 else 0.0,
+            })
+    flow_df = pd.DataFrame(flow_rows)
+    flow_df = flow_df.sort_values(["我们的分类", "笔数"], ascending=[True, False])
+
+    # ── 6. Coverage gaps ──────────────────────────────────────────────────
     our_only = our_fc[our_fc_ok & ~illion_ok].value_counts().reset_index()
     our_only.columns = ["finv_category", "count"]
     illion_only = (
@@ -344,7 +517,7 @@ def run(
     )
     illion_only.columns = ["illion_category", "count"]
 
-    # ── 6. Per-category agreement breakdown ───────────────────────────────
+    # ── 7. Per-category agreement breakdown ───────────────────────────────
     cat_summary_rows = []
     for our_cat_name in pivot.index:
         r = pivot.loc[our_cat_name]
@@ -365,6 +538,7 @@ def run(
                     break
         cat_summary_rows.append({
             "我们的分类": our_cat_name,
+            "引擎": _cat_engine.get(our_cat_name, "—"),
             "数量": total_n,
             "illion未覆盖": unclassified_n,
             "一致率": agree_str,
@@ -372,7 +546,7 @@ def run(
         })
     cat_summary_df = pd.DataFrame(cat_summary_rows)
 
-    # ── 7. Disagreement detail ────────────────────────────────────────────
+    # ── 8. Disagreement detail ────────────────────────────────────────────
     agree_series = pd.Series(
         [
             _agree(our_fc[i], illion_cat[i])
@@ -406,14 +580,20 @@ def run(
         _write_sheet(writer, "coverage", coverage_df.set_index("指标"))
         _write_sheet(writer, "agreement", agreement_df.set_index("指标"))
         _write_sheet(writer, "confusion", pivot)
+        _colour_confusion_pivot(writer.book["confusion"], meta_cols)
         _write_sheet(writer, "category_summary", cat_summary_df.set_index("我们的分类"))
+        _colour_category_summary(writer.book["category_summary"])
         _write_sheet(writer, "counterparty", counterparty_df.set_index("指标"))
+        if len(flow_df) > 0:
+            _write_sheet(writer, "disagreement_flow", flow_df.set_index("我们的分类"))
+            _colour_disagreement_flow(writer.book["disagreement_flow"])
         if len(our_only) > 0:
             _write_sheet(writer, "our_only", our_only.set_index("finv_category"))
         if len(illion_only) > 0:
             _write_sheet(writer, "illion_only", illion_only.set_index("illion_category"))
         if len(disagree_df) > 0:
             _write_sheet(writer, "disagreement_detail", disagree_df)
+            _colour_disagreement_detail(writer.book["disagreement_detail"])
         # reverse mapping sheet for human review
         illion_to_our_rows = [
             {"illion_category": k, "our_labels": ", ".join(v) if v else "（无对应）"}
@@ -421,6 +601,9 @@ def run(
         ]
         _write_sheet(writer, "illion_to_our_mapping",
                      pd.DataFrame(illion_to_our_rows).set_index("illion_category"))
+        # Style headers for all sheets
+        for name in writer.book.sheetnames:
+            _style_header_row(writer.book[name])
 
     print(f"→ 对比报告已写入: {result_path}")
     print(f"  覆盖: 我们 {our_fc_ok.sum()/n*100:.1f}% | illion {illion_ok.sum()/n*100:.1f}%")

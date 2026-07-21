@@ -320,7 +320,7 @@ class ClassificationOrchestrator:
                 category
                 for category in categories
                 if category
-                and self.category_owners.get(category) != engine.engine_id
+                and engine.engine_id not in self.category_owners.get(category, "").replace(" ", "").split(",")
             }
         )
         if invalid_categories:

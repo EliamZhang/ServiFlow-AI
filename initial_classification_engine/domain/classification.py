@@ -37,7 +37,18 @@ _CLEAN_RE = re.compile(r"[^A-Z0-9]+")
 # actual counterparty name can be matched at position 0.  Applied only to
 # transaction text, never to keywords — a KB entry named "Bill Pay Services"
 # would still have its keywords inserted as-is.
-_CHANNEL_PREFIX_RE = re.compile(r"^BILL\s*PAY(MENT)?\s+", re.IGNORECASE)
+_CHANNEL_PREFIX_RE = re.compile(
+    r"^(?:"
+    r"BILL\s*PAY(?:MENT)?\s+|"
+    r"VISA\s+(?:WDL|PURCHASE|DEBIT)\s+(?:PURCHASE\s+)?(?:\d+\w+\s+)?\s*|"
+    r"VISA\s+CREDIT\s+\d*\s*|"
+    r"EFTPOS\s+(?:DEBIT|WDL)(?:\s+\d+)?\s+|"
+    r"MISCELLANEOUS\s+DEBIT\s+V\d+\s+\d+\s+\d+\s+|"
+    r"DEBIT\s+CARD\s+PURCHASE\s+|"
+    r"EFT\s+Dep\s+"
+    r")",
+    re.IGNORECASE,
+)
 
 
 def clean_text(value: object) -> str:
@@ -449,4 +460,287 @@ def match_transactions(
         out["classification_reason"],
     ) = zip(*results)
 
+    # ── Post-processing: correct known KB misclassifications ────────────────
+    out = _apply_kb_corrections(out)
+
+    # ── Fallback: classify KB-matched rows that lack a category ─────────────
+    out = _apply_fallback_classify(out)
+
     return out.drop(columns=["_text_clean"])
+
+
+# ── KB correction rules ───────────────────────────────────────────────────
+# High-precision fixes for systematic merchant KB misclassifications.
+# Each entry: (text_pattern, wrong_category, correct_category, counterparty)
+
+_KB_CORRECTIONS: list[tuple[str, str, str, str]] = [
+    # Uber Eats contains "UBER *EATS" (food delivery) but the KB keyword
+    # "UBER" matches Transport.  Correct these to Dining Out.
+    (r"UBER\s*\*?\s*EATS", "Transport", "Dining Out", "Uber Eats"),
+]
+
+
+def _apply_kb_corrections(df: pd.DataFrame) -> pd.DataFrame:
+    """Apply high-precision overrides for known KB misclassifications."""
+    out = df.copy()
+    raw_text = out.get("text", pd.Series("", index=out.index))
+
+    for pattern, wrong_cat, correct_cat, correct_cp in _KB_CORRECTIONS:
+        mask = (
+            (out["finv_category"] == wrong_cat)
+            & raw_text.str.upper().str.contains(pattern, na=False, regex=True)
+        )
+        if mask.any():
+            out.loc[mask, "finv_category"] = correct_cat
+            out.loc[mask, "counterparty"] = correct_cp
+            out.loc[mask, "classification_rule_id"] = (
+                "merchant_kb_match_corrected"
+            )
+            out.loc[mask, "classification_reason"] = out.loc[
+                mask, "classification_reason"
+            ].apply(
+                lambda r: r.replace(
+                    "rule=merchant_kb_match",
+                    f"rule=merchant_kb_match_corrected({wrong_cat}→{correct_cat})",
+                )
+            )
+
+    return out
+
+
+# ── Fallback classification for uncategorised KB matches ──────────────────
+# When the KB has a merchant keyword but the ``category`` column is empty,
+# the automaton returns matched=True with category="".  The pipeline treats
+# empty finv_category as unclassified, which is the #1 cause of our
+# coverage gap (84% of missed records).
+#
+# These rules assign a category based on the matched merchant name or the
+# full transaction text.  Only applied when matched=True AND category="".
+
+# Priority-ordered regex -> category mapping.
+_FALLBACK_RULES: list[tuple[str, str]] = [
+    # -- Gambling (high-precision operator names) --
+    (r"\bSPORTSBET\b", "Gambling"),
+    (r"\bBET365\b", "Gambling"),
+    (r"\bLADBROKES\b", "Gambling"),
+    (r"\bBETFAIR\b", "Gambling"),
+    (r"\bPOINTSBET\b", "Gambling"),
+    (r"\bUNIBET\b", "Gambling"),
+    (r"\bDRAFTKINGS\b", "Gambling"),
+    (r"\bTAB\b", "Gambling"),
+    (r"\bTATTSBET\b", "Gambling"),
+    (r"\bNEDS\b", "Gambling"),
+    (r"\bBLUEBET\b", "Gambling"),
+    (r"\bPLAYUP\b", "Gambling"),
+    (r"\bPALMERBET\b", "Gambling"),
+    (r"\bBETR\b", "Gambling"),
+    (r"\bBOSSBET\b", "Gambling"),
+    (r"\bCLASSICBET\b", "Gambling"),
+    (r"\bBETCHAIN\b", "Gambling"),
+    (r"\bMADBOOKIE\b", "Gambling"),
+    (r"\bTOPBETTA\b", "Gambling"),
+    # -- Groceries --
+    (r"\bWOOLWORTHS\b", "Groceries"),
+    (r"\bCOLES\b", "Groceries"),
+    (r"\bBWS\b", "Groceries"),             # Beer Wine Spirits - bottle shop
+    (r"\bALDI\b", "Groceries"),
+    (r"\bIGA\b", "Groceries"),
+    (r"\bFOODWORKS\b", "Groceries"),
+    (r"\bFOODLAND\b", "Groceries"),
+    (r"\bDRAKES\b", "Groceries"),
+    (r"\bRITCHIES\b", "Groceries"),
+    (r"\bSUPA\s*IGA\b", "Groceries"),
+    (r"\bFREE CHOICE\b", "Groceries"),     # tobacconist / convenience
+    # -- Dining Out (restaurants, pubs, cafes, fast food) --
+    (r"\bBAKEHOUSE\b", "Dining Out"),
+    (r"\bBAKERY\b", "Dining Out"),
+    (r"\bSURF CLUB\b", "Dining Out"),
+    (r"\bBOWLS CLUB\b", "Dining Out"),
+    (r"\bBOWLING CLUB\b", "Dining Out"),
+    (r"\bLEAGUES CLUB\b", "Dining Out"),
+    (r"\bRSL\b", "Dining Out"),
+    (r"\bTAVERN\b", "Dining Out"),
+    (r"\bBAR AND GRILL\b", "Dining Out"),
+    (r"\bBRASSERIE\b", "Dining Out"),
+    (r"\bBISTRO\b", "Dining Out"),
+    (r"\bROADHOUSE\b", "Dining Out"),
+    (r"\bLUNCH BAR\b", "Dining Out"),
+    (r"\bTAKEAWAY\b", "Dining Out"),
+    (r"\bPIZZA\b", "Dining Out"),
+    (r"\bMCDONALD\'?S\b", "Dining Out"),
+    (r"\bKFC\b", "Dining Out"),
+    (r"\bSUBWAY\b", "Dining Out"),
+    (r"\bHUNGRY JACKS\b", "Dining Out"),
+    (r"\bDOMINO\'?S\b", "Dining Out"),
+    (r"\bGRILL\'?D\b", "Dining Out"),
+    (r"\bNANDO\'?S\b", "Dining Out"),
+    (r"\bGUZMAN Y GOMEZ\b", "Dining Out"),
+    (r"\bZAMBRERO\b", "Dining Out"),
+    (r"\bSUSHI\b", "Dining Out"),
+    (r"\bNOODLE BOX\b", "Dining Out"),
+    # -- Transport --
+    (r"\bTRANSPORTFORNSW\b", "Transport"),
+    (r"\bDIDIMOBILITY\b", "Transport"),
+    (r"\bDIDI\b", "Transport"),
+    (r"\bOLAFARE\b", "Transport"),
+    (r"\b13CABS\b", "Transport"),
+    (r"\bCABCHARGE\b", "Transport"),
+    (r"\bTAXI\b", "Transport"),
+    (r"\bMYLI\b", "Transport"),
+    (r"\bOPAL\b", "Transport"),
+    (r"\bUBER(?!\s*EATS)\b", "Transport"),  # Uber ride, not Uber Eats
+    # -- Subscription TV / Streaming --
+    (r"\bNETFLIX\b", "Subscription TV"),
+    (r"\bSTAN\b", "Subscription TV"),
+    (r"\bSPOTIFY\b", "Subscription TV"),
+    (r"\bDISNEY PLUS\b", "Subscription TV"),
+    (r"\bDISNEYPLUS\b", "Subscription TV"),
+    (r"\bAMAZON PRIME\b", "Subscription TV"),
+    (r"\bAPPLE TV\b", "Subscription TV"),
+    (r"\bBINGE\b", "Subscription TV"),
+    (r"\bKAYO\b", "Subscription TV"),
+    (r"\bFOXTEL\b", "Subscription TV"),
+    (r"\bFETCH\b", "Subscription TV"),
+    # -- Health --
+    (r"\bPHARMACY\b", "Health"),
+    (r"\bCHEMIST\b", "Health"),
+    (r"\bMEDICAL CENTRE\b", "Health"),
+    (r"\bMEDICAL CENTER\b", "Health"),
+    (r"\bDENTAL\b", "Health"),
+    (r"\bDENTIST\b", "Health"),
+    (r"\bOPTICAL\b", "Health"),
+    (r"\bOPTOMETRIST\b", "Health"),
+    (r"\bPHYSIOTHERAPY\b", "Health"),
+    (r"\bCHIROPRACTIC\b", "Health"),
+    # -- Insurance --
+    (r"\bINSURANCE\b", "Insurance"),
+    (r"\bQBE\b", "Insurance"),
+    (r"\bAAMI\b", "Insurance"),
+    (r"\bALLIANZ\b", "Insurance"),
+    (r"\bNRMA\b", "Insurance"),
+    (r"\bBUDGET DIRECT\b", "Insurance"),
+    # -- Utilities --
+    (r"\bENERGY\b", "Utilities"),
+    (r"\bELECTRICITY\b", "Utilities"),
+    (r"\bWATER CORP\b", "Utilities"),
+    (r"\bSYDNEY WATER\b", "Utilities"),
+    (r"\bORIGIN ENERGY\b", "Utilities"),
+    (r"\bAGL\b", "Utilities"),
+    (r"\bENERGYAUSTRALIA\b", "Utilities"),
+    # -- Telecommunications --
+    (r"\bTELSTRA\b", "Telecommunications"),
+    (r"\bOPTUS\b", "Telecommunications"),
+    (r"\bVODAFONE\b", "Telecommunications"),
+    (r"\bBELONG\b", "Telecommunications"),
+    (r"\bAMAYSIM\b", "Telecommunications"),
+    (r"\bTPG\b", "Telecommunications"),
+    # -- Automotive --
+    (r"\bPETROL\b", "Automotive"),
+    (r"\bSERVO\b", "Automotive"),
+    (r"\bBP\b", "Automotive"),
+    (r"\bSHELL\b", "Automotive"),
+    (r"\bCALTEX\b", "Automotive"),
+    (r"\bAMPOL\b", "Automotive"),
+    (r"\b7[ -]?ELEVEN\b", "Automotive"),
+    (r"\bUNITED PETROLEUM\b", "Automotive"),
+    (r"\bTYRE\b", "Automotive"),
+    (r"\bTIRE\b", "Automotive"),
+    (r"\bAUTO REPAIR\b", "Automotive"),
+    (r"\bMECHANICAL\b", "Automotive"),
+    # -- Retail / Department Stores --
+    (r"\bKMART\b", "Department Stores"),
+    (r"\bTARGET\b", "Department Stores"),
+    (r"\bBIG W\b", "Department Stores"),
+    (r"\bBIGW\b", "Department Stores"),
+    (r"\bMYER\b", "Department Stores"),
+    (r"\bBUNNINGS\b", "Department Stores"),
+    # -- Donations --
+    (r"\bDONATION\b", "Donations"),
+    (r"\bCHARITY\b", "Donations"),
+    (r"\bSALVATION ARMY\b", "Donations"),
+    (r"\bRED CROSS\b", "Donations"),
+    # -- Personal Care --
+    (r"\bHAIRDRESSER\b", "Personal Care"),
+    (r"\bBARBER\b", "Personal Care"),
+    (r"\bBEAUTY\b", "Personal Care"),
+    (r"\bNAIL\b", "Personal Care"),
+    # -- Pet Care --
+    (r"\bVETERINARY\b", "Pet Care"),
+    (r"\bPETBARN\b", "Pet Care"),
+    (r"\bPETSTOCK\b", "Pet Care"),
+    # -- Education --
+    (r"\bUNIVERSITY\b", "Education"),
+    (r"\bTAFE\b", "Education"),
+    (r"\bCOLLEGE\b", "Education"),
+]
+
+# Patterns that override the general "Dining Out" -> "Entertainment" mapping
+# when the matched merchant is clearly a sports/entertainment venue.
+_ENTERTAINMENT_REFINEMENT: list[tuple[str, str]] = [
+    (r"\bRUGBY LEAGUE\b", "Entertainment"),
+    (r"\bFOOTBALL CLUB\b", "Entertainment"),
+    (r"\bRACECOURSE\b", "Entertainment"),
+    (r"\bCASINO\b", "Entertainment"),
+    (r"\bCINEMA\b", "Entertainment"),
+    (r"\bHOYTS\b", "Entertainment"),
+    (r"\bEVENT\b", "Entertainment"),
+    (r"\bTICKET\b", "Entertainment"),
+]
+
+
+def _apply_fallback_classify(df: pd.DataFrame) -> pd.DataFrame:
+    """Assign a category to KB-matched rows whose category column was empty.
+
+    Only touches rows where ``matched == True`` and ``finv_category == ""``.
+    Checks the matched merchant name first, then the full transaction text.
+    """
+    out = df.copy()
+
+    fallback_mask = (
+        out["matched"].eq(True)
+        & (out["finv_category"].eq("") | out["finv_category"].isna())
+    )
+    if not fallback_mask.any():
+        return out
+
+    raw_text = out.get("text", pd.Series("", index=out.index))
+
+    for idx in out[fallback_mask].index:
+        text = str(raw_text.get(idx, "")).upper()
+        counterparty = str(out.at[idx, "counterparty"] or "").upper()
+        category = ""
+
+        # Step 1: check matched counterparty name
+        for pattern, cat in _FALLBACK_RULES:
+            if re.search(pattern, counterparty):
+                category = cat
+                break
+
+        # Step 2: fall back to full transaction text
+        if not category:
+            for pattern, cat in _FALLBACK_RULES:
+                if re.search(pattern, text):
+                    category = cat
+                    break
+
+        if not category:
+            continue  # still cannot classify - leave as-is
+
+        # Refine: Dining Out -> Entertainment for sports/cinema venues
+        if category == "Dining Out":
+            for pattern, cat in _ENTERTAINMENT_REFINEMENT:
+                if re.search(pattern, text) or re.search(pattern, counterparty):
+                    category = cat
+                    break
+
+        out.at[idx, "finv_category"] = category
+        out.at[idx, "classification_rule_id"] = "merchant_kb_fallback"
+        out.at[idx, "classification_reason"] = format_classification_reason(
+            category=category,
+            rule="merchant_kb_fallback",
+            evidence=[
+                f"counterparty={out.at[idx, 'counterparty']}",
+            ],
+        )
+
+    return out

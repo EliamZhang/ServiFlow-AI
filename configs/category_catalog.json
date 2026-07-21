@@ -36,10 +36,11 @@
     "Personal Loan Unknown": {"owner_engine_id": "liability", "active": true},
     "LOC": {"owner_engine_id": "liability", "active": true},
     "Home Loan": {"owner_engine_id": "liability", "active": true},
+    "Car Loan": {"owner_engine_id": "liability", "active": true},
     "Debt Collection": {"owner_engine_id": "liability", "active": true},
     "Debt Consolidation": {"owner_engine_id": "liability", "active": true},
     "Dishonours": {"owner_engine_id": "liability", "active": true},
-    "Overdrawn": {"owner_engine_id": "liability", "active": true},
+    "Overdrawn": {"owner_engine_id": "fee,liability", "active": true},
     "Internal Transfer": {"owner_engine_id": "transfer", "active": true},
     "External Transfers": {"owner_engine_id": "transfer", "active": true}
   }
