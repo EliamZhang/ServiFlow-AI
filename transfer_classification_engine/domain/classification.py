@@ -81,36 +81,6 @@ HIGH_CONFIDENCE_RULES = [
     ("external_mobile_transfer", "transfer", r"\btfr (to|from) .*\b(mob|mobile)\b", None),
     ("external_withdrawal_mobile_pymt", "transfer", r"\bwithdrawal mobile\b.*\bpymt\b", None),
 
-    # -------------------------------------------------------------------------
-    # Transfer: high-confidence patterns (P0: promoted from medium)
-    # -------------------------------------------------------------------------
-
-    # Westpac deposit patterns: always credit, 95-98% transfer.
-    ("internal_deposit_westpac_cho", "transfer", r"^deposit online \d+ tfr westpac cho", "credit"),
-    ("internal_deposit_westpac_lif", "transfer", r"^deposit online \d+ tfr westpac lif", "credit"),
-    ("internal_deposit_westpac_esa", "transfer", r"^deposit online \d+ tfr westpac esa", "credit"),
-
-    # Commbank app masked account with descriptive suffixes: 92-98% transfer.
-    ("internal_commbank_from_suffix", "transfer", r"^transfer from xx\d{4} commbank app (allowance|rent|savings|transfer|food|bill|shop)$", None),
-    ("internal_commbank_from_value_date", "transfer", r"^transfer from xx\d{4} commbank app value date: \d+/\d+/\d+$", None),
-
-    # Standard transfer narratives.
-    ("internal_phrase", "transfer", r"\binternal transfer\b", None),
-    ("internal_linked_acc", "transfer", r"\b(linked acc|linked account|acc trns|acc transfer)\b", None),
-    ("internal_anz_funds_tfer", "transfer", r"\banz internet banking funds tfer\b", None),
-    ("internal_anz_mbank_to_long", "transfer", r"^anz m-banking funds tfer transfer \d+ to \d+$", None),
-    ("internal_anz_mbank_from_long", "transfer", r"^anz m-banking funds tfer transfer \d+ from \d+$", None),
-    ("internal_ib_tfr_to_long", "transfer", r"^ib tfr \d+ to \d+$", None),
-    ("internal_mb_transfer_from", "transfer", r"^mb transfer from \d+$", None),
-    ("internal_mb_transfer_to", "transfer", r"^mb transfer to \d+$", None),
-    ("internal_orange_everyday_to", "transfer", r"^internal transfer - receipt \d+ - to orange everyday$", None),
-    ("internal_orange_everyday_from", "transfer", r"^internal transfer - receipt \d+ - from orange everyday$", None),
-    ("internal_savings_maximiser", "transfer", r"^internal transfer - internal transfer - receipt \d+ savings maximiser \d+$", None),
-    ("internal_ibank_mobile_banking", "transfer", r"^ibank trf ref: \d+ transferred to \d+ mobile banking$", None),
-
-    # Internet banking withdrawal to own account (deposit direction excluded — too ambiguous).
-    ("internal_internet_banking", "transfer", r"\binternet withdrawal\b.*\bto \d{7,}\b", None),
-
     # ── NAB direct transfer credit/debit (P0: counterparty patterns promoted) ──
     ("external_nab_transfer_credit", "transfer", r"^transfer credit (?!online\b)", None),
     ("external_nab_transfer_debit", "transfer", r"^transfer debit (?!online\b)", None),
@@ -150,8 +120,8 @@ MEDIUM_CONFIDENCE_RULES = [
     ("internal_transfer_from_commbank", "transfer", r"^transfer from commbank app$", None),
     ("internal_masked_commbank", "transfer", r"\btransfer (to|from) xx\d{4}\b", None),
     # Westpac withdrawal patterns: debit direction, still mostly transfer (92-98%).
-    ("internal_westpac_family", "transfer", r"\b(tfr westpac|westpac lif|maximiser)\b", None),
-    ("internal_from_account", "transfer", r"\bfrom account \d+ .* internal transfer\b", None),
+    # NOTE: moved to INTERNAL_TRANSFER_RULES — Westpac Choice/Life/Maximiser
+    # are account types that indicate own-account (internal) transfers.
     ("internal_tfd", "transfer", r"^\. tfd$", None),
     ("internal_tfc", "transfer", r"^\. tfc$", None),
     ("internal_me_tfd", "transfer", r"^me tfd$", None),
@@ -162,6 +132,40 @@ MEDIUM_CONFIDENCE_RULES = [
     # Relaxed name+code: allows extra text after the transaction code.
     # Precision ~95.3% — kept as medium due to some lookalikes.
     ("external_transfer_name_code_relaxed", "transfer", r"^transfer (debit|credit) (?!online )[a-z].*?[a-z]\d{10,}", None),
+]
+
+# ── Internal Transfer regex rules ──────────────────────────────────────
+# These patterns strongly indicate own-account (internal) transfers.
+# Applied after the pairing rule but before external-transfer regex, so
+# rows matching these rules are classified as Internal Transfer rather
+# than External Transfers.
+
+INTERNAL_TRANSFER_RULES: list[tuple[str, str, str | None]] = [
+    # Westpac deposit patterns: always credit, 95-98% transfer.
+    ("internal_deposit_westpac_cho", r"^deposit online \d+ tfr westpac cho", "credit"),
+    ("internal_deposit_westpac_lif", r"^deposit online \d+ tfr westpac lif", "credit"),
+    ("internal_deposit_westpac_esa", r"^deposit online \d+ tfr westpac esa", "credit"),
+    # Commbank app masked account with descriptive suffixes.
+    ("internal_commbank_from_suffix", r"^transfer from xx\d{4} commbank app (allowance|rent|savings|transfer|food|bill|shop)$", None),
+    ("internal_commbank_from_value_date", r"^transfer from xx\d{4} commbank app value date: \d+/\d+/\d+$", None),
+    # Standard internal-transfer narratives.
+    ("internal_phrase", r"\binternal transfer\b", None),
+    ("internal_linked_acc", r"\b(linked acc|linked account|acc trns|acc transfer)\b", None),
+    # Westpac account-type indicators: Choice / Life / Maximiser are the
+    # user's own accounts — transfers between them are internal.
+    ("internal_westpac_family", r"\b(tfr westpac|westpac lif|maximiser)\b", None),
+    ("internal_anz_funds_tfer", r"\banz internet banking funds tfer\b", None),
+    ("internal_anz_mbank_to_long", r"^anz m-banking funds tfer transfer \d+ to \d+$", None),
+    ("internal_anz_mbank_from_long", r"^anz m-banking funds tfer transfer \d+ from \d+$", None),
+    ("internal_ib_tfr_to_long", r"^ib tfr \d+ to \d+$", None),
+    ("internal_mb_transfer_from", r"^mb transfer from \d+$", None),
+    ("internal_mb_transfer_to", r"^mb transfer to \d+$", None),
+    ("internal_orange_everyday_to", r"^internal transfer - receipt \d+ - to orange everyday$", None),
+    ("internal_orange_everyday_from", r"^internal transfer - receipt \d+ - from orange everyday$", None),
+    ("internal_savings_maximiser", r"^internal transfer - internal transfer - receipt \d+ savings maximiser \d+$", None),
+    ("internal_ibank_mobile_banking", r"^ibank trf ref: \d+ transferred to \d+ mobile banking$", None),
+    # Internet banking withdrawal to own account.
+    ("internal_internet_banking", r"\binternet withdrawal\b.*\bto \d{7,}\b", None),
 ]
 
 
@@ -280,12 +284,12 @@ def classify_transfers(
     """Apply transfer classification rules and produce output columns.
 
     Pipeline:
-    1. Internal Transfer — purely data-driven via pairing rule
-       (same application_id + transaction_date + amount, both debit & credit).
+    1. Internal Transfer — data-driven pairing rule
+       (same application_id + transaction_date + amount, debit & credit).
+    1.5 Internal Transfer — high-confidence regex rules on remaining rows.
     2. External Transfers — regex rules on remaining unclassified rows.
+    2.5 Personal Osko credit filter — remove informal personal credits from ET.
     3. Known-account deposit matching — extends External Transfers.
-    3.5 Cross-date internal transfer — account numbers seen in both
-       withdrawal and deposit directions are reclassified as Internal.
 
     Parameters
     ----------
@@ -312,14 +316,17 @@ def classify_transfers(
     pairing_pool = all_rows if all_rows is not None else output
     output = _detect_internal_transfers(output, pairing_pool)
 
+    # ── Step 1.5: Internal Transfer — regex rules ──
+    output = _detect_internal_by_regex(output)
+
     # ── Step 2: External Transfers — regex on remaining rows ──
     output = _detect_external_transfers(output)
 
+    # ── Step 2.5: filter personal Osko credits ──
+    output = _filter_personal_osko_credits(output)
+
     # ── Step 3: extend via known internal accounts (also External Transfers) ──
     output = _match_deposit_to_known_accounts(output)
-
-    # ── Step 3.5: cross-date internal transfer via account-number matching ──
-    output = _reclassify_cross_date_internal_transfers(output)
 
     # ── counterparty ──
     output["counterparty"] = _derive_counterparty(output)
@@ -336,6 +343,43 @@ def classify_transfers(
     return output
 
 
+# ── Text patterns that indicate a row is a genuine bank-account transfer ──
+# Used to validate Internal Transfer candidates: if a row's text doesn't
+# match ANY of these patterns, it is removed from the IT set (likely a
+# coincidental amount match — e.g. a gambling debit that happens to share
+# the same amount + date as an unrelated credit).
+
+_TRANSFER_INDICATOR_PATTERNS: list[re.Pattern] = [
+    re.compile(r"\btransfer\s+(?:debit|credit)\b", re.IGNORECASE),
+    re.compile(r"\binternet\s+(?:withdrawal|deposit)\b", re.IGNORECASE),
+    re.compile(r"\blinked\s+acc", re.IGNORECASE),
+    re.compile(r"\binternal\s+transfer\b", re.IGNORECASE),
+    re.compile(r"\b(?:ibank|ib)\s+trf\b", re.IGNORECASE),
+    re.compile(r"\bmb\s+transfer\b", re.IGNORECASE),
+    re.compile(r"\banz\s+m-banking\s+funds\s+tfer\b", re.IGNORECASE),
+    re.compile(r"\b(?:deposit|withdrawal)\s+online\b.*\btfr\b", re.IGNORECASE),
+    re.compile(r"\bfast\s+transfer\b", re.IGNORECASE),
+    re.compile(r"\bcommbank\s+app\b", re.IGNORECASE),
+    re.compile(r"\btfr\s+(?:from|to)\s+\d", re.IGNORECASE),
+    re.compile(r"\btransfer\s+(?:to|from)\s+xx\d{4}\b", re.IGNORECASE),
+    re.compile(r"\btransferred\s+(?:to|from)\s+\d", re.IGNORECASE),
+    re.compile(r"\.[ \t]*tf[cd]\s*$", re.IGNORECASE),
+    re.compile(r"\b(?:osko|payid|npp)\b", re.IGNORECASE),
+    re.compile(r"\bpaypal\b", re.IGNORECASE),
+    re.compile(r"\bbpay\b", re.IGNORECASE),
+    re.compile(r"\bdirect\s+(?:debit|credit)\b", re.IGNORECASE),
+    re.compile(r"\bscheduled\s+payment\b", re.IGNORECASE),
+]
+
+
+def _looks_like_transfer(text: str) -> bool:
+    """Return True if *text* contains at least one transfer-indicator pattern."""
+    if not text or pd.isna(text):
+        return False
+    text_str = str(text)
+    return any(p.search(text_str) for p in _TRANSFER_INDICATOR_PATTERNS)
+
+
 def _detect_internal_transfers(
     df: pd.DataFrame, pairing_pool: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -347,11 +391,12 @@ def _detect_internal_transfers(
 
     Groups by (application_id, transaction_date, amount).  If a group
     contains at least one ``debit`` AND at least one ``credit``, every
-    candidate row in that group is marked as **Internal Transfer**.
+    candidate row in that group whose text matches a transfer-indicator
+    pattern is marked as **Internal Transfer**.
 
     Pairs are excluded when any row in the group contains known gambling,
-    payday-lender, or BNPL keywords — those are external transactions that
-    happen to match the pairing rule by coincidence.
+    payday-lender, BNPL, EFTPOS, or ATM keywords — those are external
+    transactions that happen to match the pairing rule by coincidence.
     """
     output = df.copy()
 
@@ -379,7 +424,14 @@ def _detect_internal_transfers(
         if _contains_excluded_keywords(grp):
             continue
 
-        internal_indices.update(grp.index.intersection(candidate_idx))
+        # ── only mark rows whose text looks like a genuine transfer ──
+        group_candidates = grp.index.intersection(candidate_idx)
+        text_col = grp.get("text", pd.Series("", index=grp.index))
+        transfer_indices = {
+            idx for idx in group_candidates
+            if _looks_like_transfer(text_col.get(idx, ""))
+        }
+        internal_indices.update(transfer_indices)
 
     if internal_indices:
         internal_mask = pd.Series(False, index=output.index)
@@ -435,13 +487,29 @@ _EXCLUDED_PAIRING_PATTERNS: list[re.Pattern] = [
     # ── Generic lender/phrase patterns that indicate borrowing ──
     re.compile(r"\b(?:loan\s*repaid|loan\s*return|loan\s*repayment|wage\s*advance\s*repayment)\b", re.IGNORECASE),
     re.compile(r"\b(?:pay\s*in\s*4|payin4)\b", re.IGNORECASE),  # PayPal BNPL
-    # ── External payment networks (not internal transfers) ──
-    # Osko / NPP / PayID transactions go through the external New Payments
-    # Platform and should never be classified as Internal Transfer, even when
-    # they happen to form same-day same-amount debit-credit pairs.
-    re.compile(r"\bosko\b", re.IGNORECASE),
-    re.compile(r"\bpayid\b", re.IGNORECASE),
-    re.compile(r"\bnpp\b", re.IGNORECASE),              # New Payments Platform
+    # ── EFTPOS / card purchases (not transfers) ──
+    re.compile(r"\beftpos\b", re.IGNORECASE),
+    re.compile(r"\bmiscellaneous\s+debit\s+v\d", re.IGNORECASE),
+    # ── ATM withdrawals (not transfers) ──
+    re.compile(r"\bwithdrawal\s+at\b.*\batm\b", re.IGNORECASE),
+    re.compile(r"\batm\s+withdrawal\b", re.IGNORECASE),
+    # ── Gaming / gambling operators not covered above ──
+    re.compile(r"\bnorhengame\b", re.IGNORECASE),
+    re.compile(r"\bhappyfarm\b", re.IGNORECASE),
+    re.compile(r"\bwfun\b", re.IGNORECASE),
+    re.compile(r"\bsmedge\b", re.IGNORECASE),
+    re.compile(r"\bdragfir\b", re.IGNORECASE),
+    re.compile(r"\bprezzee\b", re.IGNORECASE),            # gift card (often gambling-adjacent)
+    # ── Person-to-person (P2P) OSKO / bank transfer patterns ──
+    # These look like internal transfers (same amount + date + debit+credit)
+    # but are actually person-to-person payments.  When any row in the group
+    # matches these patterns the entire group is excluded from internal pairing.
+    re.compile(r"\bOsko (?:Payment|Deposit)\b", re.IGNORECASE),
+    # "IBank Trf Transferred to <account> <PERSON NAME> ..." (Greater Bank P2P)
+    re.compile(r"\bIBank Trf\b", re.IGNORECASE),
+    # Generic person-title indicators strongly suggest P2P rather than
+    # own-account transfers.
+    re.compile(r"\b(?:MRS?|MR|MS|MISS)\s+[A-Z]\b", re.IGNORECASE),
 ]
 
 
@@ -546,91 +614,102 @@ def _match_deposit_to_known_accounts(df: pd.DataFrame) -> pd.DataFrame:
     return output
 
 
-def _reclassify_cross_date_internal_transfers(df: pd.DataFrame) -> pd.DataFrame:
-    """Reclassify External Transfers → Internal Transfer when matching account
-    numbers appear in both withdrawal (To) and deposit (From) directions.
+def _detect_internal_by_regex(df: pd.DataFrame) -> pd.DataFrame:
+    """Apply high-confidence internal-transfer regex rules.
 
-    The pairing rule (:func:`_detect_internal_transfers`) requires matching
-    ``transaction_date``, so transfers between the same two accounts on
-    *different* dates are missed.  This step catches them by observing that
-    an account number used as a withdrawal destination is also used as a
-    deposit source — a strong signal that both belong to the same user.
-
-    To reduce false positives, an account must appear **at least twice in
-    each direction** (≥2 withdrawals *to* the account AND ≥2 deposits *from*
-    the account) before it is considered internal.
-    Matching is scoped per ``bank_account_id`` to avoid cross-user leakage.
+    Runs on rows NOT already classified by the pairing rule.  Matched rows
+    receive ``finv_category = "Internal Transfer"``, preventing them from
+    being claimed by the external-transfer regex step.
     """
     output = df.copy()
-
-    et_mask = (
-        (output["is_transfer_pred"] == 1)
-        & (output["finv_category"] == "External Transfers")
-    )
-    if not et_mask.any():
+    remaining_mask = output["is_transfer_pred"] == 0
+    if not remaining_mask.any():
         return output
 
+    compiled = [
+        (name, re.compile(pattern, re.IGNORECASE), dr_cr)
+        for name, pattern, dr_cr in INTERNAL_TRANSFER_RULES
+    ]
     text_col = output.get("text_norm", pd.Series("", index=output.index))
-    bank_col = (
-        output["bank_account_id"]
-        if "bank_account_id" in output.columns
-        else pd.Series("__global__", index=output.index)
-    )
+    dr_cr_col = output.get("dr_cr", pd.Series("", index=output.index))
 
-    # ── Collect account numbers from both directions ──
-    to_by_bank: dict[str, dict[str, int]] = {}    # "Internet Withdrawal … To N" → count
-    from_by_bank: dict[str, dict[str, int]] = {}  # "Internet Deposit  … From N" → count
-
-    for idx in output[et_mask].index:
+    for idx in output[remaining_mask].index:
         text = str(text_col.get(idx, ""))
-        bank_val = bank_col.get(idx)
-        bank = str(bank_val) if pd.notna(bank_val) else "__global__"
+        dr_cr = str(dr_cr_col.get(idx, "")).strip().lower()
 
-        m = _WITHDRAWAL_ACCOUNT_RE.search(text)
-        if m:
-            d = to_by_bank.setdefault(bank, {})
-            d[m.group(1)] = d.get(m.group(1), 0) + 1
+        for rule_name, pattern, dr_cr_constraint in compiled:
+            if not pattern.search(text):
+                continue
+            if dr_cr_constraint is not None and dr_cr != dr_cr_constraint:
+                continue
 
-        m = _DEPOSIT_ACCOUNT_RE.search(text)
-        if m:
-            d = from_by_bank.setdefault(bank, {})
-            d[m.group(1)] = d.get(m.group(1), 0) + 1
-
-    # ── Internal accounts: appear in BOTH directions, ≥2 in each direction ──
-    MIN_PER_DIRECTION = 2
-    internal_by_bank: dict[str, set[str]] = {}
-    for bank in set(to_by_bank.keys()) | set(from_by_bank.keys()):
-        to_counts = to_by_bank.get(bank, {})
-        from_counts = from_by_bank.get(bank, {})
-        common = set(to_counts.keys()) & set(from_counts.keys())
-        filtered = {
-            acct for acct in common
-            if to_counts.get(acct, 0) >= MIN_PER_DIRECTION
-            and from_counts.get(acct, 0) >= MIN_PER_DIRECTION
-        }
-        if filtered:
-            internal_by_bank[bank] = filtered
-
-    if not internal_by_bank:
-        return output
-
-    # ── Reclassify matching rows ──
-    for idx in output[et_mask].index:
-        text = str(text_col.get(idx, ""))
-        bank_val = bank_col.get(idx)
-        bank = str(bank_val) if pd.notna(bank_val) else "__global__"
-        known = internal_by_bank.get(bank, set())
-        if not known:
-            continue
-
-        m = _WITHDRAWAL_ACCOUNT_RE.search(text) or _DEPOSIT_ACCOUNT_RE.search(text)
-        if m and m.group(1) in known:
+            output.at[idx, "is_transfer_pred"] = 1
             output.at[idx, "finv_category"] = "Internal Transfer"
             output.at[idx, "predicted_category"] = "Internal Transfer"
             output.at[idx, "prediction_confidence"] = "high"
-            output.at[idx, "prediction_rule"] = (
-                "internal_cross_date_account_match"
+            output.at[idx, "prediction_rule"] = rule_name
+            output.at[idx, "prediction_dr_cr_used"] = (
+                dr_cr_constraint is not None
             )
+            break
+
+    return output
+
+
+def _filter_personal_osko_credits(df: pd.DataFrame) -> pd.DataFrame:
+    """Unmark Osko credit rows that look like informal person-to-person payments.
+
+    Osko deposits / payments that are personal (gifts, reimbursements,
+    one-off payments) rather than systematic external transfers are unmarked
+    so they can be picked up by other engines or left unclassified.
+
+    Two checks:
+    1. No 6+ digit identifier at all → definitely personal.
+    2. Has a 6+ digit number BUT followed by a person's name
+       (e.g. "DEPOSIT-OSKO PAYMENT 2741681 LAUREN T DUSSIN") → P2P.
+    """
+    output = df.copy()
+
+    et_credit_mask = (
+        (output["is_transfer_pred"] == 1)
+        & (output["finv_category"] == "External Transfers")
+        & (output["dr_cr"].astype(str).str.lower() == "credit")
+    )
+    if not et_credit_mask.any():
+        return output
+
+    text_col = output.get("text_norm", pd.Series("", index=output.index))
+    raw_text = output.get("text", pd.Series("", index=output.index))
+
+    for idx in output[et_credit_mask].index:
+        text = str(text_col.get(idx, ""))
+        if not re.search(r"\bosko\b", text, re.IGNORECASE):
+            continue
+
+        has_ref = bool(re.search(r"\d{6,}", text))
+        if not has_ref:
+            # No reference/account number — informal personal credit.
+            pass  # fall through to unmark
+        else:
+            # Has a 6+ digit number, but check if it looks like a person's
+            # name follows in the raw (title-case) text
+            # (e.g. "DEPOSIT-OSKO PAYMENT 2741681 LAUREN T DUSSIN").
+            raw = str(raw_text.get(idx, ""))
+            if re.search(
+                r"\d{6,}\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+",
+                raw,
+            ):
+                pass  # P2P with a name — fall through to unmark
+            else:
+                continue  # Systematic transfer with reference — keep
+
+        # Personal Osko credit — unmark
+        output.at[idx, "is_transfer_pred"] = 0
+        output.at[idx, "finv_category"] = ""
+        output.at[idx, "predicted_category"] = ""
+        output.at[idx, "prediction_confidence"] = ""
+        output.at[idx, "prediction_rule"] = ""
+        output.at[idx, "prediction_dr_cr_used"] = False
 
     return output
 

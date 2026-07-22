@@ -36,11 +36,12 @@
       "immutable_when_set_by": ["fee", "income", "liability", "transfer"]
     },
     "counterparty": {
-      "description": "交易对手。initial 的商户知识库最权威，设置后锁定；initial 可覆盖 fee 的值；其他引擎仅填补空白",
-      "immutable_when_set_by": ["initial"],
+      "description": "initial 的商户知识库最权威；transfer 可覆盖 initial（Osko/PayID 等支付渠道 transfer 更准确）",
+      "immutable_when_set_by": [],
       "fill_blank_only": true,
       "override_rules": [
-        {"by": "initial", "when_set_by": ["fee"]}
+        {"by": "initial", "when_set_by": ["fee"]},
+        {"by": "transfer", "when_set_by": ["initial"]}
       ]
     }
   }

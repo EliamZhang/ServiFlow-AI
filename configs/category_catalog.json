@@ -40,7 +40,7 @@
     "Debt Collection": {"owner_engine_id": "liability", "active": true},
     "Debt Consolidation": {"owner_engine_id": "liability", "active": true},
     "Dishonours": {"owner_engine_id": "liability", "active": true},
-    "Overdrawn": {"owner_engine_id": "liability", "active": true},
+    "Overdrawn": {"owner_engine_id": "fee,liability", "active": true},
     "Internal Transfer": {"owner_engine_id": "transfer", "active": true},
     "External Transfers": {"owner_engine_id": "transfer", "active": true}
   }

@@ -37,7 +37,18 @@ _CLEAN_RE = re.compile(r"[^A-Z0-9]+")
 # actual counterparty name can be matched at position 0.  Applied only to
 # transaction text, never to keywords — a KB entry named "Bill Pay Services"
 # would still have its keywords inserted as-is.
-_CHANNEL_PREFIX_RE = re.compile(r"^BILL\s*PAY(MENT)?\s+", re.IGNORECASE)
+_CHANNEL_PREFIX_RE = re.compile(
+    r"^(?:"
+    r"BILL\s*PAY(?:MENT)?\s+|"
+    r"VISA\s+(?:WDL|PURCHASE|DEBIT)\s+(?:PURCHASE\s+)?(?:\d+\w+\s+)?\s*|"
+    r"VISA\s+CREDIT\s+\d*\s*|"
+    r"EFTPOS\s+(?:DEBIT|WDL)(?:\s+\d+)?\s+|"
+    r"MISCELLANEOUS\s+DEBIT\s+V\d+\s+\d+\s+\d+\s+|"
+    r"DEBIT\s+CARD\s+PURCHASE\s+|"
+    r"EFT\s+Dep\s+"
+    r")",
+    re.IGNORECASE,
+)
 
 
 def clean_text(value: object) -> str:
@@ -393,32 +404,58 @@ def match_transactions(
         """Classify a single cleaned text via purity × position scoring.
 
         Returns (matched, counterparty, category, keyword, rule_id, reason).
+
+        Optimisation: instead of calling ``str.find()`` + ``_is_whole_word()``
+        (which together scan the text twice), we call ``str.find()`` once and
+        inline the whole-word boundary check.  The ahocorasick automaton has
+        already confirmed the keyword *exists*; ``str.find()`` reliably gives
+        us the 0-based start index without needing to interpret ``end_pos``
+        semantics (which vary across pyahocorasick versions).
         """
-        text_clean = str(text_clean)
         if not text_clean:
             return (False, "", "", "", "", "")
 
-        text_len = max(len(text_clean), 1)
-        scored: list[tuple[float, str, str, str]] = []  # (score, kw, merchant, cat)
+        text_len = len(text_clean)
+
+        best_cat: tuple[float, str, str, str] | None = None
+        best_uncat: tuple[float, str, str, str] | None = None
 
         # pyahocorasick.iter() yields (end_pos, (kw, merchant, cat, purity)).
-        for _, (kw, merchant, cat, purity) in automaton.iter(text_clean):
-            if not _is_whole_word(kw, text_clean):
-                continue
+        for _end_pos, (kw, merchant, cat, purity) in automaton.iter(text_clean):
+            # Use str.find() for reliable position (ahocorasick end_pos
+            # semantics are version-dependent; find() is unambiguous).
             pos = text_clean.find(kw)
+            if pos == -1:  # safety — automaton guarantees the match exists
+                continue
+
+            # ── Whole-word check (inlined) ──
+            # After clean_text the text is ``[A-Z0-9 ]`` — word boundaries
+            # are spaces or string edges.
+            if pos > 0 and text_clean[pos - 1] != " ":
+                continue
+            end = pos + len(kw)
+            if end < text_len and text_clean[end] != " ":
+                continue
+
+            # ── Purity × position scoring ──
             position_weight = 1.0 - pos / text_len
             score = purity * position_weight
-            scored.append((score, kw, merchant, cat))
 
-        if not scored:
+            entry = (score, kw, merchant, cat)
+
+            if cat:
+                if best_cat is None or score > best_cat[0]:
+                    best_cat = entry
+            else:
+                if best_uncat is None or score > best_uncat[0]:
+                    best_uncat = entry
+
+        # Prefer categorised; fall back to uncategorised.
+        best = best_cat or best_uncat
+        if best is None:
             return (False, "", "", "", "", "")
 
-        # Prefer categorised matches; fall back to uncategorised if none exist.
-        cat_hits = [h for h in scored if h[3]]
-        pick_from = cat_hits if cat_hits else scored
-        best_score, best_kw, best_merchant, best_cat = max(
-            pick_from, key=lambda h: h[0]
-        )
+        best_score, best_kw, best_merchant, best_cat = best
 
         reason = format_classification_reason(
             category=best_cat,
@@ -449,4 +486,117 @@ def match_transactions(
         out["classification_reason"],
     ) = zip(*results)
 
+    # ── Post-processing: correct known KB misclassifications ────────────────
+    out = _apply_kb_corrections(out)
+
+    # ── Fallback: classify KB-matched rows that lack a category ─────────────
+    out = _apply_fallback_classify(out)
+
     return out.drop(columns=["_text_clean"])
+
+
+# ── KB correction rules ───────────────────────────────────────────────────
+# High-precision fixes for systematic merchant KB misclassifications.
+# Each entry: (text_pattern, wrong_category, correct_category, counterparty)
+
+_KB_CORRECTIONS: list[tuple[str, str, str, str]] = [
+    # Uber Eats contains "UBER *EATS" (food delivery) but the KB keyword
+    # "UBER" matches Transport.  Correct these to Dining Out.
+    (r"UBER\s*\*?\s*EATS", "Transport", "Dining Out", "Uber Eats"),
+]
+
+
+def _apply_kb_corrections(df: pd.DataFrame) -> pd.DataFrame:
+    """Apply high-precision overrides for known KB misclassifications."""
+    out = df.copy()
+    raw_text = out.get("text", pd.Series("", index=out.index))
+
+    for pattern, wrong_cat, correct_cat, correct_cp in _KB_CORRECTIONS:
+        mask = (
+            (out["finv_category"] == wrong_cat)
+            & raw_text.str.upper().str.contains(pattern, na=False, regex=True)
+        )
+        if mask.any():
+            out.loc[mask, "finv_category"] = correct_cat
+            out.loc[mask, "counterparty"] = correct_cp
+            out.loc[mask, "classification_rule_id"] = (
+                "merchant_kb_match_corrected"
+            )
+            out.loc[mask, "classification_reason"] = out.loc[
+                mask, "classification_reason"
+            ].apply(
+                lambda r: r.replace(
+                    "rule=merchant_kb_match",
+                    f"rule=merchant_kb_match_corrected({wrong_cat}→{correct_cat})",
+                )
+            )
+
+    return out
+
+
+# ── Fallback classification for uncategorised KB matches ──────────────────
+# When the KB has a merchant keyword but the ``category`` column is empty,
+# the automaton returns matched=True with category="".  The pipeline treats
+# empty finv_category as unclassified, which is the #1 cause of our
+# coverage gap (84% of missed records).
+#
+from .fallback_rules import COMPILED_FALLBACK, COMPILED_ENT_REFINEMENT
+
+
+def _apply_fallback_classify(df: pd.DataFrame) -> pd.DataFrame:
+    """Assign a category to KB-matched rows whose category column was empty.
+
+    Only touches rows where ``matched == True`` and ``finv_category == ""``.
+    Checks the matched counterparty name first, then the full transaction text.
+    Uses pre-compiled per-category combined regexes (~22 instead of ~1,119).
+    """
+    out = df.copy()
+
+    fallback_mask = (
+        out["matched"].eq(True)
+        & (out["finv_category"].eq("") | out["finv_category"].isna())
+    )
+    if not fallback_mask.any():
+        return out
+
+    raw_text = out.get("text", pd.Series("", index=out.index))
+
+    for idx in out[fallback_mask].index:
+        text = str(raw_text.get(idx, "")).upper()
+        counterparty = str(out.at[idx, "counterparty"] or "").upper()
+        category = ""
+
+        # Step 1: check matched counterparty name (per-category compiled regex)
+        for cat, combined_re in COMPILED_FALLBACK:
+            if combined_re.search(counterparty):
+                category = cat
+                break
+
+        # Step 2: fall back to full transaction text
+        if not category:
+            for cat, combined_re in COMPILED_FALLBACK:
+                if combined_re.search(text):
+                    category = cat
+                    break
+
+        if not category:
+            continue
+
+        # Refine: Dining Out -> Entertainment for sports/cinema venues
+        if category == "Dining Out":
+            for cat, combined_re in COMPILED_ENT_REFINEMENT:
+                if combined_re.search(text) or combined_re.search(counterparty):
+                    category = cat
+                    break
+
+        out.at[idx, "finv_category"] = category
+        out.at[idx, "classification_rule_id"] = "merchant_kb_fallback"
+        out.at[idx, "classification_reason"] = format_classification_reason(
+            category=category,
+            rule="merchant_kb_fallback",
+            evidence=[
+                f"counterparty={out.at[idx, 'counterparty']}",
+            ],
+        )
+
+    return out
