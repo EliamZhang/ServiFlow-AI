@@ -1,6 +1,6 @@
-counterparty,rule_id,match_type,pattern,note
-Overdrawn,OD_001,regex,\\boverdra(?:wn|ft|w)\\b,"Matches overdrawn, overdraft, or overdraw."
-Overdrawn,OD_002,regex,\\bdebit\\s+excess\\s+(?:interest|int)\\b,Matches Debit Excess Interest and Debit Excess Int.
-Overdrawn,OD_003,regex,\\bexceeding\\s+available\\s+funds\\b,Matches descriptions saying funds were exceeded.
-Overdrawn,OD_004,regex,\\bhonou?r(?:[/\\s-]+overdrawn)?\\s+(?:fee|charge)\\b,Matches Honour/Overdrawn Fee and Honour Charge.
-Overdrawn,OD_005,regex,\\bover\\s*limit\\s+fee\\b|\\boverlimit\\s+fee\\b,Matches over limit fee or overlimit fee.
+﻿counterparty,rule_id,match_type,pattern,note
+Overdrawn,OD_001,regex,\boverdra(?:wn|ft|w)\b,"Matches overdrawn, overdraft, or overdraw."
+Overdrawn,OD_002,regex,\bdebit\s+excess\s+(?:interest|int)\b,Matches Debit Excess Interest and Debit Excess Int.
+Overdrawn,OD_003,regex,\bexceeding\s+available\s+funds\b,Matches descriptions saying funds were exceeded.
+Overdrawn,OD_004,regex,\bhonou?r(?:[/\s-]+overdrawn)?\s+(?:fee|charge)\b,Matches Honour/Overdrawn Fee and Honour Charge.
+Overdrawn,OD_005,regex,\bover\s*limit\s+fee\b|\boverlimit\s+fee\b,Matches over limit fee or overlimit fee.

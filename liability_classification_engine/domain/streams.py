@@ -1913,23 +1913,37 @@ def parse_stream_id(value: object) -> tuple[str, int] | None:
     return match.group(1), int(match.group(2))
 
 
-def next_stream_id(output: pd.DataFrame, application_id: object, prefix: str) -> str:
-    application_key = normalize_group_value(application_id)
-    max_counter = 0
+class _StreamIdCounter:
+    """O(1) per-call counter for generating stream IDs with ``{prefix}_{###}`` format.
 
-    for _, row in output.iterrows():
-        if normalize_group_value(row.get("application_id", "")) != application_key:
-            continue
+    Scans *output* once on construction to find existing max counters per
+    ``(application_id, prefix)``, then tracks increments in-memory so each
+    ``next()`` call is a dict lookup rather than a full DataFrame scan.
+    """
 
-        parsed = parse_stream_id(row.get("stream_id"))
-        if parsed is None:
-            continue
+    def __init__(self, output: pd.DataFrame) -> None:
+        self._counters: dict[tuple[object, str], int] = {}
+        if "stream_id" not in output.columns or output["stream_id"].isna().all():
+            return
 
-        parsed_prefix, counter = parsed
-        if parsed_prefix == prefix:
-            max_counter = max(max_counter, counter)
+        relevant = output.loc[
+            output["stream_id"].notna(), ["application_id", "stream_id"]
+        ]
+        for _, row in relevant.iterrows():
+            app_key = normalize_group_value(row["application_id"])
+            parsed = parse_stream_id(row["stream_id"])
+            if parsed is None:
+                continue
+            prefix, counter = parsed
+            key = (app_key, prefix)
+            if counter > self._counters.get(key, 0):
+                self._counters[key] = counter
 
-    return f"{prefix}_{max_counter + 1:03d}"
+    def next(self, application_id: object, prefix: str) -> str:
+        key = (normalize_group_value(application_id), prefix)
+        current = self._counters.get(key, 0) + 1
+        self._counters[key] = current
+        return f"{prefix}_{current:03d}"
 
 
 def median_gap_matches_unknown_frequency(median_gap: float) -> bool:
@@ -1996,21 +2010,32 @@ def merge_periodic_remaining_unknown_streams(
 def refine_unknown_personal_loan_streams(
     output: pd.DataFrame,
     group_columns: list[str],
+    counter: _StreamIdCounter | None = None,
 ) -> None:
     """Refine remaining unknown personal-loan streams after LOC refinement."""
 
-    output["_transaction_date"] = pd.to_datetime(
-        output["transaction_date"],
-        errors="coerce",
+    if counter is None:
+        counter = _StreamIdCounter(output)
+
+    pl_mask = (
+        output["product_type"].eq(PERSONAL_LOAN)
+        & output["stream_id"].notna()
     )
-    output["_amount_decimal"] = output["amount"].map(parse_decimal_amount)
+    pl_idx = output.index[pl_mask]
+
+    output["_transaction_date"] = pd.NaT
+    output.loc[pl_idx, "_transaction_date"] = pd.to_datetime(
+        output.loc[pl_idx, "transaction_date"], errors="coerce"
+    )
+    output["_amount_decimal"] = None
+    output.loc[pl_idx, "_amount_decimal"] = (
+        output.loc[pl_idx, "amount"].map(parse_decimal_amount)
+    )
+    output["_sample_datetime"] = pd.NaT
     if "sample_datetime" in output.columns:
-        output["_sample_datetime"] = pd.to_datetime(
-            output["sample_datetime"],
-            errors="coerce",
+        output.loc[pl_idx, "_sample_datetime"] = pd.to_datetime(
+            output.loc[pl_idx, "sample_datetime"], errors="coerce"
         )
-    else:
-        output["_sample_datetime"] = pd.NaT
 
     max_gap = pd.Timedelta(days=UNKNOWN_REASSIGN_MAX_GAP_DAYS)
     target_prefixes = (
@@ -2019,16 +2044,20 @@ def refine_unknown_personal_loan_streams(
         SPECIAL_LOC_PREFIX,
     )
 
-    personal_loan_rows = output.loc[
-        output["product_type"].eq(PERSONAL_LOAN)
-        & output["stream_id"].notna()
-    ]
+    personal_loan_rows = output.loc[pl_idx]
 
     for _, group in personal_loan_rows.groupby(
         group_columns,
         dropna=False,
         sort=True,
     ):
+        is_debit = group["dr_cr"].astype("string").str.lower().eq("debit")
+        not_dishonour = ~(
+            group[DISHONOUR_COLUMN].astype("string").str.lower().eq("yes")
+        )
+        has_amount = group["_amount_decimal"].notna()
+        valid_repayment = is_debit & not_dishonour & has_amount
+
         multi_row_unknown_stream_ids: set[str] = set()
 
         for stream_id, stream_rows in group.groupby(
@@ -2043,14 +2072,8 @@ def refine_unknown_personal_loan_streams(
                 continue
 
             multi_row_unknown_stream_ids.add(stream_id_text)
-            repayment_rows = stream_rows[
-                stream_rows["dr_cr"].astype("string").str.lower().eq("debit")
-                & ~stream_rows[DISHONOUR_COLUMN]
-                .astype("string")
-                .str.lower()
-                .eq("yes")
-                & stream_rows["_amount_decimal"].notna()
-            ]
+            stream_repayment = valid_repayment.loc[stream_rows.index]
+            repayment_rows = stream_rows[stream_repayment]
             repayment_total = sum(
                 abs(amount)
                 for amount in repayment_rows["_amount_decimal"].tolist()
@@ -2058,11 +2081,7 @@ def refine_unknown_personal_loan_streams(
 
             application_id = stream_rows["application_id"].iloc[0]
             if repayment_total > UNKNOWN_NON_SACC_REPAYMENT_THRESHOLD:
-                target_stream_id = next_stream_id(
-                    output,
-                    application_id,
-                    "non_sacc",
-                )
+                target_stream_id = counter.next(application_id, "non_sacc")
             else:
                 latest_transaction_date = stream_rows["_transaction_date"].max()
                 sample_datetime = stream_rows["_sample_datetime"].max()
@@ -2084,11 +2103,7 @@ def refine_unknown_personal_loan_streams(
                 ):
                     continue
 
-                target_stream_id = next_stream_id(
-                    output,
-                    application_id,
-                    "sacc",
-                )
+                target_stream_id = counter.next(application_id, "sacc")
 
             output.loc[stream_rows.index, "stream_id"] = target_stream_id
 
@@ -2141,7 +2156,11 @@ def refine_unknown_personal_loan_streams(
 def apply_special_counterparty_stream_overrides(
     output: pd.DataFrame,
     group_columns: list[str],
+    counter: _StreamIdCounter | None = None,
 ) -> None:
+    if counter is None:
+        counter = _StreamIdCounter(output)
+
     personal_loan_rows = output.loc[
         output["product_type"].eq(PERSONAL_LOAN)
         & output["counterparty"]
@@ -2181,10 +2200,8 @@ def apply_special_counterparty_stream_overrides(
                     dropna=False,
                     sort=True,
                 ):
-                    target_stream_id = next_stream_id(
-                        output,
-                        stream_group["application_id"].iloc[0],
-                        prefix,
+                    target_stream_id = counter.next(
+                        stream_group["application_id"].iloc[0], prefix
                     )
                     output.loc[stream_group.index, "stream_id"] = target_stream_id
                 continue
@@ -2199,10 +2216,8 @@ def apply_special_counterparty_stream_overrides(
                 .str.startswith(f"{prefix}_", na=False)
             ]
             if prefixed_rows.empty:
-                target_stream_id = next_stream_id(
-                    output,
-                    group["application_id"].iloc[0],
-                    prefix,
+                target_stream_id = counter.next(
+                    group["application_id"].iloc[0], prefix
                 )
             else:
                 target_stream_id = (
@@ -2313,8 +2328,9 @@ def identify_streams(
             group_columns,
         )
 
-    refine_unknown_personal_loan_streams(output, group_columns)
-    apply_special_counterparty_stream_overrides(output, group_columns)
+    counter = _StreamIdCounter(output)
+    refine_unknown_personal_loan_streams(output, group_columns, counter)
+    apply_special_counterparty_stream_overrides(output, group_columns, counter)
     return renumber_stream_ids_by_application(output)
 
 
