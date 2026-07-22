@@ -59,13 +59,13 @@ OUR_TO_ILLION: dict[str, str] = {
     "Personal Loan Unknown": "Non SACC Loans",
     "Contract Loans":        "Non SACC Loans",
     "LOC":                   "Non SACC Loans",
+    "Home Loan":             "Non SACC Loans",
+    "Car Loan":              "Non SACC Loans",
 }
 
 # Our categories that illion has NO equivalent for.
 # Rows with these labels are excluded from agreement-rate calculation.
 UNMAPPABLE_OUR_CATS: frozenset[str] = frozenset({
-    "Home Loan",
-    "Car Loan",
     "Debt Consolidation",
 })
 
@@ -111,7 +111,8 @@ ILLION_TO_OUR: dict[str, list[str]] = {
     # -- 1:N: illion lumps together our fine-grained categories --
     "Wages":                        ["salary_payg", "salary_packaging", "self_employed_gig"],
     "Non SACC Loans":               ["BNPL", "Wage Advance", "Non SACC Loans",
-                                     "Personal Loan Unknown", "Contract Loans", "LOC"],
+                                     "Personal Loan Unknown", "Contract Loans", "LOC",
+                                     "Home Loan", "Car Loan"],
 
     # -- illion categories with no direct equivalent in our engine --
     "All Other Credits":            [],   # 我们没有兜底收入类，可能分散在多个标签
