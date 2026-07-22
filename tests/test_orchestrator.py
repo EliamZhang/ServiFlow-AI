@@ -64,7 +64,8 @@ class OrchestratorTests(unittest.TestCase):
             )
         )
 
-    def test_higher_priority_engine_claims_first(self) -> None:
+    def test_later_engine_overwrites_earlier_at_row_level(self) -> None:
+        """Later engines see all transactions and overwrite earlier claims entirely."""
         engines = {
             "income": FakeEngine("income", "salary_payg", {1}),
             "liability": FakeEngine("liability", "bnpl", {1, 2}),
@@ -81,12 +82,15 @@ class OrchestratorTests(unittest.TestCase):
         row_two = result.transactions.loc[
             result.transactions["transaction_id"].eq(2)
         ].iloc[0]
-        self.assertEqual(row_one["classification_engine"], "income")
-        self.assertEqual(row_one["finv_category"], "salary_payg")
+        # Liability runs later (priority 200 > 100), so it overwrites income's
+        # claim on row 1, and also claims row 2.
+        self.assertEqual(row_one["classification_engine"], "liability")
+        self.assertEqual(row_one["finv_category"], "bnpl")
         self.assertEqual(row_two["classification_engine"], "liability")
         self.assertEqual(row_two["finv_category"], "bnpl")
+        # Both engines see all transactions.
         self.assertEqual(result.executions[0].candidate_count, 2)
-        self.assertEqual(result.executions[1].candidate_count, 1)
+        self.assertEqual(result.executions[1].candidate_count, 2)
 
     def test_duplicate_transaction_keys_are_rejected(self) -> None:
         duplicated = pd.concat(

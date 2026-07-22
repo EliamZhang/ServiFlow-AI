@@ -29,20 +29,5 @@
   "execution": {
     "on_engine_error": "fail_batch",
     "unclassified_category": "unclassified"
-  },
-  "field_policy": {
-    "finv_category": {
-      "description": "分类标签。fee/income/liability/transfer 设置后锁定；initial 的 finv_category 可被后续引擎覆盖",
-      "immutable_when_set_by": ["fee", "income", "liability", "transfer"]
-    },
-    "counterparty": {
-      "description": "initial 的商户知识库最权威；transfer 可覆盖 initial（Osko/PayID 等支付渠道 transfer 更准确）",
-      "immutable_when_set_by": [],
-      "fill_blank_only": true,
-      "override_rules": [
-        {"by": "initial", "when_set_by": ["fee"]},
-        {"by": "transfer", "when_set_by": ["initial"]}
-      ]
-    }
   }
 }

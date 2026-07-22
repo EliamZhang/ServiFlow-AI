@@ -3,6 +3,5 @@ __pycache__/
 *.pickle
 .pytest_cache/
 .coverage
-output/
 initial_classification_engine/merchant_kb.csv
 run_liability/

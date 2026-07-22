@@ -17,13 +17,14 @@ class CurrentSampleIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         transactions = pd.read_csv(SAMPLE_FILE, encoding="utf-8-sig")
+        cls.transaction_count = len(transactions)
         cls.result = ClassificationOrchestrator(
             load_pipeline_config(),
             load_category_owners(),
         ).run(transactions)
 
     def test_row_count_and_transaction_keys_are_preserved(self) -> None:
-        self.assertEqual(len(self.result.transactions), 825)
+        self.assertEqual(len(self.result.transactions), self.transaction_count)
         self.assertEqual(
             int(
                 self.result.transactions.duplicated(
@@ -35,24 +36,35 @@ class CurrentSampleIntegrationTests(unittest.TestCase):
 
     def test_current_engine_claim_counts(self) -> None:
         counts = self.result.transactions["classification_engine"].value_counts()
-        self.assertEqual(int(counts["income"]), 13)
-        self.assertEqual(int(counts["liability"]), 457)
+        # All engines see all transactions; later engines overwrite earlier ones.
+        # These counts reflect the current sample.csv with the row-level
+        # overwrite semantics.
+        self.assertEqual(int(counts["initial"]), 21204)
+        self.assertEqual(int(counts["transfer"]), 17988)
+        self.assertEqual(int(counts["liability"]), 5943)
+        self.assertEqual(int(counts["income"]), 684)
+        self.assertEqual(int(counts["fee"]), 218)
+        unclassified = int(
+            self.result.transactions["classification_status"]
+            .eq("unclassified")
+            .sum()
+        )
+        self.assertEqual(unclassified, 2680)
+        # Classified + unclassified = total
         self.assertEqual(
-            int(
-                self.result.transactions["classification_status"]
-                .eq("unclassified")
-                .sum()
-            ),
-            355,
+            sum(int(counts.get(e, 0)) for e in ["fee", "initial", "income", "liability", "transfer"]) + unclassified,
+            self.transaction_count,
         )
 
     def test_summaries_are_generated(self) -> None:
         summaries = {
             artifact.name: artifact.data for artifact in self.result.summaries
         }
-        self.assertEqual(len(summaries["income_summary"]), 1)
-        self.assertEqual(len(summaries["liability_summary"]), 15)
-        self.assertEqual(len(summaries["run_summary"]), 2)
+        self.assertEqual(len(summaries["initial_summary"]), 5024)
+        self.assertEqual(len(summaries["income_summary"]), 67)
+        self.assertEqual(len(summaries["liability_summary"]), 474)
+        self.assertEqual(len(summaries["transfer_summary"]), 2)
+        self.assertEqual(len(summaries["run_summary"]), 5)
         self.assertIn("finv_category", summaries["liability_summary"].columns)
 
     def test_classified_rows_have_both_core_fields(self) -> None:

@@ -4,7 +4,7 @@ import io
 import sys
 import unittest
 from contextlib import redirect_stdout
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from main import main
 
@@ -17,11 +17,13 @@ class MainCliTests(unittest.TestCase):
             "output": 0.45,
             "total": 2.80,
         }
+        mock_result = MagicMock()
+        mock_result.executions = []
         stdout = io.StringIO()
 
         with patch.object(sys, "argv", ["main"]), patch(
             "main._execute_classification",
-            return_value=(object(), timings),
+            return_value=(mock_result, timings),
         ), redirect_stdout(stdout):
             main()
 
