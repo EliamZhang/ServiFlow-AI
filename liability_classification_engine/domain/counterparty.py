@@ -458,7 +458,7 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         target = _resolve_target(rule, output_columns)
         if not target:
             continue
-        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
         if not mask.any():
             continue
         output.loc[mask, target] = 1
@@ -474,7 +474,7 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         target = _resolve_target(rule, output_columns)
         if not target:
             continue
-        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
         if not mask.any():
             continue
         output.loc[mask, target] = 1
@@ -491,8 +491,8 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         if not target:
             continue
         pattern = rule["pattern"]
-        hit_text = text_col.str.contains(pattern.pattern, na=False, regex=True)
-        hit_cp = counterparty_col.str.contains(pattern.pattern, na=False, regex=True)
+        hit_text = text_col.str.contains(pattern.pattern, na=False, regex=True, flags=re.IGNORECASE)
+        hit_cp = counterparty_col.str.contains(pattern.pattern, na=False, regex=True, flags=re.IGNORECASE)
         mask = (hit_text | hit_cp) & output[target].eq(0)
         if not mask.any():
             continue
@@ -509,8 +509,8 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         target = _resolve_target(rule, output_columns)
         if not target:
             continue
-        hit_text = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True)
-        hit_cp = counterparty_col.str.contains(rule["pattern"].pattern, na=False, regex=True)
+        hit_text = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE)
+        hit_cp = counterparty_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE)
         mask = (hit_text | hit_cp) & output[target].eq(0)
         if not mask.any():
             continue
@@ -531,9 +531,9 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         if cond_mask is None or not cond_mask.any():
             continue
         if "pattern" in rule:
-            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
         elif "keywords" in rule:
-            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True) & output[target].eq(0)
+            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
         else:
             mask = cond_mask & output[target].eq(0)
         if not mask.any():
@@ -668,6 +668,7 @@ _TARGET_METADATA_MAP = {
     },
     "is_car_loan": {
         "counterparty": "Car Loan",
+        "finv_category": "Car Loan",
         "product_type": "car_loan",
     },
 }
