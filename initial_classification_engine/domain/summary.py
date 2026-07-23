@@ -6,10 +6,13 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from classification_core.category_mapping import to_illion_category
+
 
 SUMMARY_COLUMNS = [
     "finv_category",
     "counterparty",
+    "initial_category",
     "bank_account_id",
     "account_type",
     "application_id",
@@ -59,8 +62,11 @@ def build_summary(matched: pd.DataFrame) -> pd.DataFrame:
 
         rows.append(
             {
-                "finv_category": key_dict.get("finv_category", ""),
+                "finv_category": to_illion_category(
+                    str(key_dict.get("finv_category", ""))
+                ),
                 "counterparty": key_dict.get("counterparty", ""),
+                "initial_category": key_dict.get("finv_category", ""),
                 "bank_account_id": key_dict.get("bank_account_id", np.nan),
                 "account_type": key_dict.get("account_type", np.nan),
                 "application_id": key_dict.get("application_id", np.nan),

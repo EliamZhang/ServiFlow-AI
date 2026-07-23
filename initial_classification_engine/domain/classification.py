@@ -489,9 +489,6 @@ def match_transactions(
     # ── Post-processing: correct known KB misclassifications ────────────────
     out = _apply_kb_corrections(out)
 
-    # ── Fallback: classify KB-matched rows that lack a category ─────────────
-    out = _apply_fallback_classify(out)
-
     return out.drop(columns=["_text_clean"])
 
 
@@ -534,69 +531,4 @@ def _apply_kb_corrections(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-# ── Fallback classification for uncategorised KB matches ──────────────────
-# When the KB has a merchant keyword but the ``category`` column is empty,
-# the automaton returns matched=True with category="".  The pipeline treats
-# empty finv_category as unclassified, which is the #1 cause of our
-# coverage gap (84% of missed records).
-#
-from .fallback_rules import COMPILED_FALLBACK, COMPILED_ENT_REFINEMENT
 
-
-def _apply_fallback_classify(df: pd.DataFrame) -> pd.DataFrame:
-    """Assign a category to KB-matched rows whose category column was empty.
-
-    Only touches rows where ``matched == True`` and ``finv_category == ""``.
-    Checks the matched counterparty name first, then the full transaction text.
-    Uses pre-compiled per-category combined regexes (~22 instead of ~1,119).
-    """
-    out = df.copy()
-
-    fallback_mask = (
-        out["matched"].eq(True)
-        & (out["finv_category"].eq("") | out["finv_category"].isna())
-    )
-    if not fallback_mask.any():
-        return out
-
-    raw_text = out.get("text", pd.Series("", index=out.index))
-
-    for idx in out[fallback_mask].index:
-        text = str(raw_text.get(idx, "")).upper()
-        counterparty = str(out.at[idx, "counterparty"] or "").upper()
-        category = ""
-
-        # Step 1: check matched counterparty name (per-category compiled regex)
-        for cat, combined_re in COMPILED_FALLBACK:
-            if combined_re.search(counterparty):
-                category = cat
-                break
-
-        # Step 2: fall back to full transaction text
-        if not category:
-            for cat, combined_re in COMPILED_FALLBACK:
-                if combined_re.search(text):
-                    category = cat
-                    break
-
-        if not category:
-            continue
-
-        # Refine: Dining Out -> Entertainment for sports/cinema venues
-        if category == "Dining Out":
-            for cat, combined_re in COMPILED_ENT_REFINEMENT:
-                if combined_re.search(text) or combined_re.search(counterparty):
-                    category = cat
-                    break
-
-        out.at[idx, "finv_category"] = category
-        out.at[idx, "classification_rule_id"] = "merchant_kb_fallback"
-        out.at[idx, "classification_reason"] = format_classification_reason(
-            category=category,
-            rule="merchant_kb_fallback",
-            evidence=[
-                f"counterparty={out.at[idx, 'counterparty']}",
-            ],
-        )
-
-    return out

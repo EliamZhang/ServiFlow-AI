@@ -25,100 +25,24 @@ import pandas as pd
 from openpyxl.styles import Font, PatternFill
 from openpyxl.utils import get_column_letter
 
+from classification_core.category_mapping import (
+    ILLION_TO_OUR,
+    OUR_TO_ILLION,
+    UNMAPPABLE_CATS,
+    to_illion_category,
+)
+
 PROJECT_ROOT = Path(__file__).resolve().parent
 SAMPLE_CSV = PROJECT_ROOT / "sample.csv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "classification_report.xlsx"
 DEFAULT_RESULT = PROJECT_ROOT / "output" / "compare_result.xlsx"
 
-# ── category name mapping ──────────────────────────────────────────────
-#
-# Two mapping tables for human review:
-#   OUR_TO_ILLION  — our finv_category → illion category (drives agreement check)
-#   ILLION_TO_OUR  — illion category → our finv_category(s)  (reverse reference)
-#
-# Exact name matches work automatically and are omitted from OUR_TO_ILLION.
-# Categories in UNMAPPABLE_OUR_CATS have no illion equivalent and are
-# excluded from agreement-rate calculation.
-
-OUR_TO_ILLION: dict[str, str] = {
-    # -- singular / plural --
-    "fee":                   "Fees",
-    "Credit Card Repayment": "Credit Card Repayments",
-
-    # -- case --
-    "centrelink":            "Centrelink",
-
-    # -- income: our fine-grained → illion "Wages" --
-    "salary_payg":           "Wages",
-    "salary_packaging":      "Wages",
-    "self_employed_gig":     "Wages",
-
-    # -- liability: our fine-grained → illion coarse-grained --
-    "BNPL":                  "Non SACC Loans",
-    "Wage Advance":          "Non SACC Loans",
-    "Personal Loan Unknown": "Non SACC Loans",
-    "Contract Loans":        "Non SACC Loans",
-    "LOC":                   "Non SACC Loans",
-    "Home Loan":             "Non SACC Loans",
-    "Car Loan":              "Non SACC Loans",
-}
-
-# Our categories that illion has NO equivalent for.
-# Rows with these labels are excluded from agreement-rate calculation.
-UNMAPPABLE_OUR_CATS: frozenset[str] = frozenset({
-    "Debt Consolidation",
+# Illion categories that do NOT count as "illion covered".
+# "All Other Credits" is a catch-all — illion uses it when they cannot
+# classify a credit transaction, so we treat it as uncovered.
+ILLION_UNCOVERED_CATS: frozenset[str] = frozenset({
+    "All Other Credits",
 })
-
-# ── reverse mapping (illion → our labels) for human review ─────────
-# 1:1 exact-name matches are marked as "[同名]" for readability.
-
-ILLION_TO_OUR: dict[str, list[str]] = {
-    # -- exact name match (1:1) --
-    "Internal Transfer":            ["[同名] Internal Transfer"],
-    "External Transfers":           ["[同名] External Transfers"],
-    "Dining Out":                   ["[同名] Dining Out"],
-    "Retail":                       ["[同名] Retail"],
-    "Groceries":                    ["[同名] Groceries"],
-    "Health":                       ["[同名] Health"],
-    "Automotive":                   ["[同名] Automotive"],
-    "Entertainment":                ["[同名] Entertainment"],
-    "Home Improvement":             ["[同名] Home Improvement"],
-    "Travel":                       ["[同名] Travel"],
-    "Information":                  ["[同名] Information"],
-    "Personal Care":                ["[同名] Personal Care"],
-    "Transport":                    ["[同名] Transport"],
-    "Education":                    ["[同名] Education"],
-    "Gambling":                     ["[同名] Gambling"],
-    "Gyms and other memberships":   ["[同名] Gyms and other memberships"],
-    "Pet Care":                     ["[同名] Pet Care"],
-    "Donations":                    ["[同名] Donations"],
-    "Utilities":                    ["[同名] Utilities"],
-    "Telecommunications":           ["[同名] Telecommunications"],
-    "Rent":                         ["[同名] Rent"],
-    "Department Stores":            ["[同名] Department Stores"],
-    "Insurance":                    ["[同名] Insurance"],
-    "Subscription TV":              ["[同名] Subscription TV"],
-    "Dishonours":                   ["[同名] Dishonours"],
-    "Debt Collection":              ["[同名] Debt Collection"],
-    "Overdrawn":                    ["[同名] Overdrawn"],
-    "SACC Loans":                   ["[同名] SACC Loans"],
-
-    # -- 1:1, different names --
-    "Fees":                         ["fee"],
-    "Centrelink":                   ["centrelink"],
-    "Credit Card Repayments":       ["Credit Card Repayment"],
-
-    # -- 1:N: illion lumps together our fine-grained categories --
-    "Wages":                        ["salary_payg", "salary_packaging", "self_employed_gig"],
-    "Non SACC Loans":               ["BNPL", "Wage Advance", "Non SACC Loans",
-                                     "Personal Loan Unknown", "Contract Loans", "LOC",
-                                     "Home Loan", "Car Loan"],
-
-    # -- illion categories with no direct equivalent in our engine --
-    "All Other Credits":            [],   # 我们没有兜底收入类，可能分散在多个标签
-}
-
-# Columns to hide in the detail/confusion sheets.
 _HIDDEN_COLS = frozenset({
     "sample_datetime", "job_id", "transaction_id", "account_type",
     "credit_limit", "trx_type", "bsb", "account_no",
@@ -150,7 +74,7 @@ def _agree(our: str, illion_cat: str) -> bool | None:
     Returns None when our category has no illion equivalent (unmappable).
     """
     our, illion_cat = str(our).strip(), str(illion_cat).strip()
-    if our in UNMAPPABLE_OUR_CATS:
+    if our in UNMAPPABLE_CATS:
         return None
     return _map(our) == illion_cat
 
@@ -298,7 +222,7 @@ def _colour_disagreement_flow(worksheet) -> None:
     for row in range(2, worksheet.max_row + 1):
         our_cat = str(worksheet.cell(row=row, column=our_col).value or "")
         il_cat = str(worksheet.cell(row=row, column=il_col).value or "")
-        if our_cat in UNMAPPABLE_OUR_CATS:
+        if our_cat in UNMAPPABLE_CATS:
             # unmappable — leave neutral (no colour)
             continue
         mapped = OUR_TO_ILLION.get(our_cat, our_cat)
@@ -359,7 +283,7 @@ def run(
     illion_cp = df["_illion_cp"]
 
     our_fc_ok = _is_classified(our_fc)
-    illion_ok = _is_classified(illion_cat)
+    illion_ok = _is_classified(illion_cat) & ~illion_cat.isin(ILLION_UNCOVERED_CATS)
     our_cp_ok = _is_classified(our_cp)
     illion_cp_ok = _is_classified(illion_cp)
 
@@ -400,7 +324,7 @@ def run(
     # ── 2. Agreement summary ──────────────────────────────────────────────
     n_both = int(both_mask.sum())
     # Exclude rows where our category has no illion equivalent.
-    comparable_mask = both_mask & ~our_fc.isin(UNMAPPABLE_OUR_CATS)
+    comparable_mask = both_mask & ~our_fc.isin(UNMAPPABLE_CATS)
     n_comparable = int(comparable_mask.sum())
     n_unmappable = n_both - n_comparable
 
@@ -436,7 +360,7 @@ def run(
         }
 
         if total_n > 0:
-            if our_cat_name in UNMAPPABLE_OUR_CATS:
+            if our_cat_name in UNMAPPABLE_CATS:
                 row["agree_pct"] = None  # 不可比较：illion 无对应类别
             else:
                 ag = sum(
@@ -522,7 +446,7 @@ def run(
     cat_summary_rows = []
     for our_cat_name in pivot.index:
         r = pivot.loc[our_cat_name]
-        if our_cat_name in UNMAPPABLE_OUR_CATS:
+        if our_cat_name in UNMAPPABLE_CATS:
             agree_str = "N/A (illion无此类别)"
         elif r["agree_pct"] and r["agree_pct"] > 0:
             agree_str = f"{r['agree_pct']:.0f}%"

@@ -39,8 +39,8 @@ class CurrentSampleIntegrationTests(unittest.TestCase):
         # All engines see all transactions; later engines overwrite earlier ones.
         # These counts reflect the current sample.csv with the row-level
         # overwrite semantics.
-        self.assertEqual(int(counts["initial"]), 21204)
-        self.assertEqual(int(counts["transfer"]), 17988)
+        self.assertEqual(int(counts["initial"]), 21206)
+        self.assertEqual(int(counts["transfer"]), 17986)
         self.assertEqual(int(counts["liability"]), 5943)
         self.assertEqual(int(counts["income"]), 684)
         self.assertEqual(int(counts["fee"]), 218)

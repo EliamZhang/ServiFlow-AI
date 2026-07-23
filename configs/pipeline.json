@@ -1,12 +1,12 @@
 {
   "pipeline": [
     {
-      "engine_id": "fee",
+      "engine_id": "initial",
       "priority": 1,
       "enabled": true
     },
     {
-      "engine_id": "initial",
+      "engine_id": "fee",
       "priority": 50,
       "enabled": true
     },

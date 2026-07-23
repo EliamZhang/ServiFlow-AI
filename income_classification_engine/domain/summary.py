@@ -5,6 +5,8 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
+from classification_core.category_mapping import to_illion_category
+
 
 WEEKDAY_NAMES = {
     0: "Monday",
@@ -19,6 +21,7 @@ WEEKDAY_NAMES = {
 SUMMARY_COLUMNS = [
     "finv_category",
     "stream_id",
+    "income_category",
     "bank_account_id",
     "account_type",
     "application_id",
@@ -238,8 +241,11 @@ def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": first_non_null(group["finv_category"]),
+                "finv_category": to_illion_category(
+                    str(first_non_null(group["finv_category"]) or "")
+                ),
                 "stream_id": first_non_null(group["stream_id"]),
+                "income_category": first_non_null(group["finv_category"]),
                 "bank_account_id": first_non_null(group["bank_account_id"]),
                 "account_type": first_non_null(group["account_type"])
                 if "account_type" in group.columns

@@ -1,0 +1,33 @@
+keyword,counterparty,match_type
+Biz Core,Biz Core,keyword
+DBS XPLOR,Debitsuccess Transfer,keyword
+Zepto,Zepto Payment,keyword
+ROCKET REMIT,Rocket Remit,keyword
+Live Payments,Live Payments Transfer,keyword
+PAYPAL;PAYPAL AUSTRALIA;PP*,Paypal Transfer,keyword
+WISE SYDNEY;WISE AUSTRALIA,Wise,keyword
+WORLDREMIT,WorldRemit,keyword
+WESTERN UNION;WESTERN UNION\WU;WESTERN UNION SYDNEY,Western Union,keyword
+IMT ;RTGS ;RTGS FUNDS CREDIT;SWIFT ,Money Transfer Services,keyword
+RMTLY;NIUM;DIRECT CREDIT NIUM,Money Transfers,keyword
+WORLDWIDE WALLET,Travel Money,keyword
+TFR WESTPAC;WESTPAC CHO;WESTPAC LIF;WESTPAC ESA;WESTPAC MAXIMISER,WESTPAC Funds Transfer,keyword
+ORANGE EVERYDAY;SAVINGS MAXIMISER;ORANGE ONE,ING Funds Transfer,keyword
+IBANK TRF;WDL THPAR,GREATER Funds Transfer,keyword
+TO PHONE;TO EMAIL,BANKWEST Funds Transfer,keyword
+HOL TRANSFER,HERITAGE Funds Transfer,keyword
+SUNCORP,SUNCORP Funds Transfer,keyword
+COMMBANK APP;NETBANK,CBA Funds Transfer,keyword
+FAST TRANSFER FROM;FAST TRANSFER TO,CBA Funds Transfer,keyword
+OSKO;DEPOSIT-OSKO,Osko,keyword
+ANZ MOBILE BANKING;ANZ M-BANKING;ANZ INTERNET BANKING;ANZ BANKING,ANZ Funds Transfer,keyword
+AUTOMATIC PAYMENT,Automatic Transfers Credit,keyword
+DIRECT DEBIT,Direct Debit Transfer,keyword
+NPP TRANSFER;NPP PAYMENT;PAYID,Funds Related Transfer,keyword
+INTERNET WITHDRAWAL;INTERNET DEPOSIT;INTERNET EXTERNAL TRANSFER;PERIODIC TRANSFER,Funds Transfer,keyword
+TFR FROM;TFR TO,Other Funds Transfer,keyword
+TFD;TFC;NECTR,Other Transfers,keyword
+BENDIGO BANK,Other Transfers,keyword
+BPAY;BPAY TRANSFER,BPAY Transfer,keyword
+TRANSFER CREDIT;TRANSFER DEBIT,Miscellaneous Funds Transfer,keyword
+TRANSFERRED TO;TRANSFERRED FROM,Funds Transfer,keyword

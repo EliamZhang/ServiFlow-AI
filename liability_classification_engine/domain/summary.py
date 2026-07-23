@@ -11,9 +11,12 @@ import re
 
 import pandas as pd
 
+from classification_core.category_mapping import to_illion_category
+
 SUMMARY_COLUMNS = [
     "finv_category",
     "stream_id",
+    "liability_category",
     "bank_account_id",
     "bank",
     "account_type",
@@ -607,7 +610,8 @@ def build_bnpl_summary(
 
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -721,7 +725,8 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -829,7 +834,8 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -875,7 +881,8 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
     ):
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -916,7 +923,8 @@ def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     ):
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -957,7 +965,8 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     ):
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -998,7 +1007,8 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
     ):
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -1039,7 +1049,8 @@ def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     ):
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -1080,7 +1091,8 @@ def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     ):
         summary_rows.append(
             {
-                "finv_category": finv_category,
+                "finv_category": to_illion_category(finv_category),
+                "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),

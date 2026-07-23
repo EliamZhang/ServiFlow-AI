@@ -1,0 +1,5 @@
+keyword,match_type,exclusion_reason,priority,description
+"^TRANSFER\s+(?:CREDIT|DEBIT)\s+(?!ONLINE\b)(?:[A-Z][A-Z\s.'\-]+?)(?:\s+[A-Z]\d{9,})?$",regex,"NAB P2P transfer to named person",90,"NAB TRANSFER CREDIT/DEBIT to named person (not ONLINE/Linked Acc)"
+"^TRANSFER\s+(?:CREDIT|DEBIT)\s+(?!ONLINE\b)[A-Z][A-Z\s.'\-]+(?:CREDIT)?$",regex,"NAB P2P transfer short form",90,"NAB TRANSFER CREDIT/DEBIT to named person short form"
+IBANK TRF,keyword,"Greater Bank P2P transfer",85,"Greater Bank internal transfers between different people — exclude from pairing"
+PAYMENT REF,keyword,"International payment reference",75,"International payment reference identifier"

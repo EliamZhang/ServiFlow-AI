@@ -1,0 +1,13 @@
+keyword,target_category,dr_cr,match_type,priority,description
+"INTERNAL TRANSFER",Internal Transfer,,keyword,96,"Explicit internal transfer label — any text containing this phrase"
+"LINKED ACC;ACC TRNS;ACC TRANSFER",Internal Transfer,,keyword,95,"Linked account / account transfer indicators"
+"INTERNET DEPOSIT",Internal Transfer,,keyword,94,"CommBank internet deposit from own account"
+"INTERNET WITHDRAWAL",Internal Transfer,,keyword,93,"CommBank internet withdrawal to own account"
+"INTERNET TRANSFER CREDIT",Internal Transfer,,keyword,89,"Internet transfer credit — own account"
+"INTERNET TRANSFER DEBIT",Internal Transfer,,keyword,89,"Internet transfer debit — own account"
+"IBANK TRF REF",Internal Transfer,,keyword,93,"Greater Bank mobile own-account transfer"
+"IB TRANSFER",Internal Transfer,,keyword,92,"IB transfer between own accounts"
+"MB TRANSFER FROM;MB TRANSFER TO",Internal Transfer,,keyword,92,"Mobile banking own-account transfer"
+"ANZ M-BANKING FUNDS TFER;ANZ INTERNET BANKING FUNDS TFER",Internal Transfer,,keyword,91,"ANZ internal funds transfer"
+"TFR WESTPAC;WESTPAC CHO;WESTPAC LIF;WESTPAC ESA;WESTPAC MAXIMISER",Internal Transfer,,keyword,90,"Westpac own-account transfer indicator"
+"COMMBANK APP",External Transfers,,keyword,50,"CommBank app person-to-person — check as external when masked pattern not matched"
