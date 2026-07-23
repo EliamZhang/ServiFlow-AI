@@ -780,10 +780,11 @@ def _build_transfer_rule_name(df: pd.DataFrame) -> pd.Series:
 # =============================================================================
 #
 # Uses a data-driven CSV knowledge base (``transfer_counterparty_rules.csv``)
-# to derive standardised counterparty (third_party) labels for External Transfers.
+# to derive standardised counterparty (third_party) labels for ALL transfer
+# rows — both Internal and External Transfers follow the same keyword-matching
+# logic.  First match wins.
 #
-#   Internal Transfer  →  "Internal Transfer Debit" / "Internal Transfer Credit"
-#   External Transfer  →  label from knowledge base, or "Miscellaneous Funds Transfer"
+#   Any Transfer  →  label from knowledge base, or "Miscellaneous Funds Transfer"
 #
 # The knowledge base follows the same design as the liability engine's
 # ``counterparty_keyword_rules.csv``: keywords are semicolon-separated and
@@ -792,56 +793,28 @@ def _build_transfer_rule_name(df: pd.DataFrame) -> pd.Series:
 # ``"Miscellaneous Funds Transfer"``.
 
 
-def _is_internal_transfer(row: pd.Series) -> bool:
-    """Determine if a row represents an internal transfer for counterparty labelling.
-
-    Uses the finv_category set by _separate_internal_external, which detects
-    internal transfers via the pairing rule: same application_id + transaction_date
-    + amount, with both debit and credit rows present.
-    """
-    finv_category = str(row.get("finv_category", "") or "")
-    return finv_category == "Internal Transfer"
-
-
 def _derive_counterparty(df: pd.DataFrame) -> pd.Series:
     """Extract a counterparty label matching third_party naming conventions.
 
-    For internal transfers the label is ``"Internal Transfer Debit"`` /
-    ``"Internal Transfer Credit"`` based on dr_cr direction.
+    Counterparty is determined **exclusively** by keyword matching against
+    the CSV knowledge base (``transfer_counterparty_rules.csv``), applied to
+    ALL transfer rows regardless of Internal/External category.
 
-    For external transfers the label is determined by the CSV knowledge base
-    (``transfer_counterparty_rules.csv``).  Rows that match no rule fall back
-    to ``"Miscellaneous Funds Transfer"``.
+    Rows that match no rule fall back to ``"Miscellaneous Funds Transfer"``.
     """
     text_col = df.get("text_norm", df.get("text", pd.Series("", index=df.index)))
-    dr_cr_col = (
-        df.get("dr_cr", pd.Series("", index=df.index))
-        .fillna("")
-        .astype(str)
-    )
 
     rules = _get_counterparty_rules()
 
     results = []
     for idx in df.index:
-        row = df.loc[idx]
-        is_internal = _is_internal_transfer(row)
-
-        if is_internal:
-            direction = (
-                "Debit"
-                if str(dr_cr_col.loc[idx] if idx in dr_cr_col.index else "").strip().lower() == "debit"
-                else "Credit"
-            )
-            results.append(f"Internal Transfer {direction}")
-        else:
-            text = str(text_col.loc[idx] if idx in text_col.index else "").strip()
-            counterparty = match_counterparty(
-                text,
-                rules,
-                fallback="Miscellaneous Funds Transfer",
-            )
-            results.append(counterparty)
+        text = str(text_col.loc[idx] if idx in text_col.index else "").strip()
+        counterparty = match_counterparty(
+            text,
+            rules,
+            fallback="Miscellaneous Funds Transfer",
+        )
+        results.append(counterparty)
 
     return pd.Series(results, index=df.index)
 

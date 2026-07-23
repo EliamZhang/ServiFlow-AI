@@ -29,5 +29,11 @@ TFR FROM;TFR TO,Other Funds Transfer,keyword
 TFD;TFC;NECTR,Other Transfers,keyword
 BENDIGO BANK,Other Transfers,keyword
 BPAY;BPAY TRANSFER,BPAY Transfer,keyword
+LINKED ACC TRNS,NAB Linked Account Transfer,keyword
+CREDIT CARD PAYMENT INTERNET PAYMENT,Credit Card Payment Transfer,keyword
+SCHEDULED PAYMENT TO A CBA ACCOUNT,CBA Scheduled Payment,keyword
+INTERNET TRANSFER CREDIT;INTERNET TRANSFER DEBIT,CBA Internet Transfer,keyword
+WAGEPAY,Wagepay Transfer,keyword
+PRESS PAY,PressPay Transfer,keyword
 TRANSFER CREDIT;TRANSFER DEBIT,Miscellaneous Funds Transfer,keyword
 TRANSFERRED TO;TRANSFERRED FROM,Funds Transfer,keyword

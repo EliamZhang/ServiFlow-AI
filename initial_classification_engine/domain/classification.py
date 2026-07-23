@@ -179,8 +179,7 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
     total = len(seen)
     for kw, merchant, cat in seen:
         uniqueness = math.log(total / len(_kw_merchants[kw]))
-        completeness = 2.0 if cat else 1.0
-        purity = uniqueness * completeness
+        purity = uniqueness
         automaton.add_word(kw, (kw, merchant, cat, purity))
 
     automaton.make_automaton()
@@ -417,8 +416,7 @@ def match_transactions(
 
         text_len = len(text_clean)
 
-        best_cat: tuple[float, str, str, str] | None = None
-        best_uncat: tuple[float, str, str, str] | None = None
+        best: tuple[float, str, str, str] | None = None
 
         # pyahocorasick.iter() yields (end_pos, (kw, merchant, cat, purity)).
         for _end_pos, (kw, merchant, cat, purity) in automaton.iter(text_clean):
@@ -441,17 +439,8 @@ def match_transactions(
             position_weight = 1.0 - pos / text_len
             score = purity * position_weight
 
-            entry = (score, kw, merchant, cat)
-
-            if cat:
-                if best_cat is None or score > best_cat[0]:
-                    best_cat = entry
-            else:
-                if best_uncat is None or score > best_uncat[0]:
-                    best_uncat = entry
-
-        # Prefer categorised; fall back to uncategorised.
-        best = best_cat or best_uncat
+            if best is None or score > best[0]:
+                best = (score, kw, merchant, cat)
         if best is None:
             return (False, "", "", "", "", "")
 
