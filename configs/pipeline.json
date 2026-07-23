@@ -11,17 +11,17 @@
       "enabled": true
     },
     {
-      "engine_id": "income",
+      "engine_id": "transfer",
       "priority": 100,
       "enabled": true
     },
     {
-      "engine_id": "liability",
+      "engine_id": "income",
       "priority": 200,
       "enabled": true
     },
     {
-      "engine_id": "transfer",
+      "engine_id": "liability",
       "priority": 300,
       "enabled": true
     }

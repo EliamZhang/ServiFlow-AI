@@ -399,8 +399,8 @@ def run(
     cp_both = our_cp_ok & illion_cp_ok
     n_cp_both = int(cp_both.sum())
     cp_agree = (
-        our_cp[cp_both].astype(str).str.strip()
-        == illion_cp[cp_both].astype(str).str.strip()
+        our_cp[cp_both].astype(str).str.strip().str.upper()
+        == illion_cp[cp_both].astype(str).str.strip().str.upper()
     ).sum()
     counterparty_rows = [
         {"指标": "双方都有counterparty", "值": f"{n_cp_both:,}"},
