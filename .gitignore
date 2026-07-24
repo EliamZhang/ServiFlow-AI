@@ -5,3 +5,5 @@ __pycache__/
 .coverage
 initial_classification_engine/merchant_kb.csv
 run_liability/
+stopword_extract/
+docs/
