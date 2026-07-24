@@ -31,7 +31,12 @@ class LiabilityEngine:
         )
         details = result.transactions
         category = details["finv_category"].astype("string").str.strip()
-        matched = details[category.notna() & category.ne("")].copy()
+        matched = details[
+            category.notna()
+            & category.ne("")
+            & details["counterparty"].notna()
+            & details["counterparty"].astype("string").str.strip().ne("")
+        ].copy()
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
         predictions["matched"] = True
         predictions["counterparty"] = matched["counterparty"].values

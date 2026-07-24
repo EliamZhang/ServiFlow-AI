@@ -6,6 +6,11 @@
       "enabled": true
     },
     {
+      "engine_id": "dishonour",
+      "priority": 10,
+      "enabled": true
+    },
+    {
       "engine_id": "fee",
       "priority": 50,
       "enabled": true

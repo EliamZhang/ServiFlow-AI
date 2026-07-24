@@ -47,8 +47,6 @@ BNPL_LIMIT_COLUMNS = ["counterparty", "bnpl_max_fn_limit"]
 BNPL_LIMIT_SOURCE_COLUMNS = {"rate_type", "counterparty", "value"}
 FORTNIGHTLY = "fortnightly"
 MONEY_PRECISION = Decimal("0.01")
-WAGE_ADVANCE_TOTAL_MULTIPLIER = Decimal("1.05")
-WAGE_ADVANCE_RECENT_REPAY_RATE = Decimal("0.05")
 WEEKLY = "weekly"
 MONTHLY = "monthly"
 PERSONAL_LOAN_PRODUCT_TYPES = [
@@ -61,9 +59,6 @@ SUMMARY_GROUP_COLUMNS = [
     "finv_category",
     "stream_id",
 ]
-PLACEHOLDER_METRIC_VALUE = "-"
-
-
 def parse_decimal_amount(value: object) -> Decimal | None:
     if pd.isna(value):
         return None
@@ -304,35 +299,6 @@ def get_valid_credits(group: pd.DataFrame) -> pd.DataFrame:
     ]
 
 
-def get_latest_funding(
-    group: pd.DataFrame,
-) -> tuple[pd.Timestamp | pd.NaT, Decimal]:
-    valid_credits = get_valid_credits(group)
-    if valid_credits.empty:
-        return pd.NaT, Decimal("0")
-
-    funded_row = valid_credits.iloc[-1]
-    funded_transaction_date = funded_row["_transaction_date"]
-    funded_amount = parse_absolute_amount(funded_row["amount"]) or Decimal("0")
-    return funded_transaction_date, round_money(funded_amount)
-
-
-def get_successful_debits_after_date(
-    group: pd.DataFrame,
-    start_date: pd.Timestamp | pd.NaT,
-) -> pd.DataFrame:
-    failed_repayments = mark_failed_repayments(group)
-    debit_mask = group["dr_cr"].astype("string").str.casefold().eq("debit")
-    valid_debit_mask = debit_mask & ~failed_repayments
-    if pd.isna(start_date):
-        return sorted_stream_transactions(group.loc[valid_debit_mask].iloc[0:0].copy())
-
-    debits = group.loc[
-        valid_debit_mask & group["_transaction_date"].gt(start_date)
-    ].copy()
-    return sorted_stream_transactions(debits)
-
-
 def get_successful_debits(group: pd.DataFrame) -> pd.DataFrame:
     failed_repayments = mark_failed_repayments(group)
     debit_mask = group["dr_cr"].astype("string").str.casefold().eq("debit")
@@ -350,21 +316,27 @@ def sum_amounts(rows: pd.DataFrame, column: str = "amount") -> Decimal:
     ))
 
 
-def get_amount_series(rows: pd.DataFrame) -> list[Decimal]:
-    return [
+def calculate_mode_amount(rows: pd.DataFrame) -> Decimal:
+    """Return the most frequent debit amount; on tie, return the larger value."""
+    if rows.empty or "amount" not in rows.columns:
+        return Decimal("0")
+
+    amounts = [
         amount
         for amount in rows["amount"].map(parse_absolute_amount)
-        if amount is not None
+        if amount is not None and amount > 0
     ]
+    if not amounts:
+        return Decimal("0")
 
+    freq: dict[Decimal, int] = {}
+    for amount in amounts:
+        key = round_money(amount)
+        freq[key] = freq.get(key, 0) + 1
 
-def median_decimal(values: list[Decimal]) -> Decimal:
-    ordered = sorted(values)
-    count = len(ordered)
-    midpoint = count // 2
-    if count % 2 == 1:
-        return ordered[midpoint]
-    return (ordered[midpoint - 1] + ordered[midpoint]) / Decimal("2")
+    max_count = max(freq.values())
+    candidates = [amount for amount, count in freq.items() if count == max_count]
+    return max(candidates)
 
 
 def infer_frequency(
@@ -400,51 +372,6 @@ def infer_frequency(
     if approx_freq <= 18:
         return FORTNIGHTLY
     return MONTHLY
-
-
-def calculate_personal_loan_repayment_amount(
-    repayment_rows: pd.DataFrame,
-    funded_transaction_date: pd.Timestamp | pd.NaT,
-    transaction_end_date: pd.Timestamp | pd.NaT,
-) -> Decimal:
-    repayment_amounts = get_amount_series(repayment_rows)
-    repayment_count = len(repayment_amounts)
-    if repayment_count == 0:
-        return Decimal("0")
-    if repayment_count == 1:
-        return round_money(repayment_amounts[0])
-    if repayment_count == 2:
-        return round_money(sum(repayment_amounts) / Decimal("2"))
-
-    min_amount = min(repayment_amounts)
-    max_amount = max(repayment_amounts)
-    consistency_ratio = (
-        Decimal("0")
-        if max_amount == 0
-        else min_amount / max_amount
-    )
-    recent_three_amounts = repayment_amounts[-3:]
-    if consistency_ratio > Decimal("0.90"):
-        return round_money(median_decimal(recent_three_amounts))
-
-    if pd.isna(funded_transaction_date) or pd.isna(transaction_end_date):
-        return round_money(median_decimal(recent_three_amounts))
-
-    history_days = max(
-        0,
-        (transaction_end_date.date() - funded_transaction_date.date()).days,
-    )
-    if history_days >= 90:
-        lookback_start = transaction_end_date - pd.Timedelta(days=90)
-        lookback_rows = repayment_rows[
-            repayment_rows["_transaction_date"].ge(lookback_start)
-        ]
-        amount_90_days = sum_amounts(lookback_rows)
-        return round_money(abs((amount_90_days * Decimal("4")) / Decimal("26")))
-
-    actual_days = max(1, history_days)
-    total_repaid = sum_amounts(repayment_rows)
-    return round_money(abs((total_repaid / Decimal(actual_days)) * Decimal("14")))
 
 
 def calculate_recent_fn_repay_amount(
@@ -608,6 +535,8 @@ def build_bnpl_summary(
                 recent_60_debit_amount * Decimal("6") / Decimal("26")
             )
 
+        mode_amount = calculate_mode_amount(valid_debits)
+
         summary_rows.append(
             {
                 "finv_category": to_illion_category(finv_category),
@@ -627,7 +556,7 @@ def build_bnpl_summary(
                 "frequency_day": frequency_day_date,
                 "predicted_closing_date": None,
                 "_sample_datetime": sample_datetime,
-                "_recent_30_debit_amount": recent_30_debit_amount,
+                "_mode_amount": mode_amount,
                 "_raw_recent_fn": raw_recent_fn,
             }
         )
@@ -658,11 +587,10 @@ def build_bnpl_summary(
     for row_id, row in summary.iterrows():
         counterparty_key = normalize_match_key(row["counterparty"])
         limit_amount = limits_by_counterparty.get(counterparty_key)
+        status = row["status"]
+        is_closed = status == "Closed"
 
-        if (
-            row["status"] == "Closed"
-            or row["_recent_30_debit_amount"] < Decimal("1.00")
-        ):
+        if is_closed:
             recent_fn_repay_amount = Decimal("0")
         else:
             recent_fn_repay_amount = row["_raw_recent_fn"]
@@ -670,10 +598,14 @@ def build_bnpl_summary(
                 recent_fn_repay_amount = min(recent_fn_repay_amount, limit_amount)
 
         recent_fn_repay_amount = round_money(recent_fn_repay_amount)
+        summary.at[row_id, "recent_fn_repay_amount"] = decimal_to_output(recent_fn_repay_amount)
 
-        numeric_recent = decimal_to_output(recent_fn_repay_amount)
-        summary.at[row_id, "recent_fn_repay_amount"] = numeric_recent
-        summary.at[row_id, "repayment_amount"] = numeric_recent
+        if is_closed:
+            summary.at[row_id, "repayment_amount"] = None
+        else:
+            summary.at[row_id, "repayment_amount"] = decimal_to_output(
+                row["_mode_amount"]
+            )
 
     summary["transaction_start_date"] = summary["transaction_start_date"].dt.date
     summary["transaction_end_date"] = summary["transaction_end_date"].dt.date
@@ -696,32 +628,75 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
-        funded_transaction_date, funded_amount = get_latest_funding(group)
-        eligible_debits = get_successful_debits_after_date(
-            group,
-            funded_transaction_date,
-        )
+        valid_credits = get_valid_credits(group)
+        funded_amount = sum_amounts(valid_credits)
+        eligible_debits = get_successful_debits(group)
         repaid_amount = sum_amounts(eligible_debits)
 
-        total_remaining = round_money(
-            funded_amount * WAGE_ADVANCE_TOTAL_MULTIPLIER
+        frequency = infer_frequency(pd.NaT, eligible_debits)
+
+        transaction_end_date = group["_transaction_date"].max()
+        sample_datetime = group["_sample_datetime"].max()
+
+        if funded_amount != 0:
+            lower_bound = funded_amount * Decimal("0.75")
+            upper_bound = funded_amount * Decimal("1.25")
+            if repaid_amount <= lower_bound:
+                status = "Ongoing"
+            elif repaid_amount <= upper_bound:
+                status = "Closing Soon"
+            else:
+                status = "Closed"
+        elif (
+            not pd.isna(transaction_end_date)
+            and not pd.isna(sample_datetime)
+            and transaction_end_date >= (sample_datetime - pd.Timedelta(days=33))
+        ):
+            status = "Ongoing"
+        else:
+            status = "Closed"
+
+        # Last non-dishonoured transaction check
+        valid_all = sorted_stream_transactions(group)[
+            ~sorted_stream_transactions(group)["is_dishonours"].map(is_yes)
+        ]
+        last_txn_is_credit = (
+            not valid_all.empty
+            and normalize_text(valid_all.iloc[-1]["dr_cr"]).casefold() == "credit"
         )
-        repayment_remaining = round_money(total_remaining - repaid_amount)
-        if repayment_remaining <= 0:
+
+        # Latest non-dishonour credit amount and debits after it
+        latest_credit_amount = Decimal("0")
+        repaid_after_latest_credit = Decimal("0")
+        if not valid_credits.empty:
+            latest_credit_amount = (
+                parse_absolute_amount(valid_credits.iloc[-1]["amount"]) or Decimal("0")
+            )
+            latest_credit_date = valid_credits.iloc[-1]["_transaction_date"]
+            debits_after = eligible_debits[
+                eligible_debits["_transaction_date"] > latest_credit_date
+            ]
+            repaid_after_latest_credit = sum_amounts(debits_after)
+
+        is_closed = status == "Closed"
+        if is_closed or last_txn_is_credit:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
+            repayment_amount = Decimal("0")
             recent_fn_repay_amount = Decimal("0")
         else:
-            recent_fn_repay_amount = round_money(
-                funded_amount * WAGE_ADVANCE_RECENT_REPAY_RATE
-            )
-
-        status = (
-            "Closed"
-            if (
-                recent_fn_repay_amount == 0
-                and repaid_amount >= total_remaining
-            )
-            else "Ongoing"
-        )
+            # Latest successful debit amount
+            if not eligible_debits.empty:
+                repayment_amount = (
+                    parse_absolute_amount(eligible_debits.iloc[-1]["amount"]) or Decimal("0")
+                )
+            else:
+                repayment_amount = Decimal("0")
+            if repaid_after_latest_credit >= round_money(latest_credit_amount * Decimal("1.05")):
+                recent_fn_repay_amount = Decimal("0")
+            else:
+                recent_fn_repay_amount = round_money(latest_credit_amount * Decimal("0.05"))
 
         summary_rows.append(
             {
@@ -732,15 +707,17 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
+                "transaction_end_date": transaction_end_date,
                 "status": status,
                 "funded_amount": decimal_to_output(funded_amount),
                 "repaid_amount": decimal_to_output(repaid_amount),
-                "repayment_amount": decimal_to_output(recent_fn_repay_amount),
-                "recent_fn_repay_amount": decimal_to_output(
-                    recent_fn_repay_amount
+                "repayment_amount": (
+                    None if (is_closed or last_txn_is_credit) else decimal_to_output(repayment_amount)
                 ),
-                "frequency": FORTNIGHTLY,
+                "recent_fn_repay_amount": (
+                    None if recent_fn_repay_amount == Decimal("0") else decimal_to_output(recent_fn_repay_amount)
+                ),
+                "frequency": frequency,
                 "frequency_day": calculate_frequency_day(
                     eligible_debits,
                     due_date_columns,
@@ -777,16 +754,17 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
-        funded_transaction_date, funded_amount = get_latest_funding(group)
-        all_repayment_rows = get_successful_debits(group)
-        if pd.isna(funded_transaction_date):
-            repayment_rows = all_repayment_rows
-        else:
-            repayment_rows = get_successful_debits_after_date(
-                group,
-                funded_transaction_date,
-            )
+        funded_amount = sum_amounts(get_valid_credits(group))
+        repayment_rows = get_successful_debits(group)
         repaid_amount = sum_amounts(repayment_rows)
+
+        sorted_debits = sorted_stream_transactions(repayment_rows)
+        mode_amount = Decimal("0")
+        if len(sorted_debits) > 0:
+            mode_amount = (
+                parse_absolute_amount(sorted_debits.iloc[-1]["amount"]) or Decimal("0")
+            )
+
         transaction_end_date = group["_transaction_date"].max()
         sample_datetime = group["_sample_datetime"].max()
         status = calculate_personal_loan_status(
@@ -795,33 +773,22 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
             transaction_end_date,
             sample_datetime,
         )
-        if status == "Closed":
-            metric_repayment_rows = repayment_rows
+
+        frequency = infer_frequency(pd.NaT, repayment_rows)
+
+        is_closed = status == "Closed"
+        if is_closed:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
             repayment_amount = Decimal("0")
             recent_fn_repay_amount = Decimal("0")
         else:
-            metric_repayment_rows = (
-                repayment_rows
-                if not repayment_rows.empty
-                else all_repayment_rows
-            )
-            repayment_amount = calculate_personal_loan_repayment_amount(
-                metric_repayment_rows,
-                funded_transaction_date,
-                transaction_end_date,
-            )
+            repayment_amount = mode_amount
             recent_fn_repay_amount = calculate_recent_fn_repay_amount(
-                repayment_amount,
-                sum_amounts(metric_repayment_rows),
-                infer_frequency(
-                    funded_transaction_date,
-                    metric_repayment_rows,
-                ),
+                repayment_amount, repaid_amount, frequency
             )
-        frequency = infer_frequency(
-            funded_transaction_date,
-            metric_repayment_rows,
-        )
+
         predicted_closing_date = calculate_predicted_closing_date(
             normalize_text(stream_id_value),
             status,
@@ -845,10 +812,10 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "status": status,
                 "funded_amount": decimal_to_output(funded_amount),
                 "repaid_amount": decimal_to_output(repaid_amount),
-                "repayment_amount": decimal_to_output(repayment_amount),
-                "recent_fn_repay_amount": decimal_to_output(
-                    recent_fn_repay_amount
+                "repayment_amount": (
+                    None if is_closed else decimal_to_output(repayment_amount)
                 ),
+                "recent_fn_repay_amount": decimal_to_output(recent_fn_repay_amount),
                 "frequency": frequency,
                 "frequency_day": calculate_frequency_day(
                     repayment_rows,
@@ -865,13 +832,14 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one placeholder summary row per bank stream."""
+    """Return one summary row per bank (Credit Card Repayment) stream."""
 
     bank = filter_product_streams(df, "Credit Card Repayment")
 
     if bank.empty:
         return empty_summary()
 
+    due_date_columns = get_due_date_columns(bank)
     summary_rows: list[dict[str, object]] = []
 
     for (_, _, finv_category, stream_id_value), group in bank.groupby(
@@ -879,6 +847,48 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
+        funded_amount = sum_amounts(get_valid_credits(group))
+        eligible_debits = get_successful_debits(group)
+        repaid_amount = sum_amounts(eligible_debits)
+
+        mode_amount = calculate_mode_amount(eligible_debits)
+
+        frequency = infer_frequency(pd.NaT, eligible_debits)
+
+        transaction_end_date = group["_transaction_date"].max()
+        sample_datetime = group["_sample_datetime"].max()
+
+        if funded_amount != 0:
+            lower_bound = funded_amount * Decimal("0.75")
+            upper_bound = funded_amount * Decimal("1.25")
+            if repaid_amount <= lower_bound:
+                status = "Ongoing"
+            elif repaid_amount <= upper_bound:
+                status = "Closing Soon"
+            else:
+                status = "Closed"
+        elif (
+            not pd.isna(transaction_end_date)
+            and not pd.isna(sample_datetime)
+            and transaction_end_date >= (sample_datetime - pd.Timedelta(days=33))
+        ):
+            status = "Ongoing"
+        else:
+            status = "Closed"
+
+        is_closed = status == "Closed"
+        if is_closed:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        else:
+            repayment_amount = mode_amount
+            recent_fn_repay_amount = calculate_recent_fn_repay_amount(
+                repayment_amount, repaid_amount, frequency
+            )
+
         summary_rows.append(
             {
                 "finv_category": to_illion_category(finv_category),
@@ -888,15 +898,20 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
-                "status": PLACEHOLDER_METRIC_VALUE,
-                "funded_amount": PLACEHOLDER_METRIC_VALUE,
-                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
-                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
-                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
-                "frequency": PLACEHOLDER_METRIC_VALUE,
-                "frequency_day": PLACEHOLDER_METRIC_VALUE,
-                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+                "transaction_end_date": transaction_end_date,
+                "status": status,
+                "funded_amount": decimal_to_output(funded_amount),
+                "repaid_amount": decimal_to_output(repaid_amount),
+                "repayment_amount": (
+                    None if is_closed else decimal_to_output(repayment_amount)
+                ),
+                "recent_fn_repay_amount": decimal_to_output(recent_fn_repay_amount),
+                "frequency": frequency,
+                "frequency_day": calculate_frequency_day(
+                    eligible_debits,
+                    due_date_columns,
+                ),
+                "predicted_closing_date": None,
             }
         )
 
@@ -907,13 +922,14 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one placeholder summary row per home-loan stream."""
+    """Return one summary row per home-loan stream."""
 
     home_loan = filter_product_streams(df, "Home Loan")
 
     if home_loan.empty:
         return empty_summary()
 
+    due_date_columns = get_due_date_columns(home_loan)
     summary_rows: list[dict[str, object]] = []
 
     for (_, _, finv_category, stream_id_value), group in home_loan.groupby(
@@ -921,6 +937,48 @@ def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
+        funded_amount = sum_amounts(get_valid_credits(group))
+        eligible_debits = get_successful_debits(group)
+        repaid_amount = sum_amounts(eligible_debits)
+
+        mode_amount = calculate_mode_amount(eligible_debits)
+
+        frequency = infer_frequency(pd.NaT, eligible_debits)
+
+        transaction_end_date = group["_transaction_date"].max()
+        sample_datetime = group["_sample_datetime"].max()
+
+        if funded_amount != 0:
+            lower_bound = funded_amount * Decimal("0.75")
+            upper_bound = funded_amount * Decimal("1.25")
+            if repaid_amount <= lower_bound:
+                status = "Ongoing"
+            elif repaid_amount <= upper_bound:
+                status = "Closing Soon"
+            else:
+                status = "Closed"
+        elif (
+            not pd.isna(transaction_end_date)
+            and not pd.isna(sample_datetime)
+            and transaction_end_date >= (sample_datetime - pd.Timedelta(days=33))
+        ):
+            status = "Ongoing"
+        else:
+            status = "Closed"
+
+        is_closed = status == "Closed"
+        if is_closed:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        else:
+            repayment_amount = mode_amount
+            recent_fn_repay_amount = calculate_recent_fn_repay_amount(
+                repayment_amount, repaid_amount, frequency
+            )
+
         summary_rows.append(
             {
                 "finv_category": to_illion_category(finv_category),
@@ -930,15 +988,20 @@ def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
-                "status": PLACEHOLDER_METRIC_VALUE,
-                "funded_amount": PLACEHOLDER_METRIC_VALUE,
-                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
-                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
-                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
-                "frequency": PLACEHOLDER_METRIC_VALUE,
-                "frequency_day": PLACEHOLDER_METRIC_VALUE,
-                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+                "transaction_end_date": transaction_end_date,
+                "status": status,
+                "funded_amount": decimal_to_output(funded_amount),
+                "repaid_amount": decimal_to_output(repaid_amount),
+                "repayment_amount": (
+                    None if is_closed else decimal_to_output(repayment_amount)
+                ),
+                "recent_fn_repay_amount": decimal_to_output(recent_fn_repay_amount),
+                "frequency": frequency,
+                "frequency_day": calculate_frequency_day(
+                    eligible_debits,
+                    due_date_columns,
+                ),
+                "predicted_closing_date": None,
             }
         )
 
@@ -949,13 +1012,14 @@ def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one placeholder summary row per contract-loan stream."""
+    """Return one summary row per contract-loan stream."""
 
     contract_loan = filter_product_streams(df, "Contract Loans")
 
     if contract_loan.empty:
         return empty_summary()
 
+    due_date_columns = get_due_date_columns(contract_loan)
     summary_rows: list[dict[str, object]] = []
 
     for (_, _, finv_category, stream_id_value), group in contract_loan.groupby(
@@ -963,6 +1027,48 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
+        funded_amount = sum_amounts(get_valid_credits(group))
+        eligible_debits = get_successful_debits(group)
+        repaid_amount = sum_amounts(eligible_debits)
+
+        mode_amount = calculate_mode_amount(eligible_debits)
+
+        frequency = infer_frequency(pd.NaT, eligible_debits)
+
+        transaction_end_date = group["_transaction_date"].max()
+        sample_datetime = group["_sample_datetime"].max()
+
+        if funded_amount != 0:
+            lower_bound = funded_amount * Decimal("0.75")
+            upper_bound = funded_amount * Decimal("1.25")
+            if repaid_amount <= lower_bound:
+                status = "Ongoing"
+            elif repaid_amount <= upper_bound:
+                status = "Closing Soon"
+            else:
+                status = "Closed"
+        elif (
+            not pd.isna(transaction_end_date)
+            and not pd.isna(sample_datetime)
+            and transaction_end_date >= (sample_datetime - pd.Timedelta(days=33))
+        ):
+            status = "Ongoing"
+        else:
+            status = "Closed"
+
+        is_closed = status == "Closed"
+        if is_closed:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        else:
+            repayment_amount = mode_amount
+            recent_fn_repay_amount = calculate_recent_fn_repay_amount(
+                repayment_amount, repaid_amount, frequency
+            )
+
         summary_rows.append(
             {
                 "finv_category": to_illion_category(finv_category),
@@ -972,15 +1078,20 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
-                "status": PLACEHOLDER_METRIC_VALUE,
-                "funded_amount": PLACEHOLDER_METRIC_VALUE,
-                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
-                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
-                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
-                "frequency": PLACEHOLDER_METRIC_VALUE,
-                "frequency_day": PLACEHOLDER_METRIC_VALUE,
-                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+                "transaction_end_date": transaction_end_date,
+                "status": status,
+                "funded_amount": decimal_to_output(funded_amount),
+                "repaid_amount": decimal_to_output(repaid_amount),
+                "repayment_amount": (
+                    None if is_closed else decimal_to_output(repayment_amount)
+                ),
+                "recent_fn_repay_amount": decimal_to_output(recent_fn_repay_amount),
+                "frequency": frequency,
+                "frequency_day": calculate_frequency_day(
+                    eligible_debits,
+                    due_date_columns,
+                ),
+                "predicted_closing_date": None,
             }
         )
 
@@ -991,13 +1102,14 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one placeholder summary row per LOC stream."""
+    """Return one summary row per LOC stream."""
 
     loc = filter_product_streams(df, "LOC")
 
     if loc.empty:
         return empty_summary()
 
+    due_date_columns = get_due_date_columns(loc)
     summary_rows: list[dict[str, object]] = []
 
     for (_, _, finv_category, stream_id_value), group in loc.groupby(
@@ -1005,6 +1117,48 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
+        funded_amount = sum_amounts(get_valid_credits(group))
+        eligible_debits = get_successful_debits(group)
+        repaid_amount = sum_amounts(eligible_debits)
+
+        mode_amount = calculate_mode_amount(eligible_debits)
+
+        frequency = infer_frequency(pd.NaT, eligible_debits)
+
+        transaction_end_date = group["_transaction_date"].max()
+        sample_datetime = group["_sample_datetime"].max()
+
+        if funded_amount != 0:
+            lower_bound = funded_amount * Decimal("0.75")
+            upper_bound = funded_amount * Decimal("1.25")
+            if repaid_amount <= lower_bound:
+                status = "Ongoing"
+            elif repaid_amount <= upper_bound:
+                status = "Closing Soon"
+            else:
+                status = "Closed"
+        elif (
+            not pd.isna(transaction_end_date)
+            and not pd.isna(sample_datetime)
+            and transaction_end_date >= (sample_datetime - pd.Timedelta(days=33))
+        ):
+            status = "Ongoing"
+        else:
+            status = "Closed"
+
+        is_closed = status == "Closed"
+        if is_closed:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        else:
+            repayment_amount = mode_amount
+            recent_fn_repay_amount = calculate_recent_fn_repay_amount(
+                repayment_amount, repaid_amount, frequency
+            )
+
         summary_rows.append(
             {
                 "finv_category": to_illion_category(finv_category),
@@ -1014,15 +1168,20 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
-                "status": PLACEHOLDER_METRIC_VALUE,
-                "funded_amount": PLACEHOLDER_METRIC_VALUE,
-                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
-                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
-                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
-                "frequency": PLACEHOLDER_METRIC_VALUE,
-                "frequency_day": PLACEHOLDER_METRIC_VALUE,
-                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+                "transaction_end_date": transaction_end_date,
+                "status": status,
+                "funded_amount": decimal_to_output(funded_amount),
+                "repaid_amount": decimal_to_output(repaid_amount),
+                "repayment_amount": (
+                    None if is_closed else decimal_to_output(repayment_amount)
+                ),
+                "recent_fn_repay_amount": decimal_to_output(recent_fn_repay_amount),
+                "frequency": frequency,
+                "frequency_day": calculate_frequency_day(
+                    eligible_debits,
+                    due_date_columns,
+                ),
+                "predicted_closing_date": None,
             }
         )
 
@@ -1033,13 +1192,14 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one placeholder summary row per car-loan stream."""
+    """Return one summary row per car-loan stream."""
 
     car_loan = filter_product_streams(df, "Car Loan")
 
     if car_loan.empty:
         return empty_summary()
 
+    due_date_columns = get_due_date_columns(car_loan)
     summary_rows: list[dict[str, object]] = []
 
     for (_, _, finv_category, stream_id_value), group in car_loan.groupby(
@@ -1047,6 +1207,48 @@ def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
+        funded_amount = sum_amounts(get_valid_credits(group))
+        eligible_debits = get_successful_debits(group)
+        repaid_amount = sum_amounts(eligible_debits)
+
+        mode_amount = calculate_mode_amount(eligible_debits)
+
+        frequency = infer_frequency(pd.NaT, eligible_debits)
+
+        transaction_end_date = group["_transaction_date"].max()
+        sample_datetime = group["_sample_datetime"].max()
+
+        if funded_amount != 0:
+            lower_bound = funded_amount * Decimal("0.75")
+            upper_bound = funded_amount * Decimal("1.25")
+            if repaid_amount <= lower_bound:
+                status = "Ongoing"
+            elif repaid_amount <= upper_bound:
+                status = "Closing Soon"
+            else:
+                status = "Closed"
+        elif (
+            not pd.isna(transaction_end_date)
+            and not pd.isna(sample_datetime)
+            and transaction_end_date >= (sample_datetime - pd.Timedelta(days=33))
+        ):
+            status = "Ongoing"
+        else:
+            status = "Closed"
+
+        is_closed = status == "Closed"
+        if is_closed:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        else:
+            repayment_amount = mode_amount
+            recent_fn_repay_amount = calculate_recent_fn_repay_amount(
+                repayment_amount, repaid_amount, frequency
+            )
+
         summary_rows.append(
             {
                 "finv_category": to_illion_category(finv_category),
@@ -1056,15 +1258,20 @@ def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
-                "status": PLACEHOLDER_METRIC_VALUE,
-                "funded_amount": PLACEHOLDER_METRIC_VALUE,
-                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
-                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
-                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
-                "frequency": PLACEHOLDER_METRIC_VALUE,
-                "frequency_day": PLACEHOLDER_METRIC_VALUE,
-                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+                "transaction_end_date": transaction_end_date,
+                "status": status,
+                "funded_amount": decimal_to_output(funded_amount),
+                "repaid_amount": decimal_to_output(repaid_amount),
+                "repayment_amount": (
+                    None if is_closed else decimal_to_output(repayment_amount)
+                ),
+                "recent_fn_repay_amount": decimal_to_output(recent_fn_repay_amount),
+                "frequency": frequency,
+                "frequency_day": calculate_frequency_day(
+                    eligible_debits,
+                    due_date_columns,
+                ),
+                "predicted_closing_date": None,
             }
         )
 
@@ -1075,13 +1282,14 @@ def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one placeholder summary row per unknown personal-loan stream."""
+    """Return one summary row per unknown personal-loan stream."""
 
     unknown = filter_product_streams(df, "Personal Loan Unknown")
 
     if unknown.empty:
         return empty_summary()
 
+    due_date_columns = get_due_date_columns(unknown)
     summary_rows: list[dict[str, object]] = []
 
     for (_, _, finv_category, stream_id_value), group in unknown.groupby(
@@ -1089,6 +1297,48 @@ def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
         dropna=False,
         sort=False,
     ):
+        funded_amount = sum_amounts(get_valid_credits(group))
+        eligible_debits = get_successful_debits(group)
+        repaid_amount = sum_amounts(eligible_debits)
+
+        mode_amount = calculate_mode_amount(eligible_debits)
+
+        frequency = infer_frequency(pd.NaT, eligible_debits)
+
+        transaction_end_date = group["_transaction_date"].max()
+        sample_datetime = group["_sample_datetime"].max()
+
+        if funded_amount != 0:
+            lower_bound = funded_amount * Decimal("0.75")
+            upper_bound = funded_amount * Decimal("1.25")
+            if repaid_amount <= lower_bound:
+                status = "Ongoing"
+            elif repaid_amount <= upper_bound:
+                status = "Closing Soon"
+            else:
+                status = "Closed"
+        elif (
+            not pd.isna(transaction_end_date)
+            and not pd.isna(sample_datetime)
+            and transaction_end_date >= (sample_datetime - pd.Timedelta(days=33))
+        ):
+            status = "Ongoing"
+        else:
+            status = "Closed"
+
+        is_closed = status == "Closed"
+        if is_closed:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        elif repaid_amount == 0:
+            repayment_amount = Decimal("0")
+            recent_fn_repay_amount = Decimal("0")
+        else:
+            repayment_amount = mode_amount
+            recent_fn_repay_amount = calculate_recent_fn_repay_amount(
+                repayment_amount, repaid_amount, frequency
+            )
+
         summary_rows.append(
             {
                 "finv_category": to_illion_category(finv_category),
@@ -1098,15 +1348,20 @@ def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
                 "application_id": normalize_text(group["application_id"].iloc[0]),
                 "counterparty": normalize_text(group["counterparty"].iloc[0]),
                 "transaction_start_date": group["_transaction_date"].min(),
-                "transaction_end_date": group["_transaction_date"].max(),
-                "status": PLACEHOLDER_METRIC_VALUE,
-                "funded_amount": PLACEHOLDER_METRIC_VALUE,
-                "repaid_amount": PLACEHOLDER_METRIC_VALUE,
-                "repayment_amount": PLACEHOLDER_METRIC_VALUE,
-                "recent_fn_repay_amount": PLACEHOLDER_METRIC_VALUE,
-                "frequency": PLACEHOLDER_METRIC_VALUE,
-                "frequency_day": PLACEHOLDER_METRIC_VALUE,
-                "predicted_closing_date": PLACEHOLDER_METRIC_VALUE,
+                "transaction_end_date": transaction_end_date,
+                "status": status,
+                "funded_amount": decimal_to_output(funded_amount),
+                "repaid_amount": decimal_to_output(repaid_amount),
+                "repayment_amount": (
+                    None if is_closed else decimal_to_output(repayment_amount)
+                ),
+                "recent_fn_repay_amount": decimal_to_output(recent_fn_repay_amount),
+                "frequency": frequency,
+                "frequency_day": calculate_frequency_day(
+                    eligible_debits,
+                    due_date_columns,
+                ),
+                "predicted_closing_date": None,
             }
         )
 
