@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from dishonour_classification_engine import DishonourEngine
 from fee_classification_eigine import FeeEngine
 from income_classification_engine import IncomeEngine
 from initial_classification_engine import InitialClassificationEngine
@@ -12,6 +13,7 @@ from .engine import ClassificationEngine
 
 
 ENGINE_FACTORIES: dict[str, Callable[[], ClassificationEngine]] = {
+    "dishonour": DishonourEngine,
     "fee": FeeEngine,
     "initial": InitialClassificationEngine,
     "income": IncomeEngine,

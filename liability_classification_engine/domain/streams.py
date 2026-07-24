@@ -2399,7 +2399,6 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
     output.loc[preserved_mask, "finv_category"] = existing.loc[preserved_mask]
     dishonour_mask = (
         output["is_dishonours"].astype("string").str.lower().eq("yes")
-        & output["finv_category"].notna()
     )
     output.loc[dishonour_mask, "finv_category"] = "Dishonours"
     output["finv_category"] = output["finv_category"].replace(FINV_CATEGORY_MAP)

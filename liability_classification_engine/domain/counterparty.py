@@ -46,21 +46,39 @@ def split_upper_terms(value, separator=";"):
 
 def load_rules(rules_file):
     keyword_rules = []
+    regex_rules = []
     with open(rules_file, encoding="utf-8-sig", newline="") as f:
         for row in csv.DictReader(f):
             counterparty = row.get("counterparty")
             product_type = row.get("product_type", "")
-            if counterparty and row.get("keyword"):
-                for keyword in split_upper_terms(row["keyword"]):
-                    keyword_rules.append((keyword, counterparty, product_type))
-    return keyword_rules
+            rule_type = (row.get("rule_type") or "keyword").strip().lower()
+            if not counterparty:
+                continue
+            if rule_type == "regex":
+                pattern = str(row.get("keyword", "")).strip()
+                if pattern:
+                    try:
+                        regex_rules.append(
+                            (re.compile(pattern, re.IGNORECASE), counterparty, product_type)
+                        )
+                    except re.error:
+                        continue
+            else:
+                if row.get("keyword"):
+                    for keyword in split_upper_terms(row["keyword"]):
+                        keyword_rules.append((keyword, counterparty, product_type))
+    return keyword_rules, regex_rules
 
 
-def match_text(text, keyword_rules):
+def match_text(text, keyword_rules, regex_rules=None):
     text = normalize_match_text(text)
     for keyword, counterparty, product_type in keyword_rules:
         if keyword in text:
             return counterparty, product_type
+    if regex_rules:
+        for pattern, counterparty, product_type in regex_rules:
+            if pattern.search(text):
+                return counterparty, product_type
     return "", ""
 
 
@@ -187,10 +205,10 @@ def clean_dataframe_columns(df):
 
 
 def apply_counterparty_rules(df, rules_file):
-    keyword_rules = load_rules(rules_file)
+    keyword_rules, regex_rules = load_rules(rules_file)
     output = clean_dataframe_columns(df)
     text_values = output.get("text", pd.Series("", index=output.index))
-    matches = text_values.map(lambda text: match_text(text, keyword_rules))
+    matches = text_values.map(lambda text: match_text(text, keyword_rules, regex_rules))
     output["counterparty"] = matches.map(lambda match: match[0])
     output["product_type"] = matches.map(lambda match: match[1])
     return output
