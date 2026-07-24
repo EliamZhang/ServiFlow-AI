@@ -598,55 +598,6 @@ FEE_RULES: list[FeeRule] = [
         "ATM Operator Fee",
     ),
 
-    # =========================================================================
-    # 18. DIRECT DEBIT DISHONOURED — dishonour fee records (no explicit "fee")
-    #     "DIRECT DEBIT DISHONOURED 0613609"
-    # =========================================================================
-    (
-        "direct_debit_dishonoured",
-        "fee",
-        r"^DIRECT\s+DEBIT\s+DISHONOURED\s+\d+",
-        "Dishonour Fee",
-    ),
-
-    # =========================================================================
-    # 19. DISHONOURED ITEM — dishonour fee event
-    # =========================================================================
-    (
-        "dishonoured_item",
-        "fee",
-        r"^DISHONOURED\s+ITEM",
-        "Dishonour Fee",
-    ),
-
-    # =========================================================================
-    # 20. Direct Debit Dishonour — standalone dishonour (no "fee" word)
-    #     "Direct Debit Dishonour"
-    # =========================================================================
-    (
-        "direct_debit_dishonour_standalone",
-        "fee",
-        r"^Direct\s+Debit\s+Dishonour$",
-        "Dishonour Fee",
-    ),
-
-    # =========================================================================
-    # 21. Payment dishonoured — overdraft/insufficient funds dishonour
-    #     "Payment dishonoured (ODF-Insuff Funds)"
-    # =========================================================================
-    (
-        "payment_dishonoured",
-        "fee",
-        r"^Payment\s+dishonoured\s+\(ODF",
-        "Dishonour Fee",
-    ),
-    # "Dishonour of a payment made 09/04/26 Backdated to 09/04/26"
-    (
-        "dishonour_of_payment",
-        "fee",
-        r"^Dishonour\s+of\s+a\s+payment\s+made\s+",
-        "Dishonour Fee",
-    ),
 
     # =========================================================================
     # 22. LOAN ADMINISTRATION CHARGE — loan admin fee

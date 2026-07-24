@@ -78,6 +78,9 @@ ILLION_TO_OUR: dict[str, list[str]] = {
     "Centrelink":                   ["centrelink"],
     "Credit Card Repayments":       ["Credit Card Repayment"],
 
+    # -- All Other Credits --
+    "All Other Credits":    "All Other Credits",
+
     # -- 1:N: illion lumps together our fine-grained categories --
     "Wages":                        ["salary_payg", "salary_packaging", "self_employed_gig"],
     "Non SACC Loans":               ["BNPL", "Wage Advance", "Non SACC Loans",
