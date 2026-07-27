@@ -12,7 +12,7 @@
     },
     {
       "engine_id": "fee",
-      "priority": 50,
+      "priority": 500,
       "enabled": true
     },
     {
