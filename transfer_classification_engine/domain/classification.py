@@ -83,6 +83,9 @@ HIGH_CONFIDENCE_RULES = [
     ("external_withdrawal_westpac_cho_loan", "transfer", r"^withdrawal mobile \d+ tfr westpac cho loan$", None),
     # IMT = International Money Transfer (common format: "IMT <ref> <name> REF <code> <currency> Rate_...")
     ("external_imt", "transfer", r"^imt \d+", None),
+    # ANZ Internet Banking funds transfer with INTL-FEE = international (cross-border).
+    # These are explicitly excluded from Internal Transfer by _detect_internal_by_regex.
+    ("external_anz_intl_fee", "transfer", r"\banz internet banking funds tfer\b.*\bintl[-\s]?fee\b", None),
 
     # -------------------------------------------------------------------------
     # Transfer: named mobile/online payments and well-defined syntax
@@ -433,6 +436,22 @@ def _looks_like_transfer(text: str) -> bool:
     return any(p.search(text_str) for p in _TRANSFER_INDICATOR_PATTERNS)
 
 
+def _matches_row_exclusion(text: str) -> bool:
+    """Return True if *text* matches a row-level P2P exclusion pattern.
+
+    Row-level exclusions only exclude the matching row from IT, not the
+    entire group — unlike group-level exclusions (gambling, BNPL, etc.)
+    which invalidate the entire pairing group.
+    """
+    if not text or pd.isna(text) or not str(text).strip():
+        return False
+    text_str = str(text)
+    for pattern in _ROW_EXCLUSION_PATTERNS:
+        if pattern.search(text_str):
+            return True
+    return False
+
+
 def _detect_internal_transfers(
     df: pd.DataFrame, pairing_pool: pd.DataFrame,
 ) -> pd.DataFrame:
@@ -478,11 +497,13 @@ def _detect_internal_transfers(
             continue
 
         # ── only mark rows whose text looks like a genuine transfer ──
+        #     and does NOT match row-level P2P exclusion patterns ──
         group_candidates = grp.index.intersection(candidate_idx)
         text_col = grp.get("text", pd.Series("", index=grp.index))
         transfer_indices = {
             idx for idx in group_candidates
             if _looks_like_transfer(text_col.get(idx, ""))
+            and not _matches_row_exclusion(text_col.get(idx, ""))
         }
         internal_indices.update(transfer_indices)
 
@@ -502,7 +523,13 @@ def _detect_internal_transfers(
 # These are checked against the full text of every row in a candidate pair
 # group.  If ANY row matches, the entire group is skipped.
 
-_EXCLUDED_PAIRING_PATTERNS: list[re.Pattern] = [
+# ── Group-level exclusion patterns ───────────────────────────────────────
+# These patterns indicate the ENTIRE group is not a genuine internal transfer
+# pair (e.g. a gambling debit that happens to share the same amount+date as
+# an unrelated credit).  If ANY row in the group matches, the whole group is
+# excluded from internal-transfer pairing.
+
+_GROUP_EXCLUSION_PATTERNS: list[re.Pattern] = [
     # ── Gambling / betting operators ──
     re.compile(r"\bsportsbet\b", re.IGNORECASE),
     re.compile(r"\bladbrokes\b", re.IGNORECASE),
@@ -553,17 +580,34 @@ _EXCLUDED_PAIRING_PATTERNS: list[re.Pattern] = [
     re.compile(r"\bsmedge\b", re.IGNORECASE),
     re.compile(r"\bdragfir\b", re.IGNORECASE),
     re.compile(r"\bprezzee\b", re.IGNORECASE),            # gift card (often gambling-adjacent)
+]
+
+# ── Row-level exclusion patterns ─────────────────────────────────────────
+# These patterns indicate a SPECIFIC row is a P2P / external payment, NOT an
+# internal transfer.  Unlike group-level exclusions, only the matching row is
+# excluded from IT — other rows in the same group can still be paired as IT.
+# This preserves genuine internal transfers that share a group with P2P rows.
+
+_ROW_EXCLUSION_PATTERNS: list[re.Pattern] = [
     # ── Person-to-person (P2P) OSKO / bank transfer patterns ──
-    # These look like internal transfers (same amount + date + debit+credit)
-    # but are actually person-to-person payments.  When any row in the group
-    # matches these patterns the entire group is excluded from internal pairing.
     re.compile(r"\bOsko (?:Payment|Deposit)\b", re.IGNORECASE),
     # "IBank Trf Transferred to <account> <PERSON NAME> ..." (Greater Bank P2P)
     re.compile(r"\bIBank Trf\b", re.IGNORECASE),
     # Generic person-title indicators strongly suggest P2P rather than
-    # own-account transfers.
-    re.compile(r"\b(?:MRS?|MR|MS|MISS)\s+[A-Z]\b", re.IGNORECASE),
+    # own-account transfers.  Matches both single initials ("MR J") and
+    # full names ("MISS KARIN") — [A-Z][A-Za-z]* covers both cases.
+    re.compile(r"\b(?:MRS?|MR|MS|MISS)\s+[A-Z][A-Za-z]*\b", re.IGNORECASE),
+    # ── PayID / PayTo transfers are person-to-person, never own-account ──
+    re.compile(r"\b(?:PayID|PayTo)\b", re.IGNORECASE),
+    # ── TRANSFER DEBIT/CREDIT + all-caps person name (NAB-style P2P) ──
+    # "TRANSFER DEBIT JOSE VARUGHESE Q8294369047" — name + reference = external.
+    # "TRANSFER CREDIT NICHOLAS WYNGAARD Nick & Paige Event" — same pattern.
+    # Exclude "TRANSFER ... ONLINE" which is internet banking (genuine internal).
+    re.compile(r"^TRANSFER\s+(?:DEBIT|CREDIT)\s+(?!ONLINE\b)[A-Z]{2,}\b", re.IGNORECASE),
 ]
+
+# Backward-compatible alias used by _contains_excluded_keywords (group-level only).
+_EXCLUDED_PAIRING_PATTERNS = _GROUP_EXCLUSION_PATTERNS
 
 
 def _contains_excluded_keywords(grp: pd.DataFrame) -> bool:
@@ -707,6 +751,18 @@ def _detect_internal_by_regex(df: pd.DataFrame) -> pd.DataFrame:
                 continue
             if dr_cr_constraint is not None and dr_cr != dr_cr_constraint:
                 continue
+
+            # ── Per-rule exclusion checks ──────────────────────────
+            # ANZ internet banking funds transfer with international fee
+            # is an EXTERNAL (cross-border) transfer, not internal.
+            if rule_name == "internal_anz_funds_tfer":
+                if re.search(r"\bINTL[-\s]?FEE\b", text, re.IGNORECASE):
+                    continue
+            # Internet withdrawal to an account that also has "INTL-FEE"
+            # is sending money overseas — external, not internal.
+            if rule_name == "internal_internet_banking":
+                if re.search(r"\bINTL[-\s]?FEE\b", text, re.IGNORECASE):
+                    continue
 
             output.at[idx, "is_transfer_pred"] = 1
             output.at[idx, "finv_category"] = "Internal Transfer"
