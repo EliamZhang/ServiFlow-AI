@@ -28,7 +28,7 @@ OUR_TO_ILLION: dict[str, str] = {
     # -- liability: our fine-grained → illion coarse-grained --
     "BNPL":                  "Non SACC Loans",
     "Wage Advance":          "Non SACC Loans",
-    "Personal Loan Unknown": "Non SACC Loans",
+    "Personal Loan Unknown": "Unknown Loans",
     "Contract Loans":        "Non SACC Loans",
     "LOC":                   "Non SACC Loans",
     "Home Loan":             "Non SACC Loans",
@@ -84,8 +84,10 @@ ILLION_TO_OUR: dict[str, list[str]] = {
     # -- 1:N: illion lumps together our fine-grained categories --
     "Wages":                        ["salary_payg", "salary_packaging", "self_employed_gig"],
     "Non SACC Loans":               ["BNPL", "Wage Advance", "Non SACC Loans",
-                                     "Personal Loan Unknown", "Contract Loans", "LOC",
+                                     "Contract Loans", "LOC",
                                      "Home Loan", "Car Loan"],
+
+    "Unknown Loans":                ["Personal Loan Unknown"],
 
     # -- illion categories with no direct equivalent in our engine --
     "All Other Credits":            [],

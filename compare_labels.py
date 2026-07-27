@@ -38,10 +38,7 @@ DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "classification_report.xlsx"
 DEFAULT_RESULT = PROJECT_ROOT / "output" / "compare_result.xlsx"
 
 # Illion categories that do NOT count as "illion covered".
-# "All Other Credits" is a catch-all — illion uses it when they cannot
-# classify a credit transaction, so we treat it as uncovered.
 ILLION_UNCOVERED_CATS: frozenset[str] = frozenset({
-    "All Other Credits",
 })
 _HIDDEN_COLS = frozenset({
     "sample_datetime", "job_id", "transaction_id", "account_type",
