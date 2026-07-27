@@ -66,14 +66,15 @@ def load_rules(rules_file):
             else:
                 if row.get("keyword"):
                     for keyword in split_upper_terms(row["keyword"]):
-                        keyword_rules.append((keyword, counterparty, product_type))
+                        compiled = re.compile(r"\b" + re.escape(keyword) + r"\b")
+                        keyword_rules.append((compiled, counterparty, product_type))
     return keyword_rules, regex_rules
 
 
 def match_text(text, keyword_rules, regex_rules=None):
     text = normalize_match_text(text)
-    for keyword, counterparty, product_type in keyword_rules:
-        if keyword in text:
+    for pattern, counterparty, product_type in keyword_rules:
+        if pattern.search(text):
             return counterparty, product_type
     if regex_rules:
         for pattern, counterparty, product_type in regex_rules:
