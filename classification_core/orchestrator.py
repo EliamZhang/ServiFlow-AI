@@ -115,7 +115,6 @@ class ClassificationOrchestrator:
                 )
             )
 
-        summaries.append(self._build_run_summary(executions, summaries))
         return ClassificationRunResult(
             run_id=run_id,
             transactions=output,
@@ -268,37 +267,3 @@ class ClassificationOrchestrator:
 
             if pd.notna(prediction.get("counterparty")):
                 output.at[row_index, "counterparty"] = prediction["counterparty"]
-
-    # ------------------------------------------------------------------
-    # run summary
-    # ------------------------------------------------------------------
-
-    @staticmethod
-    def _build_run_summary(
-        executions: list[EngineExecution],
-        summaries: list[SummaryArtifact],
-    ) -> SummaryArtifact:
-        summary_rows_by_engine = {
-            artifact.name.removesuffix("_summary"): len(artifact.data)
-            for artifact in summaries
-            if artifact.name.endswith("_summary")
-        }
-        rows = [
-            {
-                "engine_id": execution.engine_id,
-                "engine_version": execution.engine_version,
-                "priority": execution.priority,
-                "candidate_count": execution.candidate_count,
-                "prediction_count": execution.prediction_count,
-                "accepted_count": execution.accepted_count,
-                "summary_row_count": summary_rows_by_engine.get(
-                    execution.engine_id, 0
-                ),
-            }
-            for execution in executions
-        ]
-        return SummaryArtifact(
-            "run_summary",
-            "1.0",
-            pd.DataFrame(rows),
-        )

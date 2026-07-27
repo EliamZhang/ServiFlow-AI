@@ -26,10 +26,10 @@ python main.py `
 
 The workbook contains:
 
-- `transactions`: unified row-level classifications;
-- `income_summary`: accepted income classifications;
-- `liability_summary`: accepted liability classifications; and
-- `run_summary`: per-engine run statistics.
+- `transactions`: income and liability transaction flows with unified row-level
+  classifications;
+- `income_summary`: accepted income classifications; and
+- `liability_summary`: accepted liability classifications.
 
 ## Architecture
 

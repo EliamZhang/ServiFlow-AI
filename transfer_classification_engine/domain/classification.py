@@ -81,6 +81,8 @@ HIGH_CONFIDENCE_RULES = [
     ("external_debit_card_wise_taptap", "transfer", r"^debit card purchase (wise|taptap send) sydney", None),
     ("external_fast_pymt_in", "transfer", r"^fast pymt in", None),
     ("external_withdrawal_westpac_cho_loan", "transfer", r"^withdrawal mobile \d+ tfr westpac cho loan$", None),
+    # IMT = International Money Transfer (common format: "IMT <ref> <name> REF <code> <currency> Rate_...")
+    ("external_imt", "transfer", r"^imt \d+", None),
 
     # -------------------------------------------------------------------------
     # Transfer: named mobile/online payments and well-defined syntax
@@ -122,7 +124,7 @@ HIGH_CONFIDENCE_RULES = [
     ("external_nab_transfer_debit", "transfer", r"^transfer debit (?!online\b)", None),
 
     # ── Internet banking transfers ──
-    ("external_internet_banking", "transfer", r"^internet (?:withdrawal|deposit)\b", None),
+    ("external_internet_banking", "transfer", r"^internet (?:withdrawal|deposit|external transfer)\b", None),
 
     # ── TFR to/from (bank transfers) ──
     ("external_tfr_to_from", "transfer", r"\btfr (?:to|from)\b", None),
@@ -152,8 +154,8 @@ MEDIUM_CONFIDENCE_RULES = [
     ("internal_internet_transfer_debit", "transfer", r"^internet transfer debit to \d+ reference no \d+$", None),
     ("internal_ib_transfer_tfd", "transfer", r"^ib transfer \d+ to \d{3}-\d{3}-\d+ \d+:\d+(?:am|pm) tfd$", None),
     ("internal_ib_transfer_tfc", "transfer", r"^ib transfer \d+ from \d{3}-\d{3}-\d+ \d+:\d+(?:am|pm) tfc$", None),
-    ("internal_transfer_to_cba_ac", "transfer", r"^transfer to cba a/c commbank app$", None),
-    ("internal_transfer_from_commbank", "transfer", r"^transfer from commbank app$", None),
+    ("internal_transfer_to_cba_ac", "transfer", r"^transfer to cba a/c commbank app\b", None),
+    ("internal_transfer_from_commbank", "transfer", r"^transfer from commbank app\b", None),
     ("internal_masked_commbank", "transfer", r"\btransfer (to|from) xx\d{4}\b", None),
     # Westpac withdrawal patterns: debit direction, still mostly transfer (92-98%).
     # NOTE: moved to INTERNAL_TRANSFER_RULES — Westpac Choice/Life/Maximiser
@@ -164,6 +166,18 @@ MEDIUM_CONFIDENCE_RULES = [
     ("internal_x_tfc", "transfer", r"^x tfc$", None),
     ("internal_save_tfc", "transfer", r"^save tfc$", None),
     ("internal_j_tfd", "transfer", r"^j tfd$", None),
+    # Letter-prefix TFD/TFC variants (Westpac/St George shorthand).
+    # "b TFD" / "b TFC" — common single-letter prefix indicating transfer type.
+    ("internal_b_tfd", "transfer", r"^b tfd$", None),
+    ("internal_b_tfc", "transfer", r"^b tfc$", None),
+    ("internal_n_tfd", "transfer", r"^n tfd$", None),
+    ("internal_h_tfd", "transfer", r"^h tfd$", None),
+    # Automatic payment / sweep between linked accounts — looks like a transfer.
+    ("external_automatic_payment", "transfer", r"^automatic payment$", None),
+    # Periodic / scheduled transfers between accounts.
+    ("external_periodic_transfer", "transfer", r"^periodic transfer from\b", None),
+    # RTGS (Real-Time Gross Settlement) — high-value interbank transfer.
+    ("external_rtgs", "transfer", r"^rtgs funds credit$", None),
 
     # Relaxed name+code: allows extra text after the transaction code.
     # Precision ~95.3% — kept as medium due to some lookalikes.

@@ -19,6 +19,16 @@ _HIDDEN_COLUMNS = frozenset({
 _RED_COLUMNS = frozenset({"category", "third_party"})
 _GREEN_COLUMNS = frozenset({"counterparty", "finv_category"})
 
+# These four columns should be adjacent for easy comparison.
+_COMPARISON_COLUMNS = ["category", "third_party", "counterparty", "finv_category"]
+
+
+def _reorder_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Move comparison columns to the right so they sit together."""
+    present = [col for col in _COMPARISON_COLUMNS if col in df.columns]
+    others = [col for col in df.columns if col not in _COMPARISON_COLUMNS]
+    return df[others + present]
+
 
 def write_report(
     result: ClassificationRunResult,
@@ -28,8 +38,11 @@ def write_report(
     path.parent.mkdir(parents=True, exist_ok=True)
     sheet_names: set[str] = set()
 
+    # ── reorder so comparison columns sit together ──
+    transactions = _reorder_columns(result.transactions)
+
     with pd.ExcelWriter(path, engine="openpyxl") as writer:
-        result.transactions.to_excel(writer, sheet_name="transactions", index=False)
+        transactions.to_excel(writer, sheet_name="transactions", index=False)
         sheet_names.add("transactions")
         for artifact in result.summaries:
             sheet_name = artifact.name[:31]

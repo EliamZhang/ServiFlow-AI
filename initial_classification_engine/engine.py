@@ -10,9 +10,7 @@ from classification_core.models import (
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
-from classification_core.transaction_keys import filter_to_transaction_keys
 
-from .domain.summary import build_summary
 from .pipeline import DEFAULT_KB_PATH, run_pipeline
 
 
@@ -61,14 +59,4 @@ class InitialClassificationEngine:
         result: EngineResult,
         accepted_predictions: pd.DataFrame,
     ) -> list[SummaryArtifact]:
-        accepted_details = filter_to_transaction_keys(
-            result.transactions,
-            accepted_predictions,
-        )
-        return [
-            SummaryArtifact(
-                "initial_summary",
-                "1.0",
-                build_summary(accepted_details),
-            )
-        ]
+        return []

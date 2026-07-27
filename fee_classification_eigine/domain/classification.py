@@ -620,6 +620,148 @@ FEE_RULES: list[FeeRule] = [
         r"FX\s+FEE\s+IS\s+A\$",
         "Foreign Currency Fee",
     ),
+
+    # =========================================================================
+    # 24. INTEREST CHARGES — credit card / loan / overdraft interest.
+    #     illion classifies interest as "Fees"; finv follows the same
+    #     convention.  Rules are ordered from most specific to most generic
+    #     so that explicit patterns (e.g. "INTEREST CHARGES - PUR CH") match
+    #     before bare "INTEREST".
+    # =========================================================================
+    # "INTEREST CHARGES - PUR CH" / "INTEREST CHARGES - PURCH"
+    (
+        "interest_charges_purch",
+        "fee",
+        r"^INTEREST\s+CHARGES\s+-\s+PUR",
+        "Interest Charges",
+    ),
+    # "INTEREST CHARGES - CAS H" / "INTEREST CHARGES - CASH"
+    (
+        "interest_charges_cash",
+        "fee",
+        r"^INTEREST\s+CHARGES\s+-\s+CAS",
+        "Interest Charges",
+    ),
+    # "Interest Charges - Purch" (title case)
+    (
+        "interest_charges_purch_title",
+        "fee",
+        r"^Interest\s+Charges\s+-\s+Purch",
+        "Interest Charges",
+    ),
+    # "Interest Charges - Cash" (title case)
+    (
+        "interest_charges_cash_title",
+        "fee",
+        r"^Interest\s+Charges\s+-\s+Cash",
+        "Interest Charges",
+    ),
+    # "INTEREST ON CASH ADV"
+    (
+        "interest_on_cash_adv",
+        "fee",
+        r"^INTEREST\s+ON\s+CASH\s+ADV",
+        "Interest Charges",
+    ),
+    # "CASH ADVANCE INTEREST"
+    (
+        "cash_advance_interest",
+        "fee",
+        r"^CASH\s+ADVANCE\s+INTEREST",
+        "Interest Charges",
+    ),
+    # "VISA PURCHASE INTEREST"
+    (
+        "visa_purchase_interest",
+        "fee",
+        r"^VISA\s+PURCHASE\s+INTEREST",
+        "Interest Charges",
+    ),
+    # "INSTALMENT PLAN INTEREST"
+    (
+        "instalment_plan_interest",
+        "fee",
+        r"^INSTALMENT\s+PLAN\s+INTEREST",
+        "Interest Charges",
+    ),
+    # "INTEREST CHARGED ON PURCHASES"
+    (
+        "interest_charged_on_purchases",
+        "fee",
+        r"^INTEREST\s+CHARGED\s+ON\s+PURCHASES",
+        "Interest Charges",
+    ),
+    # "INTEREST - BASE PLAN"
+    (
+        "interest_base_plan",
+        "fee",
+        r"^INTEREST\s+-\s+BASE\s+PLAN",
+        "Interest Charges",
+    ),
+    # "INTEREST CHARGED INTEREST CHARGED" (duplicated text from some banks)
+    (
+        "interest_charged_dup",
+        "fee",
+        r"^INTEREST\s+CHARGED\s+INTEREST\s+CHARGED",
+        "Interest Charges",
+    ),
+    # "INTEREST CHARGED" (bare, singular — before the plural "INTEREST CHARGES")
+    (
+        "interest_charged_bare",
+        "fee",
+        r"^INTEREST\s+CHARGED$",
+        "Interest Charges",
+    ),
+    # "DEBIT INTEREST CHARGED"
+    (
+        "debit_interest_charged",
+        "fee",
+        r"^DEBIT\s+INTEREST\s+CHARGED",
+        "Interest Charges",
+    ),
+    # "Debit Interest" (title case, plain — distinct from "Debit Excess Interest"
+    # which is already caught as Overdrawn in section 0)
+    (
+        "debit_interest_title",
+        "fee",
+        r"^Debit\s+Interest$",
+        "Interest Charges",
+    ),
+    # "Interest charged" (title case, bare)
+    (
+        "interest_charged_title",
+        "fee",
+        r"^Interest\s+charged$",
+        "Interest Charges",
+    ),
+    # "INTEREST CHARGES" (bare, uppercase)
+    (
+        "interest_charges_bare",
+        "fee",
+        r"^INTEREST\s+CHARGES$",
+        "Interest Charges",
+    ),
+    # "INTEREST DEBIT"
+    (
+        "interest_debit",
+        "fee",
+        r"^INTEREST\s+DEBIT$",
+        "Interest Charges",
+    ),
+    # "INTEREST" (bare, uppercase — most generic, placed last)
+    (
+        "interest_bare",
+        "fee",
+        r"^INTEREST$",
+        "Interest Charges",
+    ),
+    # "Interest" (bare, title case — low-amount residual interest)
+    (
+        "interest_bare_title",
+        "fee",
+        r"^Interest$",
+        "Interest Charges",
+    ),
 ]
 
 

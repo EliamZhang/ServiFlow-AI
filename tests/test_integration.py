@@ -39,20 +39,22 @@ class CurrentSampleIntegrationTests(unittest.TestCase):
         # All engines see all transactions; later engines overwrite earlier ones.
         # These counts reflect the current sample.csv with the row-level
         # overwrite semantics.
-        self.assertEqual(int(counts["initial"]), 21206)
-        self.assertEqual(int(counts["transfer"]), 17986)
-        self.assertEqual(int(counts["liability"]), 5943)
-        self.assertEqual(int(counts["income"]), 684)
-        self.assertEqual(int(counts["fee"]), 218)
+        self.assertEqual(int(counts["initial"]), 10041)
+        self.assertEqual(int(counts["transfer"]), 13767)
+        self.assertEqual(int(counts["liability"]), 10061)
+        self.assertEqual(int(counts["income"]), 830)
+        self.assertEqual(int(counts["fee"]), 2092)
+        self.assertEqual(int(counts["dishonour"]), 44)
+        self.assertEqual(int(counts["all_other_credit"]), 813)
         unclassified = int(
             self.result.transactions["classification_status"]
             .eq("unclassified")
             .sum()
         )
-        self.assertEqual(unclassified, 2680)
+        self.assertEqual(unclassified, 11069)
         # Classified + unclassified = total
         self.assertEqual(
-            sum(int(counts.get(e, 0)) for e in ["fee", "initial", "income", "liability", "transfer"]) + unclassified,
+            sum(int(counts.get(e, 0)) for e in ["fee", "initial", "income", "liability", "transfer", "dishonour", "all_other_credit"]) + unclassified,
             self.transaction_count,
         )
 
@@ -60,11 +62,8 @@ class CurrentSampleIntegrationTests(unittest.TestCase):
         summaries = {
             artifact.name: artifact.data for artifact in self.result.summaries
         }
-        self.assertEqual(len(summaries["initial_summary"]), 5024)
-        self.assertEqual(len(summaries["income_summary"]), 67)
-        self.assertEqual(len(summaries["liability_summary"]), 474)
-        self.assertEqual(len(summaries["transfer_summary"]), 2)
-        self.assertEqual(len(summaries["run_summary"]), 5)
+        self.assertEqual(len(summaries["income_summary"]), 74)
+        self.assertEqual(len(summaries["liability_summary"]), 518)
         self.assertIn("finv_category", summaries["liability_summary"].columns)
 
     def test_classified_rows_have_both_core_fields(self) -> None:
