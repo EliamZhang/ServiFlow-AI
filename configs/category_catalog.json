@@ -42,6 +42,7 @@
     "Dishonours": {"owner_engine_id": "dishonour,liability", "active": true},
     "Overdrawn": {"owner_engine_id": "fee,liability", "active": true},
     "Internal Transfer": {"owner_engine_id": "transfer", "active": true},
-    "External Transfers": {"owner_engine_id": "transfer", "active": true}
+    "External Transfers": {"owner_engine_id": "transfer", "active": true},
+    "All Other Credits": {"owner_engine_id": "all_other_credit", "active": true}
   }
 }

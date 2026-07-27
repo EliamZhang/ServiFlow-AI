@@ -29,6 +29,11 @@
       "engine_id": "liability",
       "priority": 300,
       "enabled": true
+    },
+    {
+      "engine_id": "all_other_credit",
+      "priority": 400,
+      "enabled": true
     }
   ],
   "execution": {
