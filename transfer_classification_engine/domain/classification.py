@@ -604,6 +604,20 @@ _ROW_EXCLUSION_PATTERNS: list[re.Pattern] = [
     # "TRANSFER CREDIT NICHOLAS WYNGAARD Nick & Paige Event" — same pattern.
     # Exclude "TRANSFER ... ONLINE" which is internet banking (genuine internal).
     re.compile(r"^TRANSFER\s+(?:DEBIT|CREDIT)\s+(?!ONLINE\b)[A-Z]{2,}\b", re.IGNORECASE),
+    # ── Fast Transfer From/To + person name (P2P, never own-account) ──
+    # "Fast Transfer From WAYNE SCOTT BROWNLOWE DAD"
+    # "Fast Transfer From HEIKE FOX Hay x 14 rounds"
+    # "Fast Transfer From Jordan Brownlowe 6 7"
+    re.compile(r"\bFast Transfer (?:From|To)\s+[A-Z][A-Za-z]+", re.IGNORECASE),
+    # ── Transfer To [NAME] CommBank App (P2P, not own-account) ──
+    # "Transfer To Theresa Salanoa CommBank App misc"
+    # "Transfer To Daniel Smith CommBank App Dinner"
+    # Distinguished from internal "Transfer to xx\d{4} CommBank App"
+    # and "Transfer to cba a/c commbank app" by negative lookahead.
+    re.compile(
+        r"\bTransfer To\s+(?!xx\d{4}|cba a/c)[A-Za-z0-9].*?\s+CommBank App\b",
+        re.IGNORECASE,
+    ),
 ]
 
 # Backward-compatible alias used by _contains_excluded_keywords (group-level only).
