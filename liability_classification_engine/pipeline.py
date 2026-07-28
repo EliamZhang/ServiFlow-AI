@@ -11,6 +11,7 @@ from .domain.counterparty import (
     apply_credit_card_rules,
     apply_debt_collection_flag,
     apply_debt_consolidation_flag,
+    apply_generic_loan_catchall,
     apply_home_loan_car_loan_flags,
     apply_overdrawn_flag,
 )
@@ -53,6 +54,7 @@ def run_pipeline(
     )
     output = identify_streams(output, reset_stream_ids=True)
     output = add_finv_category(output)
+    output = apply_generic_loan_catchall(output)
     return PipelineResult(
         transactions=output,
         original_columns=tuple(transactions.columns),

@@ -66,15 +66,14 @@ def load_rules(rules_file):
             else:
                 if row.get("keyword"):
                     for keyword in split_upper_terms(row["keyword"]):
-                        compiled = re.compile(r"\b" + re.escape(keyword) + r"\b")
-                        keyword_rules.append((compiled, counterparty, product_type))
+                        keyword_rules.append((keyword, counterparty, product_type))
     return keyword_rules, regex_rules
 
 
 def match_text(text, keyword_rules, regex_rules=None):
     text = normalize_match_text(text)
-    for pattern, counterparty, product_type in keyword_rules:
-        if pattern.search(text):
+    for keyword, counterparty, product_type in keyword_rules:
+        if keyword in text:
             return counterparty, product_type
     if regex_rules:
         for pattern, counterparty, product_type in regex_rules:
@@ -738,3 +737,32 @@ def apply_debt_consolidation_flag(df, rules_file):
     """Apply debt consolidation flag rules."""
     rules = _load_flag_rules(rules_file)
     return _apply_flag_rules(df, rules, ["is_debt_consolidation"])
+
+
+def apply_generic_loan_catchall(df):
+    """Fallback: classify remaining unclassified transactions with 'Loan' in text.
+
+    Runs after all other rules (counterparty, credit card, home loan, car loan,
+    overdrawn, debt collection, debt consolidation, dishonours, stream assignment)
+    have been exhausted.  Transactions whose finv_category is still empty and whose
+    text contains the word ``LOAN`` are assigned counterparty ``Generic Loans`` and
+    finv_category ``Non SACC Loans``.
+    """
+    output = df.copy()
+
+    fc_col = output.get("finv_category", pd.Series(index=output.index))
+    fc_empty = fc_col.isna() | fc_col.astype(str).str.strip().eq("")
+
+    if not fc_empty.any():
+        return output
+
+    text_col = output["text"].fillna("").astype(str).str.upper()
+    has_loan = text_col.str.contains(r"\bLOAN\b", na=False, regex=True)
+
+    catchall_mask = fc_empty & has_loan
+
+    output.loc[catchall_mask, "counterparty"] = "Generic Loans"
+    output.loc[catchall_mask, "product_type"] = "generic_loan"
+    output.loc[catchall_mask, "finv_category"] = "Non SACC Loans"
+
+    return output

@@ -31,3 +31,4 @@ CL020,is_car_loan,Motor Trade Finance,text_or_counterparty,regex,motor\s*trade\s
 CL021,is_car_loan,Cars On Terms,text_or_counterparty,regex,cars\s*on\s*terms,*,*,*,,90,1
 CL022,is_car_loan,RACV Finance,text_or_counterparty,regex,racv\s*finance,*,*,*,,90,1
 CL023,is_car_loan,RACQ Finance,text_or_counterparty,regex,racq\s*finance,*,*,*,,90,1
+CL024,is_car_loan,Affordable Car Loans,text_or_counterparty,regex,affordable\s*car\s*loans,*,*,*,,90,1
