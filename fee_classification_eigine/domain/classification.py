@@ -789,6 +789,38 @@ def normalize_text(value: object) -> str:
 
 
 # =============================================================================
+# Rules that should be rejected when the transaction amount is $0.00.
+#
+# These rules match text patterns that describe fees *included* in other
+# transactions, *waived* fees, or informational notes — not actual fee
+# charges.  When the amount is zero (or very close to it), the row is an
+# informational line-item, not a real fee.
+# =============================================================================
+
+_AMOUNT_ZERO_REJECT_RULES: set[str] = {
+    # "Includes Foreign Currency Conversion Fee $X.XX" — the fee was already
+    # included in another transaction; this is a note, not a charge.
+    "includes_foreign_currency_fee",
+    # "FEES INCLUDED IN TRAN USD11.03 IS WAIVED. FX FEE IS A$0.47"
+    # — the fee was waived, not charged.
+    "fees_included_waived",
+    # "MONTHLY FEE WAIVED" — not actually charged.
+    "monthly_fee_waived",
+    # "OFI ATM W/D TRAN FOR $X.XX INCLUDES OFI ATM OPERATOR FEE OF $X.XX"
+    # — describes a fee embedded in another transaction, not a standalone fee.
+    "ofi_atm_operator_fee",
+    # "FOREIGN FEE AUD X.XX" — when $0 this is an informational duplicate
+    # of a fee line already captured elsewhere.
+    "foreign_fee_aud",
+    # "INTEREST" / "Interest" — $0 informational interest notes.
+    "interest_bare",
+    "interest_bare_title",
+    # "LOAN ADMINISTRATION CHARGE" — when $0 it's informational.
+    "loan_administration_charge",
+}
+
+
+# =============================================================================
 # Fee classifier
 # =============================================================================
 
@@ -853,6 +885,10 @@ def classify_fees(df: pd.DataFrame) -> pd.DataFrame:
     output["fee_rule_name"] = [
         p.rule_name if p.is_fee else "" for p in predictions
     ]
+
+    # ── Post-processing: reject $0 informational fee lines ──────────
+    _reject_zero_amount_informational(output)
+
     output["fee_pred_reason"] = output.apply(_build_reason, axis=1)
 
     # stream_id
@@ -864,6 +900,41 @@ def classify_fees(df: pd.DataFrame) -> pd.DataFrame:
     output = output.drop(columns=["text_norm", "_text_original"])
 
     return output
+
+
+def _reject_zero_amount_informational(df: pd.DataFrame) -> None:
+    """Unset fee predictions whose amount is $0 and rule is informational.
+
+    Certain fee-rule patterns match informational line-items (e.g. "Includes
+    Foreign Currency Conversion Fee $0.81") where the transaction amount is
+    $0.00 — these are notes attached to other transactions, NOT real fee
+    charges.  This function unsets the prediction so the row can be picked
+    up by a later engine or left unclassified.
+    """
+    if "amount" not in df.columns:
+        return
+
+    # Only consider rows currently marked as fee.
+    fee_mask = df["is_fee_pred"].eq(1)
+    if not fee_mask.any():
+        return
+
+    # Find rows where the rule is in our reject set AND amount is zero.
+    amount_col = pd.to_numeric(df["amount"], errors="coerce")
+    zero_amount_mask = (
+        amount_col.abs() < 0.001  # near-zero — informational lines
+    )
+    reject_rule_mask = df["fee_rule_name"].isin(_AMOUNT_ZERO_REJECT_RULES)
+
+    reject_mask = fee_mask & zero_amount_mask & reject_rule_mask
+    if not reject_mask.any():
+        return
+
+    # Unset the prediction columns for rejected rows.
+    df.loc[reject_mask, "is_fee_pred"] = 0
+    df.loc[reject_mask, "finv_category"] = ""
+    df.loc[reject_mask, "counterparty"] = ""
+    df.loc[reject_mask, "fee_rule_name"] = ""
 
 
 def _build_reason(row: pd.Series) -> str:
