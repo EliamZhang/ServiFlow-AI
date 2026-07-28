@@ -294,7 +294,7 @@ SWOOSH LOSS RECO,Swoosh Finance,personal_loan,keyword
 POWERTORQUE FIN; POWER TORQUE FINANC,Toyota Finance,personal_loan,keyword
 VW FINANCE,Volkswagen Financial,personal_loan,keyword
 APSBS,APS Loans,personal_loan,keyword
-MOTORCYCLE FINANCE; AUTOME FINANCE; WEEKEND TOY FINANC; AMO,Allied Retail Finance,personal_loan,keyword
+MOTORCYCLE FINANCE; AUTOME FINANCE; WEEKEND TOY FINANC; AMO AMO,Allied Retail Finance,personal_loan,keyword
 FMC,First Mortgage Company,personal_loan,keyword
 CASHSTOP,Cash Stop,personal_loan,keyword
 UNITED LOAN SOLUTIONS,Gedda Money,personal_loan,keyword
@@ -353,3 +353,4 @@ ANZ Asset Finance; ANZ Asset Fin; ANZASSET,ANZ Asset Finance,personal_loan,keywo
 RACV Finance; RACV Fin; RACV FINANCE,RACV Finance,personal_loan,keyword
 RACQ Finance; RACQ Fin; RACQ FINANCE,RACQ Finance,personal_loan,keyword
 DT\.[A-Za-z0-9]+\s+Sunshine,Sunshine Loans,personal_loan,regex
+AZORA ASSET FINA,Azora Finance,personal_loan,keyword
