@@ -4,7 +4,10 @@ keyword,DIRECT DEBIT DISHONOURED,
 keyword,Direct Debit Dishonour,
 keyword,Reversal - Direct Debit - Receipt,
 regex,^Return\s+\d{2}/\d{2}/\d{2}\s+Direct Debit\b,
-regex,^Return\s+\d{2}/\d{2}/\d{2}\s+Loan Repayment LN REPAY\b,Return;Direct Debit
-keyword,DISHONOUR FEE,Return;Loan Repayment LN REPAY
+regex,^Return\s+\d{2}/\d{2}/\d{2}\s+Direct Debit\b,Return;Direct Debit
+regex,^Return\s+\d{2}/\d{2}/\d{2}\s+Loan Repayment LN REPAY\b,Return;Loan Repayment LN REPAY
+keyword,Loan Pymt Dishonour,
+keyword,Loan Payment Dishonour,
+keyword,DISHONOUR FEE,
 keyword,REVERSAL OF PAYMENT,
 keyword,DISHONOURED ITEM,
