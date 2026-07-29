@@ -73,7 +73,7 @@ def load_rules(rules_file):
 def match_text(text, keyword_rules, regex_rules=None):
     text = normalize_match_text(text)
     for keyword, counterparty, product_type in keyword_rules:
-        if keyword in text:
+        if re.search(r'(?<![A-Za-z])' + re.escape(keyword) + r'(?![A-Za-z])', text):
             return counterparty, product_type
     if regex_rules:
         for pattern, counterparty, product_type in regex_rules:
