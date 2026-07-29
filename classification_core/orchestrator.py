@@ -74,10 +74,17 @@ class ClassificationOrchestrator:
             # at the row level (finv_category + counterparty as a pair).
             candidate_mask = pd.Series(True, index=output.index)
 
+            candidates_df = original.copy()
+            if spec.engine_id == "liability":
+                already_income_mask = output["finv_category"].isin(
+                    ["salary_payg", "salary_packaging", "centrelink", "self_employed_gig"]
+                )
+                candidates_df = original.loc[~already_income_mask].copy()
+
             context = EngineContext(
                 run_id=run_id,
                 all_transactions=original.copy(),
-                candidates=original.copy(),
+                candidates=candidates_df,
                 prior_claims=output.loc[
                     output["classification_status"].ne(_UNCLASSIFIED_SENTINEL),
                     [
