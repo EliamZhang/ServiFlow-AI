@@ -33,17 +33,44 @@ The workbook contains:
 
 ## Architecture
 
+The pipeline runs 7 engines in priority order (configured in `configs/pipeline.json`):
+
+| Priority | Engine | Classification |
+|----------|--------|---------------|
+| 1 | `initial` | Merchant keyword matching (Aho-Corasick, 2.5M-row KB) |
+| 10 | `dishonour` | Dishonoured / reversed transactions |
+| 100 | `transfer` | Internal & external transfers |
+| 200 | `income` | Salary, Centrelink, gig income |
+| 300 | `liability` | BNPL, loans, credit cards, debt collection |
+| 400 | `all_other_credit` | Catch-all for remaining credits |
+| 500 | `fee` | Overdrawn fees, ATM fees, interest charges |
+
 ```text
 main.py
 `- ClassificationOrchestrator
+   |- InitialClassificationEngine
+   |- DishonourEngine
+   |- TransferEngine
    |- IncomeEngine
    |- LiabilityEngine
+   |- AllOtherCreditEngine
+   |- FeeEngine
    `- classification_core.reporting.write_report
 ```
 
-The engine packages contain only logic used by this flow: their shared engine
-adapter, in-memory pipeline, domain rules, and required resources. They do not
-provide separate CLIs or report/dashboard writers.
+### Matching rules
+
+Each engine stores its matching rules as **CSV files** under `resources/`, following
+the liability engine pattern:
+
+- **fee**: `resources/fee_classification_rules.csv` (~80 regex rules)
+- **income**: `resources/income_pattern_rules.csv` (~110 patterns) + `income_config.csv`
+- **transfer**: 6 CSV files for external/internal transfer regex, indicator patterns, exclusions
+- **liability**: 8 CSV files (~700 rules) covering counterparty, credit cards, loans, debt collection
+- **initial**: `merchant_kb.csv` (~2.5M rows, 233 MB) — merchant keyword database
+
+Rules support `keyword` (case-insensitive substring) and `regex` match types, ordered
+by priority. Domain modules load from CSV at import time with lazy caching.
 
 ## Tests
 
