@@ -43,7 +43,6 @@
     "Overdrawn": {"owner_engine_id": "fee,liability", "active": true},
     "Internal Transfer": {"owner_engine_id": "transfer", "active": true},
     "External Transfers": {"owner_engine_id": "transfer", "active": true},
-    "All Other Credits": {"owner_engine_id": "all_other_credit", "active": true},
-    "Financial Institutions": {"owner_engine_id": "initial", "active": true}
+    "All Other Credits": {"owner_engine_id": "all_other_credit", "active": true}
   }
 }
