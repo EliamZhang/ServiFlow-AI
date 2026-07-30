@@ -205,12 +205,63 @@ def clean_dataframe_columns(df):
 
 
 def apply_counterparty_rules(df, rules_file):
+    """Apply counterparty keyword/regex rules using vectorised operations.
+
+    The original implementation called ``match_text`` once per row via
+    ``.map()``, which compiled a new regex inside every call and performed
+    O(rows × rules) Python-level iterations.  This version achieves the
+    identical result with vectorised ``str.contains()`` passes — one per
+    keyword / regex rule — and an early-exit tracker so later rules only
+    process still-unmatched rows.
+    """
     keyword_rules, regex_rules = load_rules(rules_file)
     output = clean_dataframe_columns(df)
-    text_values = output.get("text", pd.Series("", index=output.index))
-    matches = text_values.map(lambda text: match_text(text, keyword_rules, regex_rules))
-    output["counterparty"] = matches.map(lambda match: match[0])
-    output["product_type"] = matches.map(lambda match: match[1])
+    text_col = output["text"].fillna("").astype(str)
+    # Vectorised normalisation — collapse whitespace then uppercase.
+    text_normalised = (
+        text_col.str.replace(r"\s+", " ", regex=True)
+        .str.strip()
+        .str.upper()
+    )
+
+    output["counterparty"] = ""
+    output["product_type"] = ""
+    already = pd.Series(False, index=output.index)
+
+    # Keyword rules — processed in original priority order.
+    for keyword, counterparty, product_type in keyword_rules:
+        mask = (
+            ~already
+            & text_normalised.str.contains(
+                r"(?<![A-Za-z])" + re.escape(keyword) + r"(?![A-Za-z])",
+                na=False,
+                regex=True,
+            )
+        )
+        if not mask.any():
+            continue
+        output.loc[mask, "counterparty"] = counterparty
+        output.loc[mask, "product_type"] = product_type
+        already |= mask
+
+    # Regex rules — compiled patterns, matched against the normalised text
+    # (same as the original ``match_text`` behaviour).
+    for pattern, counterparty, product_type in regex_rules:
+        mask = (
+            ~already
+            & text_normalised.str.contains(
+                pattern.pattern,
+                na=False,
+                regex=True,
+                flags=re.IGNORECASE,
+            )
+        )
+        if not mask.any():
+            continue
+        output.loc[mask, "counterparty"] = counterparty
+        output.loc[mask, "product_type"] = product_type
+        already |= mask
+
     return output
 
 
@@ -471,6 +522,24 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
     counterparty_col = output.get("counterparty", pd.Series("", index=output.index))
     counterparty_col = counterparty_col.fillna("").astype(str)
 
+    # Pre-compute the "not yet classified" mask for the non-overwrite path
+    # so we can vectorise metadata writes instead of looping row-by-row.
+    if not overwrite:
+        cp_empty = output["counterparty"].fillna("").astype(str).str.strip().eq("")
+        pt_empty = output["product_type"].fillna("").astype(str).str.strip().eq("")
+        not_classified = cp_empty & pt_empty
+    else:
+        not_classified = None
+
+    def _write_metadata(mask, rule, target):
+        """Write metadata for matched rows, honouring overwrite mode."""
+        if overwrite:
+            _bulk_write_metadata(output, mask, rule, target)
+        else:
+            effective = mask & not_classified
+            if effective.any():
+                _bulk_write_metadata(output, effective, rule, target)
+
     # -- text_keyword (vectorised) --
     for rule in rules.get("text_keyword", []):
         target = _resolve_target(rule, output_columns)
@@ -480,12 +549,7 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         if not mask.any():
             continue
         output.loc[mask, target] = 1
-        if overwrite:
-            _bulk_write_metadata(output, mask, rule, target)
-        else:
-            for row_id in output[mask].index:
-                if not _already_classified(output.loc[row_id]):
-                    _write_one_metadata(output, row_id, rule, target)
+        _write_metadata(mask, rule, target)
 
     # -- text_regex (each rule has its own compiled pattern) --
     for rule in rules.get("text_regex", []):
@@ -496,12 +560,7 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         if not mask.any():
             continue
         output.loc[mask, target] = 1
-        if overwrite:
-            _bulk_write_metadata(output, mask, rule, target)
-        else:
-            for row_id in output[mask].index:
-                if not _already_classified(output.loc[row_id]):
-                    _write_one_metadata(output, row_id, rule, target)
+        _write_metadata(mask, rule, target)
 
     # -- text_or_counterparty_keyword --
     for rule in rules.get("text_or_counterparty_keyword", []):
@@ -515,12 +574,7 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         if not mask.any():
             continue
         output.loc[mask, target] = 1
-        if overwrite:
-            _bulk_write_metadata(output, mask, rule, target)
-        else:
-            for row_id in output[mask].index:
-                if not _already_classified(output.loc[row_id]):
-                    _write_one_metadata(output, row_id, rule, target)
+        _write_metadata(mask, rule, target)
 
     # -- text_or_counterparty_regex --
     for rule in rules.get("text_or_counterparty_regex", []):
@@ -533,12 +587,7 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         if not mask.any():
             continue
         output.loc[mask, target] = 1
-        if overwrite:
-            _bulk_write_metadata(output, mask, rule, target)
-        else:
-            for row_id in output[mask].index:
-                if not _already_classified(output.loc[row_id]):
-                    _write_one_metadata(output, row_id, rule, target)
+        _write_metadata(mask, rule, target)
 
     # -- all_rules --
     for rule in rules.get("all_rules", []):
@@ -557,12 +606,7 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         if not mask.any():
             continue
         output.loc[mask, target] = 1
-        if overwrite:
-            _bulk_write_metadata(output, mask, rule, target)
-        else:
-            for row_id in output[mask].index:
-                if not _already_classified(output.loc[row_id]):
-                    _write_one_metadata(output, row_id, rule, target)
+        _write_metadata(mask, rule, target)
 
     return output
 

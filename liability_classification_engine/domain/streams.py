@@ -16,6 +16,7 @@ from dataclasses import dataclass
 from decimal import Decimal, InvalidOperation
 from typing import Callable
 
+import numpy as np
 import pandas as pd
 
 
@@ -229,41 +230,52 @@ def assign_grouped_product_streams(
 
     Stream numbering is based on a stable business sort so IDs do not depend
     on the raw input row order.
+
+    The original implementation used ``iterrows()`` to iterate over every
+    eligible row.  This version computes unique group keys from the sorted
+    rows and only loops over the (far smaller) set of unique groups.
     """
 
-    streams_by_key: dict[tuple[object, object, object], str] = {}
-    stream_number_by_application: dict[object, int] = {}
     sort_columns = [
         column for column in SIMPLE_STREAM_SORT_COLUMNS if column in output.columns
     ]
-    eligible_rows = output.loc[eligible_mask]
+    eligible = output.loc[eligible_mask]
     if sort_columns:
-        eligible_rows = eligible_rows.sort_values(
+        eligible = eligible.sort_values(
             sort_columns,
             kind="stable",
             na_position="last",
         )
 
-    for row_id, row in eligible_rows.iterrows():
-        group_values = tuple(
-            normalize_group_value(row.get(column, ""))
-            for column in SIMPLE_STREAM_GROUP_COLUMNS
-        )
-        application_id, bank_account_id, counterparty = group_values
-        if not has_counterparty(counterparty):
-            continue
+    # Exclude rows without a counterparty (original behaviour: ``continue``).
+    has_cp = (
+        eligible["counterparty"].notna()
+        & eligible["counterparty"].astype(str).str.strip().ne("")
+    )
+    eligible = eligible[has_cp]
+    if eligible.empty:
+        return
 
-        stream_key = (application_id, bank_account_id, counterparty)
-        if stream_key not in streams_by_key:
-            application_key = normalize_group_value(application_id)
-            stream_number_by_application[application_key] = (
-                stream_number_by_application.get(application_key, 0) + 1
-            )
-            streams_by_key[stream_key] = (
-                f"{prefix}_{stream_number_by_application[application_key]:03d}"
-            )
+    # Build a string-based group key from the three grouping columns so
+    # we can work with vectorised Series instead of per-row tuples.
+    app_col = eligible["application_id"].map(normalize_group_value)
+    acct_col = eligible["bank_account_id"].map(normalize_group_value)
+    cp_col = eligible["counterparty"].map(normalize_group_value)
+    group_key = app_col.astype(str) + "||" + acct_col.astype(str) + "||" + cp_col.astype(str)
 
-        output.at[row_id, "stream_id"] = streams_by_key[stream_key]
+    # Unique groups in sorted first-appearance order.
+    unique_groups = group_key.drop_duplicates()
+
+    # Assign sequential stream numbers per application.
+    app_counters: dict[object, int] = {}
+    stream_map: dict[str, str] = {}
+    for g in unique_groups:
+        app = g.split("||", 1)[0]
+        app_counters[app] = app_counters.get(app, 0) + 1
+        stream_map[g] = f"{prefix}_{app_counters[app]:03d}"
+
+    # Map stream IDs back to every row in the eligible set.
+    output.loc[eligible.index, "stream_id"] = group_key.map(stream_map).values
 
 
 def identify_direct_loc_streams(
@@ -622,21 +634,21 @@ class LocStreamIdGenerator:
 
     @staticmethod
     def _find_max_counters(existing_rows: pd.DataFrame) -> dict[object, int]:
-        counters: dict[object, int] = {}
+        """Return the max ``loc_NNN`` counter per application (vectorised)."""
+        sid_col = existing_rows["stream_id"].astype("string").str.strip().str.lower()
+        extracted = sid_col.str.extract(r"loc_(\d+)")
+        valid = extracted[0].notna()
+        if not valid.any():
+            return {}
 
-        for _, row in existing_rows.iterrows():
-            application_key = normalize_group_value(row.get("application_id", ""))
-            value = row.get("stream_id")
-            if pd.isna(value):
-                continue
-            match = re.fullmatch(r"loc_(\d+)", str(value).strip().lower())
-            if match:
-                counters[application_key] = max(
-                    counters.get(application_key, 0),
-                    int(match.group(1)),
-                )
-
-        return counters
+        app_key_col = existing_rows["application_id"].map(normalize_group_value)
+        counters_series = (
+            extracted.loc[valid, 0]
+            .astype(int)
+            .groupby(app_key_col[valid], sort=False)
+            .max()
+        )
+        return counters_series.to_dict()
 
     def next(self, application_id: object) -> str:
         application_key = normalize_group_value(application_id)
@@ -1929,15 +1941,29 @@ class _StreamIdCounter:
         relevant = output.loc[
             output["stream_id"].notna(), ["application_id", "stream_id"]
         ]
-        for _, row in relevant.iterrows():
-            app_key = normalize_group_value(row["application_id"])
-            parsed = parse_stream_id(row["stream_id"])
-            if parsed is None:
-                continue
-            prefix, counter = parsed
-            key = (app_key, prefix)
-            if counter > self._counters.get(key, 0):
-                self._counters[key] = counter
+        if relevant.empty:
+            return
+
+        # Vectorised parse: extract prefix & counter via str.extract.
+        sid_col = relevant["stream_id"].astype("string").str.strip()
+        extracted = sid_col.str.extract(r"(.+?)_(\d+)")
+        valid = extracted[0].notna() & extracted[1].notna()
+
+        if not valid.any():
+            return
+
+        app_key_col = relevant["application_id"].map(normalize_group_value)
+        prefix_col = extracted[0][valid]
+        counter_col = extracted[1][valid].astype(int)
+
+        # Max counter per (app_key, prefix).
+        max_counters = (
+            counter_col.groupby(
+                [app_key_col[valid], prefix_col], sort=False
+            ).max()
+        )
+        for (app_key, prefix), counter in max_counters.items():
+            self._counters[(app_key, prefix)] = counter
 
     def next(self, application_id: object, prefix: str) -> str:
         key = (normalize_group_value(application_id), prefix)
@@ -2238,64 +2264,80 @@ def apply_special_counterparty_stream_overrides(
 
 
 def renumber_stream_ids_by_application(df: pd.DataFrame) -> pd.DataFrame:
+    """Renumber stream IDs so they are consecutive per (application, prefix).
+
+    The original implementation used two ``iterrows()`` passes — one to
+    discover the existing stream IDs and their first positions, and a
+    second to apply the replacements.  This version uses ``str.extract``
+    and ``groupby`` to discover the mapping, then applies it with
+    ``Series.map`` so every operation stays inside pandas' C-level loops.
+    """
     output = df.copy()
     if "application_id" not in output.columns or "stream_id" not in output.columns:
         return output
 
-    first_positions: dict[tuple[object, str], int] = {}
-    parsed_streams: dict[tuple[object, str], tuple[str, int]] = {}
+    # ---- 1. Parse stream IDs (vectorised str.extract) ----
+    sid_col = output["stream_id"].astype("string").str.strip()
+    extracted = sid_col.str.extract(r"(.+?)_(\d+)")
+    # extracted[0] = prefix,  extracted[1] = counter digits
+    valid = extracted[0].notna() & extracted[1].notna()
 
-    for position, (_, row) in enumerate(output.iterrows()):
-        parsed = parse_stream_id(row.get("stream_id"))
-        if parsed is None:
-            continue
-
-        application_key = normalize_group_value(row.get("application_id", ""))
-        stream_id = str(row.get("stream_id")).strip()
-        stream_key = (application_key, stream_id)
-        first_positions.setdefault(stream_key, position)
-        parsed_streams.setdefault(stream_key, parsed)
-
-    replacements: dict[tuple[object, str], str] = {}
-    stream_keys_by_application_prefix: dict[
-        tuple[object, str],
-        list[tuple[object, str]],
-    ] = {}
-
-    for stream_key, (prefix, _) in parsed_streams.items():
-        application_key, _ = stream_key
-        stream_keys_by_application_prefix.setdefault(
-            (application_key, prefix),
-            [],
-        ).append(stream_key)
-
-    for (application_key, prefix), stream_keys in (
-        stream_keys_by_application_prefix.items()
-    ):
-        ordered_stream_keys = sorted(
-            stream_keys,
-            key=lambda stream_key: (
-                parsed_streams[stream_key][1],
-                first_positions[stream_key],
-                stream_key[1],
-            ),
-        )
-        for counter, stream_key in enumerate(ordered_stream_keys, start=1):
-            replacements[stream_key] = f"{prefix}_{counter:03d}"
-
-    if not replacements:
+    if not valid.any():
         return output
 
-    output["stream_id"] = [
-        replacements.get(
-            (
-                normalize_group_value(row.get("application_id", "")),
-                str(row.get("stream_id")).strip(),
-            ),
-            row.get("stream_id"),
-        )
-        for _, row in output.iterrows()
-    ]
+    # ---- 2. Build lookup columns ----
+    app_key_col = output["application_id"].map(normalize_group_value)
+    position_col = pd.Series(range(len(output)), index=output.index)
+
+    # ---- 3. First-position per unique (app_key, stream_id) ----
+    sid_clean = sid_col.where(valid, other=pd.NA)
+    first_pos = (
+        position_col
+        .groupby([app_key_col, sid_clean], sort=False)
+        .first()
+    )
+
+    # ---- 4. Build a DataFrame of unique streams ----
+    streams_df = pd.DataFrame({
+        "app_key": app_key_col[valid],
+        "stream_id": sid_clean[valid],
+        "prefix": extracted[0][valid],
+        "counter": extracted[1][valid].astype(int),
+    }).drop_duplicates(subset=["app_key", "stream_id"])
+
+    # Attach first positions via merge
+    streams_df = streams_df.merge(
+        first_pos.rename("first_pos"),
+        left_on=["app_key", "stream_id"],
+        right_index=True,
+        how="left",
+    )
+
+    # ---- 5. Assign new consecutive counters per (app_key, prefix) ----
+    # Sort within each group: (old counter, first position, stream_id)
+    streams_df = streams_df.sort_values(
+        ["app_key", "prefix", "counter", "first_pos", "stream_id"],
+        kind="stable",
+    )
+    streams_df["new_counter"] = streams_df.groupby(
+        ["app_key", "prefix"], sort=False
+    ).cumcount() + 1
+    streams_df["new_stream_id"] = (
+        streams_df["prefix"] + "_" + streams_df["new_counter"].astype(str).str.zfill(3)
+    )
+
+    # ---- 6. Build replacement map and apply via Series.map ----
+    streams_df["_map_key"] = streams_df["app_key"].astype(str) + "||" + streams_df["stream_id"]
+    replacement_map = dict(
+        zip(streams_df["_map_key"], streams_df["new_stream_id"])
+    )
+
+    if not replacement_map:
+        return output
+
+    row_keys = app_key_col.astype(str) + "||" + sid_col
+    output["stream_id"] = row_keys.map(replacement_map).fillna(sid_col).values
+
     return output
 
 
@@ -2377,17 +2419,17 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
 
     valid_mask = valid_mask & ~product_type.str.lower().eq("car_loan")
 
-    output.loc[valid_mask, "finv_category"] = [
-        (
-            base
-            if base in {"bnpl", "wage_advance", "home_loan", "bank", "loc", "contract_loan"}
-            else f"{product}_{base}"
-        )
-        for product, base in zip(
-            product_type.loc[valid_mask],
+    # Vectorised finv_category assignment (replaces the original per-row
+    # list comprehension that called ``zip`` on Series slices).
+    if valid_mask.any():
+        special_bases = stream_base.loc[valid_mask].isin({
+            "bnpl", "wage_advance", "home_loan", "bank", "loc", "contract_loan",
+        })
+        output.loc[valid_mask, "finv_category"] = np.where(
+            special_bases,
             stream_base.loc[valid_mask],
+            product_type.loc[valid_mask] + "_" + stream_base.loc[valid_mask],
         )
-    ]
     car_loan_mask = output["finv_category"].isna() & product_type.str.lower().eq("car_loan")
     output.loc[car_loan_mask, "finv_category"] = "Car Loan"
 

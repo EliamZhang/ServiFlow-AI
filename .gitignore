@@ -9,3 +9,8 @@ stopword_extract/
 docs/
 output/
 sample.csv
+sample_30_apps.csv
+create_ppt.js
+package.json
+package-lock.json
+node_modules/
