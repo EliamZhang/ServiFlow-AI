@@ -34,6 +34,11 @@
       "engine_id": "all_other_credit",
       "priority": 400,
       "enabled": true
+    },
+    {
+      "engine_id": "catch_all",
+      "priority": 999,
+      "enabled": true
     }
   ],
   "execution": {
