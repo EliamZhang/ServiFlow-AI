@@ -24,10 +24,18 @@ def run_pipeline(
     automaton = get_cached_automaton(kb_path)
     output = match_transactions(transactions, automaton)
 
-    # Debt Collection / Debt Consolidation are now owned by the liability engine.
+    # Debt Collection / Debt Consolidation belong to the liability engine.
+    # Financial Institutions has no category owner in this pipeline.
     # Clear them here so the initial engine does not fail ownership validation.
-    _liability_owned = output["finv_category"].isin(["Debt Collection", "Debt Consolidation"])
-    output.loc[_liability_owned, "finv_category"] = ""
+    _financial_institutions = output["finv_category"].eq(
+        "Financial Institutions"
+    )
+    _suppressed_categories = output["finv_category"].isin(
+        ["Debt Collection", "Debt Consolidation", "Financial Institutions"]
+    )
+    output.loc[_suppressed_categories, "finv_category"] = ""
+    # Avoid committing an empty initial-engine classification for this category.
+    output.loc[_financial_institutions, "matched"] = False
 
     return PipelineResult(
         transactions=output,
