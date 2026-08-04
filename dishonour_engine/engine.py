@@ -40,13 +40,17 @@ class DishonourEngine:
                 mask |= term_mask & text_col.str.contains(pattern, case=False, na=False, regex=True)
 
         matched = candidates[mask].copy()
-        predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
-        predictions["matched"] = True
-        predictions["counterparty"] = "-"
-        predictions["finv_category"] = "Dishonours"
-        predictions["stream_id"] = pd.NA
-        predictions["classification_rule_id"] = "dishonour:generic"
-        predictions["classification_reason"] = "Dishonour transaction detected"
+        predictions = pd.DataFrame(
+            {
+                **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},
+                "matched": True,
+                "counterparty": "-",
+                "finv_category": "Dishonours",
+                "stream_id": pd.NA,
+                "classification_rule_id": "dishonour:generic",
+                "classification_reason": "Dishonour transaction detected",
+            }
+        )
 
         return EngineResult(predictions=predictions, transactions=pd.DataFrame())
 

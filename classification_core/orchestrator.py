@@ -39,6 +39,8 @@ CLAIM_ARCHIVE_COLUMNS = (
 # ── key helpers ─────────────────────────────────────────────────────────────
 
 def _key_tuples(df: pd.DataFrame) -> list[tuple[str, str]]:
+    if df.empty:
+        return []
     key_frame = df.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
     key_frame = key_frame.astype("string").fillna("")
     return [tuple(row) for row in key_frame.itertuples(index=False, name=None)]
@@ -189,6 +191,8 @@ class ClassificationOrchestrator:
                 f"Engine {engine.engine_id!r} must return EngineResult."
             )
         predictions = result.predictions.copy()
+        if predictions.empty:
+            return predictions
         missing = sorted(PREDICTION_REQUIRED_COLUMNS.difference(predictions.columns))
         if missing:
             raise ValueError(

@@ -35,17 +35,21 @@ class InitialClassificationEngine:
         details = result.transactions
 
         matched = details[details["matched"].eq(True)].copy()
-        predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
-        predictions["matched"] = True
-        predictions["counterparty"] = matched["counterparty"].values
-        predictions["finv_category"] = matched["finv_category"].values
-        predictions["stream_id"] = ""
-        predictions["classification_rule_id"] = matched[
-            "classification_rule_id"
-        ].values
-        predictions["classification_reason"] = matched[
-            "classification_reason"
-        ].values
+        predictions = pd.DataFrame(
+            {
+                **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},
+                "matched": True,
+                "counterparty": matched["counterparty"].values,
+                "finv_category": matched["finv_category"].values,
+                "stream_id": "",
+                "classification_rule_id": matched[
+                    "classification_rule_id"
+                ].values,
+                "classification_reason": matched[
+                    "classification_reason"
+                ].values,
+            }
+        )
 
         return EngineResult(
             predictions=predictions,

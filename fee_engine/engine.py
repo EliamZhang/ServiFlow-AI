@@ -36,17 +36,17 @@ class FeeEngine:
         details = result.transactions
 
         matched = details[details["is_fee_pred"].eq(1)].copy()
-        predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
-        predictions["matched"] = True
-        predictions["counterparty"] = matched["counterparty"].values
-        predictions["finv_category"] = matched["finv_category"].values
-        predictions["stream_id"] = matched["stream_id"].values
-        predictions["classification_rule_id"] = matched[
-            "fee_rule_name"
-        ].values
-        predictions["classification_reason"] = matched[
-            "fee_pred_reason"
-        ].values
+        predictions = pd.DataFrame(
+            {
+                **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},
+                "matched": True,
+                "counterparty": matched["counterparty"].values,
+                "finv_category": matched["finv_category"].values,
+                "stream_id": matched["stream_id"].values,
+                "classification_rule_id": matched["fee_rule_name"].values,
+                "classification_reason": matched["fee_pred_reason"].values,
+            }
+        )
 
         return EngineResult(
             predictions=predictions,
