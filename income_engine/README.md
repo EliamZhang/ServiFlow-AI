@@ -18,7 +18,7 @@ That command writes `output/classification_report.xlsx`.
 ## Package layout
 
 ```text
-income_classification_engine/
+income_engine/
 |- engine.py       # shared engine contract implementation
 |- pipeline.py     # in-memory income classification flow
 `- domain/         # classification and summary logic

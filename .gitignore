@@ -4,7 +4,7 @@ __pycache__/
 *.pickle
 .pytest_cache/
 .coverage
-initial_classification_engine/merchant_kb.csv
+initial_engine/merchant_kb.csv
 output/
 sample.csv
 sample_30_apps.csv

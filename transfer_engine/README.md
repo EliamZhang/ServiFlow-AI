@@ -18,7 +18,7 @@ That command writes `output/classification_report.xlsx`.
 ## Package layout
 
 ```text
-transfer_classification_engine/
+transfer_engine/
 |- engine.py       # shared engine contract implementation
 |- pipeline.py     # in-memory transfer classification flow
 `- domain/         # classification and summary logic

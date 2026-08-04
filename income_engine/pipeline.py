@@ -3,7 +3,7 @@ from __future__ import annotations
 import pandas as pd
 
 from classification_core.models import PipelineResult
-from initial_classification_engine.domain.classification import (
+from initial_engine.domain.classification import (
     clean_text,
     get_cached_automaton,
     _is_whole_word,

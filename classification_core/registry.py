@@ -3,13 +3,13 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from all_other_credit_engine import AllOtherCreditEngine
-from catch_all_classification_engine import CatchAllEngine
-from dishonour_classification_engine import DishonourEngine
-from fee_classification_eigine import FeeEngine
-from income_classification_engine import IncomeEngine
-from initial_classification_engine import InitialClassificationEngine
-from liability_classification_engine import LiabilityEngine
-from transfer_classification_engine import TransferEngine
+from catch_all_engine import CatchAllEngine
+from dishonour_engine import DishonourEngine
+from fee_engine import FeeEngine
+from income_engine import IncomeEngine
+from initial_engine import InitialClassificationEngine
+from liability_engine import LiabilityEngine
+from transfer_engine import TransferEngine
 
 from .engine import ClassificationEngine
 

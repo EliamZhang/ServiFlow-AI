@@ -23,7 +23,7 @@ That command writes `output/classification_report.xlsx`.
 ## Package layout
 
 ```text
-liability_classification_engine/
+liability_engine/
 |- engine.py       # shared engine contract implementation
 |- pipeline.py     # in-memory liability classification flow
 |- domain/         # rules, stream identification, and summary logic
