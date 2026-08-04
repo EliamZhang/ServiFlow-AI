@@ -18,7 +18,6 @@ from .models import (
 )
 from .registry import build_engine
 
-
 PREDICTION_REQUIRED_COLUMNS = {
     *TRANSACTION_KEY_COLUMNS,
     "matched",
@@ -27,6 +26,14 @@ PREDICTION_REQUIRED_COLUMNS = {
 }
 
 _UNCLASSIFIED_SENTINEL = "unclassified"
+
+CLAIM_ARCHIVE_COLUMNS = (
+    *TRANSACTION_KEY_COLUMNS,
+    "finv_category",
+    "counterparty",
+    "classification_rule_id",
+    "stream_id",
+)
 
 
 # ── key helpers ─────────────────────────────────────────────────────────────
@@ -98,6 +105,7 @@ class ClassificationOrchestrator:
             engine_started = perf_counter()
             engine_result = engine.classify(context)
             accepted = self._validate_predictions(engine, context, engine_result)
+            claim_archive = self._archive_claims(accepted, spec.priority)
             self._commit(
                 output=output,
                 key_to_index=key_to_index,
@@ -118,6 +126,7 @@ class ClassificationOrchestrator:
                     accepted_count=len(accepted),
                     duration_seconds=engine_seconds,
                     diagnostics=engine_result.diagnostics,
+                    claims=claim_archive,
                 )
             )
 
@@ -235,6 +244,21 @@ class ClassificationOrchestrator:
     # ------------------------------------------------------------------
     # commit (row-level — later engines overwrite earlier ones entirely)
     # ------------------------------------------------------------------
+
+    @staticmethod
+    def _archive_claims(
+        predictions: pd.DataFrame, priority: int
+    ) -> pd.DataFrame:
+        """Snapshot each engine's accepted predictions for baseline comparison.
+
+        Every claim is archived regardless of which engine ends up winning the
+        row in the final output, so a regression inside a later-overwritten
+        engine still shows up in ``baseline.py diff``."""
+        claim_archive = predictions[
+            [col for col in CLAIM_ARCHIVE_COLUMNS if col in predictions.columns]
+        ].copy()
+        claim_archive["priority"] = priority
+        return claim_archive
 
     @staticmethod
     def _commit(

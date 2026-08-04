@@ -11,8 +11,10 @@
 
 ## 基线回归对比（output 变更检查）
 
-- 每次改完代码，必须运行 `python baseline.py diff`（用 `.venv/Scripts/python.exe` 运行），将当前流水线输出与基线 `baseline/sample_baseline.csv` 对比，检查分类结果是否发生变更。
-- 若 `diff` 报告有差异（exit 1），必须向用户说明每笔差异的原因（对应改动的规则/逻辑），不能只报告"有差异"就结束。
+- 每次改完代码，必须运行 `python baseline.py diff`（用 `.venv/Scripts/python.exe` 运行），将当前流水线输出与基线对比，检查分类结果是否发生变更。基线为**双层**，由 `save` 一次性生成，缺一不可：
+  - `baseline/sample_baseline.csv`（最终输出层）：每笔交易 1 行，只记最终赢家结果（`finv_category` / `counterparty` / `classification_engine` / `stream_id`）。
+  - `baseline/engine_claims.csv`（每引擎认领层）：每引擎每交易 1 行，记录所有引擎各自的认领（含 `classification_rule_id` / `stream_id` / `priority`），无论该行最终被哪台引擎赢走。**只有它才能抓到"引擎改了逻辑但没当上最终赢家"的回归**（此类变更在最终层完全不可见）。数据来自 `orchestrator.py` 的 `_archive_claims`，挂在 `EngineExecution.claims` 上。
+- `diff` 输出两类差异：最终输出变化（CHANGED/NEW/GONE）+ 引擎认领变化（含 rule_id 计数增减）。若 `diff` 报告有差异（exit 1），必须向用户说明每笔差异的原因（对应改动的规则/逻辑），不能只报告"有差异"就结束。
 - 基线由 `python baseline.py save` 生成；仅当用户确认分类结果变更符合预期时，才允许重新保存基线。
 - 注意：diff 输出含中文，Windows 控制台需设置 `PYTHONIOENCODING=utf-8`，或用 `.venv` 环境运行。
 

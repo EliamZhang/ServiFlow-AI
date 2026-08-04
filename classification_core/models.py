@@ -47,6 +47,7 @@ class EngineExecution:
     accepted_count: int
     duration_seconds: float = 0.0
     diagnostics: dict[str, Any] = field(default_factory=dict)
+    claims: pd.DataFrame = field(default_factory=pd.DataFrame)
 
 
 @dataclass
