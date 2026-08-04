@@ -6,7 +6,6 @@ from classification_core.models import PipelineResult
 from initial_engine.domain.classification import (
     clean_text,
     get_cached_automaton,
-    _is_whole_word,
 )
 
 from .domain.classification import (
@@ -34,13 +33,8 @@ def _add_kb_counterparty(transactions: pd.DataFrame) -> pd.DataFrame:
 
     for text_clean in texts:
         hits = automaton.search(str(text_clean))
-        whole_word_hits = [
-            h for h in hits if _is_whole_word(h[0], str(text_clean))
-        ]
-        if whole_word_hits:
-            best_kw, _merchant, _cat = max(
-                whole_word_hits, key=lambda h: len(h[0])
-            )
+        if hits:
+            best_kw, _merchant, _cat = max(hits, key=lambda h: len(h[0]))
             kb_counterparties.append(best_kw.title())
         else:
             kb_counterparties.append("")

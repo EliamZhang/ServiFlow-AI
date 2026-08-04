@@ -13,10 +13,8 @@ Performance characteristics
 
 from __future__ import annotations
 
-import math
 import pickle
 import re
-from collections import defaultdict
 from pathlib import Path
 
 import ahocorasick
@@ -90,12 +88,21 @@ class _Automaton:
         return self._a.iter(text)
 
     def search(self, text: str) -> list[tuple[str, str, str]]:
-        """Return ``(keyword, merchant, category)`` tuples — compatible with the
-        legacy pure-Python automaton API used by downstream engines (e.g. income)."""
-        return [
-            (kw, merchant, cat)
-            for _, (kw, merchant, cat, _p) in self._a.iter(text)
-        ]
+        """Return whole-word ``(keyword, merchant, category)`` hits — compatible
+        with the legacy pure-Python automaton API used by downstream engines
+        (e.g. income)."""
+        hits: list[tuple[str, str, str]] = []
+        for _, (kw, merchant, cat) in self._a.iter(text):
+            pos = text.find(kw)
+            if pos == -1:  # safety — automaton guarantees the match exists
+                continue
+            if pos > 0 and text[pos - 1] != " ":
+                continue
+            end = pos + len(kw)
+            if end < len(text) and text[end] != " ":
+                continue
+            hits.append((kw, merchant, cat))
+        return hits
 
 
 # ---------------------------------------------------------------------------
@@ -148,11 +155,6 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
         # Clean keywords.
         exploded["_kw_clean"] = exploded["_kw_raw"].apply(clean_text)
 
-        # Filter: minimum length.
-        exploded = exploded[
-            exploded["_kw_clean"].str.len() >= _MIN_KEYWORD_LEN
-        ]
-
         # Filter: stopwords.
         exploded = exploded[~exploded["_kw_clean"].isin(_STOPWORDS)]
 
@@ -164,7 +166,7 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
             subset=["_kw_clean", "merchant_name", "category"]
         )
 
-        # Cross-chunk dedup (collect, automaton built after purity calc).
+        # Cross-chunk dedup (collect, automaton built afterwards).
         for _, row in exploded.iterrows():
             kw = row["_kw_clean"]
             merchant = str(row["merchant_name"]).strip()
@@ -175,20 +177,11 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
             if key not in seen:
                 seen[key] = None
 
-    # Compute per-keyword merchant count for uniqueness scoring.
-    # More distinct merchants sharing a keyword → more generic → lower purity.
-    _kw_merchants: dict[str, set[str]] = defaultdict(set)
-    for kw, merchant, _cat in seen:
-        _kw_merchants[kw].add(merchant)
-
-    total = len(seen)
     for kw, merchant, cat in seen:
-        uniqueness = math.log(total / len(_kw_merchants[kw]))
-        purity = uniqueness
-        automaton.add_word(kw, (kw, merchant, cat, purity))
+        automaton.add_word(kw, (kw, merchant, cat))
 
     automaton.make_automaton()
-    return _Automaton(automaton, total)
+    return _Automaton(automaton, len(seen))
 
 
 # Module-level cache so that downstream engines (e.g. income) can reuse the
@@ -249,7 +242,6 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> _Automaton:
 # Batch matcher
 # ---------------------------------------------------------------------------
 
-_MIN_KEYWORD_LEN = 4
 _MAX_VARIANTS_PER_MERCHANT = 50  # cap to guard against KB entries with hundreds of
                                 # unrelated generic keywords (data-quality issue)
 
@@ -362,7 +354,7 @@ _STOPWORDS: frozenset[str] = frozenset(
         "FUNDS",
         "CASH",
         "MONEY",
-        # --- generic company suffixes (>= _MIN_KEYWORD_LEN chars) ---
+        # --- generic company suffixes ---
         "LIMITED",
         "GROUP",
         "HOLDINGS",
@@ -372,23 +364,6 @@ _STOPWORDS: frozenset[str] = frozenset(
         "SERVICES",
     }
 )
-
-
-def _is_whole_word(keyword: str, text: str) -> bool:
-    """Check that *keyword* appears as a whole word in *text*.
-
-    After ``clean_text`` the text contains only ``[A-Z0-9 ]`` — word
-    boundaries are simply spaces or string edges.
-    """
-    pos = text.find(keyword)
-    if pos == -1:
-        return False
-    if pos > 0 and text[pos - 1] != " ":
-        return False
-    end = pos + len(keyword)
-    if end < len(text) and text[end] != " ":
-        return False
-    return True
 
 
 def match_transactions(
@@ -405,26 +380,25 @@ def match_transactions(
     out["_text_clean"] = out["text"].apply(_clean_transaction_text)
 
     def _classify_one(text_clean: str) -> tuple[bool, str, str, str, str, str]:
-        """Classify a single cleaned text via purity × position scoring.
+        """Classify a single cleaned text by whole-word keyword match.
 
         Returns (matched, counterparty, category, keyword, rule_id, reason).
 
-        Optimisation: instead of calling ``str.find()`` + ``_is_whole_word()``
-        (which together scan the text twice), we call ``str.find()`` once and
-        inline the whole-word boundary check.  The ahocorasick automaton has
-        already confirmed the keyword *exists*; ``str.find()`` reliably gives
-        us the 0-based start index without needing to interpret ``end_pos``
-        semantics (which vary across pyahocorasick versions).
+        The automaton yields every matching keyword; a keyword only counts if
+        it appears as a whole word (inlined boundary check — the cleaned text
+        is ``[A-Z0-9 ]``, so boundaries are spaces or string edges).  Matches
+        are ranked by longest keyword first — when the same text hits several
+        keywords, the longest (most specific) one wins.
         """
         if not text_clean:
             return (False, "", "", "", "", "")
 
         text_len = len(text_clean)
 
-        best: tuple[float, str, str, str] | None = None
+        best: tuple[int, str, str, str] | None = None
 
-        # pyahocorasick.iter() yields (end_pos, (kw, merchant, cat, purity)).
-        for _end_pos, (kw, merchant, cat, purity) in automaton.iter(text_clean):
+        # pyahocorasick.iter() yields (end_pos, (kw, merchant, cat)).
+        for _end_pos, (kw, merchant, cat) in automaton.iter(text_clean):
             # Use str.find() for reliable position (ahocorasick end_pos
             # semantics are version-dependent; find() is unambiguous).
             pos = text_clean.find(kw)
@@ -440,16 +414,13 @@ def match_transactions(
             if end < text_len and text_clean[end] != " ":
                 continue
 
-            # ── Purity × position scoring ──
-            position_weight = 1.0 - pos / text_len
-            score = purity * position_weight
-
-            if best is None or score > best[0]:
-                best = (score, kw, merchant, cat)
+            # ── Longest keyword wins ──
+            if best is None or len(kw) > best[0]:
+                best = (len(kw), kw, merchant, cat)
         if best is None:
             return (False, "", "", "", "", "")
 
-        best_score, best_kw, best_merchant, best_cat = best
+        _best_len, best_kw, best_merchant, best_cat = best
 
         reason = format_classification_reason(
             category=best_cat,
@@ -457,7 +428,6 @@ def match_transactions(
             evidence=[
                 f"keyword={best_kw}",
                 f"merchant={best_merchant}",
-                f"purity={best_score:.2f}",
             ],
         )
         return (
