@@ -403,25 +403,6 @@ def _load_flag_rules_format_b(rows):
     return indexed
 
 
-def _matches_all_conditions(row, rule):
-    """Check account_type / dr_cr / bank / amount_gt constraints."""
-    for field_name in ("account_type", "dr_cr", "bank"):
-        rule_value = rule.get(field_name, "*")
-        if rule_value == "*":
-            continue
-        row_value = normalize_rule_value(row.get(field_name, "")) or "-"
-        if rule_value != normalize_rule_value(row_value):
-            return False
-
-    amount_gt = rule.get("amount_gt")
-    if amount_gt is not None:
-        amount = parse_decimal(row.get("amount"))
-        if amount is None or abs(amount) <= amount_gt:
-            return False
-
-    return True
-
-
 def _apply_flag_rules(df, rules, output_columns, overwrite=False):
     """Apply loaded flag rules to a dataframe.
 

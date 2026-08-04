@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 from collections import Counter
-from datetime import date
 from math import ceil
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 from pathlib import Path
@@ -460,7 +459,6 @@ def calculate_predicted_closing_date(
 def build_bnpl_summary(
     df: pd.DataFrame,
     limits: pd.DataFrame | None = None,
-    as_of_date: date | None = None,
 ) -> pd.DataFrame:
     """Return one BNPL summary row per finv_category + stream_id."""
 
@@ -516,27 +514,15 @@ def build_bnpl_summary(
             if not pd.isna(sample_datetime)
             else transaction_end_date
         )
-        recent_30_debit_amount = Decimal("0")
         raw_recent_fn = Decimal("0")
 
         if not valid_debits.empty and not pd.isna(as_of_datetime):
             as_of_day = pd.Timestamp(as_of_datetime).normalize()
             transaction_days = valid_debits["_transaction_date"].dt.normalize()
-            recent_30_mask = transaction_days.between(
-                as_of_day - pd.Timedelta(days=30),
-                as_of_day,
-                inclusive="both",
-            )
             recent_60_mask = transaction_days.between(
                 as_of_day - pd.Timedelta(days=60),
                 as_of_day,
                 inclusive="both",
-            )
-            recent_30_debit_amount = round_money(
-                sum(
-                    valid_debits.loc[recent_30_mask, "_amount_decimal"],
-                    Decimal("0"),
-                )
             )
             recent_60_debit_amount = round_money(
                 sum(
@@ -576,7 +562,7 @@ def build_bnpl_summary(
 
     summary = pd.DataFrame(summary_rows)
 
-    for (app_id, counterparty), counterparty_rows in summary.groupby(
+    for (_, counterparty), counterparty_rows in summary.groupby(
         ["application_id", "counterparty"],
         dropna=False,
         sort=False,

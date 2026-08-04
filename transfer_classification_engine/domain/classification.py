@@ -21,11 +21,8 @@ from __future__ import annotations
 import csv
 import re
 from pathlib import Path
-from typing import List
 
 import pandas as pd
-
-from classification_core.reasons import format_classification_reason
 
 from .transfer_counterparty import load_counterparty_rules
 from .transfer_rules import (

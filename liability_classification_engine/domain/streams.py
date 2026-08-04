@@ -25,11 +25,6 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 
 DEFAULT_GROUP_COLUMNS = ["application_id", "counterparty"]
-SIMPLE_STREAM_GROUP_COLUMNS = [
-    "application_id",
-    "bank_account_id",
-    "counterparty",
-]
 SIMPLE_STREAM_SORT_COLUMNS = [
     "application_id",
     "bank_account_id",
@@ -196,11 +191,6 @@ def amount_within_tolerance(
 
 def normalize_group_value(value: object) -> object:
     return "" if pd.isna(value) else value
-
-
-def has_counterparty(value: object) -> bool:
-    # Match the original CSV behavior: only a genuinely empty value is skipped.
-    return not pd.isna(value) and str(value) != ""
 
 
 def ensure_stream_id_column(df: pd.DataFrame, reset: bool = False) -> pd.DataFrame:
@@ -1913,16 +1903,6 @@ FINV_CATEGORY_MAP = {
     "loc": "LOC",
     "home_loan": "Home Loan",
 }
-
-def parse_stream_id(value: object) -> tuple[str, int] | None:
-    if pd.isna(value):
-        return None
-
-    match = re.fullmatch(r"(.+?)_(\d+)", str(value).strip())
-    if not match:
-        return None
-
-    return match.group(1), int(match.group(2))
 
 
 class _StreamIdCounter:

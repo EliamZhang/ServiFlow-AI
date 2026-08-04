@@ -1,7 +1,5 @@
 import re
 
-import pandas as pd
-
 
 # ---------------------------------------------------------------------------
 # Cash Converters: retail vs lending

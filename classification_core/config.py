@@ -25,7 +25,6 @@ class EngineSpec:
 class PipelineConfig:
     engines: tuple[EngineSpec, ...]
     on_engine_error: str = "fail_batch"
-    unclassified_category: str = "unclassified"
 
     @property
     def enabled_engines(self) -> tuple[EngineSpec, ...]:
@@ -75,9 +74,6 @@ def load_pipeline_config(path: str | Path = DEFAULT_PIPELINE_CONFIG) -> Pipeline
     return PipelineConfig(
         engines=engines,
         on_engine_error=on_engine_error,
-        unclassified_category=str(
-            execution.get("unclassified_category", "unclassified")
-        ),
     )
 
 

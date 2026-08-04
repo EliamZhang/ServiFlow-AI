@@ -20,7 +20,6 @@ from collections import defaultdict
 from pathlib import Path
 
 import ahocorasick
-import numpy as np
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason

@@ -34,7 +34,6 @@ class EngineResult:
 @dataclass
 class SummaryArtifact:
     name: str
-    schema_version: str
     data: pd.DataFrame
 
 

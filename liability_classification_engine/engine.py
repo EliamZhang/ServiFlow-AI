@@ -76,4 +76,4 @@ class LiabilityEngine:
             accepted_details,
             limits_file=self.resources_dir / "bnpl_maximum_limits.csv",
         )
-        return [SummaryArtifact("liability_summary", "1.0", summary)]
+        return [SummaryArtifact("liability_summary", summary)]

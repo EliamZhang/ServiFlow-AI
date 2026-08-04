@@ -1,6 +1,6 @@
 """Category mapping from engine granular categories to illion parent categories.
 
-This is the single source of truth.  ``compare_labels.py`` imports from here.
+This is the single source of truth for the illion mapping.
 """
 
 from __future__ import annotations
@@ -10,7 +10,6 @@ import pandas as pd
 # ── granular (our) → illion parent ────────────────────────────────────────
 #
 # Exact name matches work automatically (identity mapping) and are NOT listed.
-# Categories in UNMAPPABLE_CATS have no illion equivalent.
 
 OUR_TO_ILLION: dict[str, str] = {
     # -- singular / plural --
@@ -33,64 +32,6 @@ OUR_TO_ILLION: dict[str, str] = {
     "LOC":                   "Non SACC Loans",
     "Home Loan":             "Non SACC Loans",
     "Car Loan":              "Non SACC Loans",
-}
-
-# Our categories that illion has NO equivalent for.
-UNMAPPABLE_CATS: frozenset[str] = frozenset({
-    "Debt Consolidation",
-})
-
-# ── reverse mapping (illion → our labels) for human review ─────────────────
-
-ILLION_TO_OUR: dict[str, list[str]] = {
-    # -- exact name match (1:1) --
-    "Internal Transfer":            ["[同名] Internal Transfer"],
-    "External Transfers":           ["[同名] External Transfers"],
-    "Dining Out":                   ["[同名] Dining Out"],
-    "Retail":                       ["[同名] Retail"],
-    "Groceries":                    ["[同名] Groceries"],
-    "Health":                       ["[同名] Health"],
-    "Automotive":                   ["[同名] Automotive"],
-    "Entertainment":                ["[同名] Entertainment"],
-    "Home Improvement":             ["[同名] Home Improvement"],
-    "Travel":                       ["[同名] Travel"],
-    "Information":                  ["[同名] Information"],
-    "Personal Care":                ["[同名] Personal Care"],
-    "Transport":                    ["[同名] Transport"],
-    "Education":                    ["[同名] Education"],
-    "Gambling":                     ["[同名] Gambling"],
-    "Gyms and other memberships":   ["[同名] Gyms and other memberships"],
-    "Pet Care":                     ["[同名] Pet Care"],
-    "Donations":                    ["[同名] Donations"],
-    "Utilities":                    ["[同名] Utilities"],
-    "Telecommunications":           ["[同名] Telecommunications"],
-    "Rent":                         ["[同名] Rent"],
-    "Department Stores":            ["[同名] Department Stores"],
-    "Insurance":                    ["[同名] Insurance"],
-    "Subscription TV":              ["[同名] Subscription TV"],
-    "Dishonours":                   ["[同名] Dishonours"],
-    "Debt Collection":              ["[同名] Debt Collection"],
-    "Overdrawn":                    ["[同名] Overdrawn"],
-    "SACC Loans":                   ["[同名] SACC Loans"],
-
-    # -- 1:1, different names --
-    "Fees":                         ["fee"],
-    "Centrelink":                   ["centrelink"],
-    "Credit Card Repayments":       ["Credit Card Repayment"],
-
-    # -- All Other Credits --
-    "All Other Credits":    "All Other Credits",
-
-    # -- 1:N: illion lumps together our fine-grained categories --
-    "Wages":                        ["salary_payg", "salary_packaging", "self_employed_gig"],
-    "Non SACC Loans":               ["BNPL", "Wage Advance", "Non SACC Loans",
-                                     "Contract Loans", "LOC",
-                                     "Home Loan", "Car Loan"],
-
-    "Unknown Loans":                ["Personal Loan Unknown"],
-
-    # -- illion categories with no direct equivalent in our engine --
-    "All Other Credits":            [],
 }
 
 

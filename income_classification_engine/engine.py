@@ -52,7 +52,6 @@ class IncomeEngine:
         return [
             SummaryArtifact(
                 "income_summary",
-                "1.0",
                 build_summary(accepted_details),
             )
         ]
