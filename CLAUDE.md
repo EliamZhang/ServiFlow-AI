@@ -9,6 +9,13 @@
 - 特例：`liability` 引擎的候选集会排除已被分为收入类的交易（`salary_payg`、`salary_packaging`、`centrelink`、`self_employed_gig`），因此不会覆盖这些行（`orchestrator.py` 的 `run` 中）。
 - `priority` 字段仅决定执行顺序，并记录进 `classification_priority` 列，不参与覆盖判定。
 
+## 基线回归对比（output 变更检查）
+
+- 每次改完代码，必须运行 `python baseline.py diff`（用 `.venv/Scripts/python.exe` 运行），将当前流水线输出与基线 `baseline/sample_baseline.csv` 对比，检查分类结果是否发生变更。
+- 若 `diff` 报告有差异（exit 1），必须向用户说明每笔差异的原因（对应改动的规则/逻辑），不能只报告"有差异"就结束。
+- 基线由 `python baseline.py save` 生成；仅当用户确认分类结果变更符合预期时，才允许重新保存基线。
+- 注意：diff 输出含中文，Windows 控制台需设置 `PYTHONIOENCODING=utf-8`，或用 `.venv` 环境运行。
+
 ## 重要约定
 
 **所有涉及引擎顺序调整的改动（新增引擎、删除引擎、调整 priority、启用/禁用引擎、修改覆盖规则），都必须先与用户确认后再实施。**
