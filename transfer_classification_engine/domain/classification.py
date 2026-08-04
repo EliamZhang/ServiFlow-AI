@@ -27,10 +27,7 @@ import pandas as pd
 
 from classification_core.reasons import format_classification_reason
 
-from .transfer_counterparty import (
-    load_counterparty_rules,
-    match_counterparty,
-)
+from .transfer_counterparty import load_counterparty_rules
 from .transfer_rules import (
     ExclusionRule,
     load_exclusion_rules,

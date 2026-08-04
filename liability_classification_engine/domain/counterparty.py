@@ -70,43 +70,6 @@ def load_rules(rules_file):
     return keyword_rules, regex_rules
 
 
-def match_text(text, keyword_rules, regex_rules=None):
-    text = normalize_match_text(text)
-    for keyword, counterparty, product_type in keyword_rules:
-        if re.search(r'(?<![A-Za-z])' + re.escape(keyword) + r'(?![A-Za-z])', text):
-            return counterparty, product_type
-    if regex_rules:
-        for pattern, counterparty, product_type in regex_rules:
-            if pattern.search(text):
-                return counterparty, product_type
-    return "", ""
-
-
-def build_rule_key(account_type, dr_cr, bank):
-    return (
-        normalize_rule_value(account_type) or "-",
-        normalize_rule_value(dr_cr) or "-",
-        normalize_rule_value(bank) or "-",
-    )
-
-
-def candidate_values(value):
-    normalized = normalize_rule_value(value) or "-"
-    values = [normalized, "*"]
-    if normalized != "-":
-        values.append("-")
-    return list(dict.fromkeys(values))
-
-
-def candidate_rule_keys(row):
-    keys = []
-    for account_type in candidate_values(row.get("account_type")):
-        for dr_cr in candidate_values(row.get("dr_cr")):
-            for bank in candidate_values(row.get("bank")):
-                keys.append(build_rule_key(account_type, dr_cr, bank))
-    return keys
-
-
 def load_credit_card_rules(rules_file):
     """Load V2 regex-based credit card rules.
 
@@ -148,50 +111,6 @@ def load_credit_card_rules(rules_file):
     generic.sort(key=lambda r: -r["priority"])
 
     return {"specific": specific, "generic": generic}
-
-
-def regex_rule_matches(rule, raw_text, match_text):
-    return any(pattern.search(raw_text) for pattern in rule["patterns"])
-
-
-def keyword_rule_matches(rule, raw_text, match_text):
-    return any(keyword in match_text for keyword in rule["patterns"])
-
-
-def prefix_rule_matches(rule, raw_text, match_text):
-    for keyword in rule["patterns"]:
-        min_prefix_len = rule["min_prefix_len"] or len(keyword)
-        min_prefix_len = min(min_prefix_len, len(keyword))
-
-        if keyword in match_text:
-            return True
-
-        for length in range(len(keyword) - 1, min_prefix_len - 1, -1):
-            if keyword[:length] in match_text:
-                return True
-
-    return False
-
-
-def iter_matching_rules(row, rules):
-    matchers = (
-        ("keyword", keyword_rule_matches),
-        ("prefix", prefix_rule_matches),
-        ("regex", regex_rule_matches),
-    )
-    raw_text = "" if pd.isna(row.get("text")) else str(row.get("text"))
-    match_text = normalize_match_text(raw_text)
-    for match_type, matcher in matchers:
-        for key in candidate_rule_keys(row):
-            for rule in rules[match_type].get(key, []):
-                if matcher(rule, raw_text, match_text):
-                    yield rule
-
-
-def match_credit_card_rule(row, rules):
-    for rule in iter_matching_rules(row, rules):
-        return rule["counterparty"], rule["product_type"]
-    return None
 
 
 def clean_dataframe_columns(df):
@@ -646,25 +565,6 @@ def _bulk_write_metadata(output, mask, rule, target):
             output.loc[mask, "finv_category"] = product_type
 
 
-def _write_one_metadata(output, row_id, rule, target):
-    """Write metadata for a single row (used in non-overwrite mode)."""
-    if target in _TARGET_METADATA_MAP:
-        meta = _TARGET_METADATA_MAP[target]
-        if meta.get("counterparty"):
-            cp = output.at[row_id, "counterparty"]
-            if pd.isna(cp) or str(cp).strip() == "":
-                output.at[row_id, "counterparty"] = meta["counterparty"]
-        if meta.get("finv_category"):
-            output.at[row_id, "finv_category"] = meta["finv_category"]
-        if meta.get("product_type"):
-            output.at[row_id, "product_type"] = meta["product_type"]
-    elif counterparty := rule.get("counterparty", ""):
-        output.at[row_id, "counterparty"] = counterparty
-        product_type = rule.get("product_type", "")
-        if product_type:
-            output.at[row_id, "finv_category"] = product_type
-
-
 def _resolve_target(rule, output_columns):
     """Resolve the target flag column name from a rule dict."""
     target = rule.get("target_field")
@@ -672,42 +572,6 @@ def _resolve_target(rule, output_columns):
         return target
     # Format B rules don't have target_field; use the first output column
     return output_columns[0] if output_columns else None
-
-
-def _already_classified(row):
-    """Check if a row already has counterparty or product_type assigned."""
-    cp = row.get("counterparty")
-    pt = row.get("product_type")
-    has_cp = not pd.isna(cp) and str(cp).strip() != ""
-    has_pt = not pd.isna(pt) and str(pt).strip() != ""
-    return has_cp or has_pt
-
-
-def _write_flag_metadata(output, row_id, rule, target, overwrite=False):
-    """Write counterparty / finv_category / product_type based on matched target.
-
-    If overwrite is False, only writes metadata for unclassified rows.
-    If overwrite is True, always writes, replacing any existing values.
-    """
-    row = output.loc[row_id]
-    if not overwrite and _already_classified(row):
-        return
-
-    if target in _TARGET_METADATA_MAP:
-        meta = _TARGET_METADATA_MAP[target]
-        if meta.get("counterparty"):
-            cp = output.at[row_id, "counterparty"]
-            if pd.isna(cp) or str(cp).strip() == "":
-                output.at[row_id, "counterparty"] = meta["counterparty"]
-        if meta.get("finv_category"):
-            output.at[row_id, "finv_category"] = meta["finv_category"]
-        if meta.get("product_type"):
-            output.at[row_id, "product_type"] = meta["product_type"]
-    elif counterparty := rule.get("counterparty", ""):
-        output.at[row_id, "counterparty"] = counterparty
-        product_type = rule.get("product_type", "")
-        if product_type:
-            output.at[row_id, "finv_category"] = product_type
 
 
 _TARGET_METADATA_MAP = {

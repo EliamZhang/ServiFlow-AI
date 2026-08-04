@@ -49,21 +49,6 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_classification(
-    input_file: str | Path = DEFAULT_INPUT,
-    output_file: str | Path = DEFAULT_OUTPUT,
-    config_file: str | Path = DEFAULT_PIPELINE_CONFIG,
-    category_catalog_file: str | Path = DEFAULT_CATEGORY_CATALOG,
-) -> ClassificationRunResult:
-    result, _ = _execute_classification(
-        input_file=input_file,
-        output_file=output_file,
-        config_file=config_file,
-        category_catalog_file=category_catalog_file,
-    )
-    return result
-
-
 def _execute_classification(
     input_file: str | Path,
     output_file: str | Path,

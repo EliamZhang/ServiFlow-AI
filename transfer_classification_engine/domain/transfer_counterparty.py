@@ -14,8 +14,6 @@ liability engine's ``counterparty_keyword_rules.csv``::
 Keywords are semicolon-separated and matched case-insensitively against
 normalised (uppercase, collapsed whitespace) transaction text.  Rules are
 applied in CSV row order — first match wins.
-
-Rows that match no rule fall back to ``"Miscellaneous Funds Transfer"``.
 """
 
 from __future__ import annotations
@@ -76,56 +74,3 @@ def load_counterparty_rules(
             if keywords:
                 rules.append((keywords, counterparty))
     return rules
-
-
-# ---------------------------------------------------------------------------
-# Matching
-# ---------------------------------------------------------------------------
-
-def match_counterparty(
-    text: str,
-    rules: list[tuple[list[str], str]],
-    fallback: str = "Miscellaneous Funds Transfer",
-) -> str:
-    """Return the counterparty label for *text* using the first matching rule.
-
-    Parameters
-    ----------
-    text : str
-        Raw transaction text.
-    rules : list[tuple[list[str], str]]
-        Loaded rule list (keyword-lists → counterparty), in priority order.
-    fallback : str
-        Counterparty name returned when no rule matches.
-
-    Returns
-    -------
-    str
-        The counterparty (third_party) label.
-    """
-    if not text or pd.isna(text):
-        return fallback
-
-    normalized = _normalize_match_text(text)
-    if not normalized:
-        return fallback
-
-    for keywords, counterparty in rules:
-        for kw in keywords:
-            if kw in normalized:
-                return counterparty
-
-    return fallback
-
-
-def derive_counterparty_series(
-    text_series: pd.Series,
-    rules: list[tuple[list[str], str]],
-    fallback: str = "Miscellaneous Funds Transfer",
-) -> pd.Series:
-    """Vectorised counterparty derivation for a Series of text values.
-
-    Returns a Series of counterparty labels with the same index as
-    *text_series*.
-    """
-    return text_series.apply(lambda t: match_counterparty(t, rules, fallback=fallback))

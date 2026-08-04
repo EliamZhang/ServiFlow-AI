@@ -5,9 +5,6 @@ __pycache__/
 .pytest_cache/
 .coverage
 initial_classification_engine/merchant_kb.csv
-run_liability/
-stopword_extract/
-docs/
 output/
 sample.csv
 sample_30_apps.csv

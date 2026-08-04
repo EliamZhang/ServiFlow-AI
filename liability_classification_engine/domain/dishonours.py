@@ -22,17 +22,6 @@ def load_rules(rules_file):
     return rules
 
 
-def is_dishonour(text, rules):
-    text = "" if pd.isna(text) else str(text)
-    lower_text = text.lower()
-    for rule_type, pattern, required_terms in rules:
-        if rule_type == "keyword" and pattern.lower() in lower_text:
-            return "Yes"
-        if rule_type == "regex" and all(term in lower_text for term in required_terms) and re.search(pattern, text):
-            return "Yes"
-    return "No"
-
-
 def _parse_decimal(value):
     if pd.isna(value):
         return None
@@ -138,8 +127,6 @@ def _backfill_dishonour_counterparty(df):
     # Write results back to *output* in one vectorised assignment.
     output.loc[best["_orig_idx"].values, "counterparty"] = best["counterparty"].values
     output.loc[best["_orig_idx"].values, "product_type"] = best["product_type"].values
-
-    return output
 
     return output
 
