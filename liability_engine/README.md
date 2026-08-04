@@ -15,7 +15,7 @@ engines. The engine:
 The only runnable entry point and report writer live at the project root:
 
 ```powershell
-python main.py
+python backfill.py
 ```
 
 That command writes `output/classification_report.xlsx`.

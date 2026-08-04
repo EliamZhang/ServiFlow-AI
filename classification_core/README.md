@@ -12,4 +12,4 @@ This package contains:
 
 It does not contain income or liability business rules. Those remain inside
 their respective engine packages. The project-level entry point is the root
-`main.py`.
+`backfill.py`.
