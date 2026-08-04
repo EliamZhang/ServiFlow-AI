@@ -52,9 +52,12 @@ _HIDDEN_COLS = frozenset({
 def _load(report_path: Path) -> pd.DataFrame:
     our = pd.read_excel(report_path, sheet_name="transactions")
     illion = pd.read_csv(SAMPLE_CSV, encoding="utf-8-sig")
-    df = our.copy()
-    df["_illion_cat"] = illion["category"].values
-    df["_illion_cp"] = illion["third_party"].values
+    # Merge by transaction_id instead of assuming row alignment.
+    illion_ref = illion[["transaction_id", "category", "third_party"]].copy()
+    illion_ref.columns = ["transaction_id", "_illion_cat", "_illion_cp"]
+    df = our.merge(illion_ref, on="transaction_id", how="left")
+    df["_illion_cat"] = df["_illion_cat"].fillna("")
+    df["_illion_cp"] = df["_illion_cp"].fillna("")
     return df
 
 
@@ -542,17 +545,17 @@ def main() -> None:
         description="Compare our labels against illion labels"
     )
     p.add_argument(
-        "--output",
+        "-i", "--input",
         default=str(DEFAULT_OUTPUT),
-        help="Path to classification_report.xlsx (our output)",
+        help="Path to our classification_report.xlsx (input)",
     )
     p.add_argument(
-        "--result",
+        "-o", "--output",
         default=str(DEFAULT_RESULT),
-        help="Path to write compare_result.xlsx",
+        help="Path to write the comparison result .xlsx",
     )
     args = p.parse_args()
-    run(args.output, args.result)
+    run(report_path=args.input, result_path=args.output)
 
 
 if __name__ == "__main__":

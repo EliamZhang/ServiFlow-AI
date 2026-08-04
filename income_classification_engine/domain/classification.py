@@ -30,8 +30,10 @@ Important restrictions:
 This module is invoked by the unified engine pipeline.
 """
 
+import csv
 import re
-from typing import Iterable, List
+from pathlib import Path
+from typing import Dict, Iterable, List
 
 import numpy as np
 import pandas as pd
@@ -40,153 +42,104 @@ from classification_core.reasons import format_classification_reason
 
 
 # =============================================================================
-# Config
+# Paths
+# =============================================================================
+
+_RESOURCES_DIR = Path(__file__).resolve().parent.parent / "resources"
+_PATTERN_RULES_FILE = _RESOURCES_DIR / "income_pattern_rules.csv"
+_CONFIG_FILE = _RESOURCES_DIR / "income_config.csv"
+
+
+# =============================================================================
+# CSV rule loading (data-driven pattern definitions)
+# =============================================================================
+
+def _load_pattern_rules(rules_file: str | Path | None = None) -> Dict[str, List[str]]:
+    """Load income pattern rules from CSV, grouped by pattern_group.
+
+    Returns a dict mapping pattern_group name → list of regex pattern strings.
+    """
+    if rules_file is None:
+        rules_file = _PATTERN_RULES_FILE
+
+    grouped: Dict[str, List[str]] = {}
+    with open(rules_file, encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            group = str(row.get("pattern_group", "")).strip()
+            pattern = str(row.get("pattern", "")).strip()
+            if not group or not pattern:
+                continue
+            grouped.setdefault(group, []).append(pattern)
+    return grouped
+
+
+def _load_income_config(config_file: str | Path | None = None) -> Dict[str, float]:
+    """Load income classification config values from CSV.
+
+    Returns a dict mapping config_key → numeric value.
+    """
+    if config_file is None:
+        config_file = _CONFIG_FILE
+
+    config: Dict[str, float] = {}
+    with open(config_file, encoding="utf-8-sig", newline="") as f:
+        for row in csv.DictReader(f):
+            key = str(row.get("config_key", "")).strip()
+            value = str(row.get("config_value", "")).strip()
+            config_type = str(row.get("config_type", "float")).strip()
+            if not key or not value:
+                continue
+            config[key] = float(value) if config_type == "float" else int(value)
+    return config
+
+
+# Lazy-loaded caches (populated on first use, following liability engine pattern).
+_PATTERN_CACHE: Dict[str, List[str]] | None = None
+_CONFIG_CACHE: Dict[str, float] | None = None
+
+
+def _get_patterns() -> Dict[str, List[str]]:
+    global _PATTERN_CACHE
+    if _PATTERN_CACHE is None:
+        _PATTERN_CACHE = _load_pattern_rules()
+    return _PATTERN_CACHE
+
+
+def _get_config() -> Dict[str, float]:
+    global _CONFIG_CACHE
+    if _CONFIG_CACHE is None:
+        _CONFIG_CACHE = _load_income_config()
+    return _CONFIG_CACHE
+
+
+# =============================================================================
+# Config — columns and pattern-driven constants
 # =============================================================================
 
 # These columns are removed before rule execution to avoid accidental leakage.
 RESTRICTED_COLUMNS = ["trx_type", "txn_type", "txn_type_category", "third_party"]
 
-STRONG_WAGE_PATTERNS = [
-    r"\bSALARY\b",
-    r"\bPAYROLL\b",
-    r"\bPAY\s*ROLL\b",
-    r"\bWAGES?\b",
-    r"\bPAYSLIP\b",
-    r"\bPAYRUN\b",
-    r"\bEMPLOYER\b",
-    r"\bSTAFF\s*PAY\b",
-    r"\bEFT\s*SALARY\b",
-    r"\bDEPOSIT\s*SALARY\b",
-]
 
-MEDIUM_INCOME_PATTERNS = [
-    r"\bDIRECT\s*CREDIT\b",
-    r"\bDIR\s*CREDIT\b",
-    r"\bDEPOSIT[-\s]*SALARY\b",
-    r"\bEFT\s*DEP\b",
-    r"\bDIRECT\s*DEP(?:OSIT)?\b",
-]
+def _make_pattern_list(group: str) -> List[str]:
+    """Return pattern strings for *group* from the CSV-backed cache."""
+    return _get_patterns().get(group, [])
 
-REPEAT_EMPLOYER_LIKE_PATTERNS = [
-    r"\bPAY\-PACK\b",
-    r"\bINTER[-\s]*BANK\s*CREDIT\b",
-    r"\bPAY\s+FOR\b",
-    r"\bDEPOSIT\s+ONLINE\b.*\bPYMT\b",
-    r"\bDEPOSIT\b.*\bPAY\b",
-]
+# Resolve pattern lists (CSV-first, fallback to built-ins).
+STRONG_WAGE_PATTERNS = _make_pattern_list("strong_wage")
+MEDIUM_INCOME_PATTERNS = _make_pattern_list("medium_income")
+REPEAT_EMPLOYER_LIKE_PATTERNS = _make_pattern_list("repeat_employer_like")
+REPEAT_EMPLOYER_LIKE_EXCLUSION_PATTERNS = _make_pattern_list("repeat_employer_like_exclusion")
+SALARY_PACKAGING_PATTERNS = _make_pattern_list("salary_packaging")
+CENTRELINK_PATTERNS = _make_pattern_list("centrelink")
+SELF_EMPLOYED_GIG_PATTERNS = _make_pattern_list("self_employed_gig")
+WAGE_ADVANCE_PATTERNS = _make_pattern_list("wage_advance")
+RETURN_LIKE_PATTERNS = _make_pattern_list("return_like")
 
-REPEAT_EMPLOYER_LIKE_EXCLUSION_PATTERNS = [
-    r"\bREPAYMENT\b",
-    r"\bPAYPAL\b",
-    r"\bJOB\s*SEEKER\b",
-    r"\bJOBSEEKER\b",
-    r"\bFAMILY\s*PAYMENT\b",
-    r"\bMAXXIA\b",
-    r"\bCLAIMS?\b",
-    r"\bMERCHANT\s*SETTLEMENT\b",
-    r"\bDISBURSEMENT\b",
-    r"\bINVEST(?:MENT)?\b",
-]
-
-SALARY_PACKAGING_PATTERNS = [
-    r"\bSALARY\s*PACKAGING\b",
-    r"\bSALARY\s*PACKAGE\b",
-    r"\bACCESS\s*PAY\b",
-    r"\bACCESSPAY\b",
-    r"\bSALARY\s*SACRIFICE\b",
-    r"\bEMPLOYER\s*BENEFIT\b",
-]
-
-CENTRELINK_PATTERNS = [
-    r"\bCENTRE\s*LINK\b",
-    r"\bCENTRELINK\b",
-    r"\bCTRLINK\b",
-    r"\bCTR\s*LINK\b",
-    r"\bSERVICES\s*AUSTRALIA\b",
-    r"\bAUS\s*GOV\b",
-    r"\bAUSTRALIAN\s*GOV(?:ERNMENT)?\b",
-    r"\bFAMILY\s*ALLOWANCE\b",
-    r"\bFAMILY\s*PAYMENT\b",
-    r"\bPENSION\b",
-    r"\bYOUTH\s*ALLOWANCE\b",
-    r"\bJOB\s*SEEKER\b",
-    r"\bJOBSEEKER\b",
-    r"\bPARENTING\s*PAYMENT\b",
-    r"\bCARER\s*PAYMENT\b",
-    r"\bDISABILITY\s*SUPPORT\b",
-]
-
-SELF_EMPLOYED_GIG_PATTERNS = [
-    r"\bUBER\b",
-    r"\bUBER\s*PARTNER\b",
-    r"\bDOOR\s*DASH\b",
-    r"\bDOORDASH\b",
-    r"\bMENULOG\b",
-    r"\bDELIVEROO\b",
-    r"\bAIRTASKER\b",
-    r"\bPAYMENT\s*FOR\s*SERVICES?\b",
-    r"\bINVOICE\b",
-    r"\bCONTRACTOR\b",
-    r"\bBUSINESS\s*PAYMENT\b",
-    r"\bBUSINESS\s*INCOME\b",
-    r"\bSETTLEMENT\b",
-    r"\bSTRIPE\b",
-    r"\bSQUARE\b",
-    r"\bPAYPAL\b",
-    r"\bSHOPIFY\b",
-]
-
-WAGE_ADVANCE_PATTERNS = [
-    r"\bBEFOREPAY\b",
-    r"\bMYPAYNOW\b",
-    r"\bWAGETAP\b",
-    r"\bSTEPPAY\b",
-    r"\bPRESS\s*PAY\b",
-    r"\bPRESSPAY\b",
-    r"\bWAGE\s*PAY\b",
-    r"\bWAGEPAY\b",
-]
-
-RETURN_LIKE_PATTERNS = [
-    r"\bRETURN\b",
-    r"\bVALUE\s*DATE\b",
-    r"\bDISHONOU?R(?:ED)?\b",
-    r"\bREVERSAL\s+OF\s+DEBIT\b",
-]
-
-# Hard negative patterns for wage detection.
-# These rows should not be treated as wages even if they look repeated.
-HARD_NEGATIVE_PATTERNS = RETURN_LIKE_PATTERNS + [
-    r"\bINTERNAL\s*TRANSFER\b",
-    r"\bLINKED\s*ACC\b",
-    r"\bREFUND\b",
-    r"\bREVERSAL\b",
-    r"\bADJUSTMENT\b",
-    r"\bREBATE\b",
-    r"\bCASHBACK\b",
-    r"\bLOAN\b",
-    r"\bADVANCE\b",
-    r"\bCENTRE\s*LINK\b",
-    r"\bCENTRELINK\b",
-    r"\bCTRLINK\b",
-    r"\bSERVICES\s*AUSTRALIA\b",
-    r"\bATO\b",
-    r"\bTAX\b",
-    r"\bINTEREST\b",
-    r"\bDIVIDEND\b",
-    r"\bBNPL\b",
-    r"\bZIP\b",
-    r"\bAFTERPAY\b",
-    r"\bWITHDRAWAL\b",
-]
+# Hard negative = return_like + additional hard_negative patterns
+HARD_NEGATIVE_PATTERNS = RETURN_LIKE_PATTERNS + _make_pattern_list("hard_negative")
 
 # Soft negative patterns for wage detection.
-# These usually indicate non-wage transfers, but can still be overridden by a
-# strong wage signal plus repeated salary-like behavior.
-SOFT_NEGATIVE_PATTERNS = [
-    r"\bTRANSFER\b",
-    r"\bOSKO\b",
-]
+SOFT_NEGATIVE_PATTERNS = _make_pattern_list("soft_negative")
 
 # Combined negative view kept for explainability output.
 NEGATIVE_PATTERNS = HARD_NEGATIVE_PATTERNS + SOFT_NEGATIVE_PATTERNS
@@ -202,21 +155,27 @@ PAYER_STOP_WORDS = {
     "REFERENCE", "ONLINE", "INTERNET", "EFT", "DEP", "OSKO", "VISA", "CARD",
     "PURCHASE", "DEBIT", "MISCELLANEOUS", "BPAY", "WITHDRAWAL", "ATM",
     "TRNS", "ACC", "ACCOUNT", "LINKED", "AU", "AUS", "THE", "AND", "PTY",
-    "LTD", "LIMITED", "SALARY", "PACKAGING", "CENTRELINK", "CENTRE", "LINK",
+    "LTD", "LIMITED", "PACKAGING", "CENTRELINK", "CENTRE", "LINK",
     "SERVICES", "AUSTRALIA", "GOV", "GOVERNMENT", "RETURN", "VALUE", "DATE",
     "FAST", "NPP", "THANK", "YOU", "RECEIVED", "MAIN", "JAN", "FEB", "MAR",
     "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
 }
 
-MIN_NORMAL_WAGE_AMOUNT = 100
-COMMON_WAGE_AMOUNT_MIN = 300
-COMMON_WAGE_AMOUNT_MAX = 10000
-POSSIBLE_WAGE_AMOUNT_MAX = 20000
-STABLE_AMOUNT_CV_MAX = 0.35
-REGULAR_GAP_RANGES = ((6, 8), (13, 16), (27, 33))
-HIGH_REPEAT_PAYER_COUNT_MIN = 4
-VERY_HIGH_REPEAT_PAYER_COUNT_MIN = 8
-STABLE_PAYER_REPEAT_COUNT_MIN = 6
+# Config values — loaded from CSV, with built-in defaults as fallback.
+_config = _get_config()
+MIN_NORMAL_WAGE_AMOUNT = int(_config.get("MIN_NORMAL_WAGE_AMOUNT", 100))
+COMMON_WAGE_AMOUNT_MIN = int(_config.get("COMMON_WAGE_AMOUNT_MIN", 300))
+COMMON_WAGE_AMOUNT_MAX = int(_config.get("COMMON_WAGE_AMOUNT_MAX", 10000))
+POSSIBLE_WAGE_AMOUNT_MAX = int(_config.get("POSSIBLE_WAGE_AMOUNT_MAX", 20000))
+STABLE_AMOUNT_CV_MAX = float(_config.get("STABLE_AMOUNT_CV_MAX", 0.35))
+REGULAR_GAP_RANGES = (
+    (int(_config.get("REGULAR_GAP_WEEKLY_MIN", 6)), int(_config.get("REGULAR_GAP_WEEKLY_MAX", 8))),
+    (int(_config.get("REGULAR_GAP_FORTNIGHTLY_MIN", 13)), int(_config.get("REGULAR_GAP_FORTNIGHTLY_MAX", 16))),
+    (int(_config.get("REGULAR_GAP_MONTHLY_MIN", 27)), int(_config.get("REGULAR_GAP_MONTHLY_MAX", 33))),
+)
+HIGH_REPEAT_PAYER_COUNT_MIN = int(_config.get("HIGH_REPEAT_PAYER_COUNT_MIN", 4))
+VERY_HIGH_REPEAT_PAYER_COUNT_MIN = int(_config.get("VERY_HIGH_REPEAT_PAYER_COUNT_MIN", 8))
+STABLE_PAYER_REPEAT_COUNT_MIN = int(_config.get("STABLE_PAYER_REPEAT_COUNT_MIN", 6))
 
 IMPORTANT_OUTPUT_COLUMNS = [
     # New income classification fields
@@ -445,8 +404,6 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
     out["is_possible_wage_amount"] = out["amount_num"].between(
         MIN_NORMAL_WAGE_AMOUNT, POSSIBLE_WAGE_AMOUNT_MAX, inclusive="both"
     ).astype(int)
-    out["is_tiny_credit"] = ((out["is_credit"] == 1) & (out["amount_num"] < MIN_NORMAL_WAGE_AMOUNT)).astype(int)
-
     out["payer_key_from_text"] = out["text_clean"].apply(make_payer_key)
     out["has_valid_payer_key"] = (out["payer_key_from_text"].str.len() >= 3).astype(int)
     return out
@@ -480,13 +437,16 @@ def add_payer_history_features(df: pd.DataFrame) -> pd.DataFrame:
         out["same_payer_amount_std"] / out["same_payer_amount_mean"].abs(),
         np.nan,
     )
-    out["has_repeat_same_payer"] = (out["same_payer_credit_count"].fillna(0) >= 2).astype(int)
     out["has_stable_amount"] = (
         (out["same_payer_credit_count"].fillna(0) >= 2)
         & (out["same_payer_amount_cv"].fillna(999) <= STABLE_AMOUNT_CV_MAX)
     ).astype(int)
 
-    return out.drop(columns="_group_key")
+    return out.drop(columns=[
+        "_group_key", "prev_same_payer_date", "next_same_payer_date",
+        "regular_gap_prev", "regular_gap_next",
+        "same_payer_amount_mean", "same_payer_amount_std",
+    ])
 
 
 def add_wages_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -779,41 +739,21 @@ def choose_rule_name(df: pd.DataFrame) -> pd.Series:
 
 
 def build_wages_reason(row: pd.Series) -> str:
-    category = "wages" if row.get("is_wages_pred", 0) == 1 else "not_wages"
-    evidence = [
-        "credit" if row.get("is_credit", 0) == 1 else "not_credit",
-        (
-            "strong_wage_keyword"
-            if row.get("has_strong_wage_keyword", 0) == 1
-            else ""
-        ),
-        (
-            "medium_income_keyword"
-            if row.get("has_medium_income_keyword", 0) == 1
-            else ""
-        ),
-        (
-            "repeat_payer"
-            if row.get("same_payer_credit_count", 0) >= 2
-            else ""
-        ),
-        (
-            "regular_cycle"
-            if row.get("has_regular_salary_cycle", 0) == 1
-            else ""
-        ),
-        "stable_amount" if row.get("has_stable_amount", 0) == 1 else "",
-        (
-            "negative_keyword"
-            if row.get("has_hard_negative_keyword", 0) == 1
-            or row.get("has_soft_negative_keyword", 0) == 1
-            else ""
-        ),
+    is_wages = row.get("is_wages_pred", 0) == 1
+    flags = [
+        ("credit", row.get("is_credit", 0) == 1),
+        ("strong_wage_keyword", row.get("has_strong_wage_keyword", 0) == 1),
+        ("medium_income_keyword", row.get("has_medium_income_keyword", 0) == 1),
+        ("repeat_payer", row.get("same_payer_credit_count", 0) >= 2),
+        ("regular_cycle", row.get("has_regular_salary_cycle", 0) == 1),
+        ("stable_amount", row.get("has_stable_amount", 0) == 1),
+        ("negative_keyword", row.get("has_hard_negative_keyword", 0) == 1
+         or row.get("has_soft_negative_keyword", 0) == 1),
     ]
     return format_classification_reason(
-        category=category,
+        category="wages" if is_wages else "not_wages",
         rule=row.get("wages_rule_name", ""),
-        evidence=evidence,
+        evidence=[label for label, flag in flags if flag],
     )
 
 
@@ -937,43 +877,34 @@ def build_income_type_reason(row: pd.Series) -> str:
     rule_name = row.get("income_type_rule_name", "")
 
     if income_type == "non_income":
-        evidence = [
-            "not_credit" if row.get("is_credit", 0) != 1 else "",
-            (
-                f"known_non_income={row.get('known_non_income_type_pred', '')}"
-                if row.get("known_non_income_type_pred", "")
-                else ""
-            ),
-            (
-                "exclusion_keyword"
-                if row.get("has_gig_exclusion_keyword", 0) == 1
+        evidence: list[str] = []
+        if row.get("is_credit", 0) != 1:
+            evidence.append("not_credit")
+        if kn := row.get("known_non_income_type_pred", ""):
+            evidence.append(f"known_non_income={kn}")
+        if (row.get("has_gig_exclusion_keyword", 0) == 1
                 or row.get("has_hard_negative_keyword", 0) == 1
-                or row.get("has_soft_negative_keyword", 0) == 1
-                else ""
-            ),
-        ]
+                or row.get("has_soft_negative_keyword", 0) == 1):
+            evidence.append("exclusion_keyword")
         return format_classification_reason(
-            category=income_type,
-            rule=rule_name,
-            evidence=evidence,
+            category=income_type, rule=rule_name, evidence=evidence,
         )
 
-    checks = [
-        (row.get("is_credit", 0) == 1, "credit"),
-        (row.get("has_salary_packaging_keyword", 0) == 1, "salary_packaging_keyword"),
-        (row.get("has_centrelink_keyword", 0) == 1, "centrelink_keyword"),
-        (row.get("is_wages_pred", 0) == 1, "wages_detector"),
-        (row.get("has_strong_wage_keyword", 0) == 1, "strong_wage_keyword"),
-        (row.get("has_medium_income_keyword", 0) == 1, "medium_income_keyword"),
-        (row.get("same_payer_credit_count", 0) >= 2, "repeat_payer"),
-        (row.get("has_regular_salary_cycle", 0) == 1, "regular_cycle"),
-        (row.get("has_stable_amount", 0) == 1, "stable_amount"),
-        (row.get("has_self_employed_gig_keyword", 0) == 1, "gig_keyword"),
+    flags = [
+        ("credit", row.get("is_credit", 0) == 1),
+        ("salary_packaging_keyword", row.get("has_salary_packaging_keyword", 0) == 1),
+        ("centrelink_keyword", row.get("has_centrelink_keyword", 0) == 1),
+        ("wages_detector", row.get("is_wages_pred", 0) == 1),
+        ("strong_wage_keyword", row.get("has_strong_wage_keyword", 0) == 1),
+        ("medium_income_keyword", row.get("has_medium_income_keyword", 0) == 1),
+        ("repeat_payer", row.get("same_payer_credit_count", 0) >= 2),
+        ("regular_cycle", row.get("has_regular_salary_cycle", 0) == 1),
+        ("stable_amount", row.get("has_stable_amount", 0) == 1),
+        ("gig_keyword", row.get("has_self_employed_gig_keyword", 0) == 1),
     ]
     return format_classification_reason(
-        category=income_type,
-        rule=rule_name,
-        evidence=(reason for matched, reason in checks if matched),
+        category=income_type, rule=rule_name,
+        evidence=[label for label, flag in flags if flag],
     )
 
 

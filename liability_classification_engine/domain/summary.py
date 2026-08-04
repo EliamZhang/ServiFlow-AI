@@ -203,18 +203,31 @@ def sorted_stream_transactions(group: pd.DataFrame) -> pd.DataFrame:
 
 
 def mark_failed_repayments(group: pd.DataFrame) -> pd.Series:
+    """Return a boolean Series flagging debits whose *next* transaction is a dishonour.
+
+    The original implementation iterated over rows in Python.  This version
+    uses ``shift`` so the check runs inside pandas' C-level loops.
+    """
     ordered = sorted_stream_transactions(group)
     failed = pd.Series(False, index=group.index, dtype=bool)
 
-    row_ids = ordered.index.tolist()
-    for position, row_id in enumerate(row_ids[:-1]):
-        row = ordered.loc[row_id]
-        next_row = ordered.loc[row_ids[position + 1]]
-        if normalize_text(row.get("dr_cr")).casefold() != "debit":
-            continue
-        if is_yes(next_row.get("is_dishonours")):
-            failed.at[row_id] = True
+    is_debit = (
+        ordered["dr_cr"]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .str.lower()
+        .eq("debit")
+    )
+    # ``shift(-1)`` brings the next row's dishonour flag up to the current row.
+    next_is_dishonour = (
+        ordered["is_dishonours"]
+        .shift(-1)
+        .map(is_yes)
+        .fillna(False)
+    )
 
+    failed.loc[ordered.index[is_debit & next_is_dishonour]] = True
     return failed
 
 

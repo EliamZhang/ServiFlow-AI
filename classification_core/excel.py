@@ -15,22 +15,20 @@ GREEN_FILL = PatternFill(fill_type="solid", fgColor="FFB4E0B4")
 
 
 def _apply_base_format(worksheet) -> None:
-    """Apply freeze panes, auto-filter, fonts, and header styling."""
+    """Apply freeze panes, auto-filter, and header styling.
+
+    Body cells use Excel defaults (no per-cell formatting) to avoid
+    O(rows × cols) overhead on large sheets.
+    """
     worksheet.freeze_panes = "A2"
     worksheet.auto_filter.ref = worksheet.dimensions
 
-    default_font = Font(name=DEFAULT_FONT_NAME)
     header_font = Font(
         name=DEFAULT_FONT_NAME,
         color=HEADER_FONT_COLOR,
         bold=True,
     )
     header_fill = PatternFill(fill_type="solid", fgColor=HEADER_FILL)
-
-    for row in worksheet.iter_rows():
-        for cell in row:
-            cell.font = default_font
-            cell.alignment = Alignment(vertical="center")
 
     for cell in worksheet[1]:
         cell.font = header_font
