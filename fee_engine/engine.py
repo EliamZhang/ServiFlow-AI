@@ -20,8 +20,8 @@ class FeeEngine:
     fees, bank account fees, overdrawn/dishonour/late-payment fees, cash advance
     fees, and third-party maintenance/membership fees.
 
-    This engine runs FIRST in the pipeline (priority 1) to ensure fee
-    transactions are claimed before the merchant keyword engine.
+    Execution order is defined by the engine's ``priority`` in
+    ``configs/pipeline.json`` (fee = 500), not by this file.
     """
 
     engine_id = "fee"

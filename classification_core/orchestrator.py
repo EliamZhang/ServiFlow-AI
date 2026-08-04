@@ -78,8 +78,6 @@ class ClassificationOrchestrator:
 
             # All engines see all transactions; later engines overwrite earlier ones
             # at the row level (finv_category + counterparty as a pair).
-            candidate_mask = pd.Series(True, index=output.index)
-
             candidates_df = original.copy()
             if spec.engine_id == "liability":
                 already_income_mask = output["finv_category"].isin(
@@ -121,7 +119,7 @@ class ClassificationOrchestrator:
                     engine_id=engine.engine_id,
                     engine_version=engine.engine_version,
                     priority=spec.priority,
-                    candidate_count=int(candidate_mask.sum()),
+                    candidate_count=len(original),
                     prediction_count=len(engine_result.predictions),
                     accepted_count=len(accepted),
                     duration_seconds=engine_seconds,

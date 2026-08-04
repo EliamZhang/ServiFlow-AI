@@ -14,8 +14,7 @@ Fee types include: overdrawn/overlimit fees, international transaction fees,
 ATM operator fees, bank account fees, dishonour fees, late payment fees,
 cash advance fees, and third-party maintenance/membership fees.
 
-This module is invoked by the unified engine pipeline as the FIRST engine,
-before initial classification.
+This module is invoked by the unified engine pipeline.
 """
 
 from __future__ import annotations
