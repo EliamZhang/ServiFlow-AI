@@ -413,53 +413,7 @@ FEE_RULES: list[FeeRule] = [
     ),
 
     # =========================================================================
-    # 10. Dishonour Fees
-    # =========================================================================
-    # "Unpaid Payment Fee"
-    (
-        "unpaid_payment_fee",
-        "fee",
-        r"^Unpaid\s+Payment\s+Fee",
-        "Dishonour Fee",
-    ),
-    # "Dishonour Fee"
-    (
-        "dishonour_fee",
-        "fee",
-        r"^Dishonou?r\s+Fee$",
-        "Dishonour Fee",
-    ),
-    # "DISHONOUR FEE"
-    (
-        "dishonour_fee_upper",
-        "fee",
-        r"^DISHONOUR\s+FEE$",
-        "Dishonour Fee",
-    ),
-    # "Direct debit dishonour fee"
-    (
-        "direct_debit_dishonour_fee",
-        "fee",
-        r"^Direct\s+debit\s+dishonou?r\s+fee",
-        "Dishonour Fee",
-    ),
-    # "Direct Debit Dishonour - 01 - De Dishonour Fee / 463063098 D"
-    (
-        "direct_debit_dishonour_inline_fee",
-        "fee",
-        r"^Direct\s+Debit\s+Dishonou?r\s+.*Dishonou?r\s+Fee\s+/",
-        "Dishonour Fee",
-    ),
-    # "Direct Debit Dishonour - 51 - De Dishonour no Fee / 507477012 D"
-    (
-        "direct_debit_dishonour_no_fee",
-        "fee",
-        r"^Direct\s+Debit\s+Dishonou?r\s+.*no\s+Fee\s+/",
-        "Dishonour Fee",
-    ),
-
-    # =========================================================================
-    # 11. Late Payment Fees
+    # 10. Late Payment Fees
     # =========================================================================
     # "LATE PAYMENT FEE"
     (

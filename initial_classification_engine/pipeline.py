@@ -28,6 +28,9 @@ def run_pipeline(
     # Clear them here so the initial engine does not fail ownership validation.
     _liability_owned = output["finv_category"].isin(["Debt Collection", "Debt Consolidation"])
     output.loc[_liability_owned, "finv_category"] = ""
+    # Financial Institutions is handled by liability/dishonour engines.
+    _fi_mask = output["finv_category"] == "Financial Institutions"
+    output.loc[_fi_mask, "finv_category"] = ""
 
     return PipelineResult(
         transactions=output,

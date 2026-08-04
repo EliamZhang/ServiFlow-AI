@@ -7,7 +7,7 @@
     },
     {
       "engine_id": "dishonour",
-      "priority": 10,
+      "priority": 150,
       "enabled": true
     },
     {
