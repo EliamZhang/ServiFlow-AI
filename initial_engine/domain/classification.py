@@ -111,7 +111,11 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
     """
     kb_path = Path(kb_path)
     automaton = ahocorasick.Automaton()
-    seen: set[tuple[str, str, str]] = set()  # (keyword_upper, merchant, cat)
+    # (keyword_upper, merchant, cat) keyed in file order.  A dict (not a set)
+    # preserves insertion order, so rebuilds are deterministic even when the
+    # KB lists the same keyword under several merchants — the last row wins,
+    # exactly mirroring add_word's overwrite semantics.
+    seen: dict[tuple[str, str, str], None] = {}
 
     chunks = pd.read_csv(
         kb_path,
@@ -169,7 +173,7 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
             )
             key = (kw, merchant, category)
             if key not in seen:
-                seen.add(key)
+                seen[key] = None
 
     # Compute per-keyword merchant count for uniqueness scoring.
     # More distinct merchants sharing a keyword → more generic → lower purity.
@@ -178,22 +182,7 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
         _kw_merchants[kw].add(merchant)
 
     total = len(seen)
-    # Insertion order is deterministic here: shared keywords (the same keyword
-    # appearing under several merchants — 882 of 621k in the KB) are resolved by
-    # preferring the merchant that owns the fewest other keywords, then the
-    # alphabetically first merchant name.  Without this, the winner depended on
-    # Python set iteration order, which is randomised per process (PYTHONHASHSEED),
-    # so every rebuild of the automaton could bind a shared keyword to a different
-    # merchant and change classification output.
-    for kw, merchant, cat in sorted(
-        seen,
-        key=lambda item: (
-            len(_kw_merchants[item[0]]),
-            item[1],
-            item[0],
-            item[2],
-        ),
-    ):
+    for kw, merchant, cat in seen:
         uniqueness = math.log(total / len(_kw_merchants[kw]))
         purity = uniqueness
         automaton.add_word(kw, (kw, merchant, cat, purity))
