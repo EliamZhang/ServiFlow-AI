@@ -127,6 +127,8 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
         chunk = chunk[
             chunk["keywords"].notna() & (chunk["keywords"].str.strip() != "")
         ]
+        # Exclude "Financial Institutions" — handled by liability/dishonour engines.
+        chunk = chunk[chunk["category"] != "Financial Institutions"]
         if chunk.empty:
             continue
 
