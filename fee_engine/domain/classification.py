@@ -8,7 +8,7 @@ Classifies transactions into:
 
 Uses regex rules in priority order to identify fee transactions from text alone.
 Overdrawn-related fees (overdrawn, overlimit, overdraft, overdraw, debit excess
-interest) are checked FIRST so they override the generic "fee" category.
+interest) are checked FIRST so they override the generic "Fees" category.
 
 Fee types include: overdrawn/overlimit fees, international transaction fees,
 ATM operator fees, bank account fees, dishonour fees, late payment fees,
@@ -40,7 +40,7 @@ FeeRule = tuple[str, str, str, str]
 FEE_RULES: list[FeeRule] = [
     # =========================================================================
     # 0. OVERDRAWN / OVERLIMIT FEES — must run FIRST so Overdrawn category
-    #    overrides the generic "fee" category.
+    #    overrides the generic "Fees" category.
     # =========================================================================
     # "HONOUR/OVERDRAWN FEE"
     (
@@ -106,13 +106,13 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "intl_txn_fee_standard",
-        "fee",
+        "Fees",
         r"^FEES\s+V\d{4}\s+\d{2}/\d{2}\s+INTL\s+TXN\s+FEE-(MC|SC)\s+\d+$",
         "International Transaction Fee",
     ),
     (
         "intl_txn_fee_reversal",
-        "fee",
+        "Fees",
         r"^MISCELLANEOUS\s+CREDIT\s+V\d{4}\s+\d{2}/\d{2}\s+INTL\s+TXN\s+FEE\s+REV-(MC|SC)\s+\d+$",
         "International Transaction Fee Refund",
     ),
@@ -123,21 +123,21 @@ FEE_RULES: list[FeeRule] = [
     # "ATM OPERATOR FEE WITHDRAWAL COOLUM HOTEL"
     (
         "atm_operator_fee_withdrawal",
-        "fee",
+        "Fees",
         r"^ATM\s+OPERATOR\s+FEE\s+WITHDRAWAL\s+",
         "ATM Operator Fee",
     ),
     # "ATM OPERATOR FEE - WITHDRAWAL AT ETX ATM DICKY BEA ..."
     (
         "atm_operator_fee_dash_withdrawal",
-        "fee",
+        "Fees",
         r"^ATM\s+OPERATOR\s+FEE\s+-\s+WITHDRAWAL\s+AT\s+",
         "ATM Operator Fee",
     ),
     # "ATM OPERATOR FEE -16:05"
     (
         "atm_operator_fee_time",
-        "fee",
+        "Fees",
         r"^ATM\s+OPERATOR\s+FEE\s+-\d{2}:\d{2}",
         "ATM Operator Fee",
     ),
@@ -145,63 +145,63 @@ FEE_RULES: list[FeeRule] = [
     # "Atm Operator Fee Inq 09May15:44 Pioneer Tavern ..."
     (
         "atm_operator_fee_wdl",
-        "fee",
+        "Fees",
         r"^Atm\s+Operator\s+Fee\s+(?:Wdl|Inq)\s+",
         "ATM Operator Fee",
     ),
     # "ATM Operator Fee - Np - Foodworks Sheppartsheppar / 6676"
     (
         "atm_operator_fee_np",
-        "fee",
+        "Fees",
         r"^ATM\s+Operator\s+Fee\s+-\s+Np\s+-",
         "ATM Operator Fee",
     ),
     # "ATM Operator Fee - Coles Sm - Shepparton Shepp / 3254"
     (
         "atm_operator_fee_coles",
-        "fee",
+        "Fees",
         r"^ATM\s+Operator\s+Fee\s+-\s+Coles\s+",
         "ATM Operator Fee",
     ),
     # "ATM owner fee of $3.40 charged by ..."
     (
         "atm_owner_fee",
-        "fee",
+        "Fees",
         r"ATM\s+owner\s+fee\s+of\s+\$",
         "ATM Operator Fee",
     ),
     # "FEES BBL ATM 19th13:28atmx 582 CHAPMAN ROA DIR CHG OTH ATM"
     (
         "fees_bbl_atm",
-        "fee",
+        "Fees",
         r"^FEES\s+BBL\s+ATM\s+",
         "ATM Operator Fee",
     ),
     # "FEES EFTEX ATM 06th17:42UP RANGEWAY DIR CHG OTH ATM"
     (
         "fees_eftex_atm",
-        "fee",
+        "Fees",
         r"^FEES\s+EFTEX\s+ATM\s+",
         "ATM Operator Fee",
     ),
     # "FEES SML ATM 16th11:39AMPOL - MAIDSTONE DIR CHG OTH ATM"
     (
         "fees_sml_atm",
-        "fee",
+        "Fees",
         r"^FEES\s+SML\s+ATM\s+",
         "ATM Operator Fee",
     ),
     # "OFI ATM W/D TRAN FOR $53.50 INCLUDES OFI ATM OPERATOR FEE OF $3.50"
     (
         "ofi_atm_operator_fee",
-        "fee",
+        "Fees",
         r"OFI\s+ATM\s+.*INCLUDES\s+OFI\s+ATM\s+OPERATOR\s+FEE\s+OF\s+\$",
         "ATM Operator Fee",
     ),
     # "NON-ANZ ATM UP GAGEBROOK ... INCLUDES ATM OPERATOR CHARGE $3.35"
     (
         "non_anz_atm_operator_charge",
-        "fee",
+        "Fees",
         r"NON-ANZ\s+ATM\s+.*INCLUDES\s+ATM\s+OPERATOR\s+(?:FEE|CHARGE)\s+\$",
         "ATM Operator Fee",
     ),
@@ -212,56 +212,56 @@ FEE_RULES: list[FeeRule] = [
     # "International Transaction Fee Value Date: 02/03/2026"
     (
         "international_txn_fee",
-        "fee",
+        "Fees",
         r"^International\s+Transaction\s+Fee",
         "International Transaction Fee",
     ),
     # "International ATM Withdrawal Fee"
     (
         "international_atm_fee",
-        "fee",
+        "Fees",
         r"^International\s+ATM\s+Withdrawal\s+Fee",
         "International ATM Fee",
     ),
     # "INTNL TRANSACTION FEE"
     (
         "intnl_txn_fee",
-        "fee",
+        "Fees",
         r"^INTNL\s+TRANSACTION\s+FEE",
         "International Transaction Fee",
     ),
     # "Foreign Currency Conversn Fee"
     (
         "foreign_currency_conversn_fee",
-        "fee",
+        "Fees",
         r"^Foreign\s+Currency\s+Convers?n\s+Fee",
         "Foreign Currency Conversion Fee",
     ),
     # "Overseas Currency Conversion Fee"
     (
         "overseas_currency_fee",
-        "fee",
+        "Fees",
         r"^Overseas\s+Currency\s+Conversion\s+Fee",
         "Foreign Currency Conversion Fee",
     ),
     # "Non CBA ATM Withdrawal Fee"
     (
         "non_cba_atm_fee",
-        "fee",
+        "Fees",
         r"^Non\s+CBA\s+ATM\s+Withdrawal\s+Fee",
         "Non-CBA ATM Fee",
     ),
     # "IRD Conv Fee Auckland NZL..."
     (
         "ird_conv_fee",
-        "fee",
+        "Fees",
         r"^IRD\s+Conv\s+Fee\s+",
         "International Transaction Fee",
     ),
     # "RTGS payment fee"
     (
         "rtgs_payment_fee",
-        "fee",
+        "Fees",
         r"^RTGS\s+payment\s+fee",
         "RTGS Payment Fee",
     ),
@@ -273,7 +273,7 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "foreign_fee_aud",
-        "fee",
+        "Fees",
         r"^FOREIGN\s+FEE\s+AUD\s+",
         "Foreign Currency Fee",
     ),
@@ -283,7 +283,7 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "includes_foreign_currency_fee",
-        "fee",
+        "Fees",
         r"^Includes\s+Foreign\s+Currency\s+Conversion\s+Fee\s+\$",
         "Foreign Currency Conversion Fee",
     ),
@@ -293,7 +293,7 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "fees_included_waived",
-        "fee",
+        "Fees",
         r"^FEES\s+INCLUDED\s+IN\s+TRAN\s+(?:USD|AUD|GBP|EUR|NZD)",
         "Foreign Currency Fee",
     ),
@@ -304,84 +304,84 @@ FEE_RULES: list[FeeRule] = [
     # "MONTHLY FEE"
     (
         "monthly_fee",
-        "fee",
+        "Fees",
         r"^MONTHLY\s+FEE$",
         "Monthly Account Fee",
     ),
     # "MONTHLY CARD FEE"
     (
         "monthly_card_fee",
-        "fee",
+        "Fees",
         r"^MONTHLY\s+CARD\s+FEE$",
         "Monthly Card Fee",
     ),
     # "FEES MONTHLY CARD/CREDIT FEE"
     (
         "fees_monthly_card_fee",
-        "fee",
+        "Fees",
         r"^FEES\s+MONTHLY\s+CARD/CREDIT\s+FEE",
         "Monthly Card Fee",
     ),
     # "LOAN ACCOUNT FEE"
     (
         "loan_account_fee",
-        "fee",
+        "Fees",
         r"^LOAN\s+ACCOUNT\s+FEE$",
         "Loan Service Fee",
     ),
     # "FEES LOAN SERVICE FEE"
     (
         "fees_loan_service_fee",
-        "fee",
+        "Fees",
         r"^FEES\s+LOAN\s+SERVICE\s+FEE",
         "Loan Service Fee",
     ),
     # "ACCOUNT SERVICING FEE"
     (
         "account_servicing_fee",
-        "fee",
+        "Fees",
         r"^ACCOUNT\s+SERVICING\s+FEE",
         "Account Service Fee",
     ),
     # "CARD FEE"
     (
         "card_fee",
-        "fee",
+        "Fees",
         r"^CARD\s+FEE$",
         "Card Fee",
     ),
     # "Annual Fee"
     (
         "annual_fee",
-        "fee",
+        "Fees",
         r"^Annual\s+Fee$",
         "Annual Fee",
     ),
     # "Bank@Post Deposit Fee"
     (
         "bankpost_deposit_fee",
-        "fee",
+        "Fees",
         r"^Bank@Post\s+Deposit\s+Fee",
         "Bank@Post Fee",
     ),
     # "Bank@Post Withdrawal Fee"
     (
         "bankpost_withdrawal_fee",
-        "fee",
+        "Fees",
         r"^Bank@Post\s+Withdrawal\s+Fee",
         "Bank@Post Fee",
     ),
     # "Fee for servicing your loan"
     (
         "fee_servicing_loan",
-        "fee",
+        "Fees",
         r"^Fee\s+for\s+servicing\s+your\s+loan",
         "Loan Service Fee",
     ),
     # "LENDING ESTABLISHMENT FEE"
     (
         "lending_establishment_fee",
-        "fee",
+        "Fees",
         r"^LENDING\s+ESTABLISHMENT\s+FEE",
         "Establishment Fee",
     ),
@@ -392,21 +392,21 @@ FEE_RULES: list[FeeRule] = [
     # "CBA OTHER CASH ADV FEE"
     (
         "cba_cash_adv_fee",
-        "fee",
+        "Fees",
         r"^CBA\s+OTHER\s+CASH\s+ADV\s+FEE",
         "Cash Advance Fee",
     ),
     # "CASH ADVANCE FEE"
     (
         "cash_advance_fee_upper",
-        "fee",
+        "Fees",
         r"^CASH\s+ADVANCE\s+FEE",
         "Cash Advance Fee",
     ),
     # "Cash Advance Fee"
     (
         "cash_advance_fee_title",
-        "fee",
+        "Fees",
         r"^Cash\s+Advance\s+Fee",
         "Cash Advance Fee",
     ),
@@ -417,35 +417,35 @@ FEE_RULES: list[FeeRule] = [
     # "LATE PAYMENT FEE"
     (
         "late_payment_fee",
-        "fee",
+        "Fees",
         r"^LATE\s+PAYMENT\s+FEE",
         "Late Payment Fee",
     ),
     # "Late payment fee"
     (
         "late_payment_fee_lower",
-        "fee",
+        "Fees",
         r"^Late\s+payment\s+fee",
         "Late Payment Fee",
     ),
     # "LATE FEE"
     (
         "late_fee",
-        "fee",
+        "Fees",
         r"^LATE\s+FEE$",
         "Late Payment Fee",
     ),
     # "STEPPAY LATE FEE"
     (
         "steppay_late_fee",
-        "fee",
+        "Fees",
         r"^STEPPAY\s+LATE\s+FEE",
         "Late Payment Fee",
     ),
     # "MISSED PAYMENT FEE"
     (
         "missed_payment_fee",
-        "fee",
+        "Fees",
         r"^MISSED\s+PAYMENT\s+FEE",
         "Late Payment Fee",
     ),
@@ -455,7 +455,7 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "commbank_advancepay_fee",
-        "fee",
+        "Fees",
         r"^CommBank\s+AdvancePay\s+Fee",
         "AdvancePay Fee",
     ),
@@ -467,13 +467,13 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "raiz_maint_fee_direct_debit",
-        "fee",
+        "Fees",
         r"Direct\s+Debit\s+\d+\s+Raiz\s+Maint\s+Fee\s+",
         "Raiz Maintenance Fee",
     ),
     (
         "raiz_maint_fee_automatic",
-        "fee",
+        "Fees",
         r"^AUTOMATIC\s+DRAWING\s+\w+\s+Raiz\s+Maint\s+Fee",
         "Raiz Maintenance Fee",
     ),
@@ -485,13 +485,13 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "uwu_fees_automatic",
-        "fee",
+        "Fees",
         r"^AUTOMATIC\s+DRAWING\s+UWDues\d+\s+UWU\s+FEES",
         "Union Membership Fee",
     ),
     (
         "uwu_fees_authority",
-        "fee",
+        "Fees",
         r"^PAYMENT\s+BY\s+AUTHORITY\s+TO\s+UWU\s+FEES",
         "Union Membership Fee",
     ),
@@ -502,14 +502,14 @@ FEE_RULES: list[FeeRule] = [
     # "REFUND OF FEE CHARGED ON 012009 RH *cnfans.com London GBRUSD"
     (
         "refund_of_fee",
-        "fee",
+        "Fees",
         r"^REFUND\s+OF\s+FEE\s+",
         "Fee Refund",
     ),
     # "LATE FEE REVERSAL"
     (
         "late_fee_reversal",
-        "fee",
+        "Fees",
         r"^LATE\s+FEE\s+REVERSAL",
         "Fee Refund",
     ),
@@ -520,14 +520,14 @@ FEE_RULES: list[FeeRule] = [
     # "MONTHLY FEE WAIVED"
     (
         "monthly_fee_waived",
-        "fee",
+        "Fees",
         r"^MONTHLY\s+FEE\s+WAIVED",
         "Fee Waived",
     ),
     # "WAIVE: HONOUR/OVERDRAWN FEE"
     (
         "waive_overdrawn_fee",
-        "fee",
+        "Fees",
         r"^WAIVE:\s+HONOUR/OVERDRAWN\s+FEE",
         "Fee Waived",
     ),
@@ -539,14 +539,14 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "atm_charge",
-        "fee",
+        "Fees",
         r"^ATM\s+Charge\s+",
         "ATM Operator Fee",
     ),
     # "ATM Owners charge - WDL 005725/0305143659 0200 0305153659"
     (
         "atm_owners_charge",
-        "fee",
+        "Fees",
         r"^ATM\s+Owners\s+charge\s+-\s+WDL\s+",
         "ATM Operator Fee",
     ),
@@ -557,7 +557,7 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "loan_administration_charge",
-        "fee",
+        "Fees",
         r"^LOAN\s+ADMINISTRATION\s+CHARGE",
         "Loan Administration Charge",
     ),
@@ -569,7 +569,7 @@ FEE_RULES: list[FeeRule] = [
     # =========================================================================
     (
         "fx_fee_is",
-        "fee",
+        "Fees",
         r"FX\s+FEE\s+IS\s+A\$",
         "Foreign Currency Fee",
     ),
@@ -584,91 +584,91 @@ FEE_RULES: list[FeeRule] = [
     # "INTEREST CHARGES - PUR CH" / "INTEREST CHARGES - PURCH"
     (
         "interest_charges_purch",
-        "fee",
+        "Fees",
         r"^INTEREST\s+CHARGES\s+-\s+PUR",
         "Interest Charges",
     ),
     # "INTEREST CHARGES - CAS H" / "INTEREST CHARGES - CASH"
     (
         "interest_charges_cash",
-        "fee",
+        "Fees",
         r"^INTEREST\s+CHARGES\s+-\s+CAS",
         "Interest Charges",
     ),
     # "Interest Charges - Purch" (title case)
     (
         "interest_charges_purch_title",
-        "fee",
+        "Fees",
         r"^Interest\s+Charges\s+-\s+Purch",
         "Interest Charges",
     ),
     # "Interest Charges - Cash" (title case)
     (
         "interest_charges_cash_title",
-        "fee",
+        "Fees",
         r"^Interest\s+Charges\s+-\s+Cash",
         "Interest Charges",
     ),
     # "INTEREST ON CASH ADV"
     (
         "interest_on_cash_adv",
-        "fee",
+        "Fees",
         r"^INTEREST\s+ON\s+CASH\s+ADV",
         "Interest Charges",
     ),
     # "CASH ADVANCE INTEREST"
     (
         "cash_advance_interest",
-        "fee",
+        "Fees",
         r"^CASH\s+ADVANCE\s+INTEREST",
         "Interest Charges",
     ),
     # "VISA PURCHASE INTEREST"
     (
         "visa_purchase_interest",
-        "fee",
+        "Fees",
         r"^VISA\s+PURCHASE\s+INTEREST",
         "Interest Charges",
     ),
     # "INSTALMENT PLAN INTEREST"
     (
         "instalment_plan_interest",
-        "fee",
+        "Fees",
         r"^INSTALMENT\s+PLAN\s+INTEREST",
         "Interest Charges",
     ),
     # "INTEREST CHARGED ON PURCHASES"
     (
         "interest_charged_on_purchases",
-        "fee",
+        "Fees",
         r"^INTEREST\s+CHARGED\s+ON\s+PURCHASES",
         "Interest Charges",
     ),
     # "INTEREST - BASE PLAN"
     (
         "interest_base_plan",
-        "fee",
+        "Fees",
         r"^INTEREST\s+-\s+BASE\s+PLAN",
         "Interest Charges",
     ),
     # "INTEREST CHARGED INTEREST CHARGED" (duplicated text from some banks)
     (
         "interest_charged_dup",
-        "fee",
+        "Fees",
         r"^INTEREST\s+CHARGED\s+INTEREST\s+CHARGED",
         "Interest Charges",
     ),
     # "INTEREST CHARGED" (bare, singular — before the plural "INTEREST CHARGES")
     (
         "interest_charged_bare",
-        "fee",
+        "Fees",
         r"^INTEREST\s+CHARGED$",
         "Interest Charges",
     ),
     # "DEBIT INTEREST CHARGED"
     (
         "debit_interest_charged",
-        "fee",
+        "Fees",
         r"^DEBIT\s+INTEREST\s+CHARGED",
         "Interest Charges",
     ),
@@ -676,42 +676,42 @@ FEE_RULES: list[FeeRule] = [
     # which is already caught as Overdrawn in section 0)
     (
         "debit_interest_title",
-        "fee",
+        "Fees",
         r"^Debit\s+Interest$",
         "Interest Charges",
     ),
     # "Interest charged" (title case, bare)
     (
         "interest_charged_title",
-        "fee",
+        "Fees",
         r"^Interest\s+charged$",
         "Interest Charges",
     ),
     # "INTEREST CHARGES" (bare, uppercase)
     (
         "interest_charges_bare",
-        "fee",
+        "Fees",
         r"^INTEREST\s+CHARGES$",
         "Interest Charges",
     ),
     # "INTEREST DEBIT"
     (
         "interest_debit",
-        "fee",
+        "Fees",
         r"^INTEREST\s+DEBIT$",
         "Interest Charges",
     ),
     # "INTEREST" (bare, uppercase — most generic, placed last)
     (
         "interest_bare",
-        "fee",
+        "Fees",
         r"^INTEREST$",
         "Interest Charges",
     ),
     # "Interest" (bare, title case — low-amount residual interest)
     (
         "interest_bare_title",
-        "fee",
+        "Fees",
         r"^Interest$",
         "Interest Charges",
     ),
@@ -844,10 +844,10 @@ def classify_fees(df: pd.DataFrame) -> pd.DataFrame:
 
     output["fee_pred_reason"] = output.apply(_build_reason, axis=1)
 
-    # stream_id
-    output["stream_id"] = output["finv_category"].where(
-        output["is_fee_pred"].eq(1), ""
-    )
+    # stream_id (legacy value "fee" — keep as-is for baseline parity)
+    output["stream_id"] = output["finv_category"].map(
+        {"Fees": "fee"}
+    ).where(output["is_fee_pred"].eq(1), "")
 
     # Drop internal columns
     output = output.drop(columns=["text_norm", "_text_original"])

@@ -6,7 +6,6 @@ from uuid import uuid4
 
 import pandas as pd
 
-from .category_mapping import to_illion_category
 from .config import PipelineConfig
 from .engine import ClassificationEngine
 from .models import (
@@ -77,7 +76,7 @@ class ClassificationOrchestrator:
             candidates_df = original.copy()
             if spec.engine_id == "liability":
                 already_income_mask = output["finv_category"].isin(
-                    ["salary_payg", "salary_packaging", "centrelink", "self_employed_gig"]
+                    ["Wages", "Centrelink"]
                 )
                 candidates_df = original.loc[~already_income_mask].copy()
 
@@ -253,9 +252,7 @@ class ClassificationOrchestrator:
         ):
             row_index = key_to_index[key]
 
-            output.at[row_index, "finv_category"] = to_illion_category(
-                prediction["finv_category"]
-            )
+            output.at[row_index, "finv_category"] = prediction["finv_category"]
             output.at[row_index, "classification_status"] = "classified"
             output.at[row_index, "classification_engine"] = engine.engine_id
             output.at[row_index, "classification_engine_version"] = (

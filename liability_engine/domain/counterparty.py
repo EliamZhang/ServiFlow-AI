@@ -558,7 +558,7 @@ def _resolve_target(rule, output_columns):
 _TARGET_METADATA_MAP = {
     "is_home_loan": {
         "counterparty": "Home Loan",
-        "finv_category": "Home Loan",
+        "finv_category": "Non SACC Loans",
         "product_type": "home_loan",
     },
     "is_overdrawn": {
@@ -575,7 +575,7 @@ _TARGET_METADATA_MAP = {
     },
     "is_car_loan": {
         "counterparty": "Car Loan",
-        "finv_category": "Car Loan",
+        "finv_category": "Non SACC Loans",
         "product_type": "car_loan",
     },
 }

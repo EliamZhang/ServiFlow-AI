@@ -856,7 +856,14 @@ def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
     out["income_type_pred"] = np.select(conditions, income_types, default="non_income")
     out["income_type_rule_name"] = np.select(conditions, rule_names, default="no_income_type_rule")
     out["is_income_pred"] = out["income_type_pred"].ne("non_income").astype(int)
-    out["finv_category"] = out["income_type_pred"].where(out["is_income_pred"].eq(1), "")
+    # finv_category is the coarse illion category.  The fine-grained income type
+    # (salary_packaging / centrelink / salary_payg / self_employed_gig) stays in
+    # income_type_pred for stream grouping and reasoning.
+    out["finv_category"] = (
+        out["income_type_pred"]
+        .map({"salary_packaging": "Wages", "salary_payg": "Wages", "self_employed_gig": "Wages", "centrelink": "Centrelink"})
+        .where(out["is_income_pred"].eq(1), "")
+    )
     out["known_non_income_type_pred"] = np.select(
         [out["rule_known_non_income_wage_advance"] == 1],
         ["wage_advance"],

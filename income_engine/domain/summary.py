@@ -5,8 +5,6 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-from classification_core.category_mapping import to_illion_category
-
 
 WEEKDAY_NAMES = {
     0: "Monday",
@@ -81,7 +79,7 @@ def build_stream_group_key(row: pd.Series) -> Optional[str]:
 
     values = [
         str(row.get("bank_account_id", "")).strip(),
-        str(row.get("finv_category", "")).strip(),
+        str(row.get("income_type_pred", "")).strip(),
         str(row.get("counterparty", "")).strip(),
     ]
     if not all(values[:3]):
@@ -167,13 +165,13 @@ def assign_stream_ids(transactions: pd.DataFrame) -> pd.DataFrame:
     stream_order = (
         income.groupby("_income_stream_group_key", dropna=False)
         .agg(
-            finv_category=("finv_category", first_non_null),
+            income_type_pred=("income_type_pred", first_non_null),
             bank_account_id=("bank_account_id", first_non_null),
             counterparty=("counterparty", first_non_null),
             first_txn_date=("txn_date", "min"),
         )
         .sort_values(
-            ["finv_category", "bank_account_id", "counterparty", "first_txn_date"],
+            ["income_type_pred", "bank_account_id", "counterparty", "first_txn_date"],
             na_position="last",
         )
         .reset_index()
@@ -182,7 +180,7 @@ def assign_stream_ids(transactions: pd.DataFrame) -> pd.DataFrame:
     stream_ids: dict[str, str] = {}
     counters: dict[str, int] = {}
     for _, row in stream_order.iterrows():
-        category = str(row["finv_category"])
+        category = str(row["income_type_pred"])
         counters[category] = counters.get(category, 0) + 1
         stream_ids[row["_income_stream_group_key"]] = (
             f"{category}_{counters[category]:03d}"
@@ -241,11 +239,9 @@ def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(
-                    str(first_non_null(group["finv_category"]) or "")
-                ),
+                "finv_category": str(first_non_null(group["finv_category"]) or ""),
                 "stream_id": first_non_null(group["stream_id"]),
-                "income_category": first_non_null(group["finv_category"]),
+                "income_category": first_non_null(group["income_type_pred"]),
                 "bank_account_id": first_non_null(group["bank_account_id"]),
                 "account_type": first_non_null(group["account_type"])
                 if "account_type" in group.columns

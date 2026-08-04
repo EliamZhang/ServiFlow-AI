@@ -10,8 +10,6 @@ import re
 
 import pandas as pd
 
-from classification_core.category_mapping import to_illion_category
-
 SUMMARY_COLUMNS = [
     "finv_category",
     "stream_id",
@@ -133,7 +131,7 @@ def derive_finv_category(product_type: object, stream_id: object) -> object:
     if not product or not base:
         return pd.NA
 
-    if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan", "home_loan"}:
+    if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan", "home_loan", "car_loan"}:
         key = base
     else:
         key = f"{product}_{base}"
@@ -292,14 +290,17 @@ def empty_summary() -> pd.DataFrame:
 
 def filter_product_streams(
     df: pd.DataFrame,
-    finv_category: str,
+    stream_prefix: str,
 ) -> pd.DataFrame:
+    """Return rows whose stream_id starts with *stream_prefix*.
+
+    finv_category holds coarse categories now (multiple products share one),
+    so product-level summary builders filter by the stream_id prefix instead.
+    """
+    stream_text = df["stream_id"].astype("string").str.strip()
     return df[
-        df["finv_category"].astype("string").str.casefold().eq(
-            finv_category.casefold()
-        )
-        & df["stream_id"].notna()
-        & df["stream_id"].astype("string").str.strip().ne("")
+        stream_text.str.startswith(stream_prefix, na=False)
+        & stream_text.ne("")
     ].copy()
 
 
@@ -462,7 +463,7 @@ def build_bnpl_summary(
 ) -> pd.DataFrame:
     """Return one BNPL summary row per finv_category + stream_id."""
 
-    bnpl = filter_product_streams(df, "BNPL")
+    bnpl = filter_product_streams(df, "bnpl")
 
     if bnpl.empty:
         return empty_summary()
@@ -538,7 +539,7 @@ def build_bnpl_summary(
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -614,7 +615,7 @@ def build_bnpl_summary(
 def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one wage-advance summary row per finv_category + stream_id."""
 
-    wage_advance = filter_product_streams(df, "Wage Advance")
+    wage_advance = filter_product_streams(df, "wage_advance")
 
     if wage_advance.empty:
         return empty_summary()
@@ -699,7 +700,7 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -800,7 +801,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -833,7 +834,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per bank (Credit Card Repayment) stream."""
 
-    bank = filter_product_streams(df, "Credit Card Repayment")
+    bank = filter_product_streams(df, "bank")
 
     if bank.empty:
         return empty_summary()
@@ -890,7 +891,7 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -923,7 +924,7 @@ def build_bank_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per home-loan stream."""
 
-    home_loan = filter_product_streams(df, "Home Loan")
+    home_loan = filter_product_streams(df, "home_loan")
 
     if home_loan.empty:
         return empty_summary()
@@ -980,7 +981,7 @@ def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -1013,7 +1014,7 @@ def build_home_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per contract-loan stream."""
 
-    contract_loan = filter_product_streams(df, "Contract Loans")
+    contract_loan = filter_product_streams(df, "contract_loan")
 
     if contract_loan.empty:
         return empty_summary()
@@ -1070,7 +1071,7 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -1103,7 +1104,7 @@ def build_contract_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per LOC stream."""
 
-    loc = filter_product_streams(df, "LOC")
+    loc = filter_product_streams(df, "loc")
 
     if loc.empty:
         return empty_summary()
@@ -1160,7 +1161,7 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -1193,7 +1194,7 @@ def build_loc_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per car-loan stream."""
 
-    car_loan = filter_product_streams(df, "Car Loan")
+    car_loan = filter_product_streams(df, "car_loan")
 
     if car_loan.empty:
         return empty_summary()
@@ -1250,7 +1251,7 @@ def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
@@ -1283,7 +1284,7 @@ def build_car_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per unknown personal-loan stream."""
 
-    unknown = filter_product_streams(df, "Personal Loan Unknown")
+    unknown = filter_product_streams(df, "unknown")
 
     if unknown.empty:
         return empty_summary()
@@ -1340,7 +1341,7 @@ def build_unknown_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": to_illion_category(finv_category),
+                "finv_category": finv_category,
                 "liability_category": finv_category,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),

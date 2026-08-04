@@ -1893,15 +1893,16 @@ PRODUCT_RULES: tuple[ProductRule, ...] = (
 )
 
 FINV_CATEGORY_MAP = {
-    "bank": "Credit Card Repayment",
-    "bnpl": "BNPL",
-    "wage_advance": "Wage Advance",
+    "bank": "Credit Card Repayments",
+    "bnpl": "Non SACC Loans",
+    "wage_advance": "Non SACC Loans",
     "personal_loan_sacc": "SACC Loans",
-    "personal_loan_unknown": "Personal Loan Unknown",
+    "personal_loan_unknown": "Unknown Loans",
     "personal_loan_non_sacc": "Non SACC Loans",
-    "contract_loan": "Contract Loans",
-    "loc": "LOC",
-    "home_loan": "Home Loan",
+    "contract_loan": "Non SACC Loans",
+    "loc": "Non SACC Loans",
+    "home_loan": "Non SACC Loans",
+    "car_loan": "Non SACC Loans",
 }
 
 
@@ -2397,21 +2398,18 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
     existing = output.get("finv_category", pd.Series(index=output.index))
     output["finv_category"] = pd.NA
 
-    valid_mask = valid_mask & ~product_type.str.lower().eq("car_loan")
-
     # Vectorised finv_category assignment (replaces the original per-row
     # list comprehension that called ``zip`` on Series slices).
     if valid_mask.any():
         special_bases = stream_base.loc[valid_mask].isin({
             "bnpl", "wage_advance", "home_loan", "bank", "loc", "contract_loan",
+            "car_loan",
         })
         output.loc[valid_mask, "finv_category"] = np.where(
             special_bases,
             stream_base.loc[valid_mask],
             product_type.loc[valid_mask] + "_" + stream_base.loc[valid_mask],
         )
-    car_loan_mask = output["finv_category"].isna() & product_type.str.lower().eq("car_loan")
-    output.loc[car_loan_mask, "finv_category"] = "Car Loan"
 
     preserved_mask = (
         output["finv_category"].isna()
