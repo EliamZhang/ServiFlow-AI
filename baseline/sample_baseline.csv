@@ -1890,7 +1890,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972110,Wages,Goodstart,income,salary_payg_001
 2534491,2880971725,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971917,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971366,Department Stores,Big W,initial,
+2534491,2880971366,,,,
 2534491,2880971802,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972009,Retail,Cotton Road News,initial,
 2534491,2880971778,Utilities,AGL,initial,
@@ -1898,7 +1898,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971882,,,,
 2534491,2880971461,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971482,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971368,Department Stores,Big W,initial,
+2534491,2880971368,,,,
 2534491,2880971552,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971905,Dishonours,-,dishonour,
 2534491,2880971985,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2019,7 +2019,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971574,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2534491,2880971559,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971993,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880971608,Department Stores,Big W,initial,
+2534491,2880971608,,,,
 2534491,2880971914,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971607,Transport,-,catch_all,
 2534491,2880971711,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -2097,7 +2097,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971977,,,,
 2534491,2880971649,Transport,Australia Post,initial,
 2534491,2880971383,Groceries,WOOLWORTHS GROUP LIMITED,initial,
-2534491,2880971660,Department Stores,Big W,initial,
+2534491,2880971660,,,,
 2534491,2880972005,Wages,Goodstart,income,salary_payg_001
 2534491,2880971700,Utilities,AGL,initial,
 2534491,2880971666,Groceries,WOOLWORTHS GROUP LIMITED,initial,
@@ -2110,7 +2110,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971988,,,,
 2534491,2880972067,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971639,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880971605,Department Stores,Big W,initial,
+2534491,2880971605,,,,
 2534491,2880972103,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971679,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971375,Retail,Apple,initial,
@@ -2225,7 +2225,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972004,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972090,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971373,Retail,Apple,initial,
-2534491,2880971522,Department Stores,Big W,initial,
+2534491,2880971522,,,,
 2534491,2880971442,Education,Queensland Department of Education,initial,
 2534491,2880971801,Dishonours,-,dishonour,
 2534491,2880972117,Centrelink,CENTRELINK,income,centrelink_001
@@ -2264,7 +2264,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971961,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971422,Gambling,Sportsbet,initial,
 2534491,2880971632,Gambling,SPORTSBET PTY LTD,initial,
-2534491,2880971521,Department Stores,Big W,initial,
+2534491,2880971521,,,,
 2534491,2880971881,,,,
 2534491,2880971541,,,,
 2534491,2880971445,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2456,7 +2456,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971832,,,,
 2534491,2880971817,Retail,Etsy,initial,
 2534491,2880971974,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971520,Department Stores,Big W,initial,
+2534491,2880971520,,,,
 2534491,2880972096,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971602,Non SACC Loans,Afterpay,liability,bnpl_001
 2534491,2880972053,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2528,7 +2528,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972043,Wages,Goodstart,income,salary_payg_001
 2534491,2880971575,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971400,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971367,Department Stores,Big W,initial,
+2534491,2880971367,,,,
 2534491,2880971571,Retail,Innovative Retail,initial,
 2534491,2880971644,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972021,,,,
@@ -3166,7 +3166,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972134,Dishonours,-,dishonour,
 2534491,2880972690,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2534491,2880972510,Gambling,Sportsbet,initial,
-2534491,2880972248,Department Stores,Big W,initial,
+2534491,2880972248,,,,
 2534491,2880973418,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973056,Groceries,Coles,initial,
 2534491,2880972570,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3433,7 +3433,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972714,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972582,,,,
 2534491,2880972459,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972172,Department Stores,Big W,initial,
+2534491,2880972172,,,,
 2534491,2880973603,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972472,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972823,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
