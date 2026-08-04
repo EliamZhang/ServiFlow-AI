@@ -1328,7 +1328,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971073,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971124,,,,
 2534491,2880971213,Dining Out,KFC,initial,
-2534491,2880971354,Dining Out,Uber Eats,initial,
+2534491,2880971354,Transport,Uber,initial,
 2534491,2880971219,Retail,Mount Cotton Road News,initial,
 2534491,2880971138,Home Improvement,Ripples,initial,
 2534491,2880971186,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1390,7 +1390,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971107,Retail,Apple,initial,
 2534491,2880971315,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971167,Retail,Mount Cotton Road News,initial,
-2534491,2880971217,Dining Out,Uber Eats,initial,
+2534491,2880971217,Transport,Uber,initial,
 2534491,2880971335,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
 2534491,2880971169,,,,
 2534491,2880971050,Dining Out,McDonald's,initial,

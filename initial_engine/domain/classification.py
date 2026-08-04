@@ -450,49 +450,8 @@ def match_transactions(
         out["classification_reason"],
     ) = zip(*results)
 
-    # ── Post-processing: correct known KB misclassifications ────────────────
-    out = _apply_kb_corrections(out)
-
     return out.drop(columns=["_text_clean"])
 
-
-# ── KB correction rules ───────────────────────────────────────────────────
-# High-precision fixes for systematic merchant KB misclassifications.
-# Each entry: (text_pattern, wrong_category, correct_category, counterparty)
-
-_KB_CORRECTIONS: list[tuple[str, str, str, str]] = [
-    # Uber Eats contains "UBER *EATS" (food delivery) but the KB keyword
-    # "UBER" matches Transport.  Correct these to Dining Out.
-    (r"UBER\s*\*?\s*EATS", "Transport", "Dining Out", "Uber Eats"),
-]
-
-
-def _apply_kb_corrections(df: pd.DataFrame) -> pd.DataFrame:
-    """Apply high-precision overrides for known KB misclassifications."""
-    out = df.copy()
-    raw_text = out.get("text", pd.Series("", index=out.index))
-
-    for pattern, wrong_cat, correct_cat, correct_cp in _KB_CORRECTIONS:
-        mask = (
-            (out["finv_category"] == wrong_cat)
-            & raw_text.str.upper().str.contains(pattern, na=False, regex=True)
-        )
-        if mask.any():
-            out.loc[mask, "finv_category"] = correct_cat
-            out.loc[mask, "counterparty"] = correct_cp
-            out.loc[mask, "classification_rule_id"] = (
-                "merchant_kb_match_corrected"
-            )
-            out.loc[mask, "classification_reason"] = out.loc[
-                mask, "classification_reason"
-            ].apply(
-                lambda r: r.replace(
-                    "rule=merchant_kb_match",
-                    f"rule=merchant_kb_match_corrected({wrong_cat}→{correct_cat})",
-                )
-            )
-
-    return out
 
 
 
