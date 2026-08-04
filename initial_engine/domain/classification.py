@@ -178,7 +178,22 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
         _kw_merchants[kw].add(merchant)
 
     total = len(seen)
-    for kw, merchant, cat in seen:
+    # Insertion order is deterministic here: shared keywords (the same keyword
+    # appearing under several merchants — 882 of 621k in the KB) are resolved by
+    # preferring the merchant that owns the fewest other keywords, then the
+    # alphabetically first merchant name.  Without this, the winner depended on
+    # Python set iteration order, which is randomised per process (PYTHONHASHSEED),
+    # so every rebuild of the automaton could bind a shared keyword to a different
+    # merchant and change classification output.
+    for kw, merchant, cat in sorted(
+        seen,
+        key=lambda item: (
+            len(_kw_merchants[item[0]]),
+            item[1],
+            item[0],
+            item[2],
+        ),
+    ):
         uniqueness = math.log(total / len(_kw_merchants[kw]))
         purity = uniqueness
         automaton.add_word(kw, (kw, merchant, cat, purity))

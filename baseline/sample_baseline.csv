@@ -1312,11 +1312,11 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975246,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975260,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971019,Retail,Mt Cotton Road News,initial,
-2534491,2880971069,,Apple Inc.,initial,
+2534491,2880971069,Retail,Apple,initial,
 2534491,2880970983,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880970994,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971030,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971065,,Apple Inc.,initial,
+2534491,2880971065,Retail,Apple,initial,
 2534491,2880971178,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971156,Groceries,Maxima,initial,
 2534491,2880971255,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1349,7 +1349,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971218,Retail,Mt Cotton Road News,initial,
 2534491,2880971025,Groceries,Coles,initial,
 2534491,2880971122,Department Stores,Kmart,initial,
-2534491,2880971034,,Apple Inc.,initial,
+2534491,2880971034,Retail,Apple,initial,
 2534491,2880971071,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971048,Dining Out,McDonald's,initial,
 2534491,2880971269,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1367,7 +1367,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971001,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971319,Department Stores,Kmart,initial,
 2534491,2880971162,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971155,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
+2534491,2880971155,Retail,Shein,initial,
 2534491,2880971131,,,,
 2534491,2880971024,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971310,Telecommunications,Vodafone,initial,
@@ -1383,21 +1383,21 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971303,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971343,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971254,Telecommunications,Vodafone,initial,
-2534491,2880971181,,Apple Inc.,initial,
+2534491,2880971181,,,,
 2534491,2880971281,Retail,Mt Cotton Road News,initial,
 2534491,2880971304,Entertainment,Dreamworld,initial,
 2534491,2880971032,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971107,,Apple Inc.,initial,
+2534491,2880971107,Retail,Apple,initial,
 2534491,2880971315,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971167,Retail,Mt Cotton Road News,initial,
 2534491,2880971217,Dining Out,Uber Eats,initial,
-2534491,2880971335,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
+2534491,2880971335,Retail,Shein,initial,
 2534491,2880971169,,,,
 2534491,2880971050,Dining Out,McDonald's,initial,
 2534491,2880971049,Transport,TransLink,initial,
 2534491,2880971168,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971297,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971064,,Apple Inc.,initial,
+2534491,2880971064,Retail,Apple,initial,
 2534491,2880971077,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971040,,,,
 2534491,2880971288,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -1417,7 +1417,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971312,Entertainment,Dreamworld,initial,
 2534491,2880971287,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880970984,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971306,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
+2534491,2880971306,Retail,Shein,initial,
 2534491,2880970982,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971241,,,,
 2534491,2880971166,,,,
@@ -1459,8 +1459,8 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971115,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971174,Retail,Mt Cotton Road News,initial,
 2534491,2880971361,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880971080,,PAPPA FLOCK PTY LTD,initial,
-2534491,2880971153,,FRIENDLY PTY LIMITED,initial,
+2534491,2880971080,Retail,Pappa Flock,initial,
+2534491,2880971153,Groceries,Friendly Grocer,initial,
 2534491,2880971183,,,,
 2534491,2880971261,Dining Out,The Grazing Table,initial,
 2534491,2880971258,Travel,Schoolies.com,initial,
@@ -1474,11 +1474,11 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971031,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971092,Dining Out,McDonald's,initial,
 2534491,2880971207,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880971352,,Apple Inc.,initial,
+2534491,2880971352,Retail,Apple,initial,
 2534491,2880971215,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971253,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971273,Groceries,Woolworths,initial,
-2534491,2880971249,,Apple Inc.,initial,
+2534491,2880971249,Retail,Apple,initial,
 2534491,2880971123,Dining Out,McDonald's,initial,
 2534491,2880971209,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971242,Retail,Mt Cotton Road News,initial,
@@ -1525,15 +1525,15 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971129,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971339,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971226,Retail,Cotton Road News,initial,
-2534491,2880971228,,Apple Inc.,initial,
+2534491,2880971228,Retail,Apple,initial,
 2534491,2880970979,Retail,Mt Cotton Road News,initial,
-2534491,2880971260,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
+2534491,2880971260,Retail,Shein,initial,
 2534491,2880971046,Dining Out,-,catch_all,
 2534491,2880971252,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880970989,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971337,Department Stores,The Reject Shop,initial,
 2534491,2880971125,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971126,,Apple Inc.,initial,
+2534491,2880971126,Retail,Apple,initial,
 2534491,2880971238,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971342,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971089,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1547,11 +1547,11 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971006,Dining Out,McDonald's,initial,
 2534491,2880971236,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971140,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971182,,PAPPA FLOCK PTY LTD,initial,
+2534491,2880971182,Retail,Pappa Flock,initial,
 2534491,2880971110,Dining Out,McDonald's,initial,
 2534491,2880971351,Groceries,Woolworths,initial,
 2534491,2880971328,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971194,,Apple Inc.,initial,
+2534491,2880971194,,,,
 2534491,2880971132,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971216,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971250,,,,
@@ -1576,7 +1576,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971102,Department Stores,Kmart,initial,
 2534491,2880971277,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971096,Department Stores,Kmart,initial,
-2534491,2880971057,,Apple Inc.,initial,
+2534491,2880971057,Retail,Apple,initial,
 2534491,2880971054,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971027,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971299,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1638,7 +1638,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971116,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971141,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971003,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971010,,Apple Inc.,initial,
+2534491,2880971010,Retail,Apple,initial,
 2534491,2880971043,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971279,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971225,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1657,7 +1657,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971146,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971170,,,,
 2534491,2880971091,Dining Out,Tilly's Kitchen,initial,
-2534491,2880971045,,Apple Inc.,initial,
+2534491,2880971045,Retail,Apple,initial,
 2534491,2880971346,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971180,Dining Out,Yo-Chi,initial,
 2534491,2880971029,Groceries,Woolworths,initial,
@@ -1673,7 +1673,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971259,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971333,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971041,,,,
-2534491,2880970985,,The Clog Barn,initial,
+2534491,2880970985,,,,
 2534491,2880971097,Retail,Mt Cotton Road News,initial,
 2534491,2880971227,Telecommunications,Vodafone,initial,
 2534491,2880971282,Groceries,Coles,initial,
@@ -1692,7 +1692,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880970997,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971171,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971348,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880970992,,The Clog Barn,initial,
+2534491,2880970992,,,,
 2534491,2880971192,Groceries,Coles,initial,
 2534491,2880971272,Retail,Mt Cotton Road News,initial,
 2534491,2880976242,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
@@ -1817,7 +1817,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976220,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976205,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971983,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971969,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971969,,,,
 2534491,2880971501,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971962,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971889,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -1832,14 +1832,14 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971596,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971970,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971739,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971840,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971840,,,,
 2534491,2880971416,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971935,Dishonours,-,dishonour,
 2534491,2880971956,Unknown Loans,Difrent Rental,liability,unknown_001
 2534491,2880971728,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971380,,,,
 2534491,2880972028,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880972041,,# PTY LTD,initial,
+2534491,2880972041,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880971957,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971477,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972064,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
@@ -1848,7 +1848,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971951,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971780,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971497,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971623,,MUFFIN BREAK PTY LTD,initial,
+2534491,2880971623,Dining Out,Muffin Break,initial,
 2534491,2880971942,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971884,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971730,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1895,7 +1895,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972009,Retail,Cotton Road News,initial,
 2534491,2880971778,,,,
 2534491,2880971597,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971882,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971882,,,,
 2534491,2880971461,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971482,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971368,Department Stores,Big W,initial,
@@ -1912,7 +1912,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971430,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971692,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971539,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880971928,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971928,,,,
 2534491,2880971808,SACC Loans,MoneySpot,liability,sacc_003
 2534491,2880971641,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971504,Groceries,Woolworths,initial,
@@ -1948,8 +1948,8 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971443,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971668,Non SACC Loans,Afterpay,liability,bnpl_001
 2534491,2880971752,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880971570,,The Bolt King,initial,
-2534491,2880971377,,Apple Inc.,initial,
+2534491,2880971570,,,,
+2534491,2880971377,Retail,Apple,initial,
 2534491,2880971650,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971646,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971685,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1976,7 +1976,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971545,Groceries,Woolworths,initial,
 2534491,2880971920,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971706,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971688,,THE SMITH FAMILY,initial,
+2534491,2880971688,All Other Credits,-,all_other_credit,
 2534491,2880971580,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971981,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880972002,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -1986,14 +1986,14 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971915,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971708,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971640,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971715,,# PTY LTD,initial,
+2534491,2880971715,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880971825,Unknown Loans,Difrent Rental,liability,unknown_001
 2534491,2880971637,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971764,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971601,,,,
 2534491,2880971390,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971883,Gambling,Sportsbet,initial,
-2534491,2880972003,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880972003,,,,
 2534491,2880971517,,,,
 2534491,2880971774,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971610,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2056,7 +2056,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971811,Wages,Goodstart,income,salary_payg_001
 2534491,2880971438,Unknown Loans,Difrent Rental,liability,unknown_001
 2534491,2880971417,Gambling,Sportsbet,initial,
-2534491,2880972040,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880972040,,,,
 2534491,2880971458,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971873,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972066,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2090,7 +2090,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971558,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971757,SACC Loans,Fundo Loans,liability,sacc_001
 2534491,2880971877,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971687,,THE SMITH FAMILY,initial,
+2534491,2880971687,All Other Credits,-,all_other_credit,
 2534491,2880971908,,,,
 2534491,2880971971,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971763,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2113,11 +2113,11 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971605,Department Stores,Big W,initial,
 2534491,2880972103,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971679,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971375,,Apple Inc.,initial,
+2534491,2880971375,Retail,Apple,initial,
 2534491,2880971704,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972091,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971508,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971531,Department Stores,Best & Less,initial,
+2534491,2880971531,Department Stores,Best and Less,initial,
 2534491,2880971475,,,,
 2534491,2880971469,Entertainment,Disney,initial,
 2534491,2880972082,,,,
@@ -2131,7 +2131,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971403,Gambling,Sportsbet,initial,
 2534491,2880971544,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971936,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972044,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880972044,,,,
 2534491,2880971680,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971766,,,,
 2534491,2880971946,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2167,20 +2167,20 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971396,Gambling,Sportsbet,initial,
 2534491,2880971556,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971754,Centrelink,CENTRELINK,income,centrelink_001
-2534491,2880971371,,Apple Inc.,initial,
+2534491,2880971371,Retail,Apple,initial,
 2534491,2880971394,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971850,Wages,Goodstart,income,salary_payg_001
-2534491,2880971836,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971836,,,,
 2534491,2880971991,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972070,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971786,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971506,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971376,,Apple Inc.,initial,
+2534491,2880971376,Retail,Apple,initial,
 2534491,2880972056,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971823,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971902,SACC Loans,MoneySpot,liability,sacc_003
 2534491,2880971745,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971689,,THE SMITH FAMILY,initial,
+2534491,2880971689,All Other Credits,-,all_other_credit,
 2534491,2880971678,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971576,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971612,Fees,ATM Operator Fee,fee,fee
@@ -2197,7 +2197,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971741,Unknown Loans,Difrent Rental,liability,unknown_001
 2534491,2880971405,Gambling,Sportsbet,initial,
 2534491,2880971934,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971900,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971900,,,,
 2534491,2880971701,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971509,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971491,Department Stores,Target,initial,
@@ -2224,7 +2224,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971878,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972004,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972090,Centrelink,CENTRELINK,income,centrelink_001
-2534491,2880971373,,Apple Inc.,initial,
+2534491,2880971373,Retail,Apple,initial,
 2534491,2880971522,Department Stores,Big W,initial,
 2534491,2880971442,Education,Queensland Department of Education,initial,
 2534491,2880971801,Dishonours,-,dishonour,
@@ -2237,10 +2237,10 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971716,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971800,Wages,Goodstart,income,salary_payg_001
 2534491,2880972039,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971860,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971860,,,,
 2534491,2880971785,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971594,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880972071,,PARADISE GARDENS PROPRIETARY LIMITED,initial,
+2534491,2880972071,,,,
 2534491,2880971976,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972001,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880972095,Wages,Goodstart,income,salary_payg_001
@@ -2265,7 +2265,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971422,Gambling,Sportsbet,initial,
 2534491,2880971632,Gambling,Sportsbet,initial,
 2534491,2880971521,Department Stores,Big W,initial,
-2534491,2880971881,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971881,,,,
 2534491,2880971541,,,,
 2534491,2880971445,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971721,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2286,7 +2286,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971927,SACC Loans,MoneySpot,liability,sacc_003
 2534491,2880971868,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971465,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880971690,,THE SMITH FAMILY,initial,
+2534491,2880971690,All Other Credits,-,all_other_credit,
 2534491,2880971821,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971457,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972057,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2302,7 +2302,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971484,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971865,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971408,Gambling,Sportsbet,initial,
-2534491,2880971372,,Apple Inc.,initial,
+2534491,2880971372,Retail,Apple,initial,
 2534491,2880972061,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971870,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971788,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2310,13 +2310,13 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971797,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971852,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971440,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880971846,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971846,,,,
 2534491,2880971837,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972083,Retail,Capalaba Sports,initial,
 2534491,2880971710,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971806,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971938,Unknown Loans,Difrent Rental,liability,unknown_001
-2534491,2880971824,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971824,,,,
 2534491,2880971567,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880971805,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971643,Non SACC Loans,Afterpay,liability,bnpl_001
@@ -2346,9 +2346,9 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971523,Entertainment,Spotify,initial,
 2534491,2880972074,,,,
 2534491,2880971487,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971894,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971894,,,,
 2534491,2880971997,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972010,,# PTY LTD,initial,
+2534491,2880972010,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880971419,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971781,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971820,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
@@ -2368,7 +2368,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971606,Gambling,Tatts Online,initial,
 2534491,2880971913,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971862,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880971944,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971944,,,,
 2534491,2880971813,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971435,Groceries,Coles,initial,
 2534491,2880971393,Gambling,Sportsbet,initial,
@@ -2383,10 +2383,10 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971572,Subscription TV,Stan,initial,
 2534491,2880972051,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971867,Centrelink,CENTRELINK,income,centrelink_001
-2534491,2880971851,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971851,,,,
 2534491,2880971671,Personal Care,-,catch_all,
 2534491,2880971775,Unknown Loans,Difrent Rental,liability,unknown_001
-2534491,2880971551,,# PTY LTD,initial,
+2534491,2880971551,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880971364,SACC Loans,Fundo Loans,liability,sacc_002
 2534491,2880971490,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971436,Groceries,Woolworths,initial,
@@ -2412,7 +2412,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972099,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972008,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971478,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880971909,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971909,,,,
 2534491,2880971578,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972042,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972063,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -2431,7 +2431,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971761,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971514,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971975,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971370,,Apple Inc.,initial,
+2534491,2880971370,Retail,Apple,initial,
 2534491,2880971613,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971412,Gambling,Sportsbet,initial,
 2534491,2880971795,Centrelink,CENTRELINK,income,centrelink_001
@@ -2451,9 +2451,9 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971755,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971955,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971489,Centrelink,CENTRELINK,income,centrelink_001
-2534491,2880971374,,Apple Inc.,initial,
+2534491,2880971374,Retail,Apple,initial,
 2534491,2880971968,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971832,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971832,,,,
 2534491,2880971817,Retail,Etsy,initial,
 2534491,2880971974,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971520,Department Stores,Big W,initial,
@@ -2465,7 +2465,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971391,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971750,Telecommunications,Vodafone,initial,
 2534491,2880972000,Dishonours,-,dishonour,
-2534491,2880972026,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880972026,,,,
 2534491,2880971659,,,,
 2534491,2880972078,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971609,,,,
@@ -2475,7 +2475,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971496,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972027,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972069,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971937,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971937,,,,
 2534491,2880971530,SACC Loans,Fundo Loans,liability,sacc_001
 2534491,2880971483,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971592,,,,
@@ -2491,12 +2491,12 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971665,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972029,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971906,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880971998,,# PTY LTD,initial,
+2534491,2880971998,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972118,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972019,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971903,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971903,,,,
 2534491,2880972089,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971611,,MUFFIN BREAK PTY LTD,initial,
+2534491,2880971611,Dining Out,Muffin Break,initial,
 2534491,2880971866,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971912,Department Stores,Kmart,initial,
 2534491,2880971907,Wages,Goodstart,income,salary_payg_001
@@ -2521,7 +2521,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971528,Wages,Goodstart,income,salary_payg_001
 2534491,2880971893,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971651,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971595,Retail,FREEDOM FURNITURE AUSTRALIA PTY LIMITED,initial,
+2534491,2880971595,Transport,FREEDOM LOGISTICS PTY LTD,initial,
 2534491,2880972107,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880971979,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971424,Non SACC Loans,Afterpay,liability,bnpl_001
@@ -2531,7 +2531,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971367,Department Stores,Big W,initial,
 2534491,2880971571,Retail,Innovative Retail,initial,
 2534491,2880971644,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972021,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880972021,,,,
 2534491,2880972018,Centrelink,CENTRELINK,income,centrelink_001
 2534491,2880971624,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880971589,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2555,7 +2555,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971467,Groceries,Coles,initial,
 2534491,2880971587,Transport,U-Haul Australia,initial,
 2534491,2880971929,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880971872,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880971872,,,,
 2534491,2880971527,,,,
 2534491,2880971652,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972075,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2571,8 +2571,8 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880971550,Telecommunications,Vodafone,initial,
 2534491,2880971415,Gambling,Sportsbet,initial,
 2534491,2880971503,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880972007,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880971885,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880972007,,,,
+2534491,2880971885,,,,
 2534491,2880972982,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972524,Dining Out,Tang Cha,initial,
 2534491,2880973630,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2584,7 +2584,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973595,Gambling,Sportsbet,initial,
 2534491,2880972328,Gambling,Sportsbet,initial,
 2534491,2880972624,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973493,,Apple Inc.,initial,
+2534491,2880973493,Retail,Apple,initial,
 2534491,2880973047,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972896,Gambling,Sportsbet,initial,
 2534491,2880972298,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2682,7 +2682,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972922,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972444,Telecommunications,Vodafone,initial,
 2534491,2880972653,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972613,,Apple Inc.,initial,
+2534491,2880972613,Retail,Apple,initial,
 2534491,2880972197,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973073,Gambling,Sportsbet,initial,
 2534491,2880972460,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2729,7 +2729,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973464,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973650,Personal Care,MSP Photography,initial,
 2534491,2880972511,Gambling,Sportsbet,initial,
-2534491,2880972143,,Apple Inc.,initial,
+2534491,2880972143,Retail,Apple,initial,
 2534491,2880973334,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880972906,Home Improvement,Ripples,initial,
 2534491,2880972451,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2744,7 +2744,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973283,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973152,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880973780,Gambling,Sportsbet,initial,
-2534491,2880973206,Home Improvement,BUNNINGS GROUP LIMITED,initial,
+2534491,2880973206,Home Improvement,Bunnings,initial,
 2534491,2880973800,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973830,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973881,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2772,7 +2772,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972347,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973080,Gambling,Sportsbet,initial,
 2534491,2880973400,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972150,,MUFFIN BREAK PTY LTD,initial,
+2534491,2880972150,Dining Out,Muffin Break,initial,
 2534491,2880972616,Fees,ATM Operator Fee,fee,fee
 2534491,2880973003,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973944,Gambling,Sportsbet,initial,
@@ -2782,21 +2782,21 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973453,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972617,Retail,Mt Cotton Road News,initial,
 2534491,2880973875,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973939,,Apple Inc.,initial,
+2534491,2880973939,Retail,Apple,initial,
 2534491,2880972195,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973396,Gambling,Sportsbet,initial,
 2534491,2880972626,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973661,,CONNECT ENGINEERING PTY LIMITED,initial,
+2534491,2880973661,,,,
 2534491,2880973952,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973555,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973361,Gambling,Sportsbet,initial,
 2534491,2880972745,Gambling,Sportsbet,initial,
-2534491,2880973985,,Apple Inc.,initial,
+2534491,2880973985,Retail,Apple,initial,
 2534491,2880973648,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972399,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972744,Gambling,Sportsbet,initial,
 2534491,2880972157,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973984,,Apple Inc.,initial,
+2534491,2880973984,Retail,Apple,initial,
 2534491,2880973202,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972903,Home Improvement,Ripples,initial,
 2534491,2880972889,Gambling,Sportsbet,initial,
@@ -2838,7 +2838,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972408,Credit Card Repayments,Gem Credit Card Repayment,liability,bank_001
 2534491,2880973841,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972943,Non SACC Loans,Afterpay,liability,bnpl_002
-2534491,2880972435,,Apple Inc.,initial,
+2534491,2880972435,Retail,Apple,initial,
 2534491,2880973532,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973528,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973819,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2855,8 +2855,8 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973960,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972611,Gambling,Sportsbet,initial,
 2534491,2880973367,Gambling,Sportsbet,initial,
-2534491,2880972525,,Apple Inc.,initial,
-2534491,2880973298,Department Stores,Best & Less,initial,
+2534491,2880972525,Retail,Apple,initial,
+2534491,2880973298,Department Stores,Best and Less,initial,
 2534491,2880972948,Gambling,Sportsbet,initial,
 2534491,2880972136,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973027,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -2867,7 +2867,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972730,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973677,Gambling,Sportsbet,initial,
 2534491,2880973257,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973496,,Apple Inc.,initial,
+2534491,2880973496,Retail,Apple,initial,
 2534491,2880972546,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972634,Groceries,Woolworths,initial,
 2534491,2880972385,Groceries,Woolworths,initial,
@@ -2949,7 +2949,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972421,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973277,Retail,Mt Cotton Road News,initial,
 2534491,2880973471,Telecommunications,Vodafone,initial,
-2534491,2880973186,,# PTY LTD,initial,
+2534491,2880973186,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972759,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973297,Retail,Cotton Road News,initial,
 2534491,2880973181,Groceries,Coles,initial,
@@ -3017,8 +3017,8 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973637,Gyms and other memberships,Redlands Junior Rugby Club,initial,
 2534491,2880973205,Travel,Tasman Holiday Parks,initial,
 2534491,2880972856,,,,
-2534491,2880973529,Department Stores,Best & Less,initial,
-2534491,2880973140,,Apple Inc.,initial,
+2534491,2880973529,Department Stores,Best and Less,initial,
+2534491,2880973140,Retail,Apple,initial,
 2534491,2880973726,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973441,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973006,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3073,11 +3073,11 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973950,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972591,Groceries,Coles,initial,
 2534491,2880973572,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973695,,11ONE PTY LTD,initial,
+2534491,2880973695,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972159,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973217,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972491,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972755,,PAYMATE PTY LTD,initial,
+2534491,2880972755,,,,
 2534491,2880972785,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973302,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973660,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3097,7 +3097,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972310,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972632,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880972806,Non SACC Loans,Afterpay,liability,bnpl_002
-2534491,2880973445,,# PTY LTD,initial,
+2534491,2880973445,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972586,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972886,Gambling,Sportsbet,initial,
 2534491,2880973271,Gambling,Sportsbet,initial,
@@ -3122,7 +3122,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972331,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972913,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972165,SACC Loans,MoneySpot,liability,sacc_003
-2534491,2880972847,,Apple Inc.,initial,
+2534491,2880972847,Retail,Apple,initial,
 2534491,2880973964,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973621,Gambling,Sportsbet,initial,
 2534491,2880972931,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3132,8 +3132,8 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972829,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972420,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972445,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973238,,# PTY LTD,initial,
-2534491,2880973772,Transport,Uber,initial,
+2534491,2880973238,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
+2534491,2880973772,Dining Out,Uber Eats,initial,
 2534491,2880972803,Gambling,Sportsbet,initial,
 2534491,2880972813,Gambling,Sportsbet,initial,
 2534491,2880973287,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3145,7 +3145,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973468,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972615,Telecommunications,Vodafone,initial,
 2534491,2880973358,Gambling,Sportsbet,initial,
-2534491,2880973640,,# PTY LTD,initial,
+2534491,2880973640,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973898,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973576,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973891,Telecommunications,Vodafone,initial,
@@ -3212,9 +3212,9 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973871,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973485,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972628,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973693,,11ONE PTY LTD,initial,
+2534491,2880973693,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973273,Groceries,Woolworths,initial,
-2534491,2880972950,,Chandler Companies (Aust) Pty Ltd,initial,
+2534491,2880972950,Groceries,Megafresh Pty Ltd,initial,
 2534491,2880972731,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973632,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972194,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3277,7 +3277,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972552,,,,
 2534491,2880972975,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972892,Gambling,Sportsbet,initial,
-2534491,2880972151,,# PTY LTD,initial,
+2534491,2880972151,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972749,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973193,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972610,Gambling,Sportsbet,initial,
@@ -3396,14 +3396,14 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973926,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972888,Gambling,Sportsbet,initial,
 2534491,2880973925,Non SACC Loans,Afterpay,liability,bnpl_002
-2534491,2880973178,Home Improvement,BUNNINGS GROUP LIMITED,initial,
+2534491,2880973178,Home Improvement,Bunnings,initial,
 2534491,2880972538,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973681,Retail,GJ's,initial,
 2534491,2880972891,Gambling,Sportsbet,initial,
 2534491,2880973245,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973709,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973295,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880972434,,Apple Inc.,initial,
+2534491,2880972434,Retail,Apple,initial,
 2534491,2880973125,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973370,Gambling,Sportsbet,initial,
 2534491,2880973727,Gambling,Sportsbet,initial,
@@ -3451,9 +3451,9 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973300,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972923,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972425,Non SACC Loans,Afterpay,liability,bnpl_002
-2534491,2880973938,,Apple Inc.,initial,
-2534491,2880973719,,# PTY LTD,initial,
-2534491,2880973763,,# PTY LTD,initial,
+2534491,2880973938,Retail,Apple,initial,
+2534491,2880973719,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
+2534491,2880973763,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972534,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973476,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973756,Retail,Cotton Road News,initial,
@@ -3467,7 +3467,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972160,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972911,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973904,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973087,,THE FRESHIONALS PTY LTD,initial,
+2534491,2880973087,,,,
 2534491,2880972996,Gambling,Sportsbet,initial,
 2534491,2880973416,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973559,Gambling,Sportsbet,initial,
@@ -3476,7 +3476,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972314,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880973353,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973697,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972467,,# PTY LTD,initial,
+2534491,2880972467,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972564,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880973446,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973729,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3497,7 +3497,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973228,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973432,Department Stores,Kmart,initial,
 2534491,2880973561,Gambling,Sportsbet,initial,
-2534491,2880973376,,# PTY LTD,initial,
+2534491,2880973376,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972630,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972249,Groceries,Woolworths,initial,
 2534491,2880973625,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3510,18 +3510,18 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973437,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972516,Gambling,Sportsbet,initial,
 2534491,2880973755,Gambling,Sportsbet,initial,
-2534491,2880973638,,# PTY LTD,initial,
+2534491,2880973638,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973299,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973495,Gambling,Sportsbet,initial,
 2534491,2880972815,Gambling,Sportsbet,initial,
 2534491,2880972265,Gambling,Sportsbet,initial,
 2534491,2880973048,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972340,Gambling,Sportsbet,initial,
-2534491,2880973717,,Apple Inc.,initial,
+2534491,2880973717,Retail,Apple,initial,
 2534491,2880972796,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973417,SACC Loans,MoneySpot,liability,sacc_003
-2534491,2880973716,,CONNECT ENGINEERING PTY LIMITED,initial,
-2534491,2880972598,Department Stores,Best & Less,initial,
+2534491,2880973716,,,,
+2534491,2880972598,Department Stores,Best and Less,initial,
 2534491,2880972471,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973596,Gambling,Sportsbet,initial,
 2534491,2880972601,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3605,7 +3605,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973611,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972284,Gambling,Sportsbet,initial,
 2534491,2880973254,Telecommunications,TPG INTERNET PTY LTD,initial,
-2534491,2880972846,,Apple Inc.,initial,
+2534491,2880972846,Retail,Apple,initial,
 2534491,2880972647,Retail,Stacks Discounts,initial,
 2534491,2880972337,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973840,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3625,7 +3625,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973478,Travel,-,catch_all,
 2534491,2880973920,Telecommunications,Vodafone,initial,
 2534491,2880973527,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973860,,Chandler Companies (Aust) Pty Ltd,initial,
+2534491,2880973860,,,,
 2534491,2880972622,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972502,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972764,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3637,17 +3637,17 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973846,Gambling,Sportsbet,initial,
 2534491,2880972861,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973897,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972170,,PayPal,initial,
+2534491,2880972170,Entertainment,Disney,initial,
 2534491,2880973176,Groceries,Woolworths,initial,
 2534491,2880972816,Gambling,Sportsbet,initial,
 2534491,2880972587,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972827,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973033,,HOME ICE CREAM PTY. LTD.,initial,
+2534491,2880973033,Dining Out,-,catch_all,
 2534491,2880973966,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973265,Groceries,Coles,initial,
 2534491,2880972976,Gambling,Sportsbet,initial,
 2534491,2880972588,Non SACC Loans,Afterpay,liability,bnpl_002
-2534491,2880972531,,11ONE PTY LTD,initial,
+2534491,2880972531,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973244,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973983,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973479,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -3655,7 +3655,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973315,Retail,Stacks Discounts,initial,
 2534491,2880972844,Retail,Cotton Road News,initial,
 2534491,2880973116,Groceries,Coles,initial,
-2534491,2880973138,,Apple Inc.,initial,
+2534491,2880973138,Retail,Apple,initial,
 2534491,2880972317,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973943,Gambling,Sportsbet,initial,
 2534491,2880972487,Non SACC Loans,Afterpay,liability,bnpl_002
@@ -3714,7 +3714,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973982,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972403,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973272,,,,
-2534491,2880973460,,# PTY LTD,initial,
+2534491,2880973460,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972765,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972338,,,,
 2534491,2880972365,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3737,7 +3737,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972663,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972379,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973222,Dining Out,McDonald's,initial,
-2534491,2880973754,,Apple Inc.,initial,
+2534491,2880973754,Retail,Apple,initial,
 2534491,2880972830,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973864,Gambling,Sportsbet,initial,
 2534491,2880973545,Non SACC Loans,Afterpay,liability,bnpl_002
@@ -3787,9 +3787,9 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972285,Gambling,Sportsbet,initial,
 2534491,2880973249,Retail,Cotton Road News,initial,
 2534491,2880973380,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973753,,Apple Inc.,initial,
+2534491,2880973753,Retail,Apple,initial,
 2534491,2880972775,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972437,,Apple Inc.,initial,
+2534491,2880972437,Retail,Apple,initial,
 2534491,2880973119,Retail,Cotton Road News,initial,
 2534491,2880972995,,,,
 2534491,2880972236,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3820,9 +3820,9 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973713,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973105,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973195,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973423,,# PTY LTD,initial,
+2534491,2880973423,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972378,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880973694,,# PTY LTD,initial,
+2534491,2880973694,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972367,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972668,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973968,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3891,7 +3891,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973462,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972490,Retail,Mt Cotton Road News,initial,
 2534491,2880973439,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973180,Home Improvement,BUNNINGS GROUP LIMITED,initial,
+2534491,2880973180,Home Improvement,Bunnings,initial,
 2534491,2880973301,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973798,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972963,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -3915,7 +3915,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972376,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972866,,,,
 2534491,2880973083,Groceries,Coles,initial,
-2534491,2880973139,,Apple Inc.,initial,
+2534491,2880973139,Retail,Apple,initial,
 2534491,2880973430,Gambling,Sportsbet,initial,
 2534491,2880973879,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973790,Non SACC Loans,Afterpay,liability,bnpl_002
@@ -3952,7 +3952,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973340,,,,
 2534491,2880973775,Gambling,Sportsbet,initial,
 2534491,2880972993,Gambling,Sportsbet,initial,
-2534491,2880973551,,# PTY LTD,initial,
+2534491,2880973551,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973951,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973166,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972156,,,,
@@ -4005,7 +4005,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972483,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972492,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972789,Gambling,Sportsbet,initial,
-2534491,2880972137,,Apple Inc.,initial,
+2534491,2880972137,Retail,Apple,initial,
 2534491,2880973692,Gambling,Sportsbet,initial,
 2534491,2880973127,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972743,Gambling,Sportsbet,initial,
@@ -4067,13 +4067,13 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972838,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972640,Gambling,Sportsbet,initial,
 2534491,2880972383,Non SACC Loans,Afterpay,liability,bnpl_002
-2534491,2880973424,,# PTY LTD,initial,
+2534491,2880973424,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973094,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973172,Dining Out,Domino's Pizza Moranbah,initial,
 2534491,2880972893,Gambling,Sportsbet,initial,
 2534491,2880973184,,,,
 2534491,2880972543,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880972235,,# PTY LTD,initial,
+2534491,2880972235,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973857,,,,
 2534491,2880973078,Gambling,Sportsbet,initial,
 2534491,2880973608,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -4118,7 +4118,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972381,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880972469,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973905,,,,
-2534491,2880973760,,Apple Inc.,initial,
+2534491,2880973760,Retail,Apple,initial,
 2534491,2880972206,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973764,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972493,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -4136,7 +4136,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972514,Gambling,Sportsbet,initial,
 2534491,2880973665,Gambling,Sportsbet,initial,
 2534491,2880972382,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973389,,HOME ICE CREAM PTY. LTD.,initial,
+2534491,2880973389,Dining Out,-,catch_all,
 2534491,2880972831,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973113,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973641,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -4256,7 +4256,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973199,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973664,Department Stores,"COSTCO WHOLESALE AUSTRALIA, PTY. LTD.",initial,
 2534491,2880973761,Gambling,Sportsbet,initial,
-2534491,2880973569,,# PTY LTD,initial,
+2534491,2880973569,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880973028,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973187,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973690,Gambling,Sportsbet,initial,
@@ -4295,7 +4295,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972894,Gambling,Sportsbet,initial,
 2534491,2880973312,Department Stores,Kmart,initial,
 2534491,2880972273,Non SACC Loans,Afterpay,liability,bnpl_002
-2534491,2880973276,,# PTY LTD,initial,
+2534491,2880973276,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972603,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973280,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972648,,,,
@@ -4324,7 +4324,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973001,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880973581,Gambling,Sportsbet,initial,
 2534491,2880973456,Gambling,Sportsbet,initial,
-2534491,2880972652,Department Stores,Best & Less,initial,
+2534491,2880972652,Department Stores,Best and Less,initial,
 2534491,2880973624,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972579,Department Stores,Kmart,initial,
 2534491,2880973395,Non SACC Loans,Zip Pay,liability,bnpl_003
@@ -4408,7 +4408,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880973333,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880973016,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880972781,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973443,,CONNECT ENGINEERING PTY LIMITED,initial,
+2534491,2880973443,,,,
 2534491,2880972689,Groceries,Coles,initial,
 2534491,2880973335,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880973266,,,,
@@ -4417,7 +4417,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880972942,Non SACC Loans,Afterpay,liability,bnpl_002
 2534491,2880972880,,,,
 2534491,2880972965,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880973666,,# PTY LTD,initial,
+2534491,2880973666,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880972752,Groceries,Coles,initial,
 2534491,2880973383,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880973505,Gambling,Sportsbet,initial,
@@ -4618,7 +4618,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976384,,,,
 2534491,2880976355,,,,
 2534491,2880976480,Transport,TransLink,initial,
-2534491,2880976457,,FRIENDLY PTY LIMITED,initial,
+2534491,2880976457,Groceries,Friendly Grocer,initial,
 2534491,2880976549,,,,
 2534491,2880976328,Transport,TransLink,initial,
 2534491,2880976435,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -4631,7 +4631,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976476,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976557,Retail,Mt Cotton Road News,initial,
 2534491,2880976514,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976554,Department Stores,Best & Less,initial,
+2534491,2880976554,Department Stores,Best and Less,initial,
 2534491,2880976359,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976352,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976516,Entertainment,Zone Bowling,initial,
@@ -4690,7 +4690,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976470,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976492,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976547,Transport,TransLink,initial,
-2534491,2880976581,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
+2534491,2880976581,Retail,Shein,initial,
 2534491,2880976507,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880976528,Dining Out,The Grazing Table,initial,
 2534491,2880976455,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -4797,7 +4797,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976361,Telecommunications,Vodafone,initial,
 2534491,2880976426,Dining Out,-,catch_all,
 2534491,2880976400,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976582,Department Stores,Best & Less,initial,
+2534491,2880976582,Department Stores,Best and Less,initial,
 2534491,2880976458,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880976571,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976357,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -4843,7 +4843,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976500,Transport,TransLink,initial,
 2534491,2880976462,,,,
 2534491,2880976379,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976377,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
+2534491,2880976377,Retail,Shein,initial,
 2534491,2880976383,Telecommunications,Vodafone,initial,
 2534491,2880976542,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976491,,,,
@@ -4914,7 +4914,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975409,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975608,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975697,,,,
-2534491,2880975569,,NOSQ PTY LTD,initial,
+2534491,2880975569,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,initial,
 2534491,2880975427,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975616,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975487,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -4948,7 +4948,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975381,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975431,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880975377,,,,
-2534491,2880975690,Transport,Uber,initial,
+2534491,2880975690,Dining Out,Uber Eats,initial,
 2534491,2880975701,Transport,Metro,initial,
 2534491,2880975565,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975575,Transport,-,catch_all,
@@ -5181,7 +5181,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975643,Transport,Linkt,initial,
 2534491,2880975346,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975547,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880975686,,Chandler Companies (Aust) Pty Ltd,initial,
+2534491,2880975686,,,,
 2534491,2880975621,,,,
 2534491,2880975438,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975581,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
@@ -5278,7 +5278,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975695,,,,
 2534491,2880975445,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
 2534491,2880975453,External Transfers,Miscellaneous Funds Transfer,transfer,External Transfers
-2534491,2880975689,Transport,Uber,initial,
+2534491,2880975689,Dining Out,Uber Eats,initial,
 2534491,2880975684,,,,
 2534491,2880975871,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976012,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -5287,32 +5287,32 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976138,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975908,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975942,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880975999,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880975999,,,,
 2534491,2880976148,Dishonours,-,dishonour,
 2534491,2880975929,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
-2534491,2880976128,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976128,,,,
 2534491,2880975955,Gambling,Sportsbet,initial,
-2534491,2880976186,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976186,,,,
 2534491,2880975866,Gambling,Sportsbet,initial,
 2534491,2880975952,Gambling,Sportsbet,initial,
-2534491,2880976155,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976155,,,,
 2534491,2880975985,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975997,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880975936,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976156,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976156,,,,
 2534491,2880975881,Gambling,Sportsbet,initial,
 2534491,2880975967,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975900,Gambling,Sportsbet,initial,
-2534491,2880976125,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976130,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976107,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976125,,,,
+2534491,2880976130,,,,
+2534491,2880976107,,,,
 2534491,2880975951,Gambling,Sportsbet,initial,
 2534491,2880976015,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975954,Gambling,Sportsbet,initial,
-2534491,2880976033,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976127,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976134,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976170,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976033,,,,
+2534491,2880976127,,,,
+2534491,2880976134,,,,
+2534491,2880976170,,,,
 2534491,2880975904,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975880,Gambling,Sportsbet,initial,
 2534491,2880975886,Gambling,Sportsbet,initial,
@@ -5326,29 +5326,29 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975992,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976022,Dishonours,-,dishonour,
 2534491,2880976006,Dining Out,Bracken Ridge Tavern,initial,
-2534491,2880976144,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976144,,,,
 2534491,2880976053,Gambling,Sportsbet,initial,
 2534491,2880975944,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975859,Gambling,Sportsbet,initial,
 2534491,2880975971,Gambling,Sportsbet,initial,
-2534491,2880976152,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976152,,,,
 2534491,2880975974,Non SACC Loans,Zip Pay,liability,bnpl_005
 2534491,2880975905,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976034,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976034,,,,
 2534491,2880976096,Dishonours,-,dishonour,
 2534491,2880975892,Gambling,Sportsbet,initial,
-2534491,2880976154,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976154,,,,
 2534491,2880975924,Department Stores,Kmart,initial,
-2534491,2880976114,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976114,,,,
 2534491,2880976056,Gambling,Sportsbet,initial,
 2534491,2880976083,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976101,Dishonours,-,dishonour,
-2534491,2880976037,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976037,,,,
 2534491,2880976139,Gambling,Sportsbet,initial,
 2534491,2880976052,Gambling,Sportsbet,initial,
-2534491,2880976030,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976108,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976112,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976030,,,,
+2534491,2880976108,,,,
+2534491,2880976112,,,,
 2534491,2880976008,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976117,Dishonours,-,dishonour,
 2534491,2880976001,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -5359,7 +5359,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975931,Non SACC Loans,Zip Pay,liability,bnpl_005
 2534491,2880976067,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976058,Gambling,Sportsbet,initial,
-2534491,2880976171,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976171,,,,
 2534491,2880976121,Dishonours,-,dishonour,
 2534491,2880975960,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880975917,Gambling,Sportsbet,initial,
@@ -5371,34 +5371,34 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976168,Dishonours,-,dishonour,
 2534491,2880975857,Gambling,Sportsbet,initial,
 2534491,2880976123,Dishonours,-,dishonour,
-2534491,2880976102,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976102,,,,
 2534491,2880976086,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975953,Gambling,Sportsbet,initial,
 2534491,2880976124,Dishonours,-,dishonour,
 2534491,2880976011,Groceries,Fruit Depot,initial,
 2534491,2880975906,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975980,Gambling,Sportsbet,initial,
-2534491,2880976184,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976184,,,,
 2534491,2880975981,Gambling,Sportsbet,initial,
-2534491,2880976137,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976137,,,,
 2534491,2880975873,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976018,Dishonours,-,dishonour,
 2534491,2880975949,Gambling,Sportsbet,initial,
-2534491,2880976106,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976106,,,,
 2534491,2880975948,Gambling,Sportsbet,initial,
 2534491,2880976091,Dishonours,-,dishonour,
 2534491,2880975858,Gambling,Sportsbet,initial,
 2534491,2880976090,Dishonours,-,dishonour,
 2534491,2880975913,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880975939,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880975939,,,,
 2534491,2880975874,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975907,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975945,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976085,Gambling,Sportsbet,initial,
-2534491,2880975862,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880975862,,,,
 2534491,2880975897,Gambling,Sportsbet,initial,
 2534491,2880975879,Gambling,Sportsbet,initial,
-2534491,2880975975,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880975975,,,,
 2534491,2880975884,Gambling,Sportsbet,initial,
 2534491,2880975888,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976050,Gambling,Sportsbet,initial,
@@ -5408,19 +5408,19 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975933,Non SACC Loans,Afterpay,liability,bnpl_004
 2534491,2880975860,Gambling,Sportsbet,initial,
 2534491,2880975882,Gambling,Sportsbet,initial,
-2534491,2880976169,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976169,,,,
 2534491,2880976149,Dishonours,-,dishonour,
 2534491,2880975930,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976173,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976173,,,,
 2534491,2880975957,Gambling,Sportsbet,initial,
-2534491,2880976132,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976132,,,,
 2534491,2880976094,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976024,Dishonours,-,dishonour,
 2534491,2880976061,Gambling,Sportsbet,initial,
 2534491,2880976007,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975947,Gambling,Sportsbet,initial,
 2534491,2880975991,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976078,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976078,,,,
 2534491,2880976028,Dishonours,-,dishonour,
 2534491,2880976013,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975887,Gambling,Sportsbet,initial,
@@ -5433,18 +5433,18 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976183,Dishonours,-,dishonour,
 2534491,2880976075,Gambling,Sportsbet,initial,
 2534491,2880975965,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976162,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976162,,,,
 2534491,2880975976,Gambling,Sportsbet,initial,
 2534491,2880976010,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976122,Dishonours,-,dishonour,
 2534491,2880975889,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976109,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976109,,,,
 2534491,2880975872,,,,
-2534491,2880975920,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880975920,,,,
 2534491,2880975987,Gambling,Sportsbet,initial,
 2534491,2880975910,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976131,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976029,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976131,,,,
+2534491,2880976029,,,,
 2534491,2880976021,Dishonours,-,dishonour,
 2534491,2880975921,Gambling,Sportsbet,initial,
 2534491,2880976068,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -5453,21 +5453,21 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975870,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975934,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975911,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976142,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976133,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976142,,,,
+2534491,2880976133,,,,
 2534491,2880976082,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976087,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976087,,,,
 2534491,2880975863,Non SACC Loans,Zip Pay,liability,bnpl_005
 2534491,2880975890,Gambling,Sportsbet,initial,
 2534491,2880975916,Telecommunications,Vodafone,initial,
-2534491,2880976172,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976172,,,,
 2534491,2880975927,Internal Transfer,Miscellaneous Funds Transfer,transfer,Internal Transfer
 2534491,2880975896,Gambling,Sportsbet,initial,
-2534491,2880976105,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976105,,,,
 2534491,2880975915,Non SACC Loans,Afterpay,liability,bnpl_004
 2534491,2880976057,Gambling,Sportsbet,initial,
 2534491,2880976163,Dishonours,-,dishonour,
-2534491,2880976159,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976159,,,,
 2534491,2880976160,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976000,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975861,Gambling,Sportsbet,initial,
@@ -5476,15 +5476,15 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975899,Gambling,Sportsbet,initial,
 2534491,2880976081,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975950,Non SACC Loans,Afterpay,liability,bnpl_004
-2534491,2880976174,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976174,,,,
 2534491,2880976049,Gambling,Sportsbet,initial,
-2534491,2880976032,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976032,,,,
 2534491,2880976167,Dishonours,-,dishonour,
 2534491,2880975978,Gambling,Sportsbet,initial,
 2534491,2880975972,Non SACC Loans,Afterpay,liability,bnpl_004
-2534491,2880976135,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976135,,,,
 2534491,2880975902,Non SACC Loans,Afterpay,liability,bnpl_004
-2534491,2880975877,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880975877,,,,
 2534491,2880975878,SACC Loans,MoneySpot,liability,sacc_004
 2534491,2880975962,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975969,Non SACC Loans,Afterpay,liability,bnpl_004
@@ -5500,17 +5500,17 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976080,Gambling,Sportsbet,initial,
 2534491,2880976073,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975869,Gambling,Sportsbet,initial,
-2534491,2880976111,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976111,,,,
 2534491,2880976048,Gambling,Sportsbet,initial,
 2534491,2880975932,Department Stores,Big W,initial,
-2534491,2880976035,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976035,,,,
 2534491,2880975979,Gambling,Sportsbet,initial,
 2534491,2880975898,Gambling,Sportsbet,initial,
-2534491,2880976176,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976176,,,,
 2534491,2880976145,Dishonours,-,dishonour,
 2534491,2880975894,Gambling,Sportsbet,initial,
 2534491,2880976077,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976180,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976180,,,,
 2534491,2880976009,Entertainment,Feld Entertainment Australia,initial,
 2534491,2880976181,Dishonours,-,dishonour,
 2534491,2880976064,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
@@ -5525,14 +5525,14 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976161,Dishonours,-,dishonour,
 2534491,2880976063,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976059,Gambling,Sportsbet,initial,
-2534491,2880976043,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976043,,,,
 2534491,2880975968,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976042,Gambling,Sportsbet,initial,
 2534491,2880976070,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975966,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975922,Gambling,Sportsbet,initial,
 2534491,2880975938,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976129,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976129,,,,
 2534491,2880976069,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975988,Gambling,Sportsbet,initial,
 2534491,2880976164,Dishonours,-,dishonour,
@@ -5547,42 +5547,42 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880976066,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976041,SACC Loans,MoneySpot,liability,sacc_004
 2534491,2880976027,Dishonours,-,dishonour,
-2534491,2880976158,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976036,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976158,,,,
+2534491,2880976036,,,,
 2534491,2880976099,Dishonours,-,dishonour,
 2534491,2880976044,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975994,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975909,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976079,Gambling,Sportsbet,initial,
-2534491,2880976039,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976039,,,,
 2534491,2880976046,Gambling,Sportsbet,initial,
 2534491,2880976084,Gambling,Sportsbet,initial,
-2534491,2880976178,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976038,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976178,,,,
+2534491,2880976038,,,,
 2534491,2880975986,Non SACC Loans,Zip Pay,liability,bnpl_005
 2534491,2880976092,Dishonours,-,dishonour,
 2534491,2880975977,Gambling,Sportsbet,initial,
-2534491,2880976153,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976153,,,,
 2534491,2880975937,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976089,Dishonours,-,dishonour,
-2534491,2880976185,,HAPANA HOLDINGS PTY LTD,initial,
-2534491,2880976126,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976185,,,,
+2534491,2880976126,,,,
 2534491,2880975989,Gambling,Sportsbet,initial,
 2534491,2880976072,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975963,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975914,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976110,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976110,,,,
 2534491,2880975996,Non SACC Loans,Afterpay,liability,bnpl_004
-2534491,2880976017,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976017,,,,
 2534491,2880976093,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976179,Dishonours,-,dishonour,
-2534491,2880976004,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976004,,,,
 2534491,2880975928,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880975961,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976005,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976005,,,,
 2534491,2880976045,Gambling,Sportsbet,initial,
 2534491,2880975982,Gambling,Sportsbet,initial,
-2534491,2880976104,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976104,,,,
 2534491,2880976097,Dishonours,-,dishonour,
 2534491,2880975895,Gambling,Sportsbet,initial,
 2534491,2880976076,Gambling,Sportsbet,initial,
@@ -5591,19 +5591,19 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2534491,2880975875,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976040,Gambling,Sportsbet,initial,
 2534491,2880975935,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
-2534491,2880976031,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976031,,,,
 2534491,2880976054,Gambling,Sportsbet,initial,
 2534491,2880976062,Gambling,Sportsbet,initial,
-2534491,2880976157,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976157,,,,
 2534491,2880976047,Gambling,Sportsbet,initial,
-2534491,2880976103,,HAPANA HOLDINGS PTY LTD,initial,
+2534491,2880976103,,,,
 2534491,2880975912,Internal Transfer,NAB Linked Account Transfer,transfer,Internal Transfer
 2534491,2880976020,Dishonours,-,dishonour,
 2534491,2880975983,Gambling,Sportsbet,initial,
 2534491,2880975925,Groceries,Coles,initial,
 2534491,2880976146,Dishonours,-,dishonour,
 2534491,2880975864,Gambling,Sportsbet,initial,
-2534491,2880975926,Retail,SHEIN DISTRIBUTION AUSTRALIA PTY LIMITED,initial,
+2534491,2880975926,Retail,Shein,initial,
 2534491,2880975856,Gambling,Sportsbet,initial,
 2534491,2880976088,Dishonours,-,dishonour,
 2534491,2880975868,Gambling,Sportsbet,initial,
