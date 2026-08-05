@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import csv
 import re
 from pathlib import Path
 
@@ -12,6 +11,7 @@ from classification_core.models import (
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
+from classification_core.rules import load_dishonour_style_rules
 
 
 class DishonourEngine:
@@ -24,7 +24,9 @@ class DishonourEngine:
         self.resources_dir = Path(resources_dir)
 
     def classify(self, context: EngineContext) -> EngineResult:
-        rules = _load_rules(self.resources_dir / "dishonour_rules.csv")
+        rules = load_dishonour_style_rules(
+            self.resources_dir / "dishonour_rules.csv"
+        )
         candidates = context.candidates.copy()
         text_col = candidates["text"].fillna("").astype(str)
 
@@ -61,15 +63,3 @@ class DishonourEngine:
         accepted_predictions: pd.DataFrame,
     ) -> list[SummaryArtifact]:
         return []
-
-
-def _load_rules(rules_file):
-    rules = []
-    with open(rules_file, encoding="utf-8-sig", newline="") as f:
-        for row in csv.DictReader(f):
-            rule_type = (row.get("rule_type") or "").strip().lower()
-            pattern = row.get("pattern") or ""
-            required_terms = [x.strip().lower() for x in (row.get("required_terms") or "").split(";") if x.strip()]
-            if rule_type and pattern:
-                rules.append((rule_type, pattern, required_terms))
-    return rules

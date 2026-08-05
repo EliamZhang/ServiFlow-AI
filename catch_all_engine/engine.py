@@ -23,24 +23,16 @@ from pathlib import Path
 
 import pandas as pd
 
+from classification_core.claims import exclude_prior_claimed
 from classification_core.models import (
     EngineContext,
     EngineResult,
     TRANSACTION_KEY_COLUMNS,
 )
 from classification_core.reasons import format_classification_reason
+from classification_core.text import clean_text
 
-# ── text normalisation (same semantics as initial engine's clean_text) ──────
-_CLEAN_RE = re.compile(r"[^A-Z0-9]+")
-
-
-def _normalise(value: object) -> str:
-    """Uppercase + strip non-alphanumeric — identical to initial engine."""
-    if pd.isna(value):
-        return ""
-    text = str(value).upper()
-    text = _CLEAN_RE.sub(" ", text)
-    return " ".join(text.split())
+# ── text normalisation (shared with the initial engine) ─────────────────────
 
 
 class CatchAllEngine:
@@ -81,23 +73,13 @@ class CatchAllEngine:
         )
 
         # Only consider rows NOT already classified by prior engines.
-        if not context.prior_claims.empty:
-            prior_keys = {
-                (str(row["application_id"]), str(row["transaction_id"]))
-                for _, row in context.prior_claims.iterrows()
-            }
-            keep = pd.Series(True, index=candidates.index)
-            for idx, row in candidates.iterrows():
-                key = (str(row["application_id"]), str(row["transaction_id"]))
-                if key in prior_keys:
-                    keep.at[idx] = False
-            candidates = candidates[keep].copy()
+        candidates = exclude_prior_claimed(candidates, context.prior_claims)
 
         if candidates.empty:
             return empty_pred
 
         # Normalise text column
-        text_clean = candidates["text"].apply(_normalise)
+        text_clean = candidates["text"].apply(clean_text)
 
         # Per-row best-match
         matched_mask = pd.Series(False, index=candidates.index)

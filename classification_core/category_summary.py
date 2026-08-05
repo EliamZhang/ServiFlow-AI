@@ -13,6 +13,8 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from .text import is_blank
+
 CATEGORY_SUMMARY_COLUMNS = [
     "finv_category",
     "bank_account_id",
@@ -26,17 +28,13 @@ CATEGORY_SUMMARY_COLUMNS = [
 ]
 
 
-def _blank(series: pd.Series) -> pd.Series:
-    return series.isna() | series.astype("string").str.strip().eq("")
-
-
 def build_category_summary(transactions: pd.DataFrame) -> pd.DataFrame:
     """Aggregate the final output per finv_category.  Returns an empty frame
     with CATEGORY_SUMMARY_COLUMNS when there is nothing to summarise."""
     if transactions.empty or "finv_category" not in transactions.columns:
         return pd.DataFrame(columns=CATEGORY_SUMMARY_COLUMNS)
 
-    categorized = transactions.loc[~_blank(transactions["finv_category"])].copy()
+    categorized = transactions.loc[~is_blank(transactions["finv_category"])].copy()
     if categorized.empty:
         return pd.DataFrame(columns=CATEGORY_SUMMARY_COLUMNS)
 

@@ -21,13 +21,11 @@ import ahocorasick
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason
+from classification_core.text import clean_text
 
 # ---------------------------------------------------------------------------
 # Text cleaning
 # ---------------------------------------------------------------------------
-
-# Keep only A-Z, 0-9 and spaces — matches how keywords are normalised.
-_CLEAN_RE = re.compile(r"[^A-Z0-9]+")
 
 # Payment-channel prefixes that should not be treated as merchant names.
 # Stripped from the beginning of transaction text before keyword matching so the
@@ -46,15 +44,6 @@ _CHANNEL_PREFIX_RE = re.compile(
     r")",
     re.IGNORECASE,
 )
-
-
-def clean_text(value: object) -> str:
-    """Normalise a text field for keyword matching (uppercase, alphanum only)."""
-    if pd.isna(value):
-        return ""
-    text = str(value).upper()
-    text = _CLEAN_RE.sub(" ", text)
-    return " ".join(text.split())  # collapse whitespace
 
 
 def _clean_transaction_text(value: object) -> str:

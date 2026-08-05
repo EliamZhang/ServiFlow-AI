@@ -1,17 +1,18 @@
 from __future__ import annotations
 
-import csv
 import re
 from pathlib import Path
 
 import pandas as pd
 
+from classification_core.claims import exclude_prior_claimed
 from classification_core.models import (
     EngineContext,
     EngineResult,
     SummaryArtifact,
     TRANSACTION_KEY_COLUMNS,
 )
+from classification_core.rules import load_dishonour_style_rules
 
 
 class AllOtherCreditEngine:
@@ -37,21 +38,11 @@ class AllOtherCreditEngine:
 
         # Exclude rows already classified by prior engines,
         # except External Transfers which may be re-matched.
-        if not context.prior_claims.empty:
-            prior_map: dict[tuple[str, str], str] = {}
-            for _, prow in context.prior_claims.iterrows():
-                key = (
-                    str(prow["application_id"]),
-                    str(prow["transaction_id"]),
-                )
-                prior_map[key] = str(prow["finv_category"])
-            keep = pd.Series(True, index=candidates.index)
-            for idx, row in candidates.iterrows():
-                key = (str(row["application_id"]), str(row["transaction_id"]))
-                prior_cat = prior_map.get(key)
-                if prior_cat is not None and prior_cat != "External Transfers":
-                    keep.at[idx] = False
-            candidates = candidates[keep].copy()
+        candidates = exclude_prior_claimed(
+            candidates,
+            context.prior_claims,
+            keep_categories={"External Transfers"},
+        )
 
         if candidates.empty:
             return EngineResult(
@@ -59,7 +50,9 @@ class AllOtherCreditEngine:
                 transactions=pd.DataFrame(),
             )
 
-        rules = _load_rules(self.resources_dir / "all_other_credit_rules.csv")
+        rules = load_dishonour_style_rules(
+            self.resources_dir / "all_other_credit_rules.csv"
+        )
         text_col = candidates["text"].fillna("").astype(str)
 
         mask = pd.Series(False, index=candidates.index)
@@ -87,19 +80,3 @@ class AllOtherCreditEngine:
         accepted_predictions: pd.DataFrame,
     ) -> list[SummaryArtifact]:
         return []
-
-
-def _load_rules(rules_file: Path) -> list[tuple[str, str, list[str]]]:
-    rules = []
-    with open(rules_file, encoding="utf-8-sig", newline="") as f:
-        for row in csv.DictReader(f):
-            rule_type = (row.get("rule_type") or "").strip().lower()
-            pattern = (row.get("pattern") or "").strip()
-            required_terms = [
-                x.strip().lower()
-                for x in (row.get("required_terms") or "").split(";")
-                if x.strip()
-            ]
-            if rule_type and pattern:
-                rules.append((rule_type, pattern, required_terms))
-    return rules
