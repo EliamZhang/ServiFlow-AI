@@ -5,27 +5,39 @@
   "bank_accounts": [
     {
       "bank_account_id": 1042813323,
-      "account_type": ""
+      "account_type": "transaction",
+      "bank": "cba",
+      "credit_limit": null
     },
     {
       "bank_account_id": 1534823854,
-      "account_type": ""
+      "account_type": "transaction",
+      "bank": "cba",
+      "credit_limit": null
     },
     {
       "bank_account_id": 1174255881,
-      "account_type": ""
+      "account_type": "savings",
+      "bank": "cba",
+      "credit_limit": null
     },
     {
       "bank_account_id": 459428115,
-      "account_type": ""
+      "account_type": "transaction",
+      "bank": "cba",
+      "credit_limit": null
     },
     {
       "bank_account_id": 1917595324,
-      "account_type": ""
+      "account_type": "savings",
+      "bank": "cba",
+      "credit_limit": null
     },
     {
       "bank_account_id": 1525527792,
-      "account_type": ""
+      "account_type": "credit card",
+      "bank": "cba",
+      "credit_limit": 5000
     }
   ],
   "illion_raw_transactions": [
