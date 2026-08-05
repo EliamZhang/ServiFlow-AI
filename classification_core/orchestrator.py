@@ -18,6 +18,7 @@ from .models import (
     TRANSACTION_KEY_COLUMNS,
 )
 from .registry import build_engine
+from .text import is_blank
 
 PREDICTION_REQUIRED_COLUMNS = {
     *TRANSACTION_KEY_COLUMNS,
@@ -33,6 +34,7 @@ CLAIM_ARCHIVE_COLUMNS = (
     "finv_category",
     "counterparty",
     "classification_rule_id",
+    "classification_reason",
     "stream_id",
 )
 
@@ -45,10 +47,6 @@ def _key_tuples(df: pd.DataFrame) -> list[tuple[str, str]]:
     key_frame = df.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
     key_frame = key_frame.astype("string").fillna("")
     return [tuple(row) for row in key_frame.itertuples(index=False, name=None)]
-
-
-def _is_blank(series: pd.Series) -> pd.Series:
-    return series.isna() | series.astype("string").str.strip().eq("")
 
 
 # ── orchestrator ────────────────────────────────────────────────────────────
@@ -122,7 +120,7 @@ class ClassificationOrchestrator:
                     engine_id=engine.engine_id,
                     engine_version=engine.engine_version,
                     priority=spec.priority,
-                    candidate_count=len(original),
+                    candidate_count=len(candidates_df),
                     prediction_count=len(engine_result.predictions),
                     accepted_count=len(accepted),
                     duration_seconds=engine_seconds,
@@ -229,7 +227,7 @@ class ClassificationOrchestrator:
                 "outside its candidate set."
             )
 
-        blank_core = _is_blank(predictions["counterparty"])
+        blank_core = is_blank(predictions["counterparty"])
         if blank_core.any():
             raise ValueError(
                 f"Engine {engine.engine_id!r} returned blank counterparty for "

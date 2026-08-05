@@ -3,6 +3,8 @@ import re
 
 import pandas as pd
 
+from classification_core.text import parse_decimal_amount
+
 
 def normalize_rule_value(value):
     if pd.isna(value):
@@ -292,7 +294,7 @@ def _load_flag_rules_format_a(rows):
             continue
 
         priority = parse_int(row.get("priority"), default=0)
-        amount_gt = parse_decimal(row.get("amount_gt"))
+        amount_gt = parse_decimal_amount(row.get("amount_gt"))
         rule = {
             "target_field": target_field,
             "priority": priority,
@@ -588,20 +590,6 @@ def _ensure_flag_columns(df, output_columns):
         if col not in output.columns:
             output[col] = 0
     return output
-
-
-def parse_decimal(value):
-    """Parse a value to Decimal, returning None on failure."""
-    from decimal import Decimal, InvalidOperation
-    if pd.isna(value):
-        return None
-    text = str(value).strip().replace(",", "")
-    if not text:
-        return None
-    try:
-        return Decimal(text)
-    except InvalidOperation:
-        return None
 
 
 def apply_home_loan_car_loan_flags(df, rules_file):

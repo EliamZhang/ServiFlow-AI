@@ -39,6 +39,7 @@ import numpy as np
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason
+from classification_core.text import clean_text
 
 
 # =============================================================================
@@ -266,14 +267,6 @@ HARD_NEGATIVE_REGEX = compile_patterns(HARD_NEGATIVE_PATTERNS)
 SOFT_NEGATIVE_REGEX = compile_patterns(SOFT_NEGATIVE_PATTERNS)
 NEGATIVE_REGEX = compile_patterns(NEGATIVE_PATTERNS)
 GIG_EXCLUSION_REGEX = compile_patterns(GIG_EXCLUSION_PATTERNS)
-
-
-def clean_text(value) -> str:
-    if pd.isna(value):
-        return ""
-    value = str(value).upper()
-    value = re.sub(r"[^A-Z0-9]+", " ", value)
-    return re.sub(r"\s+", " ", value).strip()
 
 
 def count_matches(text: str, patterns: List[re.Pattern]) -> int:
