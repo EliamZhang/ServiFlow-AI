@@ -1,0 +1,80 @@
+{
+  "applicationId": 2513560,
+  "userId": 484579009,
+  "runId": "3f1c9a2b-8d4e-4f6a-9c2b-7e1a5d3b8f21",
+  "status": "success",
+  "error": null,
+  "bankAccounts": [
+    {"bankAccountId": 1042813323, "accountType": "transaction", "bank": "cba", "creditLimit": null},
+    {"bankAccountId": 1534823854, "accountType": "transaction", "bank": "cba", "creditLimit": null},
+    {"bankAccountId": 1174255881, "accountType": "savings", "bank": "cba", "creditLimit": null},
+    {"bankAccountId": 459428115, "accountType": "transaction", "bank": "cba", "creditLimit": null},
+    {"bankAccountId": 1917595324, "accountType": "savings", "bank": "cba", "creditLimit": null},
+    {"bankAccountId": 1525527792, "accountType": "credit card", "bank": "cba", "creditLimit": 5000}
+  ],
+  "transactions": [
+    {
+      "applicationId": 2513560,
+      "transactionId": 1423884392,
+      "transactionDate": "2026-02-05",
+      "amount": -12.32,
+      "drCr": "debit",
+      "text": "UBER *TRIP HELP.UBER.C 14518236738 AUS",
+      "bankAccountId": 1042813323,
+      "category": "Transport",
+      "thirdParty": "UBER",
+      "trxType": "",
+      "balance": -126.28,
+      "illionTrxUuid": "0e63679d-ff62-5a55-bb5f-ae03d4dec068",
+      "finvCategory": "Transport",
+      "counterparty": "UBER"
+    },
+    {
+      "applicationId": 2513560,
+      "transactionId": 925664694,
+      "transactionDate": "2026-02-05",
+      "amount": 14,
+      "drCr": "credit",
+      "text": "Fast Transfer From SUMAN BISWAKARMA to PayID Phone Transfer",
+      "bankAccountId": 1534823854,
+      "category": "External Transfers",
+      "thirdParty": "CBA Funds Transfer",
+      "trxType": "Inbound Transfer",
+      "balance": 155.15,
+      "illionTrxUuid": "c39cdccb-bca6-5704-8478-f7a6372c85b6",
+      "finvCategory": null,
+      "counterparty": null
+    },
+    {
+      "applicationId": 2513560,
+      "transactionId": 20844045,
+      "transactionDate": "2026-02-05",
+      "amount": 500,
+      "drCr": "credit",
+      "text": "Fast Transfer From SASAL JOSHI to PayID Phone Loan",
+      "bankAccountId": 1534823854,
+      "category": "Non SACC Loans",
+      "thirdParty": "Generic Loan",
+      "trxType": "Inbound Transfer",
+      "balance": 641.15,
+      "illionTrxUuid": "a663933c-4b8f-5494-839f-9336013e0e0d",
+      "finvCategory": "Non SACC Loans",
+      "counterparty": "Generic Loan"
+    }
+  ],
+  "summaries": {
+    "income_summary": [
+      {"streamId": "income_001", "finvCategory": "Wages", "counterparty": "COLES PTY LTD",
+       "transactionCount": 4, "totalIncomeAmount": 3120.00, "frequency": "fortnightly",
+       "predictedNextIncomeDate": "2026-02-21"}
+    ],
+    "liability_summary": [
+      {"streamId": "sacc_004", "finvCategory": "Non SACC Loans", "counterparty": "Generic Loan",
+       "fundedAmount": 500.00, "repaidAmount": 120.00, "repaymentAmount": 100.00,
+       "frequency": "weekly", "predictedClosingDate": "2026-06-01"},
+      {"streamId": "bnpl_002", "finvCategory": "Non SACC Loans", "counterparty": "Humm",
+       "fundedAmount": 300.00, "repaidAmount": 60.00, "repaymentAmount": 30.00,
+       "frequency": "weekly", "predictedClosingDate": "2026-08-20"}
+    ]
+  }
+}
