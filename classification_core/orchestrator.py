@@ -6,6 +6,7 @@ from uuid import uuid4
 
 import pandas as pd
 
+from .category_summary import build_category_summary
 from .config import PipelineConfig
 from .engine import ClassificationEngine
 from .models import (
@@ -128,6 +129,14 @@ class ClassificationOrchestrator:
                     diagnostics=engine_result.diagnostics,
                     claims=claim_archive,
                 )
+            )
+
+        # Category-level summary for every finv_category, per bank account.
+        # income_summary / liability_summary are separate stream-level views.
+        category_summary = build_category_summary(output)
+        if not category_summary.empty:
+            summaries.append(
+                SummaryArtifact("category_summary", category_summary)
             )
 
         return ClassificationRunResult(

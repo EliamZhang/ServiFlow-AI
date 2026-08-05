@@ -1,13 +1,21 @@
 # ServiFlow-AI
 
-交易分类流水线：多个分类引擎按优先级顺序执行，对交易逐行分类并输出 Excel 报告。
+交易分类流水线：多个分类引擎按优先级顺序执行，对交易逐行分类并输出 Excel 报告（`backfill.py`）或单应用 JSON（`run_model.py`）。
 
 ## 引擎覆盖行为
 
-- **执行顺序**：由 `configs/pipeline.json` 中每台引擎的 `priority` 决定，**按 priority 升序执行**（见 `classification_core/config.py` 的 `PipelineConfig.enabled_engines`），不是按 JSON 数组中的书写顺序。
+- **执行顺序**：由 `configs/pipeline.json` 中每台引擎的 `priority` 决定，**按 priority 升序执行**（见 `classification_core/config.py` 的 `PipelineConfig.enabled_engines`），不是按 JSON 数组中的书写顺序。当前顺序（priority）：initial(1) → transfer(100) → dishonour(150) → income(200) → liability(300) → all_other_credit(400) → fee(500) → catch_all(999)。
 - **覆盖规则**：所有引擎都看到全部交易（`candidates` 默认全量）。每台引擎跑完后，其结果在行级写入 `output`，**覆盖**该行已有的 `finv_category` 与 `counterparty`（成对覆盖），并记录 `classification_engine` / `classification_priority` 等字段。**后面的引擎永远赢**（覆盖写入点：`classification_core/orchestrator.py` 的 `_commit`）。
-- **特例**：`liability` 引擎的候选集会排除已被分为收入类的交易（`salary_payg` / `salary_packaging` / `centrelink` / `self_employed_gig`），因此不会覆盖这些行（`orchestrator.py` 的 `run`）。
+- **特例 1（income 保护）**：`liability` 引擎的候选集会排除已被分为收入类的交易（`orchestrator.py` 的 `run`），因此不会覆盖这些行。排除判定基于**当前输出层的 `finv_category`**，即收入引擎映射后的粗类 `Wages` / `Centrelink`（`salary_payg` / `salary_packaging` / `self_employed_gig` 三者在 `income_engine/domain/classification.py` 的 `add_income_type_rules` 中统一映射为 `Wages`）。
+- **特例 2（all_other_credit）**：`all_other_credit` 只处理 `dr_cr == credit` 的行，且跳过已被先前引擎分类的行——唯一例外是 `External Transfers` 允许被它重新匹配（`all_other_credit_engine/engine.py` 的 `classify`）。
+- **特例 3（catch_all）**：`catch_all` 只匹配未被先前引擎分类的行（`catch_all_engine/engine.py` 的 `classify`）。
 - `priority` 仅决定执行顺序，并记录进 `classification_priority` 列，不参与覆盖判定。
+
+## 入口与数据流
+
+- `backfill.py`：CSV 批量输入 → 运行流水线 → 输出 Excel 报告（`output/classification_report_{时间戳}.xlsx`）。
+- `run_model.py`：单应用 JSON 输入（`model_input.json`）→ 运行流水线 → 输出 JSON（默认 `output/model_output_{applicationId}_{时间戳}.json`）。序列化时排除引擎内部追踪列（`classification_status` 等），账户元数据（`account_type` / `bank` / `credit_limit`）只保留在顶层 `bankAccounts`，行级不重复输出；字段名统一转 camelCase。
+- `baseline.py`：基线回归对比（见下节）。
 
 ## 基线回归对比（output 变更检查）
 
@@ -24,11 +32,21 @@
 
 **所有涉及引擎顺序调整的改动（新增引擎、删除引擎、调整 priority、启用/禁用引擎、修改覆盖规则），都必须先与用户确认后再实施。**
 
+### 规则数据外置
+
+引擎的具体规则大多外置在各引擎 `resources/` 目录的 CSV 中（如 `liability_engine/resources/`、`transfer_engine/resources/`、`catch_all_engine/resources/`），引擎代码只负责加载与执行。改规则优先改 CSV，避免动引擎代码；各 CSV 的列约定见对应引擎的 `domain/` 加载函数与 docstring。
+
 ### 协作方式
 
-- 先检查问题有没有错误前提、逻辑跳跃和信息缺失；
-- 不要迎合我，要独立判断；
-- 区分事实、推测和主观观点；
-- 涉及数字、人物和结论时尽量核实来源；
-- 不同意就直接指出，并给出依据、风险和替代解释；
-- 主动提醒我忽略的变量、成本和偏差。
+- 在开始执行前，先检查问题中是否存在错误前提、逻辑跳跃、信息缺失或目标不明确；
+
+* 保持独立判断，不盲目认同或迎合我的观点；
+* 明确区分 **已确认事实、合理推测、主观判断和未知信息** ；
+* 改代码过程中有存疑问题时，可以向我询问
+* 涉及数字、人物、政策、时间及关键结论时，优先核实可靠来源，并说明依据；
+* 发现我的判断可能有误时，直接指出，并说明理由、潜在风险及其他可能的解释；
+* 主动告诉我可能忽略的变量、边界条件、隐性成本、偏差和长期影响；
+* 存在多种方案时，说明各方案的优缺点，并给出明确建议，而不是只罗列选项；
+* 信息不足时不要编造；可以基于合理假设继续，但必须明确标注假设；
+* 默认先给出结论和建议，再补充分析过程与依据；
+* 可以自主进行分析、修改和本地验证，但涉及**提交代码、推送远程仓库、发送消息、发布内容、删除数据或其他不可逆操作**时，必须先征得我的明确确认。

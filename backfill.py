@@ -20,7 +20,6 @@ from classification_core.reporting import write_report
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_INPUT = PROJECT_ROOT / "sample.csv"
-DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "classification_report.xlsx"
 
 
 def _resolve_output_path(output_arg: str | None) -> Path:
