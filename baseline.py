@@ -6,12 +6,14 @@ Usage:
 
 ``save`` runs the full pipeline and stores each transaction's final
 classification (finv_category, counterparty, winning engine, stream_id) as a
-baseline CSV, plus per-engine claim snapshots (engine_claims.csv) and pipeline
-config/engine versions (run_meta.json).  ``diff`` reruns the pipeline and
-reports every transaction whose classification changed versus the baseline,
-per-engine claim changes, claim-count changes per rule, and any pipeline
-config / engine version drift.  Exit code: 0 = no differences, 1 =
-differences found, 2 = error.
+baseline CSV, plus per-engine claim snapshots (engine_claims.csv), pipeline
+config/engine versions (run_meta.json), and deterministic summary metrics
+(baseline/summaries/: category_summary all columns, liability_summary amount
+columns).  ``diff`` reruns the pipeline and reports every transaction whose
+classification changed versus the baseline, per-engine claim changes,
+claim-count changes per rule, pipeline config / engine version drift, and
+summary metric changes.  Exit code: 0 = no differences, 1 = differences
+found, 2 = error.
 """
 
 from __future__ import annotations
@@ -39,6 +41,23 @@ DEFAULT_INPUT = Path("sample.csv")
 DEFAULT_BASELINE = Path("baseline/sample_baseline.csv")
 DEFAULT_ENGINE_BASELINE = Path("baseline/engine_claims.csv")
 DEFAULT_RUN_META = Path("baseline/run_meta.json")
+DEFAULT_SUMMARIES_DIR = Path("baseline/summaries")
+
+# Only deterministic summary artifacts are compared.  liability_summary rows
+# mix time-sensitive fields (status, predicted_closing_date, frequency) with
+# stable amounts; comparing the amounts alone avoids drift noise when the
+# sample window changes.
+SUMMARY_ARTIFACTS = (
+    ("category_summary", None),
+    ("liability_summary", ("funded_amount", "repaid_amount", "repayment_amount", "recent_fn_repay_amount")),
+)
+
+SUMMARY_KEY_COLUMNS = (
+    "application_id",
+    "bank_account_id",
+    "finv_category",
+    "stream_id",
+)
 
 KEY_COLUMNS = ("application_id", "transaction_id")
 RESULT_COLUMNS = ("finv_category", "counterparty", "classification_engine", "stream_id")
@@ -186,6 +205,59 @@ def load_baseline(path: str | Path) -> pd.DataFrame:
     return _normalise_frame(pd.read_csv(path, encoding="utf-8-sig"))
 
 
+def extract_summary_baseline(
+    result: ClassificationRunResult,
+    artifact_name: str,
+    amount_columns: tuple[str, ...] | None,
+) -> pd.DataFrame:
+    """Extract a deterministic summary snapshot from a pipeline run.
+
+    Only the given amount columns are kept for ``liability_summary`` (the
+    stable, date-independent values); ``None`` keeps all columns."""
+    artifacts = {artifact.name: artifact for artifact in result.summaries}
+    artifact = artifacts.get(artifact_name)
+    if artifact is None or artifact.data.empty:
+        return pd.DataFrame(columns=SUMMARY_KEY_COLUMNS + (amount_columns or ()))
+
+    data = artifact.data
+    key_columns = [col for col in SUMMARY_KEY_COLUMNS if col in data.columns]
+    compare_columns = list(key_columns)
+    if amount_columns is not None:
+        compare_columns += [col for col in amount_columns if col in data.columns]
+
+    output = data[compare_columns].copy()
+    for col in key_columns:
+        output[col] = output[col].fillna("").astype(str)
+    if amount_columns is not None:
+        for col in amount_columns:
+            if col not in output.columns:
+                output[col] = ""
+            output[col] = output[col].fillna("").astype(str)
+    # Multiple streams can share one (bank_account_id, finv_category) key in
+    # category_summary; keep the first row so keys stay unique for alignment.
+    return output.drop_duplicates(subset=key_columns, keep="first").reset_index(drop=True)
+
+
+def load_summary_baseline(
+    path: str | Path,
+    amount_columns: tuple[str, ...] | None,
+) -> pd.DataFrame:
+    frame = pd.read_csv(path, encoding="utf-8-sig")
+    key_columns = [col for col in SUMMARY_KEY_COLUMNS if col in frame.columns]
+    for col in key_columns:
+        frame[col] = frame[col].fillna("").astype(str)
+    if amount_columns is not None:
+        for col in amount_columns:
+            if col not in frame.columns:
+                frame[col] = ""
+            frame[col] = frame[col].fillna("").astype(str)
+    return (
+        frame[list(key_columns) + (list(amount_columns) if amount_columns else [])]
+        .drop_duplicates(subset=key_columns, keep="first")
+        .reset_index(drop=True)
+    )
+
+
 @dataclass
 class TransactionChange:
     kind: str  # CHANGED / NEW / GONE
@@ -206,11 +278,21 @@ class EngineClaimChange:
 
 
 @dataclass
+class SummaryChange:
+    artifact_name: str
+    kind: str  # CHANGED / NEW / GONE
+    row_key: dict[str, str]
+    old: dict[str, str]
+    new: dict[str, str]
+
+
+@dataclass
 class CompareReport:
     changes: list[TransactionChange] = field(default_factory=list)
     engine_deltas: list[tuple[str, int, int]] = field(default_factory=list)
     engine_rule_deltas: list[tuple[str, str, int, int]] = field(default_factory=list)
     claim_changes: list[EngineClaimChange] = field(default_factory=list)
+    summary_changes: list[SummaryChange] = field(default_factory=list)
     engine_versions: dict[str, str] = field(default_factory=dict)
     run_meta_differences: list[str] = field(default_factory=list)
     row_count_mismatches: list[str] = field(default_factory=list)
@@ -222,6 +304,7 @@ class CompareReport:
             or self.engine_deltas
             or self.engine_rule_deltas
             or self.claim_changes
+            or self.summary_changes
             or self.run_meta_differences
             or self.row_count_mismatches
         )
@@ -235,6 +318,8 @@ def compare_transactions(
     engine_current: pd.DataFrame | None = None,
     baseline_meta: dict | None = None,
     current_meta: dict | None = None,
+    summary_baselines: dict[str, pd.DataFrame] | None = None,
+    summary_currents: dict[str, pd.DataFrame] | None = None,
 ) -> CompareReport:
     """Compare two baseline-shaped frames, aligned on (application_id, transaction_id).
 
@@ -286,6 +371,14 @@ def compare_transactions(
     else:
         run_meta_differences = []
 
+    summary_changes: list[SummaryChange] = []
+    if summary_baselines is not None and summary_currents is not None:
+        for artifact_name, amount_columns in SUMMARY_ARTIFACTS:
+            sb = summary_baselines.get(artifact_name)
+            sc = summary_currents.get(artifact_name)
+            if sb is not None and sc is not None:
+                summary_changes.extend(compare_summaries(sb, sc, artifact_name))
+
     row_count_mismatches: list[str] = []
     if len(current) != len(baseline):
         row_count_mismatches.append(
@@ -302,6 +395,7 @@ def compare_transactions(
         engine_deltas=engine_deltas,
         engine_rule_deltas=rule_deltas,
         claim_changes=claim_changes,
+        summary_changes=summary_changes,
         engine_versions=engine_versions or {},
         run_meta_differences=run_meta_differences,
         row_count_mismatches=row_count_mismatches,
@@ -315,6 +409,44 @@ CLAIM_RESULT_COLUMNS = (
     "classification_reason",
     "stream_id",
 )
+
+
+def compare_summaries(
+    baseline: pd.DataFrame,
+    current: pd.DataFrame,
+    artifact_name: str,
+) -> list[SummaryChange]:
+    """Compare deterministic summary snapshots, aligned on the key columns.
+
+    Rows are matched on the key columns present in the artifact; value columns
+    are compared as strings after CSV normalisation."""
+    key_columns = [col for col in SUMMARY_KEY_COLUMNS if col in baseline.columns]
+    value_columns = [col for col in baseline.columns if col not in key_columns]
+
+    b = baseline.set_index(list(key_columns))
+    c = current.set_index(list(key_columns))
+    changes: list[SummaryChange] = []
+
+    for key in b.index.union(c.index):
+        old_row = b.loc[key] if key in b.index else None
+        new_row = c.loc[key] if key in c.index else None
+        row_key = dict(zip(key_columns, key))
+
+        old = {col: (old_row[col] if old_row is not None else "") for col in value_columns}
+        new = {col: (new_row[col] if new_row is not None else "") for col in value_columns}
+
+        if not old_row is not None and not new_row is not None:
+            continue
+        if old_row is None:
+            changes.append(SummaryChange(artifact_name, "NEW", row_key, {}, new))
+            continue
+        if new_row is None:
+            changes.append(SummaryChange(artifact_name, "GONE", row_key, old, {}))
+            continue
+        if any(old[col] != new[col] for col in value_columns):
+            changes.append(SummaryChange(artifact_name, "CHANGED", row_key, old, new))
+
+    return changes
 
 
 def compare_engine_claims(
@@ -390,6 +522,23 @@ def _format_value(change: TransactionChange, col: str) -> str:
     return f"{old or '未分类'} → {new or '未分类'}"
 
 
+def _format_summary_change(change: SummaryChange) -> str:
+    key = ", ".join(f"{k}={v}" for k, v in change.row_key.items() if v)
+    if change.kind == "NEW":
+        detail = " | ".join(f"{col}={new}" for col, new in change.new.items() if new)
+        return f"[NEW] {key}: {detail}"
+    if change.kind == "GONE":
+        detail = " | ".join(f"{col}={old}" for col, old in change.old.items() if old)
+        return f"[GONE] {key}: {detail}"
+    detail = " | ".join(
+        f"{col}={old} → {new}"
+        for col, old in change.old.items()
+        for new in [change.new.get(col, "")]
+        if old != new
+    )
+    return f"[CHANGED] {key}: {detail}"
+
+
 def print_diff(report: CompareReport) -> None:
     if report.changes:
         print(f"=== 分类变化 ({len(report.changes)} 笔) ===")
@@ -424,6 +573,11 @@ def print_diff(report: CompareReport) -> None:
         for engine, rule, old, new in report.engine_rule_deltas:
             print(f"  {engine:<18} {rule:<36} {old} → {new} ({new - old:+d})")
 
+    if report.summary_changes:
+        print(f"\n=== 汇总指标变化 ({len(report.summary_changes)} 行) ===")
+        for change in report.summary_changes:
+            print(f"  {change.artifact_name}: {_format_summary_change(change)}")
+
     if report.run_meta_differences:
         print("\n=== 配置/版本变化 ===")
         for diff in report.run_meta_differences:
@@ -452,6 +606,13 @@ def cmd_save(args: argparse.Namespace) -> int:
     run_meta_path = Path(args.run_meta)
     save_run_meta(run_meta_path, _run_meta())
     print(f"运行元数据已保存: {run_meta_path}")
+    summaries_dir = Path(args.summaries_dir)
+    summaries_dir.mkdir(parents=True, exist_ok=True)
+    for artifact_name, amount_columns in SUMMARY_ARTIFACTS:
+        extract_summary_baseline(result, artifact_name, amount_columns).to_csv(
+            summaries_dir / f"{artifact_name}.csv", index=False
+        )
+    print(f"汇总指标基线已保存: {summaries_dir}")
     _print_engine_claims(result)
     return 0
 
@@ -483,8 +644,26 @@ def cmd_diff(args: argparse.Namespace) -> int:
         )
         baseline_meta = None
 
+    summaries_dir = Path(args.summaries_dir)
+    summary_baselines: dict[str, pd.DataFrame] = {}
+    for artifact_name, amount_columns in SUMMARY_ARTIFACTS:
+        summary_path = summaries_dir / f"{artifact_name}.csv"
+        if summary_path.exists():
+            summary_baselines[artifact_name] = load_summary_baseline(
+                summary_path, amount_columns
+            )
+        else:
+            print(
+                f"注意: 汇总指标基线不存在: {summary_path}（跳过该工件对比）",
+                file=sys.stderr,
+            )
+
     result = run_pipeline(args.input)
     engine_current = extract_engine_claims(result) if engine_baseline is not None else None
+    summary_currents = {
+        artifact_name: extract_summary_baseline(result, artifact_name, amount_columns)
+        for artifact_name, amount_columns in SUMMARY_ARTIFACTS
+    }
     report = compare_transactions(
         baseline,
         extract_baseline(result),
@@ -493,6 +672,8 @@ def cmd_diff(args: argparse.Namespace) -> int:
         engine_current=engine_current,
         baseline_meta=baseline_meta,
         current_meta=_run_meta(),
+        summary_baselines=summary_baselines,
+        summary_currents=summary_currents,
     )
     print_diff(report)
 
@@ -515,6 +696,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         sub.add_argument("--baseline", default=str(DEFAULT_BASELINE), help="Baseline CSV path.")
         sub.add_argument("--engine-baseline", default=str(DEFAULT_ENGINE_BASELINE), help="Per-engine claim baseline CSV path.")
         sub.add_argument("--run-meta", default=str(DEFAULT_RUN_META), help="Pipeline config/version metadata path.")
+        sub.add_argument("--summaries-dir", default=str(DEFAULT_SUMMARIES_DIR), help="Deterministic summary baselines directory.")
         sub.set_defaults(func=cmd_save if name == "save" else cmd_diff)
 
     return parser.parse_args(argv)
