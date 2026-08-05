@@ -1,0 +1,55 @@
+{
+  "engines": [
+    {
+      "engine_id": "initial",
+      "priority": 1,
+      "enabled": true
+    },
+    {
+      "engine_id": "dishonour",
+      "priority": 150,
+      "enabled": true
+    },
+    {
+      "engine_id": "fee",
+      "priority": 500,
+      "enabled": true
+    },
+    {
+      "engine_id": "transfer",
+      "priority": 100,
+      "enabled": true
+    },
+    {
+      "engine_id": "income",
+      "priority": 200,
+      "enabled": true
+    },
+    {
+      "engine_id": "liability",
+      "priority": 300,
+      "enabled": true
+    },
+    {
+      "engine_id": "all_other_credit",
+      "priority": 400,
+      "enabled": true
+    },
+    {
+      "engine_id": "catch_all",
+      "priority": 999,
+      "enabled": true
+    }
+  ],
+  "on_engine_error": "fail_batch",
+  "engine_versions": {
+    "all_other_credit": "1.0",
+    "catch_all": "1.0",
+    "dishonour": "1.0",
+    "fee": "1.0",
+    "income": "1.0",
+    "initial": "1.0",
+    "liability": "1.0",
+    "transfer": "1.0"
+  }
+}

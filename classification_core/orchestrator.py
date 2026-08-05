@@ -34,6 +34,7 @@ CLAIM_ARCHIVE_COLUMNS = (
     "finv_category",
     "counterparty",
     "classification_rule_id",
+    "classification_reason",
     "stream_id",
 )
 
