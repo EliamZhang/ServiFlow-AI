@@ -1,25 +1,25 @@
+"""模型服务的公共业务逻辑：输入 JSON dict → 运行流水线 → 输出 JSON dict。
+
+供两个入口共用：
+- model_main.py：生产环境推理入口（PredictMain.predict）。
+- verify_model.py：本地验证脚本（CLI）。
+"""
+
 from __future__ import annotations
 
-import argparse
-import json
-import time
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
-from classification_core.config import (
+from .config import (
     DEFAULT_CATEGORY_CATALOG,
     DEFAULT_PIPELINE_CONFIG,
     load_category_owners,
     load_pipeline_config,
 )
-from classification_core.models import ClassificationRunResult
-from classification_core.orchestrator import ClassificationOrchestrator
-
-PROJECT_ROOT = Path(__file__).resolve().parent
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
+from .models import ClassificationRunResult
+from .orchestrator import ClassificationOrchestrator
 
 # orchestrator 输出列中不属于业务结果的内部列，序列化时排除
 _INTERNAL_OUTPUT_COLUMNS = frozenset(
@@ -73,34 +73,27 @@ _SUMMARY_OUTPUT_MAP = {
 }
 
 
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Classify a single application from JSON and write JSON output."
-    )
-    parser.add_argument(
-        "--input",
-        default=str(PROJECT_ROOT / "model_input.json"),
-        help="Input application JSON path.",
-    )
-    parser.add_argument(
-        "--output",
-        default=None,
-        help=(
-            "Output JSON path. Default: output/model_output_{applicationId}_"
-            "{YYYYMMDD_HHMMSS}.json"
-        ),
-    )
-    parser.add_argument(
-        "--config",
-        default=str(DEFAULT_PIPELINE_CONFIG),
-        help="Pipeline JSON configuration path.",
-    )
-    parser.add_argument(
-        "--category-catalog",
-        default=str(DEFAULT_CATEGORY_CATALOG),
-        help="Category catalog JSON path.",
-    )
-    return parser.parse_args()
+class ModelService:
+    """模型服务入口：加载一次配置，逐次对单个 application 的输入 dict 执行推理。"""
+
+    def __init__(
+        self,
+        pipeline_config_path: str | Path = DEFAULT_PIPELINE_CONFIG,
+        category_catalog_path: str | Path = DEFAULT_CATEGORY_CATALOG,
+    ) -> None:
+        self.orchestrator = ClassificationOrchestrator(
+            config=load_pipeline_config(pipeline_config_path),
+            category_owners=load_category_owners(category_catalog_path),
+        )
+
+    def predict(self, payload: dict[str, Any]) -> dict[str, Any]:
+        """对单个 application 的输入 dict 执行流水线，返回可 JSON 序列化的结果 dict。"""
+        try:
+            transactions = build_transactions_frame(payload)
+        except Exception as exc:
+            return _build_error_output(payload, str(exc))
+        result = self.orchestrator.run(transactions)
+        return serialize_result(result, payload)
 
 
 def _to_camel(snake: str) -> str:
@@ -144,12 +137,6 @@ def _serialize_records(
             record[name] = _serialize_value(row[column])
         records.append(record)
     return records
-
-
-def load_input(path: str | Path) -> dict:
-    with Path(path).open(encoding="utf-8") as file:
-        payload = json.load(file)
-    return payload
 
 
 def build_transactions_frame(payload: dict) -> pd.DataFrame:
@@ -209,29 +196,18 @@ def _max_date(values: list[Any]) -> str | None:
 
 def build_stats(
     transactions: pd.DataFrame,
-    run_duration_seconds: float,
 ) -> dict[str, Any]:
     return {
         "txnRawInputCnt": len(transactions),
         "transactionDateMax": _max_date(
             transactions["transaction_date"].tolist()
         ),
-        "runDurationSeconds": round(run_duration_seconds, 3),
     }
-
-
-def _resolve_output_path(output_arg: str | None, payload: dict) -> Path:
-    if output_arg:
-        return Path(output_arg)
-    application_id = payload.get("applicationId")
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return DEFAULT_OUTPUT_DIR / f"model_output_{application_id}_{timestamp}.json"
 
 
 def serialize_result(
     result: ClassificationRunResult,
     payload: dict,
-    run_duration_seconds: float,
 ) -> dict:
     output: dict[str, Any] = {}
     for key in _INPUT_ECHO_TOP_KEYS:
@@ -240,7 +216,7 @@ def serialize_result(
     output["runId"] = result.run_id
     output["status"] = "success"
     output["error"] = None
-    output["stats"] = build_stats(result.transactions, run_duration_seconds)
+    output["stats"] = build_stats(result.transactions)
     output["bankAccounts"] = build_bank_accounts(payload)
 
     transactions_frame = result.transactions
@@ -262,48 +238,19 @@ def serialize_result(
     return output
 
 
-def main() -> None:
-    args = parse_args()
-    payload = load_input(args.input)
-    output_path = _resolve_output_path(args.output, payload)
-    started_at = time.perf_counter()
-
-    try:
-        transactions = build_transactions_frame(payload)
-        orchestrator = ClassificationOrchestrator(
-            config=load_pipeline_config(args.config),
-            category_owners=load_category_owners(args.category_catalog),
-        )
-        result = orchestrator.run(transactions)
-    except Exception as exc:
-        output = {
-            "runId": None,
-            "status": "failed",
-            "error": str(exc),
-            "stats": {
-                "txnRawInputCnt": 0,
-                "transactionDateMax": None,
-                "runDurationSeconds": round(
-                    time.perf_counter() - started_at, 3
-                ),
-            },
-        }
-        for key in _INPUT_ECHO_TOP_KEYS:
-            if key in payload:
-                output[key] = payload[key]
-        output["transactions"] = []
-        output["summaries"] = {}
-        print(json.dumps(output, ensure_ascii=False, indent=2))
-        raise
-
-    run_duration_seconds = time.perf_counter() - started_at
-    output = serialize_result(result, payload, run_duration_seconds)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with output_path.open("w", encoding="utf-8") as file:
-        json.dump(output, file, ensure_ascii=False, indent=2)
-    print(json.dumps(output, ensure_ascii=False, indent=2))
-    print(f"Output written to {output_path}")
-
-
-if __name__ == "__main__":
-    main()
+def _build_error_output(payload: dict, error: str) -> dict:
+    output: dict[str, Any] = {
+        "runId": None,
+        "status": "failed",
+        "error": error,
+        "stats": {
+            "txnRawInputCnt": 0,
+            "transactionDateMax": None,
+        },
+    }
+    for key in _INPUT_ECHO_TOP_KEYS:
+        if key in payload:
+            output[key] = payload[key]
+    output["transactions"] = []
+    output["summaries"] = {}
+    return output

@@ -1,6 +1,6 @@
-"""从 sample.csv 提取指定 application，转换为 run_model.py 的 JSON 入参结构。
+"""从 sample.csv 提取指定 application，转换为 verify_model.py 的 JSON 入参结构。
 
-用法：python sample_to_model_input.py [--input sample.csv] [--output output/]
+用法：python input_converter.py [--input sample.csv] [--output output/]
 运行后列出 CSV 中所有 application（user_id + application_id + 交易数），
 输入 application_id 后生成对应 JSON 入参文件。
 """
