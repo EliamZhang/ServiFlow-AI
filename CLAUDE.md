@@ -25,7 +25,7 @@
   - `baseline/run_meta.json`（配置/版本层）：引擎清单（engine_id / priority / enabled）、`on_engine_error`、各引擎 `engine_version`。用于抓取**行级对比看不到的配置变更**——例如只调换 priority 而结果恰好相同、引擎启停/增删，或引擎版本号被改。
   - `baseline/summaries/`（汇总指标层）：只比对确定性指标——`category_summary.csv` 全列（最终输出层的分类聚合统计）、`liability_summary.csv` 仅金额列（`funded_amount` / `repaid_amount` / `repayment_amount` / `recent_fn_repay_amount`）。时间敏感字段（`status` / `predicted_closing_date` / `frequency` 等）**不纳入**，避免换样本或日期推移导致的噪音误报。两个工件都按键列（application_id / bank_account_id / finv_category / stream_id）对齐；`category_summary` 存在同键多行时保留首行（提取与加载两层都去重）。
 - `diff` 输出差异：最终输出变化（CHANGED / NEW / GONE）+ 引擎认领变化（含 rule_id 计数增减）+ 汇总指标变化 + 配置/版本变化 + 行数检查（输入交易数或认领数增减）。以上任何一类有差异都 exit 1（含**规则认领计数变化**——改规则 CSV 后最常见的信号）。若 `diff` 报有差异，必须逐笔向用户说明差异原因（对应改动的规则/逻辑），不能只报告"有差异"就结束。
-- 基线由 `python baseline.py save` 生成（会同时生成所有文件）；仅当用户确认分类结果变更符合预期时，才允许重新保存基线。
+- 基线由 `python baseline.py save` 生成（会同时生成所有文件）。若任何基线工件已存在，命令会拒绝覆盖；仅当用户确认分类结果变更符合预期时，才允许用 `python baseline.py save --replace --reason "<确认原因>"` 明确重建。`run_meta.json` 同时记录输入文件及全部规则资源的 SHA-256 指纹，`diff` 会报告指纹变化。
 - Windows 控制台运行 diff 需设置 `PYTHONIOENCODING=utf-8`（输出含中文），或用 `.venv` 环境运行。
 
 ## 重要约定

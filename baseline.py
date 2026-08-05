@@ -19,6 +19,7 @@ found, 2 = error.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from collections import Counter
@@ -42,6 +43,8 @@ DEFAULT_BASELINE = Path("baseline/sample_baseline.csv")
 DEFAULT_ENGINE_BASELINE = Path("baseline/engine_claims.csv")
 DEFAULT_RUN_META = Path("baseline/run_meta.json")
 DEFAULT_SUMMARIES_DIR = Path("baseline/summaries")
+PROJECT_ROOT = Path(__file__).resolve().parent
+BASELINE_FORMAT_VERSION = 2
 
 # Only deterministic summary artifacts are compared.  liability_summary rows
 # mix time-sensitive fields (status, predicted_closing_date, frequency) with
@@ -83,29 +86,84 @@ CLAIM_RESULT_COLUMNS = (
 )
 
 
-def run_pipeline(input_file: str | Path) -> ClassificationRunResult:
+def run_pipeline(
+    input_file: str | Path,
+    config_file: str | Path = DEFAULT_PIPELINE_CONFIG,
+    category_catalog_file: str | Path = DEFAULT_CATEGORY_CATALOG,
+) -> ClassificationRunResult:
     transactions = pd.read_csv(input_file, encoding="utf-8-sig")
     orchestrator = ClassificationOrchestrator(
-        config=load_pipeline_config(DEFAULT_PIPELINE_CONFIG),
-        category_owners=load_category_owners(DEFAULT_CATEGORY_CATALOG),
+        config=load_pipeline_config(config_file),
+        category_owners=load_category_owners(category_catalog_file),
     )
     return orchestrator.run(transactions)
 
 
 # ── run metadata (pipeline config + engine versions) ────────────────────────
 
-def _run_meta() -> dict:
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as file:
+        for block in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def _display_path(path: Path) -> str:
+    """Return a portable project-relative path where possible."""
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
+def _rule_files(
+    config_file: str | Path,
+    category_catalog_file: str | Path,
+) -> list[Path]:
+    """Return all data files that define pipeline classification rules."""
+    files = [Path(config_file), Path(category_catalog_file)]
+    files.extend(PROJECT_ROOT.glob("*_engine/resources/**/*.csv"))
+    files.append(PROJECT_ROOT / "initial_engine" / "merchant_kb.csv")
+    return sorted({path.resolve() for path in files if path.is_file()})
+
+
+def _fingerprints(
+    input_file: str | Path,
+    config_file: str | Path,
+    category_catalog_file: str | Path,
+) -> dict:
+    input_path = Path(input_file)
+    return {
+        "input": {"path": _display_path(input_path), "sha256": _sha256(input_path)},
+        "rule_files": {
+            _display_path(path): _sha256(path)
+            for path in _rule_files(config_file, category_catalog_file)
+        },
+    }
+
+
+def _run_meta(
+    input_file: str | Path,
+    config_file: str | Path,
+    category_catalog_file: str | Path,
+) -> dict:
     """Snapshot pipeline config and engine versions to detect config-level
     changes (priority, enable/disable, version bumps) that the per-row
     comparisons cannot see."""
-    config = load_pipeline_config(DEFAULT_PIPELINE_CONFIG)
+    config = load_pipeline_config(config_file)
     return {
+        "baseline_format_version": BASELINE_FORMAT_VERSION,
         "engines": [
             {"engine_id": spec.engine_id, "priority": spec.priority, "enabled": spec.enabled}
             for spec in config.engines
         ],
         "on_engine_error": config.on_engine_error,
         "engine_versions": dict(sorted(_engine_versions_of_config(config).items())),
+        "fingerprints": _fingerprints(
+            input_file, config_file, category_catalog_file
+        ),
     }
 
 
@@ -152,6 +210,26 @@ def compare_run_meta(baseline_meta: dict, current_meta: dict) -> list[str]:
     }
     for engine, (old, new) in version_changes.items():
         differences.append(f"引擎版本变化: {engine} {old or '(缺失)'} -> {new or '(缺失)'}")
+
+    if baseline_meta.get("baseline_format_version") != current_meta.get(
+        "baseline_format_version"
+    ):
+        differences.append(
+            "基线格式变化: "
+            f"{baseline_meta.get('baseline_format_version', '(缺失)')} -> "
+            f"{current_meta.get('baseline_format_version', '(缺失)')}；"
+            "请审核后用 save --replace 重建基线"
+        )
+
+    baseline_fingerprints = baseline_meta.get("fingerprints")
+    current_fingerprints = current_meta.get("fingerprints")
+    if baseline_fingerprints is None:
+        differences.append("基线缺少输入/规则指纹；请审核后用 save --replace 重建基线")
+    elif baseline_fingerprints != current_fingerprints:
+        if baseline_fingerprints.get("input") != current_fingerprints.get("input"):
+            differences.append("输入文件指纹变化")
+        if baseline_fingerprints.get("rule_files") != current_fingerprints.get("rule_files"):
+            differences.append("分类规则文件指纹变化")
 
     return differences
 
@@ -205,6 +283,21 @@ def load_baseline(path: str | Path) -> pd.DataFrame:
     return _normalise_frame(pd.read_csv(path, encoding="utf-8-sig"))
 
 
+def _normalise_summary_values(series: pd.Series) -> pd.Series:
+    """Canonicalise numeric summaries so harmless float tail noise is ignored."""
+    non_blank = series.dropna().astype(str).str.strip()
+    if non_blank.empty:
+        return series.fillna("").astype(str)
+    numeric = pd.to_numeric(non_blank, errors="coerce")
+    if numeric.isna().any():
+        return series.fillna("").astype(str)
+    return series.map(
+        lambda value: ""
+        if pd.isna(value)
+        else f"{float(value):.10f}".rstrip("0").rstrip(".")
+    )
+
+
 def extract_summary_baseline(
     result: ClassificationRunResult,
     artifact_name: str,
@@ -221,18 +314,22 @@ def extract_summary_baseline(
 
     data = artifact.data
     key_columns = [col for col in SUMMARY_KEY_COLUMNS if col in data.columns]
-    compare_columns = list(key_columns)
-    if amount_columns is not None:
-        compare_columns += [col for col in amount_columns if col in data.columns]
+    value_columns = (
+        [col for col in data.columns if col not in key_columns]
+        if amount_columns is None
+        else [col for col in amount_columns if col in data.columns]
+    )
+    compare_columns = [*key_columns, *value_columns]
 
     output = data[compare_columns].copy()
     for col in key_columns:
         output[col] = output[col].fillna("").astype(str)
+    for col in value_columns:
+        output[col] = _normalise_summary_values(output[col])
     if amount_columns is not None:
         for col in amount_columns:
             if col not in output.columns:
                 output[col] = ""
-            output[col] = output[col].fillna("").astype(str)
     # Multiple streams can share one (bank_account_id, finv_category) key in
     # category_summary; keep the first row so keys stay unique for alignment.
     return output.drop_duplicates(subset=key_columns, keep="first").reset_index(drop=True)
@@ -246,13 +343,19 @@ def load_summary_baseline(
     key_columns = [col for col in SUMMARY_KEY_COLUMNS if col in frame.columns]
     for col in key_columns:
         frame[col] = frame[col].fillna("").astype(str)
+    value_columns = (
+        [col for col in frame.columns if col not in key_columns]
+        if amount_columns is None
+        else list(amount_columns)
+    )
     if amount_columns is not None:
         for col in amount_columns:
             if col not in frame.columns:
                 frame[col] = ""
-            frame[col] = frame[col].fillna("").astype(str)
+    for col in value_columns:
+        frame[col] = _normalise_summary_values(frame[col])
     return (
-        frame[list(key_columns) + (list(amount_columns) if amount_columns else [])]
+        frame[[*key_columns, *value_columns]]
         .drop_duplicates(subset=key_columns, keep="first")
         .reset_index(drop=True)
     )
@@ -400,15 +503,6 @@ def compare_transactions(
         run_meta_differences=run_meta_differences,
         row_count_mismatches=row_count_mismatches,
     )
-
-
-CLAIM_RESULT_COLUMNS = (
-    "finv_category",
-    "counterparty",
-    "classification_rule_id",
-    "classification_reason",
-    "stream_id",
-)
 
 
 def compare_summaries(
@@ -595,18 +689,40 @@ def print_diff(report: CompareReport) -> None:
 
 
 def cmd_save(args: argparse.Namespace) -> int:
-    result = run_pipeline(args.input)
     baseline_path = Path(args.baseline)
+    engine_baseline_path = Path(args.engine_baseline)
+    run_meta_path = Path(args.run_meta)
+    summaries_dir = Path(args.summaries_dir)
+    artifact_paths = [
+        baseline_path,
+        engine_baseline_path,
+        run_meta_path,
+        *(summaries_dir / f"{artifact_name}.csv" for artifact_name, _ in SUMMARY_ARTIFACTS),
+    ]
+    existing_paths = [path for path in artifact_paths if path.exists()]
+    if existing_paths and not args.replace:
+        paths = ", ".join(str(path) for path in existing_paths)
+        print(
+            "错误: 已存在基线工件，拒绝覆盖: " + paths
+            + "。审核差异后使用 --replace --reason <原因> 明确重建。",
+            file=sys.stderr,
+        )
+        return 2
+    if args.replace and not args.reason:
+        print("错误: --replace 必须同时提供 --reason。", file=sys.stderr)
+        return 2
+
+    result = run_pipeline(args.input, args.config, args.category_catalog)
     baseline_path.parent.mkdir(parents=True, exist_ok=True)
     extract_baseline(result).to_csv(baseline_path, index=False)
     print(f"基线已保存: {baseline_path}")
-    engine_baseline_path = Path(args.engine_baseline)
     extract_engine_claims(result).to_csv(engine_baseline_path, index=False)
     print(f"引擎认领基线已保存: {engine_baseline_path}")
-    run_meta_path = Path(args.run_meta)
-    save_run_meta(run_meta_path, _run_meta())
+    save_run_meta(
+        run_meta_path,
+        _run_meta(args.input, args.config, args.category_catalog),
+    )
     print(f"运行元数据已保存: {run_meta_path}")
-    summaries_dir = Path(args.summaries_dir)
     summaries_dir.mkdir(parents=True, exist_ok=True)
     for artifact_name, amount_columns in SUMMARY_ARTIFACTS:
         extract_summary_baseline(result, artifact_name, amount_columns).to_csv(
@@ -658,7 +774,7 @@ def cmd_diff(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
 
-    result = run_pipeline(args.input)
+    result = run_pipeline(args.input, args.config, args.category_catalog)
     engine_current = extract_engine_claims(result) if engine_baseline is not None else None
     summary_currents = {
         artifact_name: extract_summary_baseline(result, artifact_name, amount_columns)
@@ -671,7 +787,7 @@ def cmd_diff(args: argparse.Namespace) -> int:
         engine_baseline=engine_baseline,
         engine_current=engine_current,
         baseline_meta=baseline_meta,
-        current_meta=_run_meta(),
+        current_meta=_run_meta(args.input, args.config, args.category_catalog),
         summary_baselines=summary_baselines,
         summary_currents=summary_currents,
     )
@@ -697,6 +813,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         sub.add_argument("--engine-baseline", default=str(DEFAULT_ENGINE_BASELINE), help="Per-engine claim baseline CSV path.")
         sub.add_argument("--run-meta", default=str(DEFAULT_RUN_META), help="Pipeline config/version metadata path.")
         sub.add_argument("--summaries-dir", default=str(DEFAULT_SUMMARIES_DIR), help="Deterministic summary baselines directory.")
+        sub.add_argument("--config", default=str(DEFAULT_PIPELINE_CONFIG), help="Pipeline JSON configuration path.")
+        sub.add_argument("--category-catalog", default=str(DEFAULT_CATEGORY_CATALOG), help="Category catalog JSON path.")
+        if name == "save":
+            sub.add_argument("--replace", action="store_true", help="Explicitly replace existing baseline artifacts.")
+            sub.add_argument("--reason", help="Reason for an explicit baseline replacement.")
         sub.set_defaults(func=cmd_save if name == "save" else cmd_diff)
 
     return parser.parse_args(argv)

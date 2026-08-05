@@ -120,7 +120,7 @@ class ClassificationOrchestrator:
                     engine_id=engine.engine_id,
                     engine_version=engine.engine_version,
                     priority=spec.priority,
-                    candidate_count=len(original),
+                    candidate_count=len(candidates_df),
                     prediction_count=len(engine_result.predictions),
                     accepted_count=len(accepted),
                     duration_seconds=engine_seconds,
