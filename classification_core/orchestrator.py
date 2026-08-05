@@ -262,7 +262,7 @@ class ClassificationOrchestrator:
 
         Every claim is archived regardless of which engine ends up winning the
         row in the final output, so a regression inside a later-overwritten
-        engine still shows up in ``baseline.py diff``."""
+        engine still shows up in ``baseline_check.py diff``."""
         claim_archive = predictions[
             [col for col in CLAIM_ARCHIVE_COLUMNS if col in predictions.columns]
         ].copy()
