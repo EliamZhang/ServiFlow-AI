@@ -48,6 +48,9 @@ _TRANSACTION_OUTPUT_MAP = {
     "illion_trx_uuid": "illionTrxUuid",
 }
 
+# 账户元数据只保留在顶层 bankAccounts，行级不重复输出
+_ACCOUNT_METADATA_COLUMNS = frozenset({"account_type", "bank", "credit_limit"})
+
 _SUMMARY_OUTPUT_MAP = {
     "finv_category": "finvCategory",
     "income_category": "incomeCategory",
@@ -244,7 +247,7 @@ def serialize_result(
     transactions = _serialize_records(
         transactions_frame,
         field_map=_TRANSACTION_OUTPUT_MAP,
-        exclude=_INTERNAL_OUTPUT_COLUMNS,
+        exclude=_INTERNAL_OUTPUT_COLUMNS | _ACCOUNT_METADATA_COLUMNS,
     )
     output["transactions"] = transactions
 
@@ -253,6 +256,7 @@ def serialize_result(
         summaries[artifact.name] = _serialize_records(
             artifact.data,
             field_map=_SUMMARY_OUTPUT_MAP,
+            exclude=_ACCOUNT_METADATA_COLUMNS,
         )
     output["summaries"] = summaries
     return output
