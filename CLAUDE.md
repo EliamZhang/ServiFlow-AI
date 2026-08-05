@@ -1,6 +1,6 @@
 # ServiFlow-AI
 
-交易分类流水线：多个分类引擎按优先级顺序执行，对交易逐行分类并输出 Excel 报告（`backfill.py`）或单应用 JSON（`run_model.py`）。
+交易分类流水线：多个分类引擎按优先级顺序执行，对交易逐行分类并输出 Excel 报告（`backfill.py`）或单应用 JSON（`verify_model.py`）。
 
 ## 引擎覆盖行为
 
@@ -14,9 +14,9 @@
 ## 入口与数据流
 
 - `backfill.py`：CSV 批量输入 → 运行流水线 → 输出 Excel 报告（默认 `output/classification_report_{YYYYMMDD_HHMMSS}.xlsx`，可用 `--output` 指定）。
-- `run_model.py`：单应用 JSON 输入（默认 `model_input.json`，可用 `--input` 指定）→ 运行流水线 → 输出 JSON（默认 `output/model_output_{applicationId}_{时间戳}.json`）。序列化时排除引擎内部追踪列（`classification_status` 等），账户元数据（`account_type` / `bank` / `credit_limit`）只保留在顶层 `bankAccounts`，行级不重复输出；字段名统一转 camelCase。
+- `verify_model.py`：单应用 JSON 输入（默认 `model_input.json`，可用 `--input` 指定）→ 运行流水线 → 输出 JSON（默认 `output/model_output_{applicationId}_{时间戳}.json`）。序列化时排除引擎内部追踪列（`classification_status` 等），账户元数据（`account_type` / `bank` / `credit_limit`）只保留在顶层 `bankAccounts`，行级不重复输出；字段名统一转 camelCase。本质是单应用验证/试跑脚本。
 - `baseline.py`：基线回归对比（见下节）。
-- `input_converter.py`：从 `sample.csv` 提取指定 application（交互式选择），转换为 `run_model.py` 的 JSON 入参结构（`--input` / `--output-dir`）。
+- `input_converter.py`：从 `sample.csv` 提取指定 application（交互式选择），转换为 `verify_model.py` 的 JSON 入参结构（`--input` / `--output-dir`）。
 
 ## 基线回归对比（output 变更检查）
 
