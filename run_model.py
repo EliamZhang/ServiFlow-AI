@@ -21,7 +21,17 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
 
 # orchestrator 输出列中不属于业务结果的内部列，序列化时排除
-_INTERNAL_OUTPUT_COLUMNS = frozenset({"classification_status"})
+_INTERNAL_OUTPUT_COLUMNS = frozenset(
+    {
+        "classification_status",
+        "classification_engine",
+        "classification_engine_version",
+        "classification_priority",
+        "classification_rule_id",
+        "classification_reason",
+        "stream_id",
+    }
+)
 
 # 与 model_output.json 样例一致的输入顶层字段
 _INPUT_ECHO_TOP_KEYS = ("userId", "applicationId")
