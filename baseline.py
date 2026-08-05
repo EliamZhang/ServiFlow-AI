@@ -193,12 +193,12 @@ def compare_run_meta(baseline_meta: dict, current_meta: dict) -> list[str]:
     current_engines = {(e["engine_id"], e["priority"], e["enabled"]) for e in current_meta.get("engines", [])}
     if baseline_engines != current_engines:
         differences.append(
-            f"引擎配置变化: {sorted(baseline_engines)} -> {sorted(current_engines)}"
+            f"Engine configuration changed: {sorted(baseline_engines)} -> {sorted(current_engines)}"
         )
 
     if baseline_meta.get("on_engine_error") != current_meta.get("on_engine_error"):
         differences.append(
-            f"on_engine_error 变化: {baseline_meta.get('on_engine_error')!r} -> {current_meta.get('on_engine_error')!r}"
+            f"on_engine_error changed: {baseline_meta.get('on_engine_error')!r} -> {current_meta.get('on_engine_error')!r}"
         )
 
     baseline_versions = baseline_meta.get("engine_versions", {})
@@ -209,27 +209,27 @@ def compare_run_meta(baseline_meta: dict, current_meta: dict) -> list[str]:
         if baseline_versions.get(engine, "") != current_versions.get(engine, "")
     }
     for engine, (old, new) in version_changes.items():
-        differences.append(f"引擎版本变化: {engine} {old or '(缺失)'} -> {new or '(缺失)'}")
+        differences.append(f"Engine version changed: {engine} {old or '(missing)'} -> {new or '(missing)'}")
 
     if baseline_meta.get("baseline_format_version") != current_meta.get(
         "baseline_format_version"
     ):
         differences.append(
-            "基线格式变化: "
-            f"{baseline_meta.get('baseline_format_version', '(缺失)')} -> "
-            f"{current_meta.get('baseline_format_version', '(缺失)')}；"
-            "请审核后用 save --replace 重建基线"
+            "Baseline format changed: "
+            f"{baseline_meta.get('baseline_format_version', '(missing)')} -> "
+            f"{current_meta.get('baseline_format_version', '(missing)')}; "
+            "review and rebuild with save --replace"
         )
 
     baseline_fingerprints = baseline_meta.get("fingerprints")
     current_fingerprints = current_meta.get("fingerprints")
     if baseline_fingerprints is None:
-        differences.append("基线缺少输入/规则指纹；请审核后用 save --replace 重建基线")
+        differences.append("Baseline is missing input/rule fingerprints; review and rebuild with save --replace")
     elif baseline_fingerprints != current_fingerprints:
         if baseline_fingerprints.get("input") != current_fingerprints.get("input"):
-            differences.append("输入文件指纹变化")
+            differences.append("Input file fingerprint changed")
         if baseline_fingerprints.get("rule_files") != current_fingerprints.get("rule_files"):
-            differences.append("分类规则文件指纹变化")
+            differences.append("Rule file fingerprint changed")
 
     return differences
 
@@ -485,12 +485,12 @@ def compare_transactions(
     row_count_mismatches: list[str] = []
     if len(current) != len(baseline):
         row_count_mismatches.append(
-            f"交易行数变化: 基线 {len(baseline)} 行 -> 当前 {len(current)} 行"
+            f"Transaction row count changed: baseline {len(baseline)} rows -> current {len(current)} rows"
         )
     if engine_current is not None and engine_baseline is not None:
         if len(engine_current) != len(engine_baseline):
             row_count_mismatches.append(
-                f"引擎认领行数变化: 基线 {len(engine_baseline)} 行 -> 当前 {len(engine_current)} 行"
+                f"Engine claim row count changed: baseline {len(engine_baseline)} rows -> current {len(engine_current)} rows"
             )
 
     return CompareReport(
@@ -600,7 +600,7 @@ def _print_engine_claims(result: ClassificationRunResult) -> None:
     unclassified = int(
         (result.transactions["classification_status"] == "unclassified").sum()
     )
-    print(f"共 {total} 笔 | 未分类 {unclassified} 笔")
+    print(f"Total {total} transactions | unclassified {unclassified}")
     for engine in result.executions:
         print(f"  {engine.engine_id:<18} {counts.get(engine.engine_id, 0)}")
 
@@ -613,7 +613,7 @@ def _format_value(change: TransactionChange, col: str) -> str:
     old, new = change.old[col], change.new[col]
     if old == new:
         return ""
-    return f"{old or '未分类'} → {new or '未分类'}"
+    return f"{old or 'unclassified'} -> {new or 'unclassified'}"
 
 
 def _format_summary_change(change: SummaryChange) -> str:
@@ -625,7 +625,7 @@ def _format_summary_change(change: SummaryChange) -> str:
         detail = " | ".join(f"{col}={old}" for col, old in change.old.items() if old)
         return f"[GONE] {key}: {detail}"
     detail = " | ".join(
-        f"{col}={old} → {new}"
+        f"{col}={old} -> {new}"
         for col, old in change.old.items()
         for new in [change.new.get(col, "")]
         if old != new
@@ -635,7 +635,7 @@ def _format_summary_change(change: SummaryChange) -> str:
 
 def print_diff(report: CompareReport) -> None:
     if report.changes:
-        print(f"=== 分类变化 ({len(report.changes)} 笔) ===")
+        print(f"=== Classification changes ({len(report.changes)} rows) ===")
         for change in report.changes:
             detail = " | ".join(
                 _format_value(change, col)
@@ -645,7 +645,7 @@ def print_diff(report: CompareReport) -> None:
             print(f"  [{change.kind}] app={change.application_id} tx={change.transaction_id}: {detail}")
 
     if report.claim_changes:
-        print(f"\n=== 引擎认领变化 ({len(report.claim_changes)} 笔) ===")
+        print(f"\n=== Engine claim changes ({len(report.claim_changes)} rows) ===")
         for change in report.claim_changes:
             detail = " | ".join(
                 _format_value(change, col)
@@ -658,34 +658,34 @@ def print_diff(report: CompareReport) -> None:
             )
 
     if report.engine_deltas:
-        print("\n=== 引擎认领数变化 ===")
+        print("\n=== Engine claim count changes ===")
         for engine, old, new in report.engine_deltas:
             print(f"  {engine:<18} {old} → {new} ({new - old:+d})")
 
     if report.engine_rule_deltas:
-        print("\n=== 引擎规则认领数变化 ===")
+        print("\n=== Engine rule claim count changes ===")
         for engine, rule, old, new in report.engine_rule_deltas:
             print(f"  {engine:<18} {rule:<36} {old} → {new} ({new - old:+d})")
 
     if report.summary_changes:
-        print(f"\n=== 汇总指标变化 ({len(report.summary_changes)} 行) ===")
+        print(f"\n=== Summary metric changes ({len(report.summary_changes)} rows) ===")
         for change in report.summary_changes:
             print(f"  {change.artifact_name}: {_format_summary_change(change)}")
 
     if report.run_meta_differences:
-        print("\n=== 配置/版本变化 ===")
+        print("\n=== Config/version changes ===")
         for diff in report.run_meta_differences:
             print(f"  {diff}")
 
     if report.row_count_mismatches:
-        print("\n=== 行数检查 ===")
+        print("\n=== Row count check ===")
         for mismatch in report.row_count_mismatches:
             print(f"  {mismatch}")
 
     versions = ", ".join(
         f"{engine} {version}" for engine, version in sorted(report.engine_versions.items())
     )
-    print(f"\n=== 汇总 ===\n差异 {len(report.changes)} 笔 | 引擎版本: {versions}")
+    print(f"\n=== Summary ===\n{len(report.changes)} differences | engine versions: {versions}")
 
 
 def cmd_save(args: argparse.Namespace) -> int:
@@ -703,32 +703,32 @@ def cmd_save(args: argparse.Namespace) -> int:
     if existing_paths and not args.replace:
         paths = ", ".join(str(path) for path in existing_paths)
         print(
-            "错误: 已存在基线工件，拒绝覆盖: " + paths
-            + "。审核差异后使用 --replace --reason <原因> 明确重建。",
+            "Error: baseline artifacts already exist, refusing to overwrite: " + paths
+            + ". Review the differences, then use --replace --reason <reason> to explicitly rebuild.",
             file=sys.stderr,
         )
         return 2
     if args.replace and not args.reason:
-        print("错误: --replace 必须同时提供 --reason。", file=sys.stderr)
+        print("Error: --replace requires --reason.", file=sys.stderr)
         return 2
 
     result = run_pipeline(args.input, args.config, args.category_catalog)
     baseline_path.parent.mkdir(parents=True, exist_ok=True)
     extract_baseline(result).to_csv(baseline_path, index=False)
-    print(f"基线已保存: {baseline_path}")
+    print(f"Baseline saved: {baseline_path}")
     extract_engine_claims(result).to_csv(engine_baseline_path, index=False)
-    print(f"引擎认领基线已保存: {engine_baseline_path}")
+    print(f"Engine claim baseline saved: {engine_baseline_path}")
     save_run_meta(
         run_meta_path,
         _run_meta(args.input, args.config, args.category_catalog),
     )
-    print(f"运行元数据已保存: {run_meta_path}")
+    print(f"Run metadata saved: {run_meta_path}")
     summaries_dir.mkdir(parents=True, exist_ok=True)
     for artifact_name, amount_columns in SUMMARY_ARTIFACTS:
         extract_summary_baseline(result, artifact_name, amount_columns).to_csv(
             summaries_dir / f"{artifact_name}.csv", index=False
         )
-    print(f"汇总指标基线已保存: {summaries_dir}")
+    print(f"Summary baselines saved: {summaries_dir}")
     _print_engine_claims(result)
     return 0
 
@@ -736,7 +736,7 @@ def cmd_save(args: argparse.Namespace) -> int:
 def cmd_diff(args: argparse.Namespace) -> int:
     baseline_path = Path(args.baseline)
     if not baseline_path.exists():
-        print(f"错误: 基线文件不存在: {baseline_path}（先运行 save）", file=sys.stderr)
+        print(f"Error: baseline file not found: {baseline_path} (run save first)", file=sys.stderr)
         return 2
 
     baseline = load_baseline(baseline_path)
@@ -745,7 +745,7 @@ def cmd_diff(args: argparse.Namespace) -> int:
         engine_baseline = load_engine_claims(engine_baseline_path)
     else:
         print(
-            f"注意: 引擎认领基线不存在: {engine_baseline_path}（跳过每引擎对比）",
+            f"Note: engine claim baseline not found: {engine_baseline_path} (skipping per-engine comparison)",
             file=sys.stderr,
         )
         engine_baseline = None
@@ -755,7 +755,7 @@ def cmd_diff(args: argparse.Namespace) -> int:
         baseline_meta = load_run_meta(run_meta_path)
     else:
         print(
-            f"注意: 运行元数据不存在: {run_meta_path}（跳过配置/版本对比）",
+            f"Note: run metadata not found: {run_meta_path} (skipping config/version comparison)",
             file=sys.stderr,
         )
         baseline_meta = None
@@ -770,7 +770,7 @@ def cmd_diff(args: argparse.Namespace) -> int:
             )
         else:
             print(
-                f"注意: 汇总指标基线不存在: {summary_path}（跳过该工件对比）",
+                f"Note: summary baseline not found: {summary_path} (skipping this artifact)",
                 file=sys.stderr,
             )
 
@@ -794,9 +794,9 @@ def cmd_diff(args: argparse.Namespace) -> int:
     print_diff(report)
 
     if report.has_differences:
-        print("\n结论: 与基线存在差异（exit 1）")
+        print("\nConclusion: differences vs baseline found (exit 1)")
         return 1
-    print("\n结论: 与基线一致（exit 0）")
+    print("\nConclusion: no differences vs baseline (exit 0)")
     return 0
 
 

@@ -1,8 +1,8 @@
-"""模型服务的公共业务逻辑：输入 JSON dict → 运行流水线 → 输出 JSON dict。
+"""Shared model-service business logic: input JSON dict -> run pipeline -> output JSON dict.
 
-供两个入口共用：
-- model_main.py：生产环境推理入口（PredictMain.predict）。
-- verify_model.py：本地验证脚本（CLI）。
+Used by two entry points:
+- model_main.py: production inference entry point (PredictMain.predict).
+- verify_model.py: local verification script (CLI).
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ from .config import (
 from .models import ClassificationRunResult
 from .orchestrator import ClassificationOrchestrator
 
-# orchestrator 输出列中不属于业务结果的内部列，序列化时排除
+# Internal orchestrator output columns that are not business results; excluded when serializing
 _INTERNAL_OUTPUT_COLUMNS = frozenset(
     {
         "classification_status",
@@ -34,10 +34,10 @@ _INTERNAL_OUTPUT_COLUMNS = frozenset(
     }
 )
 
-# 与 model_output.json 样例一致的输入顶层字段
+# Top-level input fields echoed back, matching the model_output.json sample
 _INPUT_ECHO_TOP_KEYS = ("userId", "applicationId", "flowTime")
 
-# 输入 original 中可能存在的、序列化时需转换命名的列
+# Input original columns that need renamed output keys when serializing
 _TRANSACTION_OUTPUT_MAP = {
     "bank_account_id": "bankAccountId",
     "transaction_id": "transactionId",
@@ -48,7 +48,7 @@ _TRANSACTION_OUTPUT_MAP = {
     "illion_trx_uuid": "illionTrxUuid",
 }
 
-# 账户元数据只保留在顶层 bankAccounts，行级不重复输出
+# Account metadata stays at the top-level bankAccounts only; not repeated per row
 _ACCOUNT_METADATA_COLUMNS = frozenset({"account_type", "bank", "credit_limit"})
 
 _SUMMARY_OUTPUT_MAP = {
@@ -74,7 +74,7 @@ _SUMMARY_OUTPUT_MAP = {
 
 
 class ModelService:
-    """模型服务入口：加载一次配置，逐次对单个 application 的输入 dict 执行推理。"""
+    """Model service entry point: loads configuration once, runs inference per single-application input dict."""
 
     def __init__(
         self,
@@ -87,7 +87,7 @@ class ModelService:
         )
 
     def predict(self, payload: dict[str, Any]) -> dict[str, Any]:
-        """对单个 application 的输入 dict 执行流水线，返回可 JSON 序列化的结果 dict。"""
+        """Run the pipeline on a single application's input dict; return a JSON-serializable result dict."""
         try:
             transactions = build_transactions_frame(payload)
         except Exception as exc:
@@ -104,7 +104,8 @@ def _to_camel(snake: str) -> str:
 def _serialize_value(value: Any) -> Any:
     if value is None or pd.isna(value):
         return None
-    # 引擎汇总层用 normalize_text 把空值转成空串（如 credit_limit），序列化为 null
+    # Engine summary layers turn empty values into empty strings via normalize_text
+    # (e.g. credit_limit); serialize those as null
     if isinstance(value, str) and value == "":
         return None
     if isinstance(value, pd.Timestamp):
