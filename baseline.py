@@ -1,8 +1,8 @@
 """Baseline regression comparison for the classification pipeline.
 
 Usage:
-    python baseline_check.py save [--input sample.csv] [--baseline baseline/sample_baseline.csv]
-    python baseline_check.py diff [--input sample.csv] [--baseline baseline/sample_baseline.csv]
+    python baseline.py save [--input sample.csv] [--baseline baseline/sample_baseline.csv]
+    python baseline.py diff [--input sample.csv] [--baseline baseline/sample_baseline.csv]
 
 ``save`` runs the full pipeline and stores each transaction's final
 classification (finv_category, counterparty, winning engine, stream_id) as a
