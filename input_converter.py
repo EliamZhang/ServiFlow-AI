@@ -1,8 +1,8 @@
-"""从 sample.csv 提取指定 application，转换为 verify_model.py 的 JSON 入参结构。
+"""Extract a specific application from sample.csv and convert it to verify_model.py's JSON input structure.
 
-用法：python input_converter.py [--input sample.csv] [--output output/]
-运行后列出 CSV 中所有 application（user_id + application_id + 交易数），
-输入 application_id 后生成对应 JSON 入参文件。
+Usage: python input_converter.py [--input sample.csv] [--output output/]
+Lists all applications in the CSV (user_id + application_id + transaction count),
+then generates the JSON input file for the chosen application_id.
 """
 
 import argparse
@@ -98,17 +98,17 @@ def main() -> None:
         apps[str(int(row["application_id"]))].add(str(int(row["user_id"])))
 
     apps = dict(sorted(apps.items(), key=lambda item: int(item[0])))
-    print("CSV 中的 application 列表：")
+    print("Applications in CSV:")
     for app_id, user_ids in apps.items():
         count = (frame["application_id"] == int(app_id)).sum()
-        print(f"  application_id={app_id}  user_id={','.join(sorted(user_ids))}  交易数={count}")
+        print(f"  application_id={app_id}  user_id={','.join(sorted(user_ids))}  transactions={count}")
 
     while True:
-        chosen = input("\n输入要转换的 application_id（输入 q 退出）：").strip()
+        chosen = input("\nEnter application_id to convert (q to quit): ").strip()
         if chosen.lower() in ("q", "quit"):
             return
         if chosen not in apps:
-            print(f"未找到 application_id={chosen}，请重新输入")
+            print(f"application_id={chosen} not found, please try again")
             continue
         break
 
@@ -119,7 +119,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     out_path = out_dir / f"model_input_{chosen}.json"
     out_path.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(f"已生成 {out_path}（{len(payload['illion_raw_transactions'])} 笔交易）")
+    print(f"Generated {out_path} ({len(payload['illion_raw_transactions'])} transactions)")
 
 
 if __name__ == "__main__":

@@ -1,16 +1,19 @@
-"""模型推理入口：上游以 JSON dict 调用，返回 JSON 序列化结果 dict。
+"""Model inference entry point: called by upstream with a JSON dict, returns a JSON-serializable result dict.
 
-部署契约（对齐公司模型服务规范，见参考仓库 aus_old_risk_bid_submodel_v1_2_20260327_txn）：
-- 推理对象路径：model_main.PredictMain
-- __init__(model_dir)：模型加载必须在 __init__ 中完成，否则推理响应过慢甚至报错
-- predict(input_dict) -> dict：入参格式与上游提前约定，出参必须是可 json 序列化的对象
-- 由 uWSGI 托管
+Deployment contract (aligned with the company model service convention; see the reference
+repo aus_old_risk_bid_submodel_v1_2_20260327_txn):
+- Inference object path: model_main.PredictMain
+- __init__(model_dir): model loading must happen in __init__, otherwise inference
+  responses become slow or even error out
+- predict(input_dict) -> dict: input format is agreed with the caller in advance;
+  the return value must be a JSON-serializable object
+- Hosted by uWSGI
 
-入参 key 列表：
+Input keys:
     userId / applicationId / flowTime / bank_accounts / illion_raw_transactions
-其中 illion_day_end_balances 等上游可能传入的附加 key 会被忽略。
-出参结构与 verify_model.py 的输出完全同构（transactions + summaries + stats），
-出错时返回 status="failed" 的结果 dict，不抛出异常。
+Additional keys passed by upstream (e.g. illion_day_end_balances) are ignored.
+Output structure is identical to verify_model.py's output (transactions + summaries + stats);
+on error a status="failed" result dict is returned instead of raising an exception.
 """
 
 from __future__ import annotations
@@ -22,14 +25,14 @@ from classification_core.service import ModelService
 
 
 class PredictMain(object):
-    """作用: 模型推理类"""
+    """Purpose: model inference class"""
 
     def __init__(self, model_dir: str):
         """
-        :param model_dir: string, 模型文件所在目录的绝对路径
+        :param model_dir: string, absolute path of the directory containing the model files
         """
-        # 模型（流水线配置 + 引擎规则）的加载必须在 __init__ 中完成，
-        # 否则会导致推理响应过慢甚至报错。
+        # Model loading (pipeline config + engine rules) must happen in __init__,
+        # otherwise inference responses become slow or even error out.
         self._service = ModelService(
             pipeline_config_path=Path(model_dir) / "configs" / "pipeline.json",
             category_catalog_path=(
@@ -39,9 +42,9 @@ class PredictMain(object):
 
     def predict(self, input_dict: dict[str, Any]) -> dict[str, Any]:
         """
-        作用: 主模型推理方法
-        :param input_dict: dict, 模型的入参，请与调用方提前沟通好入参格式，
-            比如 key 的大小写，value 的类型等
-        :return: 模型的出参，必须是可以 json 序列化的对象，如 list, dict 等
+        Purpose: main model inference method
+        :param input_dict: dict, model input; input format (e.g. key casing, value
+            types) is agreed with the caller in advance
+        :return: model output; must be a JSON-serializable object, e.g. list, dict
         """
         return self._service.predict(input_dict)

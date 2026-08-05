@@ -1,6 +1,6 @@
-"""本地验证脚本：对单个 application 的 JSON 入参运行流水线，输出 JSON 结果。
+"""Local verification script: run the pipeline on a single application JSON input and write JSON output.
 
-用法：python verify_model.py [--input model_input.json] [--output ...]
+Usage: python verify_model.py [--input model_input.json] [--output ...]
 [--config configs/pipeline.json] [--category-catalog configs/category_catalog.json]
 """
 
