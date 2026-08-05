@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -21,10 +22,20 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
 
 # orchestrator 输出列中不属于业务结果的内部列，序列化时排除
-_INTERNAL_OUTPUT_COLUMNS = frozenset({"classification_status"})
+_INTERNAL_OUTPUT_COLUMNS = frozenset(
+    {
+        "classification_status",
+        "classification_engine",
+        "classification_engine_version",
+        "classification_priority",
+        "classification_rule_id",
+        "classification_reason",
+        "stream_id",
+    }
+)
 
 # 与 model_output.json 样例一致的输入顶层字段
-_INPUT_ECHO_TOP_KEYS = ("userId", "applicationId")
+_INPUT_ECHO_TOP_KEYS = ("userId", "applicationId", "flowTime")
 
 # 输入 original 中可能存在的、序列化时需转换命名的列
 _TRANSACTION_OUTPUT_MAP = {
@@ -188,6 +199,24 @@ def build_bank_accounts(payload: dict) -> list[dict[str, Any]]:
     ]
 
 
+def _max_date(values: list[Any]) -> str | None:
+    dates = [v for v in values if v is not None and str(v).strip()]
+    return max(dates) if dates else None
+
+
+def build_stats(
+    transactions: pd.DataFrame,
+    run_duration_seconds: float,
+) -> dict[str, Any]:
+    return {
+        "txnRawInputCnt": len(transactions),
+        "transactionDateMax": _max_date(
+            transactions["transaction_date"].tolist()
+        ),
+        "runDurationSeconds": round(run_duration_seconds, 3),
+    }
+
+
 def _resolve_output_path(output_arg: str | None, payload: dict) -> Path:
     if output_arg:
         return Path(output_arg)
@@ -199,6 +228,7 @@ def _resolve_output_path(output_arg: str | None, payload: dict) -> Path:
 def serialize_result(
     result: ClassificationRunResult,
     payload: dict,
+    run_duration_seconds: float,
 ) -> dict:
     output: dict[str, Any] = {}
     for key in _INPUT_ECHO_TOP_KEYS:
@@ -207,6 +237,7 @@ def serialize_result(
     output["runId"] = result.run_id
     output["status"] = "success"
     output["error"] = None
+    output["stats"] = build_stats(result.transactions, run_duration_seconds)
     output["bankAccounts"] = build_bank_accounts(payload)
 
     transactions_frame = result.transactions
@@ -231,6 +262,7 @@ def main() -> None:
     args = parse_args()
     payload = load_input(args.input)
     output_path = _resolve_output_path(args.output, payload)
+    started_at = time.perf_counter()
 
     try:
         transactions = build_transactions_frame(payload)
@@ -244,6 +276,13 @@ def main() -> None:
             "runId": None,
             "status": "failed",
             "error": str(exc),
+            "stats": {
+                "txnRawInputCnt": 0,
+                "transactionDateMax": None,
+                "runDurationSeconds": round(
+                    time.perf_counter() - started_at, 3
+                ),
+            },
         }
         for key in _INPUT_ECHO_TOP_KEYS:
             if key in payload:
@@ -253,7 +292,8 @@ def main() -> None:
         print(json.dumps(output, ensure_ascii=False, indent=2))
         raise
 
-    output = serialize_result(result, payload)
+    run_duration_seconds = time.perf_counter() - started_at
+    output = serialize_result(result, payload, run_duration_seconds)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=2)

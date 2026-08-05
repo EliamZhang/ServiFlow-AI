@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 from pathlib import Path
 from time import perf_counter
 
@@ -22,6 +23,13 @@ DEFAULT_INPUT = PROJECT_ROOT / "sample.csv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "classification_report.xlsx"
 
 
+def _resolve_output_path(output_arg: str | None) -> Path:
+    if output_arg:
+        return Path(output_arg)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return PROJECT_ROOT / "output" / f"classification_report_{timestamp}.xlsx"
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run all enabled transaction classification engines in priority order."
@@ -33,8 +41,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--output",
-        default=str(DEFAULT_OUTPUT),
-        help="Unified Excel report path.",
+        default=None,
+        help=(
+            "Unified Excel report path. Default: "
+            "output/classification_report_{YYYYMMDD_HHMMSS}.xlsx"
+        ),
     )
     parser.add_argument(
         "--config",
@@ -85,7 +96,7 @@ def main() -> None:
     args = parse_args()
     result, timings = _execute_classification(
         input_file=args.input,
-        output_file=args.output,
+        output_file=_resolve_output_path(args.output),
         config_file=args.config,
         category_catalog_file=args.category_catalog,
     )
