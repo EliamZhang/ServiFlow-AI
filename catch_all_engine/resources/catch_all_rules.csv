@@ -63,8 +63,6 @@ imaging_health,Health,IMAGING,keyword,0.80
 ambulance_health,Health,AMBULANCE,keyword,0.90
 prescription_health,Health,PRESCRIPTION,keyword,0.85
 medicine_health,Health,MEDICINE,keyword,0.80
-medicare_health,Health,MEDICARE,keyword,0.85
-ndis_health,Health,NDIS,keyword,0.85
 optician_health,Health,OPTICIAN,keyword,0.90
 eye_care_health,Health,EYE CARE,keyword,0.85
 eyewear_health,Health,EYEWEAR,keyword,0.85
@@ -96,11 +94,8 @@ rego_automotive,Automotive,REGO,keyword,0.7
 roadworthy_automotive,Automotive,ROADWORTHY,keyword,0.85
 taxi_transport,Transport,TAXI,keyword,0.90
 cab_transport,Transport,CAB,keyword,0.80
-uber_transport,Transport,UBER,keyword,0.80
-didi_transport,Transport,DIDI,keyword,0.85
 parking_transport,Transport,PARKING,keyword,0.75
 toll_transport,Transport,TOLL,keyword,0.80
-linkt_transport,Transport,LINKT,keyword,0.85
 tram_transport,Transport,TRAM,keyword,0.85
 ferry_transport,Transport,FERRY,keyword,0.85
 transport_word,Transport,TRANSPORT,keyword,0.75
@@ -141,10 +136,6 @@ rsl_entertainment,Entertainment,RSL,keyword,0.80
 leagues_entertainment,Entertainment,LEAGUES,keyword,0.80
 nightclub_entertainment,Entertainment,NIGHTCLUB,keyword,0.90
 night_club_entertainment,Entertainment,NIGHT CLUB,keyword,0.90
-tabcorp_gambling,Gambling,TABCORP,keyword,0.85
-sportsbet_gambling,Gambling,SPORTSBET,keyword,0.90
-ladbrokes_gambling,Gambling,LADBROKES,keyword,0.90
-unibet_gambling,Gambling,UNIBET,keyword,0.90
 betting_gambling,Gambling,BETTING,keyword,0.85
 lotto_gambling,Gambling,LOTTO,keyword,0.85
 lottery_gambling,Gambling,LOTTERY,keyword,0.85
@@ -153,7 +144,6 @@ poker_gambling,Gambling,POKER,keyword,0.85
 pokies_gambling,Gambling,POKIES,keyword,0.90
 slots_gambling,Gambling,SLOTS,keyword,0.85
 wagering_gambling,Gambling,WAGERING,keyword,0.90
-dabble_gambling,Gambling,DABBLE,keyword,0.85
 art_union_gambling,Gambling,ART UNION,keyword,0.85
 raffle_gambling,Gambling,RAFFLE,keyword,0.80
 hardware_home,Home Improvement,HARDWARE,keyword,0.85
@@ -210,7 +200,6 @@ airline_travel,Travel,AIRLINE,keyword,0.85
 flight_travel,Travel,FLIGHT,keyword,0.85
 airfare_travel,Travel,AIRFARE,keyword,0.90
 airways_travel,Travel,AIRWAYS,keyword,0.85
-airbnb_travel,Travel,AIRBNB,keyword,0.85
 caravan_travel,Travel,CARAVAN,keyword,0.80
 hostel_travel,Travel,HOSTEL,keyword,0.85
 holiday_travel,Travel,HOLIDAY,keyword,0.75
@@ -224,11 +213,7 @@ donate_donations,Donations,DONATE,keyword,0.85
 fundraising_donations,Donations,FUNDRAIS,keyword,0.85
 op_shop_donations,Donations,OP SHOP,keyword,0.85
 thrift_donations,Donations,THRIFT,keyword,0.80
-salvation_army_donations,Donations,SALVATION ARMY,keyword,0.90
-vinnies_donations,Donations,VINNIES,keyword,0.85
-red_cross_donations,Donations,RED CROSS,keyword,0.85
 fitness_membership,Gyms and other memberships,FITNESS,keyword,0.65
-crossfit_membership,Gyms and other memberships,CROSSFIT,keyword,0.85
 pilates_membership,Gyms and other memberships,PILATES,keyword,0.85
 yoga_membership,Gyms and other memberships,YOGA,keyword,0.85
 membership_word,Gyms and other memberships,MEMBERSHIP,keyword,0.75
@@ -236,32 +221,17 @@ veterinary_pet_care,Pet Care,VETERINARY,keyword,0.90
 pet_shop_pet_care,Pet Care,PET SHOP,keyword,0.85
 grooming_pet_care,Pet Care,GROOMING,keyword,0.80
 insurance_word,Insurance,INSURANCE,keyword,0.85
-allianz_insurance,Insurance,ALLIANZ,keyword,0.85
-nrma_insurance,Insurance,NRMA,keyword,0.85
-aami_insurance,Insurance,AAMI,keyword,0.85
-racv_insurance,Insurance,RACV,keyword,0.85
-racq_insurance,Insurance,RACQ,keyword,0.85
-budget_direct_insurance,Insurance,BUDGET DIRECT,keyword,0.90
 electricity_utilities,Utilities,ELECTRICITY,keyword,0.90
+power_utilities,Utilities,POWER,keyword,0.90
+water_utilities,Utilities,WATER,keyword,0.90
+gas_utilities,Utilities,GAS,keyword,0.90
+utility_utilities,Utilities,UTILITY,keyword,0.85
 energy_utilities,Utilities,ENERGY,keyword,0.65
-telstra_telecom,Telecommunications,TELSTRA,keyword,0.85
-vodafone_telecom,Telecommunications,VODAFONE,keyword,0.85
 telecom_telecom,Telecommunications,TELECOM,keyword,0.85
 broadband_telecom,Telecommunications,BROADBAND,keyword,0.85
 nbn_telecom,Telecommunications,NBN,keyword,0.85
 wifi_telecom,Telecommunications,WIFI,keyword,0.80
 streaming_tv,Subscription TV,STREAMING,keyword,0.80
-netflix_tv,Subscription TV,NETFLIX,keyword,0.90
-spotify_tv,Subscription TV,SPOTIFY,keyword,0.85
-disney_tv,Subscription TV,DISNEY,keyword,0.80
-stan_tv,Subscription TV,STAN,keyword,0.85
-amazon_prime_tv,Subscription TV,AMAZON PRIME,keyword,0.90
-apple_tv,Subscription TV,APPLE TV,keyword,0.85
-binge_tv,Subscription TV,BINGE,keyword,0.85
-kayo_tv,Subscription TV,KAYO,keyword,0.85
-foxtel_tv,Subscription TV,FOXTEL,keyword,0.85
-youtube_tv,Subscription TV,YOUTUBE,keyword,0.80
-audible_tv,Subscription TV,AUDIBLE,keyword,0.85
 rental_rent,Rent,RENTAL,keyword,0.75
 tenancy_rent,Rent,TENANC,keyword,0.85
 landlord_rent,Rent,LANDLORD,keyword,0.85
