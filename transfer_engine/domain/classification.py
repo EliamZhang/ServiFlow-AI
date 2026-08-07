@@ -232,7 +232,6 @@ def classify_transfers(
     output["text_norm"] = raw_text.apply(normalize_text)
     output["is_transfer_pred"] = 0
     output["finv_category"] = ""
-    output["predicted_category"] = ""
     output["prediction_confidence"] = ""
     output["prediction_rule"] = ""
     output["prediction_dr_cr_used"] = False
@@ -257,7 +256,6 @@ def classify_transfers(
     output["counterparty"] = _derive_counterparty(output)
 
     # ── rule metadata ──
-    output["transfer_rule_name"] = _build_transfer_rule_name(output)
     output["transfer_pred_reason"] = _build_reason_vectorised(output)
 
     # ── stream id ──
@@ -339,7 +337,6 @@ def _detect_internal_transfers(
     if internal_mask.any():
         output.loc[internal_mask[df.index], "is_transfer_pred"] = 1
         output.loc[internal_mask[df.index], "finv_category"] = "Internal Transfer"
-        output.loc[internal_mask[df.index], "predicted_category"] = "Internal Transfer"
         output.loc[internal_mask[df.index], "prediction_confidence"] = "high"
         output.loc[internal_mask[df.index], "prediction_rule"] = "internal_pairing_rule"
 
@@ -440,7 +437,6 @@ def _match_rules(
         # Assign predictions
         output.loc[matched_idx, "is_transfer_pred"] = 1
         output.loc[matched_idx, "finv_category"] = category_label
-        output.loc[matched_idx, "predicted_category"] = category_label
         output.loc[matched_idx, "prediction_confidence"] = confidence
         output.loc[matched_idx, "prediction_rule"] = rule_name
         output.loc[matched_idx, "prediction_dr_cr_used"] = dr_cr_constraint is not None
@@ -525,9 +521,9 @@ def _match_deposit_to_known_accounts(df: pd.DataFrame) -> pd.DataFrame:
             match_mask[idx] = True
 
     if match_mask.any():
-        output.loc[match_mask, ["is_transfer_pred", "finv_category", "predicted_category",
+        output.loc[match_mask, ["is_transfer_pred", "finv_category",
                                  "prediction_confidence", "prediction_rule"]] = [
-            1, "External Transfers", "External Transfers", "high",
+            1, "External Transfers", "high",
             "internal_internet_deposit_known_account",
         ]
         output.loc[match_mask, "prediction_dr_cr_used"] = False
@@ -567,15 +563,11 @@ def _filter_personal_osko_credits(df: pd.DataFrame) -> pd.DataFrame:
     unmark = osko_mask & (~has_ref | (has_ref & has_person_name))
 
     if unmark.any():
-        output.loc[unmark, ["is_transfer_pred", "finv_category", "predicted_category",
-                            "prediction_confidence", "prediction_rule"]] = [0, "", "", "", ""]
+        output.loc[unmark, ["is_transfer_pred", "finv_category",
+                            "prediction_confidence", "prediction_rule"]] = [0, "", "", ""]
         output.loc[unmark, "prediction_dr_cr_used"] = False
 
     return output
-
-
-def _build_transfer_rule_name(df: pd.DataFrame) -> pd.Series:
-    return df["prediction_rule"].fillna("")
 
 
 # =============================================================================
@@ -659,7 +651,7 @@ def _build_reason_vectorised(df: pd.DataFrame) -> pd.Series:
     if is_transfer.any():
         idx = df.index[is_transfer]
         conf = df.loc[idx, "prediction_confidence"].astype(str)
-        rule = df.loc[idx, "transfer_rule_name"].astype(str)
+        rule = df.loc[idx, "prediction_rule"].fillna("").astype(str)
         cat = df.loc[idx, "finv_category"].astype(str)
         dr_cr_flag = df.loc[idx, "prediction_dr_cr_used"].fillna(False).astype(bool)
 

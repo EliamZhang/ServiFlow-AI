@@ -31,7 +31,7 @@ class TransferEngine:
                 "finv_category": matched["finv_category"].values,
                 "stream_id": matched["stream_id"].values,
                 "classification_rule_id": matched[
-                    "transfer_rule_name"
+                    "prediction_rule"
                 ].values,
                 "classification_reason": matched[
                     "transfer_pred_reason"

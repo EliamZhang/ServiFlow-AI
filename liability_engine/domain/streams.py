@@ -13,11 +13,13 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 from typing import Callable
 
 import numpy as np
 import pandas as pd
+
+from classification_core.text import parse_decimal_amount
 
 
 # ---------------------------------------------------------------------------
@@ -156,20 +158,6 @@ class PersonalLoanStreamIdGenerator:
 # ---------------------------------------------------------------------------
 # Common helpers
 # ---------------------------------------------------------------------------
-
-
-def parse_decimal_amount(value: object) -> Decimal | None:
-    if pd.isna(value):
-        return None
-
-    text = str(value).strip().replace(",", "")
-    if not text:
-        return None
-
-    try:
-        return Decimal(text)
-    except InvalidOperation:
-        return None
 
 
 def normalize_amount_key(value: object) -> str:

@@ -6,8 +6,4 @@ __pycache__/
 .coverage
 initial_engine/merchant_kb.csv
 output/
-sample_30_apps.csv
-create_ppt.js
-package.json
-package-lock.json
-node_modules/
+/model_output_*.json
