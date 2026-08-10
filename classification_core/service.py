@@ -30,7 +30,6 @@ _INTERNAL_OUTPUT_COLUMNS = frozenset(
         "classification_priority",
         "classification_rule_id",
         "classification_reason",
-        "stream_id",
     }
 )
 
