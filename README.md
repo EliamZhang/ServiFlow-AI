@@ -131,7 +131,8 @@ Field description:
       "trxType": null,
       "applicationId": 2513560,
       "counterparty": "Uber",
-      "finvCategory": "Transport"
+      "finvCategory": "Transport",
+      "streamId": null
     }
   ],
   "summaries": {
@@ -204,7 +205,7 @@ Field description:
 | stats.txnRawInputCnt | int | Input transaction count |
 | stats.transactionDateMax | string | Max transaction date in input |
 | bankAccounts | array | Account metadata (bankAccountId / accountType / bank / creditLimit), not repeated at the transaction row level |
-| transactions | array | Original transaction fields + classification results; the core new fields are `finvCategory` (fine-grained category) and `counterparty` (counterparty name), plus the `applicationId` echo |
+| transactions | array | Original transaction fields + classification results; the core new fields are `finvCategory` (fine-grained category), `counterparty` (counterparty name), `streamId` (income/liability stream id, null for rows not belonging to any stream), plus the `applicationId` echo |
 | summaries | object | Summaries grouped by type: income_summary (income streams, incl. estimatedMonthlyIncome / predictedNextIncomeDate), liability_summary (liability streams, incl. fundedAmount / repaidAmount / predictedClosingDate), category_summary (aggregate stats by finvCategory) |
 
 ## Local run
