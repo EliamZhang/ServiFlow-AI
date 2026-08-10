@@ -20,7 +20,6 @@ import ahocorasick
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason
-from classification_core.text import clean_text
 
 # ---------------------------------------------------------------------------
 # Text cleaning
@@ -45,11 +44,20 @@ _CHANNEL_PREFIX_RE = re.compile(
 )
 
 
-def _clean_transaction_text(value: object) -> str:
-    """Normalise transaction text and strip payment-channel prefixes."""
-    text = clean_text(value)
-    text = _CHANNEL_PREFIX_RE.sub("", text)
-    return text
+def _clean_transaction_text(series: pd.Series) -> pd.Series:
+    """Vectorized: normalise transaction text and strip payment-channel prefixes.
+
+    Equivalent to the scalar clean_text() + _CHANNEL_PREFIX_RE chain, but
+    operates on the entire Series at C level — no per-row Python calls.
+    """
+    # Step 1 — clean_text equivalent (uppercase → alphanumerics → collapse spaces)
+    s = series.fillna("").str.upper()
+    s = s.str.replace(r"[^A-Z0-9]+", " ", regex=True)
+    s = s.str.replace(r"\s+", " ", regex=True).str.strip()
+    # Step 2 — strip payment-channel prefixes
+    s = s.str.replace(_CHANNEL_PREFIX_RE, "", regex=True)
+    s = s.str.replace(r"\s+", " ", regex=True).str.strip()
+    return s
 
 
 # ---------------------------------------------------------------------------
@@ -80,14 +88,23 @@ class _Automaton:
         with the legacy pure-Python automaton API used by downstream engines
         (e.g. income)."""
         hits: list[tuple[str, str, str]] = []
-        for _, (kw, merchant, cat) in self._a.iter(text):
-            pos = text.find(kw)
-            if pos == -1:  # safety — automaton guarantees the match exists
-                continue
+        text_len = len(text)
+        for end_pos, (kw, kw_len, merchant, cat) in self._a.iter(text):
+            # O(1) position from automaton end_pos.
+            # pyahocorasick 2.x: end_pos = last matching char index → start = end_pos - kw_len + 1.
+            # pyahocorasick 1.x: end_pos = one-past-the-end → start = end_pos - kw_len.
+            pos = end_pos - kw_len + 1  # try 2.x convention first
+            if pos < 0 or text[pos:pos + kw_len] != kw:
+                pos = end_pos - kw_len  # try 1.x convention
+                if pos < 0 or text[pos:pos + kw_len] != kw:
+                    pos = text.find(kw)  # safety fallback
+                    if pos == -1:
+                        continue
+            # Whole-word check
             if pos > 0 and text[pos - 1] != " ":
                 continue
-            end = pos + len(kw)
-            if end < len(text) and text[end] != " ":
+            end = pos + kw_len
+            if end < text_len and text[end] != " ":
                 continue
             hits.append((kw, merchant, cat))
         return hits
@@ -140,32 +157,41 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
         exploded["_kw_raw"] = kw_lists
         exploded = exploded.explode("_kw_raw").dropna(subset=["_kw_raw"])
 
-        # Clean keywords.
-        exploded["_kw_clean"] = exploded["_kw_raw"].apply(clean_text)
+        # Keywords are already pre-cleaned by Merchant-Extraction's
+        # dedup_keywords.py --preclean (upper, alphanumerics, collapsed
+        # spaces).  No apply(clean_text) needed — the 650k+ Python-level
+        # clean_text calls that were the dominant startup cost are gone.
 
         # Filter: stopwords.
-        exploded = exploded[~exploded["_kw_clean"].isin(_STOPWORDS)]
+        exploded = exploded[~exploded["_kw_raw"].isin(_STOPWORDS)]
 
         if exploded.empty:
             continue
 
         # Dedup within chunk (most duplicates eliminated here at C level).
         exploded = exploded.drop_duplicates(
-            subset=["_kw_clean", "merchant_name", "category"]
+            subset=["_kw_raw", "merchant_name", "category"]
         )
 
-        # Cross-chunk dedup via fast zip() — iterrows() is ~13× slower.
+        # Pre-clean at C level — avoids per-row str()/strip()/pd.notna()
+        # inside the zip loop body (~650k items).
+        exploded["merchant_name"] = exploded["merchant_name"].str.strip()
+        exploded["category"] = exploded["category"].fillna("").str.strip()
+
+        # Cross-chunk dedup via fast zip() over raw numpy arrays — avoids
+        # pandas Series iterator overhead.  iterrows() is ~13× slower.
         for kw, merchant, category in zip(
-            exploded["_kw_clean"], exploded["merchant_name"], exploded["category"]
+            exploded["_kw_raw"].values,
+            exploded["merchant_name"].values,
+            exploded["category"].values,
         ):
-            merchant = str(merchant).strip()
-            category = str(category).strip() if pd.notna(category) else ""
             key = (kw, merchant, category)
             if key not in seen:
                 seen[key] = None
 
     for kw, merchant, cat in seen:
-        automaton.add_word(kw, (kw, merchant, cat))
+        kw_len = len(kw)
+        automaton.add_word(kw, (kw, kw_len, merchant, cat))
 
     automaton.make_automaton()
     return _Automaton(automaton, len(seen))
@@ -330,6 +356,80 @@ _STOPWORDS: frozenset[str] = frozenset(
 )
 
 
+def _classify_one(
+    text_clean: str,
+    automaton: _Automaton,
+) -> tuple[bool, str, str, str, str, str]:
+    """Classify a single cleaned text by whole-word keyword match.
+
+    Returns (matched, counterparty, category, keyword, rule_id, reason).
+
+    The automaton yields every matching keyword; a keyword only counts if
+    it appears as a whole word (boundary check — the cleaned text is
+    ``[A-Z0-9 ]``, so boundaries are spaces or string edges).  Matches
+    are ranked by longest keyword first — the longest (most specific) one wins.
+    """
+    if not text_clean:
+        return (False, "", "", "", "", "")
+
+    text_len = len(text_clean)
+
+    best: tuple[int, str, str, str] | None = None
+
+    for end_pos, (kw, kw_len, merchant, cat) in automaton.iter(text_clean):
+        # O(1) position from automaton end_pos.
+        # pyahocorasick 2.x returns index of the last matching character
+        # (closed interval), so start = end_pos - kw_len + 1.
+        # pyahocorasick 1.x returns one-past-the-end (Python slice end),
+        # so start = end_pos - kw_len.  We try 2.x first (current version),
+        # then 1.x, then fall back to str.find().
+        pos = end_pos - kw_len + 1
+        if pos < 0 or text_clean[pos:pos + kw_len] != kw:
+            pos = end_pos - kw_len  # try 1.x convention
+            if pos < 0 or text_clean[pos:pos + kw_len] != kw:
+                pos = text_clean.find(kw)  # safety fallback
+                if pos == -1:
+                    continue
+
+        # ── Whole-word check (inlined) ──
+        if pos > 0 and text_clean[pos - 1] != " ":
+            continue
+        end = pos + kw_len
+        if end < text_len and text_clean[end] != " ":
+            continue
+
+        # ── Longest keyword wins ──
+        if best is None or kw_len > best[0]:
+            best = (kw_len, kw, merchant, cat)
+
+    if best is None:
+        return (False, "", "", "", "", "")
+
+    _, best_kw, best_merchant, best_cat = best
+
+    reason = format_classification_reason(
+        category=best_cat,
+        rule="merchant_kb_match",
+        evidence=[
+            f"keyword={best_kw}",
+            f"merchant={best_merchant}",
+        ],
+    )
+    return (
+        True,
+        best_merchant,
+        best_cat,
+        best_kw,
+        "merchant_kb_match",
+        reason,
+    )
+
+
+# Sentinel for empty-text rows — avoids function-call overhead for the
+# common case where _text_clean is "" after stripping channel prefixes.
+_EMPTY_RESULT = (False, "", "", "", "", "")
+
+
 def match_transactions(
     transactions: pd.DataFrame,
     automaton: _Automaton,
@@ -341,70 +441,15 @@ def match_transactions(
     protocol.
     """
     out = transactions.copy()
-    out["_text_clean"] = out["text"].apply(_clean_transaction_text)
+    out["_text_clean"] = _clean_transaction_text(out["text"])
 
-    def _classify_one(text_clean: str) -> tuple[bool, str, str, str, str, str]:
-        """Classify a single cleaned text by whole-word keyword match.
-
-        Returns (matched, counterparty, category, keyword, rule_id, reason).
-
-        The automaton yields every matching keyword; a keyword only counts if
-        it appears as a whole word (inlined boundary check — the cleaned text
-        is ``[A-Z0-9 ]``, so boundaries are spaces or string edges).  Matches
-        are ranked by longest keyword first — when the same text hits several
-        keywords, the longest (most specific) one wins.
-        """
-        if not text_clean:
-            return (False, "", "", "", "", "")
-
-        text_len = len(text_clean)
-
-        best: tuple[int, str, str, str] | None = None
-
-        # pyahocorasick.iter() yields (end_pos, (kw, merchant, cat)).
-        for _end_pos, (kw, merchant, cat) in automaton.iter(text_clean):
-            # Use str.find() for reliable position (ahocorasick end_pos
-            # semantics are version-dependent; find() is unambiguous).
-            pos = text_clean.find(kw)
-            if pos == -1:  # safety — automaton guarantees the match exists
-                continue
-
-            # ── Whole-word check (inlined) ──
-            # After clean_text the text is ``[A-Z0-9 ]`` — word boundaries
-            # are spaces or string edges.
-            if pos > 0 and text_clean[pos - 1] != " ":
-                continue
-            end = pos + len(kw)
-            if end < text_len and text_clean[end] != " ":
-                continue
-
-            # ── Longest keyword wins ──
-            if best is None or len(kw) > best[0]:
-                best = (len(kw), kw, merchant, cat)
-        if best is None:
-            return (False, "", "", "", "", "")
-
-        _best_len, best_kw, best_merchant, best_cat = best
-
-        reason = format_classification_reason(
-            category=best_cat,
-            rule="merchant_kb_match",
-            evidence=[
-                f"keyword={best_kw}",
-                f"merchant={best_merchant}",
-            ],
-        )
-        return (
-            True,
-            best_merchant,
-            best_cat,
-            best_kw,
-            "merchant_kb_match",
-            reason,
-        )
-
-    # apply() uses C-level iteration — much faster than iterrows().
-    results = out["_text_clean"].apply(_classify_one)
+    # List comprehension over raw numpy array — avoids pandas Series
+    # indexing overhead per element (measurably faster than .apply()).
+    texts = out["_text_clean"].values
+    results = [
+        _classify_one(t, automaton) if t else _EMPTY_RESULT
+        for t in texts
+    ]
     (
         out["matched"],
         out["counterparty"],
