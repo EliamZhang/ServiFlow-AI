@@ -219,6 +219,18 @@ python backfill.py                      # CSV batch input, writes Excel report (
 
 Note: the sample transactions in `model_input.json` are for demonstration only and do not cover all classification engine rules; for full validation use `input_converter.py` to extract a real application from `sample.csv` and generate the input.
 
+## Entry points
+
+Three entry scripts serve different purposes but run the **same core pipeline** — `ClassificationOrchestrator` loads the pipeline config + category catalog and runs all engines in priority order. They differ only in input/output shape:
+
+| Script | Purpose | Input | Output |
+| --- | --- | --- | --- |
+| `model_main.py` | Production inference entry (deployed service, `PredictMain.predict`) | single-application JSON dict | JSON dict (transactions + summaries + stats) |
+| `verify_model.py` | Local verification / trial run for a single application | single-application JSON file (default `model_input.json`) | JSON file (`output/model_output_{applicationId}_{timestamp}.json`) |
+| `backfill.py` | Batch classification of historical / offline data | CSV (multiple applications) | Excel report (`output/classification_report_{timestamp}.xlsx`) |
+
+**Maintenance note (important):** the three entries differ only in input/output format; classification logic — engine priority order, overwrite rules, income / liability protection — lives in the shared core and behaves identically in all three. Make changes in the core or engine code, never per-entry: a change verified through one entry applies to all. Known difference: `backfill.py` reads CSV directly and does not go through `build_transactions_frame`, so the bank-account metadata merge (`account_type` / `bank` / `credit_limit`) applied by the JSON entries is not applied there — CSV input must carry these columns itself if the engines need them.
+
 ## Classification pipeline
 
 8 classification engines run in ascending priority order; each engine matches all transactions line by line and later engines overwrite the classification of earlier ones:
