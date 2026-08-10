@@ -4,5 +4,6 @@ __pycache__/
 *.pickle
 .pytest_cache/
 .coverage
+initial_engine/merchant_kb.csv
 output/
 /model_output_*.json

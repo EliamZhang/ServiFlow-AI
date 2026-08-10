@@ -120,6 +120,3 @@ ARMA Group,Debt Collection,DC_KW_119,keyword,bpay arma
 Collection House,Debt Collection,DC_KW_120,keyword,collectionhouselimit
 Solved Group,Debt Collection,DC_KW_121,keyword,solved gro
 Waterman Collections,Debt Collection,DC_KW_122,keyword,waterman collections
-Credit Corp,Debt Collection,DC_KW_123,keyword,credit corp
-Credit Corp,Debt Collection,DC_KW_124,keyword,creditcorp
-InDebted,Debt Collection,DC_KW_125,regex,\dindebted\b
