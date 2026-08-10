@@ -57,5 +57,4 @@ def run_pipeline(
     output = apply_generic_loan_catchall(output)
     return PipelineResult(
         transactions=output,
-        original_columns=tuple(transactions.columns),
     )

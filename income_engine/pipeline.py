@@ -56,5 +56,4 @@ def run_pipeline(transactions: pd.DataFrame) -> PipelineResult:
     output = reorder_output_columns(output, original_columns)
     return PipelineResult(
         transactions=output,
-        original_columns=tuple(original_columns),
     )

@@ -13,7 +13,6 @@ TRANSACTION_KEY_COLUMNS = ("application_id", "transaction_id")
 class PipelineResult:
     transactions: pd.DataFrame
     diagnostics: dict[str, Any] = field(default_factory=dict)
-    original_columns: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

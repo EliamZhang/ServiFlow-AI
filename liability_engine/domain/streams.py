@@ -103,7 +103,6 @@ class RepaymentStream:
     row_indices: list[int]
     baseline_amount: Decimal
     first_date: pd.Timestamp
-    last_date: pd.Timestamp
 
 
 @dataclass
@@ -419,7 +418,6 @@ def cluster_repayments(group: pd.DataFrame) -> list[RepaymentStream]:
                 row_indices=cluster.row_indices,
                 baseline_amount=cluster.baseline_amount,
                 first_date=cluster_rows["_transaction_date"].min(),
-                last_date=cluster_rows["_transaction_date"].max(),
             )
         )
 

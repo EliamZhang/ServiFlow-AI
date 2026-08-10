@@ -18,7 +18,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538362,Automotive,Puma York Roadhouse,initial,
 2420589,2755537954,Information,Google,initial,
 2420589,2755537543,External Transfers,CBA Funds Transfer,transfer,External Transfers
-2420589,2755537946,Automotive,7-ELEVEN STORES PTY LTD,initial,
+2420589,2755537946,Groceries,7-ELEVEN STORES PTY LTD,initial,
 2420589,2755537591,Automotive,BP,initial,
 2420589,2755538045,Information,Google,initial,
 2420589,2755537917,Automotive,BP,initial,
@@ -249,7 +249,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538360,Information,Google,initial,
 2420589,2755537705,Department Stores,Dunnings,initial,
 2420589,2755537734,Information,Google,initial,
-2420589,2755538107,Transport,WA Transport DVS,initial,
+2420589,2755538107,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755538057,Non SACC Loans,Wagetap,liability,wage_advance_004
 2420589,2755538322,Information,Google,initial,
 2420589,2755537579,Overdrawn,Overdrawn Fee,fee,
@@ -257,7 +257,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538226,Information,Google,initial,
 2420589,2755537924,Automotive,Great Southern Fuels,initial,
 2420589,2755538120,Automotive,BP,initial,
-2420589,2755537659,,,,
+2420589,2755537659,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537704,,,,
 2420589,2755537774,Dishonours,-,dishonour,
 2420589,2755537592,Information,Google,initial,
@@ -297,7 +297,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537855,Non SACC Loans,Salt and Lime,liability,non_sacc_001
 2420589,2755537590,Automotive,Puma York Roadhouse,initial,
 2420589,2755538086,Department Stores,Dunnings,initial,
-2420589,2755537910,,,,
+2420589,2755537910,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538267,Non SACC Loans,Humm,liability,bnpl_002
 2420589,2755537747,Department Stores,Dunnings,initial,
 2420589,2755538113,Dishonours,-,dishonour,
@@ -339,7 +339,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537676,Dining Out,Hong Kong Chinese Restaurant,initial,
 2420589,2755537919,Wages,Main Roads,income,salary_payg_001
 2420589,2755538112,Dishonours,Wagepay,liability,wage_advance_003
-2420589,2755537554,,,,
+2420589,2755537554,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538185,Non SACC Loans,Salt and Lime,liability,non_sacc_001
 2420589,2755537879,Information,Google,initial,
 2420589,2755538307,Information,Google,initial,
@@ -373,25 +373,25 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537971,Non SACC Loans,Wagetap,liability,wage_advance_004
 2420589,2755538154,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755537763,Groceries,MOORA GROCERY PTY LTD,initial,
-2420589,2755537722,,,,
+2420589,2755537722,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537706,Non SACC Loans,Wagetap,liability,wage_advance_004
 2420589,2755537671,Automotive,BP,initial,
 2420589,2755537993,SACC Loans,Fundo Loans,liability,sacc_001
 2420589,2755537985,Non SACC Loans,Wagetap,liability,wage_advance_004
-2420589,2755538054,,,,
+2420589,2755538054,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538230,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755538268,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755538067,Wages,Main Roads,income,salary_payg_001
 2420589,2755537831,Information,Google,initial,
 2420589,2755537906,Dishonours,-,dishonour,
 2420589,2755538328,Overdrawn,Overdrawn Fee,fee,
-2420589,2755537982,,,,
+2420589,2755537982,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538297,Automotive,Puma York Roadhouse,initial,
 2420589,2755537871,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755537868,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755537858,Retail,Bakers Hill Rural,initial,
 2420589,2755538366,Automotive,BP,initial,
-2420589,2755538126,,,,
+2420589,2755538126,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538036,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755538130,Non SACC Loans,Wagetap,liability,wage_advance_004
 2420589,2755537649,Automotive,Great Southern Fuels,initial,
@@ -466,13 +466,13 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537915,Department Stores,Dunnings,initial,
 2420589,2755537792,,,,
 2420589,2755538025,Non SACC Loans,Afterpay,liability,bnpl_001
-2420589,2755537786,,,,
+2420589,2755537786,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538344,Non SACC Loans,Afterpay,liability,bnpl_001
 2420589,2755538260,Overdrawn,Overdrawn Fee,fee,
 2420589,2755537812,Non SACC Loans,Credit Corp,liability,loc_001
 2420589,2755537577,Information,Google,initial,
 2420589,2755537615,Non SACC Loans,Credit Corp,liability,loc_001
-2420589,2755537613,,,,
+2420589,2755537613,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537942,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755538123,Non SACC Loans,Salt and Lime,liability,non_sacc_001
 2420589,2755537816,Groceries,WOOLWORTHS GROUP LIMITED,initial,
@@ -578,7 +578,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538263,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755538281,Information,Google,initial,
 2420589,2755538177,Dishonours,Salt and Lime,liability,non_sacc_001
-2420589,2755538193,,,,
+2420589,2755538193,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537787,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755537839,Overdrawn,Overdrawn Fee,fee,
 2420589,2755537902,Non SACC Loans,Wagepay,liability,wage_advance_003
@@ -652,7 +652,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538119,Information,Google,initial,
 2420589,2755537735,Information,Google,initial,
 2420589,2755538259,Unknown Loans,Credit Corp,liability,unknown_001
-2420589,2755537861,,,,
+2420589,2755537861,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537762,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755537717,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755537661,Non SACC Loans,Credit Corp,liability,loc_001
@@ -767,7 +767,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537726,Overdrawn,Overdrawn Fee,fee,
 2420589,2755537988,Health,St John of God Subiaco Hospital,initial,
 2420589,2755538213,External Transfers,CBA Funds Transfer,transfer,External Transfers
-2420589,2755537683,Transport,WA Transport DVS,initial,
+2420589,2755537683,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755538290,Information,Google,initial,
 2420589,2755538030,Automotive,Great Southern Fuels,initial,
 2420589,2755537709,Dishonours,-,dishonour,

@@ -42,7 +42,6 @@
     }
   ],
   "execution": {
-    "on_engine_error": "fail_batch",
-    "unclassified_category": "unclassified"
+    "on_engine_error": "fail_batch"
   }
 }

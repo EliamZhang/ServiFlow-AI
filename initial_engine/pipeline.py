@@ -34,7 +34,6 @@ def run_pipeline(
 
     return PipelineResult(
         transactions=output,
-        original_columns=tuple(transactions.columns),
         diagnostics={
             "keyword_count": automaton.keyword_count,
         },
