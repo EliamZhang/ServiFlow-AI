@@ -223,7 +223,6 @@ grooming_pet_care,Pet Care,GROOMING,keyword,0.80
 insurance_word,Insurance,INSURANCE,keyword,0.85
 electricity_utilities,Utilities,ELECTRICITY,keyword,0.90
 power_utilities,Utilities,POWER,keyword,0.90
-water_utilities,Utilities,WATER,keyword,0.90
 gas_utilities,Utilities,GAS,keyword,0.90
 utility_utilities,Utilities,UTILITY,keyword,0.85
 energy_utilities,Utilities,ENERGY,keyword,0.65
@@ -256,7 +255,6 @@ patisserie_dining,Dining Out,PATISSERIE,keyword,0.85
 inn_travel,Travel,INN,keyword,0.75
 lodge_travel,Travel,LODGE,keyword,0.80
 suites_travel,Travel,SUITES,keyword,0.80
-convenience_retail,Groceries,CONVENIENCE,keyword,0.75
 newsagent_retail,Retail,NEWSAGENT,keyword,0.85
 locksmith_retail,Retail,LOCKSMITH,keyword,0.85
 school_compound,Education,SCHOOL,regex,0.70
@@ -273,3 +271,21 @@ golf_club_entertainment,Entertainment,GOLF CLUB,keyword,0.85
 rsl_club_entertainment,Entertainment,RSL CLUB,keyword,0.85
 leagues_club_entertainment,Entertainment,LEAGUES CLUB,keyword,0.85
 workers_club_entertainment,Entertainment,WORKERS CLUB,keyword,0.85
+bar_dining,Dining Out,BAR,keyword,0.80
+kitchen_dining,Dining Out,KITCHEN,keyword,0.75
+pho_dining,Dining Out,PHO,keyword,0.85
+roast_dining,Dining Out,ROAST,keyword,0.75
+hotel_pub_dining,Dining Out,HOTEL,keyword,0.60
+shop_retail,Retail,SHOP,keyword,0.75
+games_retail,Retail,GAMES,keyword,0.75
+outlet_retail,Retail,OUTLET,keyword,0.80
+music_retail,Retail,MUSIC,keyword,0.75
+gift_retail,Retail,GIFT,keyword,0.80
+variety_retail,Retail,VARIETY,keyword,0.80
+mobile_retail,Retail,MOBILE,keyword,0.75
+market_groceries,Groceries,MARKET,keyword,0.70
+mart_groceries,Groceries,MART,keyword,0.80
+convenience_boost,Groceries,CONVENIENCE,keyword,0.80
+nib_insurance,Insurance,NIB,keyword,0.75
+ahm_insurance,Insurance,AHM,keyword,0.75
+hcf_insurance,Insurance,HCF,keyword,0.75

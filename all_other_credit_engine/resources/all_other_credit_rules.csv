@@ -1,4 +1,4 @@
-rule_type,pattern,required_terms
+﻿rule_type,pattern,required_terms
 keyword,DEPOSIT-OSKO PAYMENT,
 keyword,OSKO DEPOSIT,
 keyword,OSKO PAYMENT TRANSFERRED FROM,
@@ -28,3 +28,4 @@ keyword,HEARTLAND ASF,
 keyword,METWAY BAN/,
 keyword,- DEPOSIT - RECEIPT,
 keyword,- OSKO PAYMENT - RECEIPT,
+keyword,INTEREST PAID,
