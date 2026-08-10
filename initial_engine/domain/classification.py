@@ -13,7 +13,6 @@ Performance characteristics
 
 from __future__ import annotations
 
-import pickle
 import re
 from pathlib import Path
 
@@ -155,13 +154,12 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
             subset=["_kw_clean", "merchant_name", "category"]
         )
 
-        # Cross-chunk dedup (collect, automaton built afterwards).
-        for _, row in exploded.iterrows():
-            kw = row["_kw_clean"]
-            merchant = str(row["merchant_name"]).strip()
-            category = (
-                str(row["category"]).strip() if pd.notna(row["category"]) else ""
-            )
+        # Cross-chunk dedup via fast zip() — iterrows() is ~13× slower.
+        for kw, merchant, category in zip(
+            exploded["_kw_clean"], exploded["merchant_name"], exploded["category"]
+        ):
+            merchant = str(merchant).strip()
+            category = str(category).strip() if pd.notna(category) else ""
             key = (kw, merchant, category)
             if key not in seen:
                 seen[key] = None
@@ -183,12 +181,9 @@ _DEFAULT_KB_PATH: str | None = None
 def get_cached_automaton(kb_path: str | Path | None = None) -> _Automaton:
     """Return a cached automaton, building it on first call.
 
-    Caching is two-tier:
-    1. **Disk** — a pickle file (``merchant_kb.csv.pickle``) is written after
-       the first build.  On subsequent runs the automaton is loaded from disk
-       in seconds, provided the CSV has not been modified since.
-    2. **Memory** — within the same process the automaton is reused across
-       engine invocations.
+    The automaton is cached in memory within the same process so that downstream
+    engines (e.g. income) can reuse it without reloading the 395 MB CSV.  Each
+    invocation rebuilds from CSV — there is no persistent disk cache.
     """
     global _cached_automaton, _cached_kb_path, _DEFAULT_KB_PATH
     if _DEFAULT_KB_PATH is None:
@@ -201,29 +196,9 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> _Automaton:
     if _cached_automaton is not None and _cached_kb_path == resolved:
         return _cached_automaton
 
-    # Disk cache: load from pickle if newer than the source CSV.
-    cache_path = resolved + ".pickle"
-    try:
-        kb_mtime = Path(resolved).stat().st_mtime
-        if Path(cache_path).stat().st_mtime > kb_mtime:
-            with open(cache_path, "rb") as fh:
-                _cached_automaton = pickle.load(fh)
-            _cached_kb_path = resolved
-            return _cached_automaton
-    except (FileNotFoundError, pickle.UnpicklingError, EOFError, OSError):
-        pass  # No cache, corrupted, or inaccessible — build from scratch.
-
-    # Build from scratch (one-off per CSV version).
+    # Build from scratch.
     _cached_automaton = load_merchant_kb(resolved)
     _cached_kb_path = resolved
-
-    # Persist to disk for next run.
-    try:
-        with open(cache_path, "wb") as fh:
-            pickle.dump(_cached_automaton, fh)
-    except OSError:
-        pass  # Non-critical — next run will just rebuild.
-
     return _cached_automaton
 
 
