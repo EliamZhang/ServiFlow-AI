@@ -8,8 +8,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import datetime
 from pathlib import Path
+from time import perf_counter
 
 from classification_core.config import (
     DEFAULT_CATEGORY_CATALOG,
@@ -17,7 +19,6 @@ from classification_core.config import (
 )
 from classification_core.service import (
     ModelService,
-    _build_error_output,
     build_transactions_frame,
     serialize_result,
 )
@@ -74,6 +75,7 @@ def main() -> None:
     payload = load_input(args.input)
     output_path = _resolve_output_path(args.output, payload)
 
+    started = perf_counter()
     try:
         transactions = build_transactions_frame(payload)
         service = ModelService(
@@ -82,15 +84,29 @@ def main() -> None:
         )
         result = service.orchestrator.run(transactions)
     except Exception as exc:
-        output = _build_error_output(payload, str(exc))
-        print(json.dumps(output, ensure_ascii=False, indent=2))
+        print(f"Error: {exc}", file=sys.stderr)
         raise
 
     output = serialize_result(result, payload)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=2)
-    print(json.dumps(output, ensure_ascii=False, indent=2))
+
+    total_seconds = perf_counter() - started
+    stats = output.get("stats", {})
+    print(
+        f"application_id={output.get('applicationId')} | "
+        f"status={output.get('status')} | "
+        f"transactions={stats.get('txnRawInputCnt')} | "
+        f"date_max={stats.get('transactionDateMax')}"
+    )
+    engine_times = " | ".join(
+        f"{execution.engine_id} {execution.duration_seconds:.2f}s"
+        for execution in result.executions
+    )
+    if engine_times:
+        print(f"Engines | {engine_times}")
+    print(f"Total | {total_seconds:.2f}s")
     print(f"Output written to {output_path}")
 
 
