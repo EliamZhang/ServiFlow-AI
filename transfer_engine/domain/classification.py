@@ -177,8 +177,10 @@ _ROW_EXCLUSION_PATTERNS = _get_row_exclusion_patterns()
 # Text normalization & type aliases
 # =============================================================================
 
-_RuleDef = tuple[str, str, str, str | None]
-_KeywordRuleList = list[tuple[list[str], str]]
+from typing import List, Optional, Tuple
+
+_RuleDef = Tuple[str, str, str, Optional[str]]
+_KeywordRuleList = List[Tuple[List[str], str]]
 
 
 def normalize_text(value: object) -> str:

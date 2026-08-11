@@ -541,11 +541,13 @@ def _bulk_write_metadata(output, mask, rule, target):
             output.loc[mask, "finv_category"] = meta["finv_category"]
         if meta.get("product_type"):
             output.loc[mask, "product_type"] = meta["product_type"]
-    elif counterparty := rule.get("counterparty", ""):
-        output.loc[mask, "counterparty"] = counterparty
-        product_type = rule.get("product_type", "")
-        if product_type:
-            output.loc[mask, "finv_category"] = product_type
+    else:
+        counterparty = rule.get("counterparty", "")
+        if counterparty:
+            output.loc[mask, "counterparty"] = counterparty
+            product_type = rule.get("product_type", "")
+            if product_type:
+                output.loc[mask, "finv_category"] = product_type
 
 
 def _resolve_target(rule, output_columns):
