@@ -98,9 +98,9 @@ Field description:
 
 ```json
 {
-  "userId": 484579009,
-  "applicationId": 2513560,
-  "flowTime": "2026-07-05 23:52:48.0",
+  "customerId": 484579009,
+  "applicationNo": 2513560,
+  "sampleDatetime": "2026-07-05 23:52:48.0",
   "runId": "8f0d3c9e-7a1b-4c2d-9e3f-0a1b2c3d4e5f",
   "status": "success",
   "error": null,
@@ -129,7 +129,7 @@ Field description:
       "transactionDate": "2026-02-05",
       "transactionId": 1423884392,
       "trxType": null,
-      "applicationId": 2513560,
+      "applicationNo": 2513560,
       "counterparty": "Uber",
       "finvCategory": "Transport",
       "streamId": null
@@ -142,7 +142,7 @@ Field description:
         "streamId": "salary_payg_001",
         "incomeCategory": "salary_payg",
         "bankAccountId": 459428115,
-        "applicationId": 2513560,
+        "applicationNo": 2513560,
         "counterparty": "DELIVERY SERVICE JOB",
         "transactionStartDate": "2026-02-13",
         "transactionEndDate": "2026-07-09",
@@ -164,7 +164,7 @@ Field description:
         "streamId": "bnpl_003",
         "liabilityCategory": "Non SACC Loans",
         "bankAccountId": "1534823854",
-        "applicationId": "2513560",
+        "applicationNo": "2513560",
         "counterparty": "CBA StepPay",
         "transactionStartDate": "2026-02-07",
         "transactionEndDate": "2026-06-25",
@@ -205,7 +205,7 @@ Field description:
 | stats.txnRawInputCnt | int | Input transaction count |
 | stats.transactionDateMax | string | Max transaction date in input |
 | bankAccounts | array | Account metadata (bankAccountId / accountType / bank / creditLimit), not repeated at the transaction row level |
-| transactions | array | Original transaction fields + classification results; the core new fields are `finvCategory` (fine-grained category), `counterparty` (counterparty name), `streamId` (income/liability stream id, null for rows not belonging to any stream), plus the `applicationId` echo |
+| transactions | array | Original transaction fields + classification results; the core new fields are `finvCategory` (fine-grained category), `counterparty` (counterparty name), `streamId` (income/liability stream id, null for rows not belonging to any stream), plus the `applicationNo` echo |
 | summaries | object | Summaries grouped by type: income_summary (income streams, incl. estimatedMonthlyIncome / predictedNextIncomeDate), liability_summary (liability streams, incl. fundedAmount / repaidAmount / predictedClosingDate), category_summary (aggregate stats by finvCategory) |
 
 ## Local run
