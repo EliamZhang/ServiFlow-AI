@@ -33,11 +33,16 @@ _INTERNAL_OUTPUT_COLUMNS = frozenset(
     }
 )
 
-# Top-level input fields echoed back, matching the model_output.json sample
-_INPUT_ECHO_TOP_KEYS = ("userId", "applicationId", "flowTime")
+# Top-level input fields echoed back: {input key: output key}
+_INPUT_ECHO_TOP_KEYS = {
+    "userId": "customerId",
+    "applicationId": "applicationNo",
+    "flowTime": "sampleDatetime",
+}
 
 # Input original columns that need renamed output keys when serializing
 _TRANSACTION_OUTPUT_MAP = {
+    "application_id": "applicationNo",
     "bank_account_id": "bankAccountId",
     "transaction_id": "transactionId",
     "transaction_date": "transactionDate",
@@ -210,9 +215,9 @@ def serialize_result(
     payload: dict,
 ) -> dict:
     output: dict[str, Any] = {}
-    for key in _INPUT_ECHO_TOP_KEYS:
-        if key in payload:
-            output[key] = payload[key]
+    for input_key, output_key in _INPUT_ECHO_TOP_KEYS.items():
+        if input_key in payload:
+            output[output_key] = payload[input_key]
     output["runId"] = result.run_id
     output["status"] = "success"
     output["error"] = None
@@ -248,9 +253,9 @@ def _build_error_output(payload: dict, error: str) -> dict:
             "transactionDateMax": None,
         },
     }
-    for key in _INPUT_ECHO_TOP_KEYS:
-        if key in payload:
-            output[key] = payload[key]
+    for input_key, output_key in _INPUT_ECHO_TOP_KEYS.items():
+        if input_key in payload:
+            output[output_key] = payload[input_key]
     output["transactions"] = []
     output["summaries"] = {}
     return output

@@ -95,7 +95,7 @@ def main() -> None:
     total_seconds = perf_counter() - started
     stats = output.get("stats", {})
     print(
-        f"application_id={output.get('applicationId')} | "
+        f"application_no={output.get('applicationNo')} | "
         f"status={output.get('status')} | "
         f"transactions={stats.get('txnRawInputCnt')} | "
         f"date_max={stats.get('transactionDateMax')}"
