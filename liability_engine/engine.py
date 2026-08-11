@@ -37,6 +37,28 @@ class LiabilityEngine:
             & details["counterparty"].notna()
             & details["counterparty"].astype("string").str.strip().ne("")
         ].copy()
+        if matched.empty:
+            # No liability matches (e.g. extreme inputs with few transactions):
+            # return a structurally correct empty predictions frame. DataFrame.apply
+            # on an empty frame in pandas 1.3.5 (production) returns a 2-D frame,
+            # which would crash the constructor below with
+            # "Data must be 1-dimensional".
+            predictions = pd.DataFrame(
+                {
+                    **{col: pd.Series(dtype="int64") for col in TRANSACTION_KEY_COLUMNS},
+                    "matched": pd.Series(dtype="bool"),
+                    "counterparty": pd.Series(dtype="object"),
+                    "finv_category": pd.Series(dtype="object"),
+                    "stream_id": pd.Series(dtype="object"),
+                    "classification_rule_id": pd.Series(dtype="object"),
+                    "classification_reason": pd.Series(dtype="object"),
+                }
+            )
+            return EngineResult(
+                predictions=predictions,
+                transactions=details,
+                diagnostics=result.diagnostics,
+            )
         predictions = pd.DataFrame(
             {
                 **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},
