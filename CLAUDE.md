@@ -39,6 +39,13 @@
 
 引擎的具体规则大多外置在各引擎 `resources/` 目录的 CSV 中（如 `liability_engine/resources/`、`transfer_engine/resources/`、`catch_all_engine/resources/`），引擎代码只负责加载与执行。`initial_engine/merchant_kb.csv` 为商户知识库（已 gitignore，需在本地存在）。改规则优先改 CSV，避免动引擎代码；各 CSV 的列约定见对应引擎的 `domain/` 加载函数与 docstring。注意：改动这些资源文件会改变 SHA-256 指纹，`baseline.py diff` 会报告，但行级结果未必变。
 
+### 双仓库发布流程（GitHub 开发 → GitLab 生产）
+
+- **GitHub（https://github.com/EliamZhang/ServiFlow-AI.git）是个人开发仓库**，日常开发、分支、合并都在这里进行。
+- **GitLab（http://git.ppdaicorp.com/intl/risk/AUS/Model/AUS_BS_CAT_Model.git）是线上生产环境**，发布目标分支为 `main` / `release-prep` / `staging`（三个分支通常保持同步）。
+- **标准发布顺序：先在 GitHub 完成开发与合并，确认无误后再推送到 GitLab**。不要跳过 GitHub 直接把本地改动推上 GitLab。
+- 推送 GitLab 属于影响生产的不可逆操作，**必须先将改动在 GitHub 侧定稿（合并到 main 或至少推上 staging）并经用户确认后**才能推送。
+
 ### 协作方式
 
 - 在开始执行前，先检查问题中是否存在错误前提、逻辑跳跃、信息缺失或目标不明确；
