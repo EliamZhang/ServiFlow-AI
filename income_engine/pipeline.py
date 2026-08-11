@@ -3,10 +3,8 @@ from __future__ import annotations
 import pandas as pd
 
 from classification_core.models import PipelineResult
-from initial_engine.domain.classification import (
-    clean_text,
-    get_cached_automaton,
-)
+from classification_core.text import clean_text
+from initial_engine.domain.classification import get_cached_automaton
 
 from .domain.classification import (
     add_income_type_rules,
