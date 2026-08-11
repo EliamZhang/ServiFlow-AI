@@ -3,13 +3,7 @@ from __future__ import annotations
 try:
     from typing import Protocol
 except ImportError:  # Python 3.7
-    try:
-        from typing_extensions import Protocol
-    except ImportError:  # Python 3.7 without typing_extensions installed
-        class Protocol:  # type: ignore[no-redef]
-            """Fallback: ClassificationEngine is type-annotation only, never checked at runtime."""
-
-            pass
+    from typing_extensions import Protocol
 
 import pandas as pd
 
