@@ -97,6 +97,11 @@ class ClassificationOrchestrator:
                     ["Wages", "Centrelink"]
                 )
                 candidates_df = original.loc[~already_income_mask].copy()
+            if spec.engine_id == "rent":
+                already_protected_mask = output["classification_engine"].isin(
+                    ["income", "liability"]
+                )
+                candidates_df = original.loc[~already_protected_mask].copy()
 
             context = EngineContext(
                 run_id=run_id,

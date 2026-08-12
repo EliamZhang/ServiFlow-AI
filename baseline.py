@@ -44,7 +44,7 @@ DEFAULT_ENGINE_BASELINE = Path("baseline/engine_claims.csv")
 DEFAULT_RUN_META = Path("baseline/run_meta.json")
 DEFAULT_SUMMARIES_DIR = Path("baseline/summaries")
 PROJECT_ROOT = Path(__file__).resolve().parent
-BASELINE_FORMAT_VERSION = 2
+BASELINE_FORMAT_VERSION = 3
 
 # Only deterministic summary artifacts are compared.  liability_summary rows
 # mix time-sensitive fields (status, predicted_closing_date, frequency) with
