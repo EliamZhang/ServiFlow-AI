@@ -231,7 +231,6 @@ broadband_telecom,Telecommunications,BROADBAND,keyword,0.85
 nbn_telecom,Telecommunications,NBN,keyword,0.85
 wifi_telecom,Telecommunications,WIFI,keyword,0.80
 streaming_tv,Subscription TV,STREAMING,keyword,0.80
-
 department_store_retail,Department Stores,DEPARTMENT STORE,keyword,0.85
 take_away_dining,Dining Out,TAKE AWAY,keyword,0.80
 flight_travel,Travel,FLIGHT,keyword,0.85
