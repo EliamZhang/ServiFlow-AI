@@ -70,6 +70,18 @@ class ClassificationOrchestrator:
         original = self._prepare_input(transactions)
         run_id = str(uuid4())
         output = self._initialize_output(original)
+        if original.empty:
+            # Zero-transaction input: no classification is possible. Several
+            # engines assume at least one candidate row and crash on empty
+            # frames (pandas 1.3.5 returns 2-D frames from DataFrame.apply),
+            # so short-circuit with a structurally correct empty success
+            # result instead of running them.
+            return ClassificationRunResult(
+                run_id=run_id,
+                transactions=output,
+                summaries=[],
+                executions=[],
+            )
         key_to_index = dict(zip(_key_tuples(original), output.index))
         summaries: list[SummaryArtifact] = []
         executions: list[EngineExecution] = []

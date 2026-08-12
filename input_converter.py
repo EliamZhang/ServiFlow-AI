@@ -5,6 +5,8 @@ Lists all applications in the CSV (user_id + application_id + transaction count)
 then generates the JSON input file for the chosen application_id.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 from collections import defaultdict

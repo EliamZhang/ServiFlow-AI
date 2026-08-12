@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import annotations
 """
 Rule-based income classification pipeline for bank transactions.
 
@@ -880,7 +881,8 @@ def build_income_type_reason(row: pd.Series) -> str:
         evidence: list[str] = []
         if row.get("is_credit", 0) != 1:
             evidence.append("not_credit")
-        if kn := row.get("known_non_income_type_pred", ""):
+        kn = row.get("known_non_income_type_pred", "")
+        if kn:
             evidence.append(f"known_non_income={kn}")
         if (row.get("has_gig_exclusion_keyword", 0) == 1
                 or row.get("has_hard_negative_keyword", 0) == 1

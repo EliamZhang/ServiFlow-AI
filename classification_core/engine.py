@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from typing import Protocol
+try:
+    from typing import Protocol
+except ImportError:  # Python 3.7
+    from typing_extensions import Protocol
 
 import pandas as pd
 

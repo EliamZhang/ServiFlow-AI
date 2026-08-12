@@ -157,6 +157,12 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
         exploded["_kw_raw"] = kw_lists
         exploded = exploded.explode("_kw_raw").dropna(subset=["_kw_raw"])
 
+        # Strip whitespace around "|" separators that survives the split.
+        # Without this, "KEYWORD_A | KEYWORD_B" produces "KEYWORD_A " /
+        # " KEYWORD_B", and trailing spaces break the whole-word boundary
+        # check in _classify_one.
+        exploded["_kw_raw"] = exploded["_kw_raw"].str.strip()
+
         # Keywords are already pre-cleaned by Merchant-Extraction's
         # dedup_keywords.py --preclean (upper, alphanumerics, collapsed
         # spaces).  No apply(clean_text) needed — the 650k+ Python-level

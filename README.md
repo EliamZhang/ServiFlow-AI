@@ -92,7 +92,7 @@ Field description:
 | applicationId | int | Application ID, echoed back at the transaction row level |
 | flowTime | string | Request time, echoed back unchanged |
 | bank_accounts | array | Account list providing account metadata (account_type / bank / credit_limit) missing from transaction rows; metadata does not participate in classification and is only written to the `bankAccounts` output |
-| illion_raw_transactions | array | Illion raw transactions; each must contain at least transaction_id, transaction_date, amount, dr_cr, text; when application_id is absent it is filled from the top-level applicationId |
+| illion_raw_transactions | array | Illion raw transactions; each must contain at least transaction_id, transaction_date, amount, dr_cr, text; when application_id is absent it is filled from the top-level applicationId; an **empty array (zero transactions) is legal** and returns an empty success result (see edge-case examples below) |
 
 ##### Output example
 
@@ -199,14 +199,136 @@ Field description:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| runId | string | Unique ID of a single inference run (uuid4) |
-| status | string | `success` / `failed`; on inference errors no exception is raised, instead `failed` + error message is returned with empty transactions / summaries |
+| runId | string | Unique ID of a single inference run (uuid4); null in `failed` outputs |
+| status | string | `success` / `failed`; a zero-transaction input (empty `illion_raw_transactions`) is legal and returns `success` with empty transactions / summaries; on malformed input no exception is raised, instead `failed` + error message is returned with empty transactions / summaries |
 | error | string/null | Failure reason |
 | stats.txnRawInputCnt | int | Input transaction count |
 | stats.transactionDateMax | string | Max transaction date in input |
 | bankAccounts | array | Account metadata (bankAccountId / accountType / bank / creditLimit), not repeated at the transaction row level |
 | transactions | array | Original transaction fields + classification results; the core new fields are `finvCategory` (fine-grained category), `counterparty` (counterparty name), `streamId` (income/liability stream id, null for rows not belonging to any stream), plus the `applicationNo` echo |
 | summaries | object | Summaries grouped by type: income_summary (income streams, incl. estimatedMonthlyIncome / predictedNextIncomeDate), liability_summary (liability streams, incl. fundedAmount / repaidAmount / predictedClosingDate), category_summary (aggregate stats by finvCategory) |
+
+##### Input/output examples by scenario
+
+| Scenario | illion_raw_transactions | bank_accounts | status | Output shape |
+| --- | --- | --- | --- | --- |
+| Standard application | non-empty | any | success | classified transactions + summaries (input / output examples above) |
+| Zero transactions, no accounts | `[]` | `[]` | success | empty result: empty transactions / summaries, `txnRawInputCnt` = 0 |
+| Zero transactions, accounts present | `[]` | non-empty | success | same empty result, but `bankAccounts` still carries the account list |
+| Malformed input | missing / null / non-list | any | failed | empty transactions / summaries + `error` message |
+
+**Scenario: zero transactions, no accounts** — a user profile with no bank cards and no statement rows is still a valid application; it returns `success` with an empty result instead of failing:
+
+Input:
+
+```json
+{
+  "userId": 484579009,
+  "applicationId": 2513560,
+  "flowTime": "2026-07-05 23:52:48.0",
+  "bank_accounts": [],
+  "illion_raw_transactions": []
+}
+```
+
+Output:
+
+```json
+{
+  "customerId": 484579009,
+  "applicationNo": 2513560,
+  "sampleDatetime": "2026-07-05 23:52:48.0",
+  "runId": "2b25687c-537f-4985-97f8-a1f634fc74e6",
+  "status": "success",
+  "error": null,
+  "stats": {
+    "txnRawInputCnt": 0,
+    "transactionDateMax": null
+  },
+  "bankAccounts": [],
+  "transactions": [],
+  "summaries": {}
+}
+```
+
+**Scenario: zero transactions, accounts present** — same as above, but the account metadata is still echoed at the top level:
+
+Input:
+
+```json
+{
+  "userId": 484579009,
+  "applicationId": 2513560,
+  "flowTime": "2026-07-05 23:52:48.0",
+  "bank_accounts": [
+    {
+      "bank_account_id": 1042813323,
+      "account_type": "transaction",
+      "bank": "cba",
+      "credit_limit": null
+    }
+  ],
+  "illion_raw_transactions": []
+}
+```
+
+Output:
+
+```json
+{
+  "customerId": 484579009,
+  "applicationNo": 2513560,
+  "sampleDatetime": "2026-07-05 23:52:48.0",
+  "runId": "efcd837a-cae4-416b-9faa-a9b5eb01ef59",
+  "status": "success",
+  "error": null,
+  "stats": {
+    "txnRawInputCnt": 0,
+    "transactionDateMax": null
+  },
+  "bankAccounts": [
+    {
+      "bankAccountId": 1042813323,
+      "accountType": "transaction",
+      "bank": "cba",
+      "creditLimit": null
+    }
+  ],
+  "transactions": [],
+  "summaries": {}
+}
+```
+
+**Scenario: malformed input** — `illion_raw_transactions` missing, `null`, or not a list is a structural error; no exception is raised, the call returns `failed` (note: no `bankAccounts` key in failed outputs):
+
+Input:
+
+```json
+{
+  "userId": 484579009,
+  "applicationId": 2513560,
+  "flowTime": "2026-07-05 23:52:48.0"
+}
+```
+
+Output:
+
+```json
+{
+  "customerId": 484579009,
+  "applicationNo": 2513560,
+  "sampleDatetime": "2026-07-05 23:52:48.0",
+  "runId": null,
+  "status": "failed",
+  "error": "Input JSON must contain an 'illion_raw_transactions' list.",
+  "stats": {
+    "txnRawInputCnt": 0,
+    "transactionDateMax": null
+  },
+  "transactions": [],
+  "summaries": {}
+}
+```
 
 ## Local run
 

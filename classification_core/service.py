@@ -18,7 +18,10 @@ from .config import (
     load_category_owners,
     load_pipeline_config,
 )
-from .models import ClassificationRunResult
+from .models import (
+    ClassificationRunResult,
+    TRANSACTION_KEY_COLUMNS,
+)
 from .orchestrator import ClassificationOrchestrator
 
 # Internal orchestrator output columns that are not business results; excluded when serializing
@@ -146,9 +149,20 @@ def _serialize_records(
 
 def build_transactions_frame(payload: dict) -> pd.DataFrame:
     transactions = payload.get("illion_raw_transactions")
-    if not isinstance(transactions, list) or not transactions:
+    if not isinstance(transactions, list):
         raise ValueError(
-            "Input JSON must contain a non-empty 'illion_raw_transactions' list."
+            "Input JSON must contain an 'illion_raw_transactions' list."
+        )
+    if not transactions:
+        # Zero-transaction input (empty bank card / statement arrays) is legal:
+        # return an empty frame that still carries the key columns and
+        # transaction_date so the orchestrator short-circuit and the stats
+        # builder can produce a structurally correct empty success result.
+        return pd.DataFrame(
+            {
+                column: pd.Series(dtype="object")
+                for column in (*TRANSACTION_KEY_COLUMNS, "transaction_date")
+            }
         )
     frame = pd.DataFrame(transactions)
     application_id = payload.get("applicationId")

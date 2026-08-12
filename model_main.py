@@ -18,7 +18,6 @@ on error a status="failed" result dict is returned instead of raising an excepti
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
 from classification_core.service import ModelService
@@ -33,12 +32,9 @@ class PredictMain(object):
         """
         # Model loading (pipeline config + engine rules) must happen in __init__,
         # otherwise inference responses become slow or even error out.
-        self._service = ModelService(
-            pipeline_config_path=Path(model_dir) / "configs" / "pipeline.json",
-            category_catalog_path=(
-                Path(model_dir) / "configs" / "category_catalog.json"
-            ),
-        )
+        # This model loads no weights: configs and rule resources are resolved
+        # relative to the code, so model_dir is intentionally ignored.
+        self._service = ModelService()
 
     def predict(self, input_dict: dict[str, Any]) -> dict[str, Any]:
         """
