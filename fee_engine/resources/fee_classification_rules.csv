@@ -86,3 +86,4 @@ priority,rule_name,category,pattern,counterparty,match_type,zero_amount_reject,d
 228,interest_bare_title,fee,^Interest$,Interest Charges,regex,true,"Interest (bare title, informational at $0)"
 41,international_txn_fee_upper,fee,"^INTERNATIONAL\s+TRANSACTION\s+FEE",International Transaction Fee,regex,false,"INTERNATIONAL TRANSACTION FEE (uppercase variant - fee engine is case-sensitive)"
 89,monthly_platinum_debit_fee,fee,"^MISCELLANEOUS\s+DEBIT\s+V\d{4}\s+\d{2}/\d{2}\s+MNTHLY\s+PLATINUM\s+DEBIT\s+FEE",Monthly Platinum Debit Fee,regex,false,"MNTHLY PLATINUM DEBIT FEE (misspelled MONTHLY) via Miscellaneous Debit"
+38,atm_operator_fee_slash,fee,^ATM\s+OPERATOR\s+FEE\s+/\s+,ATM Operator Fee,regex,false,ATM OPERATOR FEE / location / number format
