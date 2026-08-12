@@ -9,6 +9,7 @@ from fee_engine import FeeEngine
 from income_engine import IncomeEngine
 from initial_engine import InitialClassificationEngine
 from liability_engine import LiabilityEngine
+from rent_engine import RentEngine
 from transfer_engine import TransferEngine
 
 from .engine import ClassificationEngine
@@ -22,6 +23,7 @@ ENGINE_FACTORIES: dict[str, Callable[[], ClassificationEngine]] = {
     "initial": InitialClassificationEngine,
     "income": IncomeEngine,
     "liability": LiabilityEngine,
+    "rent": RentEngine,
     "transfer": TransferEngine,
 }
 
