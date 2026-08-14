@@ -218,7 +218,7 @@ pilates_membership,Gyms and other memberships,PILATES,keyword,0.85
 yoga_membership,Gyms and other memberships,YOGA,keyword,0.85
 membership_word,Gyms and other memberships,MEMBERSHIP,keyword,0.75
 veterinary_pet_care,Pet Care,VETERINARY,keyword,0.90
-pet_shop_pet_care,Pet Care,PET SHOP,keyword,0.85
+pet_shop_pet_care,Pet Care,PET,keyword,0.85
 grooming_pet_care,Pet Care,GROOMING,keyword,0.80
 insurance_word,Insurance,INSURANCE,keyword,0.85
 electricity_utilities,Utilities,ELECTRICITY,keyword,0.90
