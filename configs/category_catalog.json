@@ -19,7 +19,7 @@
     "Donations": {"owner_engine_id": "initial,catch_all", "active": true},
     "Utilities": {"owner_engine_id": "initial,catch_all", "active": true},
     "Telecommunications": {"owner_engine_id": "initial,catch_all", "active": true},
-    "Rent": {"owner_engine_id": "initial,rent", "active": true}
+    "Rent": {"owner_engine_id": "initial,rent", "active": true},
     "Department Stores": {"owner_engine_id": "initial,catch_all", "active": true},
     "Insurance": {"owner_engine_id": "initial,catch_all", "active": true},
     "Subscription TV": {"owner_engine_id": "initial,catch_all", "active": true},
