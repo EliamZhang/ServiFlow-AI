@@ -121,7 +121,7 @@ def derive_finv_category(product_type: object, stream_id: object) -> object:
     if not product or not base:
         return pd.NA
 
-    if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan", "home_loan", "car_loan"}:
+    if base in {"bnpl", "wage_advance", "bank", "loc", "contract_loan", "generic_loan", "home_loan", "car_loan"}:
         key = base
     else:
         key = f"{product}_{base}"
@@ -913,6 +913,7 @@ def build_summary(
         build_personal_loan_summary(prepared),
         build_standard_summary(prepared, "bank"),
         build_standard_summary(prepared, "contract_loan"),
+        build_standard_summary(prepared, "generic_loan"),
         build_standard_summary(prepared, "loc"),
         build_standard_summary(prepared, "unknown"),
     ]
