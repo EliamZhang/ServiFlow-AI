@@ -1,283 +1,463 @@
 ﻿rule_name,category,pattern,match_type,confidence
-restaurant_dining,Dining Out,RESTAURANT,keyword,0.90
-cafe_dining,Dining Out,CAFE,keyword,0.8
-coffee_dining,Dining Out,COFFEE,keyword,0.85
-pizza_dining,Dining Out,PIZZA,keyword,0.85
-pizzeria_dining,Dining Out,PIZZERIA,keyword,0.85
+auto_repair_automotive,Automotive,AUTO REPAIR,keyword,0.9
+automotive_automotive,Automotive,AUTOMOTIVE,keyword,0.9
+smash_repair_automotive,Automotive,SMASH REPAIR,keyword,0.90
+auto_care_automotive,Automotive,AUTO CARE,keyword,0.85
+auto_electrics_automotive,Automotive,AUTO ELECTRICS,keyword,0.85
+auto_parts_automotive,Automotive,AUTO PARTS,keyword,0.85
+auto_service_automotive,Automotive,AUTO SERVICE,keyword,0.85
+car_care_automotive,Automotive,CAR CARE,keyword,0.85
+car_detail_automotive,Automotive,CAR DETAIL,keyword,0.85
+car_repair_automotive,Automotive,CAR REPAIR,keyword,0.85
+car_wash_automotive,Automotive,CAR WASH,keyword,0.85
+carwash_automotive,Automotive,CARWASH,keyword,0.85
+mechanic_automotive,Automotive,MECHANIC,keyword,0.85
+mechanical_automotive,Automotive,MECHANICAL,keyword,0.85
+panel_beating_automotive,Automotive,PANEL BEAT,keyword,0.85
+parking_automotive,Automotive,PARKING,keyword,0.85
+roadworthy_automotive,Automotive,ROADWORTHY,keyword,0.85
+service_station_automotive,Automotive,SERVICE STATION,keyword,0.85
+towing_automotive,Automotive,TOWING,keyword,0.85
+tyre_automotive,Automotive,TYRE,keyword,0.85
+windscreen_automotive,Automotive,WINDSCREEN,keyword,0.85
+wrecker_automotive,Automotive,WRECKER,keyword,0.85
+auto_automotive,Automotive,AUTO,keyword,0.8
+carpark_automotive,Automotive,CARPARK,keyword,0.8
+exhaust_automotive,Automotive,EXHAUST,keyword,0.8
+motor_group_automotive,Automotive,MOTOR GROUP,keyword,0.8
+motorcycle_automotive,Automotive,MOTORCYCLE,keyword,0.8
+motors_automotive,Automotive,MOTORS,keyword,0.8
+petrol_automotive,Automotive,PETROL,keyword,0.8
+spares_automotive,Automotive,SPARES,keyword,0.8
+vehicle_automotive,Automotive,VEHICLE,keyword,0.8
+brake_automotive,Automotive,BRAKE,keyword,0.75
+car_spa_automotive,Automotive,CAR SPA,keyword,0.75
+fuel_automotive,Automotive,FUEL,keyword,0.75
+parts_automotive,Automotive,PARTS,keyword,0.75
+batteries_automotive,Automotive,BATTERIES,keyword,0.7
+rego_automotive,Automotive,REGO,keyword,0.7
+department_store_retail,Department Stores,DEPARTMENT STORE,keyword,0.85
+fast_food_dining,Dining Out,FAST FOOD,keyword,0.9
+restaurant_dining,Dining Out,RESTAURANT,keyword,0.9
+bakehouse_dining,Dining Out,BAKEHOUSE,keyword,0.85
 bakery_dining,Dining Out,BAKERY,keyword,0.85
-bakers_dining,Dining Out,BAKERS,keyword,0.80
-takeaway_dining,Dining Out,TAKEAWAY,keyword,0.80
-fast_food_dining,Dining Out,FAST FOOD,keyword,0.90
-burger_dining,Dining Out,BURGER,keyword,0.85
-sushi_dining,Dining Out,SUSHI,keyword,0.85
-noodle_dining,Dining Out,NOODLE,keyword,0.80
-thai_dining,Dining Out,THAI,keyword,0.80
-chinese_dining,Dining Out,CHINESE,keyword,0.80
-indian_dining,Dining Out,INDIAN,keyword,0.80
-vietnamese_dining,Dining Out,VIETNAMESE,keyword,0.80
-mexican_dining,Dining Out,MEXICAN,keyword,0.80
-chicken_dining,Dining Out,CHICKEN,keyword,0.75
-fish_chips_dining,Dining Out,FISH CHIPS,keyword,0.85
-kebab_dining,Dining Out,KEBAB,keyword,0.80
-curry_dining,Dining Out,CURRY,keyword,0.75
-dumpling_dining,Dining Out,DUMPLING,keyword,0.80
-snack_bar_dining,Dining Out,SNACK BAR,keyword,0.80
+bakery_cafe_dining,Dining Out,BAKERY CAFE,keyword,0.85
+banh_mi_dining,Dining Out,BANH MI,keyword,0.85
 bistro_dining,Dining Out,BISTRO,keyword,0.85
-tavern_dining,Dining Out,TAVERN,keyword,0.85
-grill_dining,Dining Out,GRILL,keyword,0.75
 brewery_dining,Dining Out,BREWERY,keyword,0.85
 brewing_dining,Dining Out,BREWING,keyword,0.85
-dining_word,Dining Out,DINING,keyword,0.80
+burger_dining,Dining Out,BURGER,keyword,0.85
+coffee_dining,Dining Out,COFFEE,keyword,0.85
+cuisine_dining,Dining Out,CUISINE,keyword,0.85
+diner_dining,Dining Out,DINER,keyword,0.85
+donut_dining,Dining Out,DONUT,keyword,0.85
 eatery_dining,Dining Out,EATERY,keyword,0.85
-eats_dining,Dining Out,EATS,keyword,0.75
-catering_dining,Dining Out,CATERING,keyword,0.75
-tuck_shop_dining,Dining Out,TUCK SHOP,keyword,0.80
-canteen_dining,Dining Out,CANTEEN,keyword,0.80
-juice_dining,Dining Out,JUICE,keyword,0.70
-smoothie_dining,Dining Out,SMOOTHIE,keyword,0.80
-icecream_dining,Dining Out,ICECREAM,keyword,0.80
-ice_cream_dining,Dining Out,ICE CREAM,keyword,0.80
+espresso_dining,Dining Out,ESPRESSO,keyword,0.85
+fish_chips_dining,Dining Out,FISH CHIPS,keyword,0.85
 gelato_dining,Dining Out,GELATO,keyword,0.85
-donut_dining,Dining Out,DONUT,keyword,0.75
-food_store_dining,Groceries,FOOD STORE,keyword,0.75
-pharmacy_health,Health,PHARMACY,keyword,0.90
-chemist_health,Health,CHEMIST,keyword,0.90
-medical_health,Health,MEDICAL,keyword,0.85
-dental_health,Health,DENTAL,keyword,0.85
-dentist_health,Health,DENTIST,keyword,0.90
-doctor_health,Health,DOCTOR,keyword,0.85
-surgery_health,Health,SURGERY,keyword,0.80
-hospital_health,Health,HOSPITAL,keyword,0.90
-clinic_health,Health,CLINIC,keyword,0.85
-optical_health,Health,OPTICAL,keyword,0.85
-optometrist_health,Health,OPTOMETRIST,keyword,0.90
-physio_health,Health,PHYSIO,keyword,0.85
-physiotherapy_health,Health,PHYSIOTHERAPY,keyword,0.90
-chiropractic_health,Health,CHIROPRACTIC,keyword,0.90
-osteopath_health,Health,OSTEOPATH,keyword,0.90
-psycholog_health,Health,PSYCHOLOG,keyword,0.85
-counselling_health,Health,COUNSELL,keyword,0.80
-pathology_health,Health,PATHOLOGY,keyword,0.90
-radiology_health,Health,RADIOLOGY,keyword,0.90
-imaging_health,Health,IMAGING,keyword,0.80
-ambulance_health,Health,AMBULANCE,keyword,0.90
-prescription_health,Health,PRESCRIPTION,keyword,0.85
-medicine_health,Health,MEDICINE,keyword,0.80
-optician_health,Health,OPTICIAN,keyword,0.90
-eye_care_health,Health,EYE CARE,keyword,0.85
-eyewear_health,Health,EYEWEAR,keyword,0.85
-remedial_health,Health,REMEDIAL,keyword,0.80
-therapy_health,Health,THERAPY,keyword,0.75
-therapist_health,Health,THERAPIST,keyword,0.80
-orthodont_health,Health,ORTHODONT,keyword,0.90
-podiatr_health,Health,PODIATR,keyword,0.90
-audiolog_health,Health,AUDIOLOG,keyword,0.90
-acupunctur_health,Health,ACUPUNCTUR,keyword,0.90
-naturopath_health,Health,NATUROPATH,keyword,0.90
-supermarket_groceries,Groceries,SUPERMARKET,keyword,0.90
-grocer_groceries,Groceries,GROCER,keyword,0.85
-grocery_groceries,Groceries,GROCERY,keyword,0.85
-butcher_groceries,Groceries,BUTCHER,keyword,0.85
-seafood_groceries,Groceries,SEAFOOD,keyword,0.85
-fish_market_groceries,Groceries,FISH MARKET,keyword,0.85
-deli_groceries,Groceries,DELI,keyword,0.80
-mechanic_automotive,Automotive,MECHANIC,keyword,0.85
-auto_repair_automotive,Automotive,AUTO REPAIR,keyword,0.90
-tyre_automotive,Automotive,TYRE,keyword,0.80
-auto_parts_automotive,Automotive,AUTO PARTS,keyword,0.85
-wrecker_automotive,Automotive,WRECKER,keyword,0.85
-panel_beating_automotive,Automotive,PANEL BEAT,keyword,0.85
-smash_repair_automotive,Automotive,SMASH REPAIR,keyword,0.90
-car_wash_automotive,Automotive,CAR WASH,keyword,0.85
-car_detail_automotive,Automotive,CAR DETAIL,keyword,0.85
-rego_automotive,Automotive,REGO,keyword,0.7
-roadworthy_automotive,Automotive,ROADWORTHY,keyword,0.85
-taxi_transport,Transport,TAXI,keyword,0.90
-cab_transport,Transport,CAB,keyword,0.80
-parking_transport,Transport,PARKING,keyword,0.75
-toll_transport,Transport,TOLL,keyword,0.80
-tram_transport,Transport,TRAM,keyword,0.85
-ferry_transport,Transport,FERRY,keyword,0.85
-transport_word,Transport,TRANSPORT,keyword,0.75
-transit_transport,Transport,TRANSIT,keyword,0.75
-petrol_transport,Transport,PETROL,keyword,0.80
-diesel_transport,Transport,DIESEL,keyword,0.85
-service_station_transport,Transport,SERVICE STATION,keyword,0.85
-salon_personal_care,Personal Care,SALON,keyword,0.85
-barber_personal_care,Personal Care,BARBER,keyword,0.85
-hairdress_personal_care,Personal Care,HAIRDRESS,keyword,0.90
-beauty_personal_care,Personal Care,BEAUTY,keyword,0.80
-beautician_personal_care,Personal Care,BEAUTICIAN,keyword,0.90
-cosmetic_personal_care,Personal Care,COSMETIC,keyword,0.80
-skin_care_personal_care,Personal Care,SKIN CARE,keyword,0.85
-massage_personal_care,Personal Care,MASSAGE,keyword,0.80
-tattoo_personal_care,Personal Care,TATTOO,keyword,0.85
-piercing_personal_care,Personal Care,PIERCING,keyword,0.85
-waxing_personal_care,Personal Care,WAXING,keyword,0.85
-laundromat_personal_care,Personal Care,LAUNDROMAT,keyword,0.90
-laundry_personal_care,Personal Care,LAUNDRY,keyword,0.80
-dry_cleaning_personal_care,Personal Care,DRY CLEAN,keyword,0.90
-fragrance_personal_care,Personal Care,FRAGRANCE,keyword,0.80
-cinema_entertainment,Entertainment,CINEMA,keyword,0.90
-movie_entertainment,Entertainment,MOVIE,keyword,0.80
-theatre_entertainment,Entertainment,THEATRE,keyword,0.85
-museum_entertainment,Entertainment,MUSEUM,keyword,0.85
-gallery_entertainment,Entertainment,GALLERY,keyword,0.75
-zoo_entertainment,Entertainment,ZOO,keyword,0.85
-aquarium_entertainment,Entertainment,AQUARIUM,keyword,0.85
-amusement_entertainment,Entertainment,AMUSEMENT,keyword,0.85
-arcade_entertainment,Entertainment,ARCADE,keyword,0.80
-bowling_entertainment,Entertainment,BOWLING,keyword,0.85
-karaoke_entertainment,Entertainment,KARAOKE,keyword,0.90
-concert_entertainment,Entertainment,CONCERT,keyword,0.85
-comedy_entertainment,Entertainment,COMEDY,keyword,0.85
-festival_entertainment,Entertainment,FESTIVAL,keyword,0.85
-rsl_entertainment,Entertainment,RSL,keyword,0.80
-leagues_entertainment,Entertainment,LEAGUES,keyword,0.80
-nightclub_entertainment,Entertainment,NIGHTCLUB,keyword,0.90
-night_club_entertainment,Entertainment,NIGHT CLUB,keyword,0.90
-betting_gambling,Gambling,BETTING,keyword,0.85
-lotto_gambling,Gambling,LOTTO,keyword,0.85
-lottery_gambling,Gambling,LOTTERY,keyword,0.85
-casino_gambling,Gambling,CASINO,keyword,0.7
-poker_gambling,Gambling,POKER,keyword,0.85
-pokies_gambling,Gambling,POKIES,keyword,0.90
-slots_gambling,Gambling,SLOTS,keyword,0.85
-wagering_gambling,Gambling,WAGERING,keyword,0.90
-art_union_gambling,Gambling,ART UNION,keyword,0.85
-raffle_gambling,Gambling,RAFFLE,keyword,0.80
-hardware_home,Home Improvement,HARDWARE,keyword,0.85
-timber_home,Home Improvement,TIMBER,keyword,0.80
-plumbing_home,Home Improvement,PLUMBING,keyword,0.85
-electrical_home,Home Improvement,ELECTRICAL,keyword,0.75
-lighting_home,Home Improvement,LIGHTING,keyword,0.80
-nursery_home,Home Improvement,NURSERY,keyword,0.75
-landscaping_home,Home Improvement,LANDSCAP,keyword,0.85
-renovation_home,Home Improvement,RENOVATION,keyword,0.85
-tiles_home,Home Improvement,TILES,keyword,0.75
-flooring_home,Home Improvement,FLOORING,keyword,0.85
-blinds_home,Home Improvement,BLINDS,keyword,0.80
-curtains_home,Home Improvement,CURTAINS,keyword,0.80
-furniture_home,Home Improvement,FURNITURE,keyword,0.75
-bathroom_home,Home Improvement,BATHROOM,keyword,0.75
-pest_control_home,Home Improvement,PEST CONTROL,keyword,0.90
-building_supply_home,Home Improvement,BUILDING SUPPL,keyword,0.85
-concrete_home,Home Improvement,CONCRETE,keyword,0.75
-liquor_retail,Retail,LIQUOR,keyword,0.80
-bottle_shop_retail,Retail,BOTTLE SHOP,keyword,0.90
-cellar_retail,Retail,CELLAR,keyword,0.80
-vending_retail,Groceries,VENDING,keyword,0.85
-florist_retail,Retail,FLORIST,keyword,0.85
-tobacconist_retail,Retail,TOBACCONIST,keyword,0.85
-tobacco_retail,Retail,TOBACCO,keyword,0.80
-vape_retail,Retail,VAPE,keyword,0.80
-antique_retail,Retail,ANTIQUE,keyword,0.80
-bookstore_retail,Retail,BOOKSTORE,keyword,0.85
-stationery_retail,Retail,STATIONERY,keyword,0.85
-clothing_retail,Retail,CLOTHING,keyword,0.80
-apparel_retail,Retail,APPAREL,keyword,0.85
-fashion_retail,Retail,FASHION,keyword,0.80
-shoes_retail,Retail,SHOES,keyword,0.80
-school_education,Education,SCHOOL,keyword,0.80
-college_education,Education,COLLEGE,keyword,0.85
-university_education,Education,UNIVERSITY,keyword,0.7
-tafe_education,Education,TAFE,keyword,0.85
-childcare_education,Education,CHILDCARE,keyword,0.85
-child_care_education,Education,CHILD CARE,keyword,0.85
-daycare_education,Education,DAYCARE,keyword,0.85
-tutor_education,Education,TUTOR,keyword,0.85
-education_word,Education,EDUCATION,keyword,0.85
-library_education,Education,LIBRARY,keyword,0.80
-student_education,Education,STUDENT,keyword,0.70
-campus_education,Education,CAMPUS,keyword,0.80
-kindergarten_education,Education,KINDERGARTEN,keyword,0.90
-preschool_education,Education,PRESCHOOL,keyword,0.90
-early_learning_education,Education,EARLY LEARNING,keyword,0.90
-motel_travel,Travel,MOTEL,keyword,0.85
-resort_travel,Travel,RESORT,keyword,0.80
-accommodation_travel,Travel,ACCOMMODATION,keyword,0.85
-airline_travel,Travel,AIRLINE,keyword,0.85
-flight_travel,Travel,FLIGHT,keyword,0.85
-airfare_travel,Travel,AIRFARE,keyword,0.90
-airways_travel,Travel,AIRWAYS,keyword,0.85
-caravan_travel,Travel,CARAVAN,keyword,0.80
-hostel_travel,Travel,HOSTEL,keyword,0.85
-holiday_travel,Travel,HOLIDAY,keyword,0.75
-tour_travel,Travel,TOUR,keyword,0.75
-cruise_travel,Travel,CRUISE,keyword,0.85
-voyage_travel,Travel,VOYAGE,keyword,0.85
+hot_pot_dining,Dining Out,HOT POT,keyword,0.85
+pasta_dining,Dining Out,PASTA,keyword,0.85
+patisserie_dining,Dining Out,PATISSERIE,keyword,0.85
+pho_dining,Dining Out,PHO,keyword,0.85
+pizza_dining,Dining Out,PIZZA,keyword,0.85
+pizzeria_dining,Dining Out,PIZZERIA,keyword,0.85
+ramen_dining,Dining Out,RAMEN,keyword,0.85
+sushi_dining,Dining Out,SUSHI,keyword,0.85
+tavern_dining,Dining Out,TAVERN,keyword,0.85
+bakers_dining,Dining Out,BAKERS,keyword,0.80
+bar_dining,Dining Out,BAR,keyword,0.8
+bbq_dining,Dining Out,BBQ,keyword,0.8
+cafe_dining,Dining Out,CAFE,keyword,0.8
+canteen_dining,Dining Out,CANTEEN,keyword,0.80
+curry_dining,Dining Out,CURRY,keyword,0.8
+dining_word,Dining Out,DINING,keyword,0.80
+dumpling_dining,Dining Out,DUMPLING,keyword,0.8
+ice_cream_dining,Dining Out,ICE CREAM,keyword,0.8
+icecream_dining,Dining Out,ICECREAM,keyword,0.80
+indian_dining,Dining Out,INDIAN,keyword,0.80
+kebab_dining,Dining Out,KEBAB,keyword,0.8
+mexican_dining,Dining Out,MEXICAN,keyword,0.80
+noodle_dining,Dining Out,NOODLE,keyword,0.8
+smoothie_dining,Dining Out,SMOOTHIE,keyword,0.80
+snack_bar_dining,Dining Out,SNACK BAR,keyword,0.8
+take_away_dining,Dining Out,TAKE AWAY,keyword,0.80
+takeaway_dining,Dining Out,TAKEAWAY,keyword,0.8
+tuck_shop_dining,Dining Out,TUCK SHOP,keyword,0.80
+vietnamese_dining,Dining Out,VIETNAMESE,keyword,0.80
+japanese_dining,Dining Out,JAPANESE,keyword,0.78
+wok_dining,Dining Out,WOK,keyword,0.78
+catering_dining,Dining Out,CATERING,keyword,0.75
+chicken_dining,Dining Out,CHICKEN,keyword,0.75
+chinese_dining,Dining Out,CHINESE,keyword,0.75
+eats_dining,Dining Out,EATS,keyword,0.75
+grill_dining,Dining Out,GRILL,keyword,0.75
+kitchen_dining,Dining Out,KITCHEN,keyword,0.75
+pub_dining,Dining Out,PUB,keyword,0.75
+roast_dining,Dining Out,ROAST,keyword,0.75
+thai_dining,Dining Out,THAI,keyword,0.75
+juice_dining,Dining Out,JUICE,keyword,0.70
+pizza_compound,Dining Out,PIZZA,regex,0.70
+hotel_dining,Dining Out,HOTEL,keyword,0.6
+donation_donations,Donations,DONATION,keyword,0.9
+charitable_donations,Donations,CHARITABLE,keyword,0.85
 charity_donations,Donations,CHARITY,keyword,0.85
-charitable_donations,Donations,CHARITABLE,keyword,0.90
-donation_donations,Donations,DONATION,keyword,0.90
 donate_donations,Donations,DONATE,keyword,0.85
 fundraising_donations,Donations,FUNDRAIS,keyword,0.85
-op_shop_donations,Donations,OP SHOP,keyword,0.85
+fundraising_donations,Donations,FUNDRAISING,keyword,0.85
+church_donations,Donations,CHURCH,keyword,0.8
 thrift_donations,Donations,THRIFT,keyword,0.80
-fitness_membership,Gyms and other memberships,FITNESS,keyword,0.65
-pilates_membership,Gyms and other memberships,PILATES,keyword,0.85
-yoga_membership,Gyms and other memberships,YOGA,keyword,0.85
-membership_word,Gyms and other memberships,MEMBERSHIP,keyword,0.75
-veterinary_pet_care,Pet Care,VETERINARY,keyword,0.90
-pet_shop_pet_care,Pet Care,PET,keyword,0.85
-grooming_pet_care,Pet Care,GROOMING,keyword,0.80
-insurance_word,Insurance,INSURANCE,keyword,0.85
-electricity_utilities,Utilities,ELECTRICITY,keyword,0.90
-power_utilities,Utilities,POWER,keyword,0.90
-gas_utilities,Utilities,GAS,keyword,0.90
-utility_utilities,Utilities,UTILITY,keyword,0.85
-energy_utilities,Utilities,ENERGY,keyword,0.65
-telecom_telecom,Telecommunications,TELECOM,keyword,0.85
-broadband_telecom,Telecommunications,BROADBAND,keyword,0.85
-nbn_telecom,Telecommunications,NBN,keyword,0.85
-wifi_telecom,Telecommunications,WIFI,keyword,0.80
-streaming_tv,Subscription TV,STREAMING,keyword,0.80
-department_store_retail,Department Stores,DEPARTMENT STORE,keyword,0.85
-take_away_dining,Dining Out,TAKE AWAY,keyword,0.80
-flight_travel,Travel,FLIGHT,keyword,0.85
-pub_dining,Dining Out,PUB,keyword,0.75
-fuel_transport,Transport,FUEL,keyword,0.65
-petroleum_transport,Transport,PETROLEUM,keyword,0.80
-motor_vehicle_transport,Transport,MOTOR VEHICLE,keyword,0.80
-vehicle_transport,Transport,VEHICLE,keyword,0.70
-nail_personal_care,Personal Care,NAIL,keyword,0.75
-spa_personal_care,Personal Care,SPA,keyword,0.75
-hair_personal_care,Personal Care,HAIR,keyword,0.75
-sports_entertainment,Entertainment,SPORTS,keyword,0.70
-patisserie_dining,Dining Out,PATISSERIE,keyword,0.85
-inn_travel,Travel,INN,keyword,0.75
-lodge_travel,Travel,LODGE,keyword,0.80
-suites_travel,Travel,SUITES,keyword,0.80
-newsagent_retail,Retail,NEWSAGENT,keyword,0.85
-locksmith_retail,Retail,LOCKSMITH,keyword,0.85
+welfare_donations,Donations,WELFARE,keyword,0.75
+raffle_donations,Donations,RAFFLE,keyword,0.7
+early_learning_education,Education,EARLY LEARNING,keyword,0.9
+kindergarten_education,Education,KINDERGARTEN,keyword,0.9
+preschool_education,Education,PRESCHOOL,keyword,0.9
+child_care_education,Education,CHILD CARE,keyword,0.85
+childcare_education,Education,CHILDCARE,keyword,0.85
+college_education,Education,COLLEGE,keyword,0.85
+daycare_education,Education,DAYCARE,keyword,0.85
+education_education,Education,EDUCATION,keyword,0.85
+grammar_education,Education,GRAMMAR,keyword,0.85
+learning_education,Education,LEARNING,keyword,0.85
+polytechnic_education,Education,POLYTECHNIC,keyword,0.85
+school_education,Education,SCHOOL,keyword,0.85
+secondary_education,Education,SECONDARY,keyword,0.85
+tutor_education,Education,TUTOR,keyword,0.85
+campus_education,Education,CAMPUS,keyword,0.80
+kindy_education,Education,KINDY,keyword,0.8
+library_education,Education,LIBRARY,keyword,0.80
+primary_education,Education,PRIMARY,keyword,0.8
+tafe_education,Education,TAFE,keyword,0.8
+uniform_education,Education,UNIFORM,keyword,0.8
 school_compound,Education,SCHOOL,regex,0.70
-pizza_compound,Dining Out,PIZZA,regex,0.70
-motors_automotive,Automotive,MOTORS,keyword,0.80
-car_repair_automotive,Automotive,CAR REPAIR,keyword,0.85
-petrol_station_transport,Transport,PETROL STATION,keyword,0.85
-organic_groceries,Groceries,ORGANIC,keyword,0.70
-fresh_food_groceries,Groceries,FRESH FOOD,keyword,0.75
-bakery_cafe_dining,Dining Out,BAKERY CAFE,keyword,0.85
-sports_club_entertainment,Entertainment,SPORTS CLUB,keyword,0.80
-bowls_club_entertainment,Entertainment,BOWLS CLUB,keyword,0.85
-golf_club_entertainment,Entertainment,GOLF CLUB,keyword,0.85
-rsl_club_entertainment,Entertainment,RSL CLUB,keyword,0.85
+student_education,Education,STUDENT,keyword,0.70
+university_education,Education,UNIVERSITY,keyword,0.7
+cinema_entertainment,Entertainment,CINEMA,keyword,0.9
+nightclub_entertainment,Entertainment,NIGHTCLUB,keyword,0.9
+circus_entertainment,Entertainment,CIRCUS,keyword,0.85
+comedy_entertainment,Entertainment,COMEDY,keyword,0.85
+concert_entertainment,Entertainment,CONCERT,keyword,0.85
+entertainment_entertainment,Entertainment,ENTERTAINMENT,keyword,0.85
 leagues_club_entertainment,Entertainment,LEAGUES CLUB,keyword,0.85
+museum_entertainment,Entertainment,MUSEUM,keyword,0.85
+night_club_entertainment,Entertainment,NIGHT CLUB,keyword,0.85
+rsl_club_entertainment,Entertainment,RSL CLUB,keyword,0.85
+stadium_entertainment,Entertainment,STADIUM,keyword,0.85
+theatre_entertainment,Entertainment,THEATRE,keyword,0.85
 workers_club_entertainment,Entertainment,WORKERS CLUB,keyword,0.85
-bar_dining,Dining Out,BAR,keyword,0.80
-kitchen_dining,Dining Out,KITCHEN,keyword,0.75
-pho_dining,Dining Out,PHO,keyword,0.85
-roast_dining,Dining Out,ROAST,keyword,0.75
-hotel_pub_dining,Dining Out,HOTEL,keyword,0.60
-shop_retail,Retail,SHOP,keyword,0.75
-games_retail,Retail,GAMES,keyword,0.75
-outlet_retail,Retail,OUTLET,keyword,0.80
-music_retail,Retail,MUSIC,keyword,0.75
-gift_retail,Retail,GIFT,keyword,0.80
-variety_retail,Retail,VARIETY,keyword,0.80
-mobile_retail,Retail,MOBILE,keyword,0.75
-market_groceries,Groceries,MARKET,keyword,0.70
-mart_groceries,Groceries,MART,keyword,0.80
-convenience_boost,Groceries,CONVENIENCE,keyword,0.80
-nib_insurance,Insurance,NIB,keyword,0.75
+zoo_entertainment,Entertainment,ZOO,keyword,0.85
+amusement_entertainment,Entertainment,AMUSEMENT,keyword,0.8
+arcade_entertainment,Entertainment,ARCADE,keyword,0.80
+art_gallery_entertainment,Entertainment,ART GALLERY,keyword,0.8
+leagues_entertainment,Entertainment,LEAGUES,keyword,0.80
+movie_entertainment,Entertainment,MOVIE,keyword,0.8
+rsl_entertainment,Entertainment,RSL,keyword,0.80
+festival_entertainment,Entertainment,FESTIVAL,keyword,0.75
+gallery_entertainment,Entertainment,GALLERY,keyword,0.75
+speedway_entertainment,Entertainment,SPEEDWAY,keyword,0.75
+wildlife_entertainment,Entertainment,WILDLIFE,keyword,0.75
+aquarium_entertainment,Entertainment,AQUARIUM,keyword,0.7
+bowling_entertainment,Entertainment,BOWLING,keyword,0.7
+karaoke_entertainment,Entertainment,KARAOKE,keyword,0.7
+sports_entertainment,Entertainment,SPORTS,keyword,0.70
+pokies_gambling,Gambling,POKIES,keyword,0.90
+wagering_gambling,Gambling,WAGERING,keyword,0.90
+art_union_gambling,Gambling,ART UNION,keyword,0.85
+betting_gambling,Gambling,BETTING,keyword,0.85
+greyhound_racing_gambling,Gambling,GREYHOUND RACING,keyword,0.85
+harness_racing_gambling,Gambling,HARNESS RACING,keyword,0.85
+keno_gambling,Gambling,KENO,keyword,0.85
+lottery_gambling,Gambling,LOTTERY,keyword,0.85
+lotto_gambling,Gambling,LOTTO,keyword,0.85
+slots_gambling,Gambling,SLOTS,keyword,0.85
+turf_club_gambling,Gambling,TURF CLUB,keyword,0.85
+jockey_club_gambling,Gambling,JOCKEY CLUB,keyword,0.8
+poker_gambling,Gambling,POKER,keyword,0.8
+racing_club_gambling,Gambling,RACING CLUB,keyword,0.8
+bingo_gambling,Gambling,BINGO,keyword,0.75
+casino_gambling,Gambling,CASINO,keyword,0.7
+supermarket_groceries,Groceries,SUPERMARKET,keyword,0.9
+bottle_shop_groceries,Groceries,BOTTLE SHOP,keyword,0.85
+bottleshop_groceries,Groceries,BOTTLESHOP,keyword,0.85
+butcher_groceries,Groceries,BUTCHER,keyword,0.85
+convenience_groceries,Groceries,CONVENIENCE,keyword,0.85
+general_store_groceries,Groceries,GENERAL STORE,keyword,0.85
+grocer_groceries,Groceries,GROCER,keyword,0.85
+grocery_groceries,Groceries,GROCERY,keyword,0.85
+milk_bar_groceries,Groceries,MILK BAR,keyword,0.85
+mini_mart_groceries,Groceries,MINI MART,keyword,0.85
+vending_groceries,Groceries,VENDING,keyword,0.85
+dairy_groceries,Groceries,DAIRY,keyword,0.8
+fish_market_groceries,Groceries,FISH MARKET,keyword,0.8
+fresh_fruit_groceries,Groceries,FRESH FRUIT,keyword,0.8
+fruit_groceries,Groceries,FRUIT,keyword,0.8
+fruit_market_groceries,Groceries,FRUIT MARKET,keyword,0.8
+fruit_vegetables_groceries,Groceries,FRUIT VEGETABLES,keyword,0.8
+liquor_groceries,Groceries,LIQUOR,keyword,0.8
+mart_groceries,Groceries,MART,keyword,0.8
+meat_groceries,Groceries,MEAT,keyword,0.8
+poultry_groceries,Groceries,POULTRY,keyword,0.8
+tobacco_groceries,Groceries,TOBACCO,keyword,0.8
+cellar_groceries,Groceries,CELLAR,keyword,0.75
+food_store_groceries,Groceries,FOOD STORE,keyword,0.75
+fresh_food_groceries,Groceries,FRESH FOOD,keyword,0.75
+fresh_produce_groceries,Groceries,FRESH PRODUCE,keyword,0.75
+vape_groceries,Groceries,VAPE,keyword,0.75
+market_groceries,Groceries,MARKET,keyword,0.7
+organic_groceries,Groceries,ORGANIC,keyword,0.70
+deli_groceries,Groceries,DELI,keyword,0.6
+seafood_groceries,Groceries,SEAFOOD,keyword,0.6
+bowling_club_membership,Gyms and other memberships,BOWLING CLUB,keyword,0.9
+bowls_club_membership,Gyms and other memberships,BOWLS CLUB,keyword,0.9
+football_club_membership,Gyms and other memberships,FOOTBALL CLUB,keyword,0.9
+golf_club_membership,Gyms and other memberships,GOLF CLUB,keyword,0.9
+gym_membership,Gyms and other memberships,GYM,keyword,0.9
+rugby_league_membership,Gyms and other memberships,RUGBY LEAGUE,keyword,0.9
+swim_school_membership,Gyms and other memberships,SWIM SCHOOL,keyword,0.9
+aquatic_membership,Gyms and other memberships,AQUATIC,keyword,0.85
+basketball_membership,Gyms and other memberships,BASKETBALL,keyword,0.85
+boxing_membership,Gyms and other memberships,BOXING,keyword,0.85
+cricket_membership,Gyms and other memberships,CRICKET,keyword,0.85
+football_membership,Gyms and other memberships,FOOTBALL,keyword,0.85
+golf_membership,Gyms and other memberships,GOLF,keyword,0.85
+golf_course_membership,Gyms and other memberships,GOLF COURSE,keyword,0.85
+gymnastics_membership,Gyms and other memberships,GYMNASTICS,keyword,0.85
+health_club_membership,Gyms and other memberships,HEALTH CLUB,keyword,0.85
+hockey_membership,Gyms and other memberships,HOCKEY,keyword,0.85
+indoor_sport_membership,Gyms and other memberships,INDOOR SPORT,keyword,0.85
+karate_membership,Gyms and other memberships,KARATE,keyword,0.85
+leisure_centre_membership,Gyms and other memberships,LEISURE CENTRE,keyword,0.85
+martial_arts_membership,Gyms and other memberships,MARTIAL ARTS,keyword,0.85
+muay_thai_membership,Gyms and other memberships,MUAY THAI,keyword,0.85
+netball_membership,Gyms and other memberships,NETBALL,keyword,0.85
+pilates_membership,Gyms and other memberships,PILATES,keyword,0.85
+rugby_membership,Gyms and other memberships,RUGBY,keyword,0.85
+soccer_membership,Gyms and other memberships,SOCCER,keyword,0.85
+swim_membership,Gyms and other memberships,SWIM,keyword,0.85
+tennis_membership,Gyms and other memberships,TENNIS,keyword,0.85
+yoga_membership,Gyms and other memberships,YOGA,keyword,0.85
+bowls_membership,Gyms and other memberships,BOWLS,keyword,0.8
+mma_membership,Gyms and other memberships,MMA,keyword,0.8
+climbing_membership,Gyms and other memberships,CLIMBING,keyword,0.75
+country_club_membership,Gyms and other memberships,COUNTRY CLUB,keyword,0.75
+league_membership,Gyms and other memberships,LEAGUE,keyword,0.75
+membership_membership,Gyms and other memberships,MEMBERSHIP,keyword,0.75
+club_membership,Gyms and other memberships,CLUB,keyword,0.7
+fitness_membership,Gyms and other memberships,FITNESS,keyword,0.7
+sports_club_membership,Gyms and other memberships,SPORTS CLUB,keyword,0.6
+acupunctur_health,Health,ACUPUNCTUR,keyword,0.90
+ambulance_health,Health,AMBULANCE,keyword,0.9
+audiolog_health,Health,AUDIOLOG,keyword,0.90
+chemist_health,Health,CHEMIST,keyword,0.9
+chiropractic_health,Health,CHIROPRACTIC,keyword,0.9
+dentist_health,Health,DENTIST,keyword,0.9
+naturopath_health,Health,NATUROPATH,keyword,0.90
+optician_health,Health,OPTICIAN,keyword,0.90
+optometrist_health,Health,OPTOMETRIST,keyword,0.90
+orthodont_health,Health,ORTHODONT,keyword,0.90
+osteopath_health,Health,OSTEOPATH,keyword,0.90
+pathology_health,Health,PATHOLOGY,keyword,0.9
+pharmacy_health,Health,PHARMACY,keyword,0.9
+physiotherapy_health,Health,PHYSIOTHERAPY,keyword,0.90
+podiatr_health,Health,PODIATR,keyword,0.90
+radiology_health,Health,RADIOLOGY,keyword,0.9
+ultrasound_health,Health,ULTRASOUND,keyword,0.9
+dental_health,Health,DENTAL,keyword,0.85
+eye_care_health,Health,EYE CARE,keyword,0.85
+healthcare_health,Health,HEALTHCARE,keyword,0.85
+imaging_health,Health,IMAGING,keyword,0.85
+medical_health,Health,MEDICAL,keyword,0.85
+optical_health,Health,OPTICAL,keyword,0.85
+physio_health,Health,PHYSIO,keyword,0.85
+prescription_health,Health,PRESCRIPTION,keyword,0.85
+psycholog_health,Health,PSYCHOLOG,keyword,0.85
+psychology_health,Health,PSYCHOLOGY,keyword,0.85
+skin_clinic_health,Health,SKIN CLINIC,keyword,0.85
+clinic_health,Health,CLINIC,keyword,0.8
+counselling_health,Health,COUNSELL,keyword,0.80
+eyewear_health,Health,EYEWEAR,keyword,0.8
+medicine_health,Health,MEDICINE,keyword,0.80
+remedial_health,Health,REMEDIAL,keyword,0.80
+surgery_health,Health,SURGERY,keyword,0.8
+therapist_health,Health,THERAPIST,keyword,0.80
+therapy_health,Health,THERAPY,keyword,0.75
+doctor_health,Health,DOCTOR,keyword,0.7
+health_health,Health,HEALTH,keyword,0.7
+hospital_health,Health,HOSPITAL,keyword,0.7
+nutrition_health,Health,NUTRITION,keyword,0.7
+pest_control_home,Home Improvement,PEST CONTROL,keyword,0.9
+building_supply_home,Home Improvement,BUILDING SUPPL,keyword,0.85
+building_supplies_home,Home Improvement,BUILDING SUPPLIES,keyword,0.85
+flooring_home,Home Improvement,FLOORING,keyword,0.85
+gardening_home,Home Improvement,GARDENING,keyword,0.85
+hardware_home,Home Improvement,HARDWARE,keyword,0.85
+home_decor_home,Home Improvement,HOME DECOR,keyword,0.85
+landscaping_home,Home Improvement,LANDSCAP,keyword,0.85
+landscape_home,Home Improvement,LANDSCAPE,keyword,0.85
+mowing_home,Home Improvement,MOWING,keyword,0.85
+plumbing_home,Home Improvement,PLUMBING,keyword,0.85
+renovation_home,Home Improvement,RENOVATION,keyword,0.85
+roofing_home,Home Improvement,ROOFING,keyword,0.85
+self_storage_home,Home Improvement,SELF STORAGE,keyword,0.85
+tiling_home,Home Improvement,TILING,keyword,0.85
+bathroom_home,Home Improvement,BATHROOM,keyword,0.8
+blinds_home,Home Improvement,BLINDS,keyword,0.80
+construction_home,Home Improvement,CONSTRUCTION,keyword,0.8
+curtains_home,Home Improvement,CURTAINS,keyword,0.80
+lighting_home,Home Improvement,LIGHTING,keyword,0.80
+timber_home,Home Improvement,TIMBER,keyword,0.8
+builder_home,Home Improvement,BUILDER,keyword,0.75
+electrical_home,Home Improvement,ELECTRICAL,keyword,0.75
+interior_home,Home Improvement,INTERIOR,keyword,0.75
+nursery_home,Home Improvement,NURSERY,keyword,0.75
+tiles_home,Home Improvement,TILES,keyword,0.75
+concrete_home,Home Improvement,CONCRETE,keyword,0.6
+insurance_insurance,Insurance,INSURANCE,keyword,0.85
+underwriting_insurance,Insurance,UNDERWRITING,keyword,0.85
 ahm_insurance,Insurance,AHM,keyword,0.75
 hcf_insurance,Insurance,HCF,keyword,0.75
+nib_insurance,Insurance,NIB,keyword,0.75
+beautician_personal_care,Personal Care,BEAUTICIAN,keyword,0.90
+dry_clean_personal_care,Personal Care,DRY CLEAN,keyword,0.9
+hairdress_personal_care,Personal Care,HAIRDRESS,keyword,0.9
+laundromat_personal_care,Personal Care,LAUNDROMAT,keyword,0.9
+barber_personal_care,Personal Care,BARBER,keyword,0.85
+laundrette_personal_care,Personal Care,LAUNDRETTE,keyword,0.85
+massage_personal_care,Personal Care,MASSAGE,keyword,0.85
+piercing_personal_care,Personal Care,PIERCING,keyword,0.85
+salon_personal_care,Personal Care,SALON,keyword,0.85
+skin_care_personal_care,Personal Care,SKIN CARE,keyword,0.85
+tattoo_personal_care,Personal Care,TATTOO,keyword,0.85
+waxing_personal_care,Personal Care,WAXING,keyword,0.85
+beauty_personal_care,Personal Care,BEAUTY,keyword,0.8
+cosmetic_personal_care,Personal Care,COSMETIC,keyword,0.80
+fragrance_personal_care,Personal Care,FRAGRANCE,keyword,0.80
+hair_personal_care,Personal Care,HAIR,keyword,0.8
+laundry_personal_care,Personal Care,LAUNDRY,keyword,0.8
+nail_personal_care,Personal Care,NAIL,keyword,0.8
+brow_personal_care,Personal Care,BROW,keyword,0.75
+lash_personal_care,Personal Care,LASH,keyword,0.75
+spa_personal_care,Personal Care,SPA,keyword,0.75
+vet_pet_care,Pet Care,VET,keyword,0.9
+veterinary_pet_care,Pet Care,VETERINARY,keyword,0.9
+cat_food_pet_care,Pet Care,CAT FOOD,keyword,0.85
+dog_food_pet_care,Pet Care,DOG FOOD,keyword,0.85
+dog_grooming_pet_care,Pet Care,DOG GROOMING,keyword,0.85
+kennel_pet_care,Pet Care,KENNEL,keyword,0.85
+pet_pet_care,Pet Care,PET,keyword,0.85
+pet_care_pet_care,Pet Care,PET CARE,keyword,0.85
+pet_food_pet_care,Pet Care,PET FOOD,keyword,0.85
+pet_shop_pet_care,Pet Care,PET SHOP,keyword,0.85
+pet_supplies_pet_care,Pet Care,PET SUPPLIES,keyword,0.85
+animal_pet_care,Pet Care,ANIMAL,keyword,0.8
+paws_pet_care,Pet Care,PAWS,keyword,0.8
+pet_resort_pet_care,Pet Care,PET RESORT,keyword,0.8
+boarding_pet_care,Pet Care,BOARDING,keyword,0.75
+grooming_pet_care,Pet Care,GROOMING,keyword,0.75
+real_estate_rent,Rent,REAL ESTATE,keyword,0.9
+estate_agent_rent,Rent,ESTATE AGENT,keyword,0.85
+property_management_rent,Rent,PROPERTY MANAGEMENT,keyword,0.85
+realty_rent,Rent,REALTY,keyword,0.85
+housing_rent,Rent,HOUSING,keyword,0.8
+property_rent,Rent,PROPERTY,keyword,0.8
+strata_rent,Rent,STRATA,keyword,0.8
+apparel_retail,Retail,APPAREL,keyword,0.85
+bookshop_retail,Retail,BOOKSHOP,keyword,0.85
+bookstore_retail,Retail,BOOKSTORE,keyword,0.85
+duty_free_retail,Retail,DUTY FREE,keyword,0.85
+florist_retail,Retail,FLORIST,keyword,0.85
+jeweller_retail,Retail,JEWELLER,keyword,0.85
+locksmith_retail,Retail,LOCKSMITH,keyword,0.85
+newsagency_retail,Retail,NEWSAGENCY,keyword,0.85
+newsagent_retail,Retail,NEWSAGENT,keyword,0.85
+stationery_retail,Retail,STATIONERY,keyword,0.85
+tobacconist_retail,Retail,TOBACCONIST,keyword,0.85
+antique_retail,Retail,ANTIQUE,keyword,0.80
+books_retail,Retail,BOOKS,keyword,0.8
+clothing_retail,Retail,CLOTHING,keyword,0.8
+dollar_retail,Retail,DOLLAR,keyword,0.8
+footwear_retail,Retail,FOOTWEAR,keyword,0.8
+furniture_retail,Retail,FURNITURE,keyword,0.8
+homeware_retail,Retail,HOMEWARE,keyword,0.8
+op_shop_retail,Retail,OP SHOP,keyword,0.8
+outlet_retail,Retail,OUTLET,keyword,0.80
+shoes_retail,Retail,SHOES,keyword,0.8
+variety_retail,Retail,VARIETY,keyword,0.8
+bait_retail,Retail,BAIT,keyword,0.75
+bargain_retail,Retail,BARGAIN,keyword,0.75
+bikes_retail,Retail,BIKES,keyword,0.75
+cards_retail,Retail,CARDS,keyword,0.75
+fashion_retail,Retail,FASHION,keyword,0.75
+fishing_retail,Retail,FISHING,keyword,0.75
+flower_retail,Retail,FLOWER,keyword,0.75
+games_retail,Retail,GAMES,keyword,0.75
+mobile_retail,Retail,MOBILE,keyword,0.75
+pants_retail,Retail,PANTS,keyword,0.75
+phone_retail,Retail,PHONE,keyword,0.75
+shop_retail,Retail,SHOP,keyword,0.75
+tackle_retail,Retail,TACKLE,keyword,0.75
+toys_retail,Retail,TOYS,keyword,0.75
+workwear_retail,Retail,WORKWEAR,keyword,0.75
+gift_retail,Retail,GIFT,keyword,0.7
+health_food_retail,Retail,HEALTH FOOD,keyword,0.7
+music_retail,Retail,MUSIC,keyword,0.7
+party_retail,Retail,PARTY,keyword,0.7
+streaming_tv,Subscription TV,STREAMING,keyword,0.8
+broadband_telecom,Telecommunications,BROADBAND,keyword,0.85
+nbn_telecom,Telecommunications,NBN,keyword,0.85
+phone_services_telecom,Telecommunications,PHONE SERVICES,keyword,0.85
+telco_telecom,Telecommunications,TELCO,keyword,0.85
+telecom_telecom,Telecommunications,TELECOM,keyword,0.85
+wifi_telecom,Telecommunications,WIFI,keyword,0.80
+communications_telecom,Telecommunications,COMMUNICATIONS,keyword,0.75
+taxi_transport,Transport,TAXI,keyword,0.9
+car_hire_transport,Transport,CAR HIRE,keyword,0.85
+car_rental_transport,Transport,CAR RENTAL,keyword,0.85
+diesel_transport,Transport,DIESEL,keyword,0.85
+ferry_transport,Transport,FERRY,keyword,0.85
+petrol_station_transport,Transport,PETROL STATION,keyword,0.85
+rideshare_transport,Transport,RIDESHARE,keyword,0.85
+tram_transport,Transport,TRAM,keyword,0.85
+cab_transport,Transport,CAB,keyword,0.80
+motor_vehicle_transport,Transport,MOTOR VEHICLE,keyword,0.80
+petroleum_transport,Transport,PETROLEUM,keyword,0.80
+toll_transport,Transport,TOLL,keyword,0.80
+truck_rental_transport,Transport,TRUCK RENTAL,keyword,0.8
+trailer_hire_transport,Transport,TRAILER HIRE,keyword,0.75
+transit_transport,Transport,TRANSIT,keyword,0.75
+transport_word,Transport,TRANSPORT,keyword,0.75
+airfare_travel,Travel,AIRFARE,keyword,0.90
+accommodation_travel,Travel,ACCOMMODATION,keyword,0.85
+airline_travel,Travel,AIRLINE,keyword,0.85
+backpacker_travel,Travel,BACKPACKER,keyword,0.85
+hostel_travel,Travel,HOSTEL,keyword,0.85
+motel_travel,Travel,MOTEL,keyword,0.85
+motor_inn_travel,Travel,MOTOR INN,keyword,0.85
+voyage_travel,Travel,VOYAGE,keyword,0.85
+airways_travel,Travel,AIRWAYS,keyword,0.8
+caravan_travel,Travel,CARAVAN,keyword,0.8
+holiday_park_travel,Travel,HOLIDAY PARK,keyword,0.8
+resort_travel,Travel,RESORT,keyword,0.8
+suites_travel,Travel,SUITES,keyword,0.8
+apartment_travel,Travel,APARTMENT,keyword,0.75
+holiday_travel,Travel,HOLIDAY,keyword,0.75
+tourist_travel,Travel,TOURIST,keyword,0.75
+lodge_travel,Travel,LODGE,keyword,0.65
+cruise_travel,Travel,CRUISE,keyword,0.6
+flight_travel,Travel,FLIGHT,keyword,0.6
+inn_travel,Travel,INN,keyword,0.6
+tour_travel,Travel,TOUR,keyword,0.6
+camping_travel,Travel,CAMPING,keyword,0.55
+electricity_utilities,Utilities,ELECTRICITY,keyword,0.9
+gas_utilities,Utilities,GAS,keyword,0.90
+landfill_utilities,Utilities,LANDFILL,keyword,0.9
+power_utilities,Utilities,POWER,keyword,0.90
+waste_utilities,Utilities,WASTE,keyword,0.9
+bin_hire_utilities,Utilities,BIN HIRE,keyword,0.85
+recycling_utilities,Utilities,RECYCLING,keyword,0.85
+rubbish_utilities,Utilities,RUBBISH,keyword,0.85
+transfer_station_utilities,Utilities,TRANSFER STATION,keyword,0.85
+utility_utilities,Utilities,UTILITY,keyword,0.85
+skip_utilities,Utilities,SKIP,keyword,0.8
+utilities_utilities,Utilities,UTILITIES,keyword,0.8
+bins_utilities,Utilities,BINS,keyword,0.75
+energy_utilities,Utilities,ENERGY,keyword,0.65

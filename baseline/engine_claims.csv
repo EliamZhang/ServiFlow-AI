@@ -1,19 +1,23 @@
 engine_id,application_id,transaction_id,finv_category,counterparty,classification_rule_id,classification_reason,stream_id,priority
+initial,2420589,2755538076,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755537885,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
+initial,2420589,2755537654,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537642,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538013,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537997,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755537777,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537997,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537777,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537809,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537692,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755537952,Retail,Thingz Gifts,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS, merchant=Thingz Gifts",,1
+initial,2420589,2755537692,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537952,Retail,THINGZ,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ",,1
 initial,2420589,2755538362,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537954,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755537543,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537946,Groceries,7-ELEVEN STORES PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=7 ELEVEN, merchant=7-ELEVEN STORES PTY LTD",,1
 initial,2420589,2755537591,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538045,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537917,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755537715,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755537715,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
+initial,2420589,2755538160,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537673,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538219,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537578,Groceries,Foodworks Dalwallinu,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DALWALLINU FOODWORKS, merchant=Foodworks Dalwallinu",,1
@@ -21,31 +25,36 @@ initial,2420589,2755537738,Automotive,Puma York Roadhouse,merchant_kb_match,"cat
 initial,2420589,2755537630,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537582,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537877,Retail,RAMPAGE RETAIL PTY LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=BP MUCHEA, merchant=RAMPAGE RETAIL PTY LTD",,1
-initial,2420589,2755537944,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537944,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755537947,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537793,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
-initial,2420589,2755537761,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537967,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537761,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537965,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538327,Dining Out,Hungry Birds Pizza,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HUNGRY BIRDS PIZZA, merchant=Hungry Birds Pizza",,1
 initial,2420589,2755538210,Groceries,IGA,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=IGA, merchant=IGA",,1
 initial,2420589,2755537576,Dining Out,Subway,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SUBWAY, merchant=Subway",,1
 initial,2420589,2755538203,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537550,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537550,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538224,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538364,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538043,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755538043,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537639,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537826,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537956,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538134,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
+initial,2420589,2755538061,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538282,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537637,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537755,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
+initial,2420589,2755538005,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755538027,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538099,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538006,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
-initial,2420589,2755537975,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755537549,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537975,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538353,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537631,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537631,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538211,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537641,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538280,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -53,19 +62,21 @@ initial,2420589,2755537880,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755538169,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538218,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537677,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537644,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
-initial,2420589,2755537721,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
+initial,2420589,2755537644,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
+initial,2420589,2755537721,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537802,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537934,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538295,Dining Out,Bucking Bull,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=BUCKING BULL, merchant=Bucking Bull",,1
 initial,2420589,2755537849,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
+initial,2420589,2755538049,Pet Care,NORTHAM FEED &,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=NORTHAM FEED HIRE, merchant=NORTHAM FEED &",,1
 initial,2420589,2755537607,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538168,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537742,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537731,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538180,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538332,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
-initial,2420589,2755538357,Dining Out,McDonald's,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=McDonald's",,1
+initial,2420589,2755538357,Dining Out,MCDONALDS,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=MCDONALDS",,1
+initial,2420589,2755537653,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537634,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755537632,Groceries,Quin's Gourmet Butcher,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=QUINS GOURMET BUTCH, merchant=Quin's Gourmet Butcher",,1
 initial,2420589,2755538170,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -73,40 +84,42 @@ initial,2420589,2755537836,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755538252,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755537672,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537623,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
-initial,2420589,2755537746,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537746,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538000,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538225,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538091,Department Stores,Big W,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=BIG W, merchant=Big W",,1
 initial,2420589,2755538257,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537853,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537784,Dining Out,Settlers Cafe,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SETTLERS CAFE, merchant=Settlers Cafe",,1
+initial,2420589,2755537784,Dining Out,Settlers Cafe,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SETTLERS CAFE YORK, merchant=Settlers Cafe",,1
 initial,2420589,2755538308,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537936,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537565,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755538318,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755538318,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538010,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755538350,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537949,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537684,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537669,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755537680,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=KMART, merchant=KMART AUSTRALIA LIMITED",,1
-initial,2420589,2755538014,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
+initial,2420589,2755538014,Personal Care,SOUTHERN,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=SOUTHERN, merchant=SOUTHERN",,1
 initial,2420589,2755537808,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538261,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
+initial,2420589,2755538261,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755537886,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755537943,Retail,CALINGIRI TRADERS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=CALINGIRI TRADERS CALINGIRI, merchant=CALINGIRI TRADERS",,1
 initial,2420589,2755537766,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537994,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537832,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538020,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
-initial,2420589,2755537933,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755538020,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
+initial,2420589,2755537933,Automotive,DUNNINGS WYALKATCHEM WYALKATCHEM,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS WYALKATCHEM WYALKATCHEM, merchant=DUNNINGS WYALKATCHEM WYALKATCHEM",,1
 initial,2420589,2755538335,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538324,Groceries,IGA,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=IGA, merchant=IGA",,1
-initial,2420589,2755538083,Entertainment,Spotify,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=Spotify",,1
+initial,2420589,2755538083,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538209,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537657,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
-initial,2420589,2755537804,Entertainment,Spotify,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=Spotify",,1
+initial,2420589,2755537657,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM MELBOURNE VI, merchant=Netflix",,1
+initial,2420589,2755537804,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755537866,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537830,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537551,Entertainment,Spotify,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=Spotify",,1
+initial,2420589,2755537551,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538070,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537959,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538320,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -114,20 +127,21 @@ initial,2420589,2755538270,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,
 initial,2420589,2755537771,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755538182,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537700,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537588,Travel,Kondinin Hotel,merchant_kb_match,"category=Travel; rule=merchant_kb_match; evidence=keyword=KONDININ HOTEL, merchant=Kondinin Hotel",,1
-initial,2420589,2755537707,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537588,Dining Out,Kondinin Hotel,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=KONDININ HOTEL KONDININ, merchant=Kondinin Hotel",,1
+initial,2420589,2755537707,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538208,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537978,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755537978,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537598,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537780,Retail,Thingz Gifts,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS, merchant=Thingz Gifts",,1
-initial,2420589,2755537807,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING, merchant=Optus",,1
+initial,2420589,2755537780,Retail,THINGZ,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ",,1
+initial,2420589,2755537807,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
 initial,2420589,2755537665,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537699,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537645,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538179,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755538179,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537837,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538236,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
 initial,2420589,2755537545,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755537548,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755537548,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538227,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537968,Dining Out,Hungry Jacks,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HUNGRY JACKS, merchant=Hungry Jacks",,1
 initial,2420589,2755537760,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
@@ -135,17 +149,17 @@ initial,2420589,2755537667,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,
 initial,2420589,2755537892,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755537636,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537764,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537781,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537781,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537869,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755537689,Home Improvement,Two Dogs Hardware,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=TWO DOGS HARDWARE, merchant=Two Dogs Hardware",,1
+initial,2420589,2755537689,Home Improvement,TWO DOGS HARDWARE MERREDIN,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=TWO DOGS HARDWARE MERREDIN, merchant=TWO DOGS HARDWARE MERREDIN",,1
 initial,2420589,2755538198,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538116,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537727,Retail,RAMPAGE RETAIL PTY LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=BP MUCHEA, merchant=RAMPAGE RETAIL PTY LTD",,1
 initial,2420589,2755537783,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538012,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537595,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537714,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755537682,Retail,OFFICEWORKS LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=OFFICEWORKS LTD",,1
+initial,2420589,2755537714,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537682,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755537847,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538052,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538339,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -154,82 +168,89 @@ initial,2420589,2755537828,Automotive,BP,merchant_kb_match,"category=Automotive;
 initial,2420589,2755538178,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538312,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755537648,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537817,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537817,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755538360,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537705,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537705,Automotive,DUNNINGS WYALKATCHEM WYALKATCHEM,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS WYALKATCHEM WYALKATCHEM, merchant=DUNNINGS WYALKATCHEM WYALKATCHEM",,1
 initial,2420589,2755537734,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538107,Transport,WA Transport DVS,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=WA TRANSPORT DVS, merchant=WA Transport DVS",,1
+initial,2420589,2755538107,Automotive,WA Transport DVS,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=WA TRANSPORT DVS COMMBANK APP BPAY, merchant=WA Transport DVS",,1
 initial,2420589,2755538322,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537770,Retail,OFFICEWORKS LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=OFFICEWORKS LTD",,1
+initial,2420589,2755537770,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755538226,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537924,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537924,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538120,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
+initial,2420589,2755537704,Dining Out,LG & QU NOMINEES PTY L MERREDIN,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=LG QU NOMINEES PTY L MERREDIN, merchant=LG & QU NOMINEES PTY L MERREDIN",,1
 initial,2420589,2755537592,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538094,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538163,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755537938,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
-initial,2420589,2755537951,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537938,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
+initial,2420589,2755537951,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755538017,Automotive,NORTHAM CAR,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=NORTHAM CAR NORTHAM, merchant=NORTHAM CAR",,1
 initial,2420589,2755537575,Telecommunications,TELSTRA CORPORATION LIMITED,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=TELSTRA SHOP, merchant=TELSTRA CORPORATION LIMITED",,1
-initial,2420589,2755538367,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755538298,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
+initial,2420589,2755538367,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755538298,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755537733,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755537785,Retail,AUSPOST PO BOX,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=AUSPOST PO BOX, merchant=AUSPOST PO BOX",,1
 initial,2420589,2755538232,Department Stores,Big W,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=BIG W, merchant=Big W",,1
-initial,2420589,2755537990,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
+initial,2420589,2755537990,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755538358,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537685,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
+initial,2420589,2755537685,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537927,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537567,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537701,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537953,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537950,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537834,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537899,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
-initial,2420589,2755537855,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755537789,Pet Care,NORTHAM FEED &,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=NORTHAM FEED HIRE, merchant=NORTHAM FEED &",,1
+initial,2420589,2755537899,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
+initial,2420589,2755537855,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537590,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538086,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537747,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755538086,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755537747,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755537610,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537922,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538248,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755537547,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755538248,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537547,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755538302,Pet Care,NORTHAM FEED &,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=NORTHAM FEED HIRE, merchant=NORTHAM FEED &",,1
 initial,2420589,2755537583,Groceries,IGA,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=IGA, merchant=IGA",,1
 initial,2420589,2755537732,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538077,Retail,Innovative Retail,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=INNOVATIVE RETAIL, merchant=Innovative Retail",,1
+initial,2420589,2755538077,Entertainment,Innovative Retail,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=INNOVATIVE RETAIL PTY, merchant=Innovative Retail",,1
 initial,2420589,2755538033,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537957,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538092,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537650,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755537650,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
+initial,2420589,2755538129,Dining Out,FOOLOK MIDLAND,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=FOOLOK MIDLAND, merchant=FOOLOK MIDLAND",,1
 initial,2420589,2755538250,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
-initial,2420589,2755538235,Entertainment,Spotify,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=Spotify",,1
+initial,2420589,2755538059,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755538235,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755537711,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537566,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538217,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537569,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538212,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
-initial,2420589,2755537794,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
+initial,2420589,2755538212,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
+initial,2420589,2755537794,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755538063,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538065,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537647,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537833,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538341,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537798,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
-initial,2420589,2755537670,Groceries,Thirsty Camel,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=THIRSTYCAMEL, merchant=Thirsty Camel",,1
+initial,2420589,2755537670,Groceries,THIRSTYCAMEL,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=THIRSTYCAMEL NORTHAM NORTHAM, merchant=THIRSTYCAMEL",,1
 initial,2420589,2755538363,Dining Out,Hungry Jacks,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HUNGRY JACKS, merchant=Hungry Jacks",,1
-initial,2420589,2755537676,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
+initial,2420589,2755537676,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755537919,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
-initial,2420589,2755538185,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755538185,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537879,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538307,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537597,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538155,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537768,Dining Out,Cicerello's,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=CICERELLO S, merchant=Cicerello's",,1
+initial,2420589,2755537768,Dining Out,CICERELLO S FREMANTL,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=CICERELLO S FREMANTL, merchant=CICERELLO S FREMANTL",,1
 initial,2420589,2755538109,Dining Out,Hungry Jacks,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HUNGRY JACKS, merchant=Hungry Jacks",,1
 initial,2420589,2755537574,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537977,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537585,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755538284,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538347,Groceries,Spud Shed,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=SPUD SHED, merchant=Spud Shed",,1
-initial,2420589,2755537857,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537857,Automotive,DUNNINGS NORTHAM NORTHAM,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS NORTHAM NORTHAM, merchant=DUNNINGS NORTHAM NORTHAM",,1
 initial,2420589,2755537908,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755537818,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537627,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -237,20 +258,22 @@ initial,2420589,2755538144,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,
 initial,2420589,2755538355,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537674,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537932,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=KMART, merchant=KMART AUSTRALIA LIMITED",,1
+initial,2420589,2755538154,Health,CHEMIST SEAFORD,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=CHEMIST, merchant=CHEMIST SEAFORD",,1
 initial,2420589,2755537763,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=MOORA IGA, merchant=MOORA GROCERY PTY LTD",,1
 initial,2420589,2755537671,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538067,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537831,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538297,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537871,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755537858,Retail,Bakers Hill Rural,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=BAKERS HILL RURAL, merchant=Bakers Hill Rural",,1
+initial,2420589,2755537858,Home Improvement,Bakers Hill Rural,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BAKERS HILL RURAL S BAKERS HILL, merchant=Bakers Hill Rural",,1
 initial,2420589,2755538366,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755537649,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537649,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537939,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755537905,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537905,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755538105,Transport,Australia Post,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=AUST POST, merchant=Australia Post",,1
 initial,2420589,2755538084,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537893,Retail,OFFICEWORKS LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=OFFICEWORKS LTD",,1
+initial,2420589,2755537754,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537893,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755538087,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537822,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537690,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
@@ -261,73 +284,79 @@ initial,2420589,2755538145,Automotive,Puma York Roadhouse,merchant_kb_match,"cat
 initial,2420589,2755538181,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755538064,Groceries,IGA,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=IGA, merchant=IGA",,1
 initial,2420589,2755538266,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
-initial,2420589,2755537601,Dining Out,Hungry Jack's,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HJS, merchant=Hungry Jack's",,1
+initial,2420589,2755537601,Dining Out,HJS UPPER COOMERA UPPER COOMERA,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HJS, merchant=HJS UPPER COOMERA UPPER COOMERA",,1
 initial,2420589,2755537703,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538042,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538121,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
-initial,2420589,2755537900,Groceries,Greenway Grocers,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=GREENWAY GROCERS, merchant=Greenway Grocers",,1
+initial,2420589,2755538121,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537900,Groceries,Greenway Grocers,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=GREENWAY GROCERS PTY L WYALKATCHEM, merchant=Greenway Grocers",,1
 initial,2420589,2755537850,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538340,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537958,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
-initial,2420589,2755537884,Retail,OFFICEWORKS LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=OFFICEWORKS LTD",,1
+initial,2420589,2755537958,Health,MUNDARING PHARMACY,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MUNDARING, merchant=MUNDARING PHARMACY",,1
+initial,2420589,2755537884,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755537581,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538244,Dining Out,Mandarin Duck,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MANDARIN DUCK, merchant=Mandarin Duck",,1
-initial,2420589,2755537572,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755538293,Health,YORK PHARMACY PTY LTD,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=YORK PHARMACY PTY LTD, merchant=YORK PHARMACY PTY LTD",,1
+initial,2420589,2755538244,Dining Out,MANDARIN DUCK CANNINGTON,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MANDARIN DUCK CANNINGTON, merchant=MANDARIN DUCK CANNINGTON",,1
+initial,2420589,2755537572,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755538293,Health,York Pharmacy,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=YORK PHARMACY PTY LTD YORK, merchant=York Pharmacy",,1
 initial,2420589,2755538115,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
+initial,2420589,2755538323,Gyms and other memberships,SURRY HILLS,merchant_kb_match,"category=Gyms and other memberships; rule=merchant_kb_match; evidence=keyword=SURRY HILLS NS, merchant=SURRY HILLS",,1
 initial,2420589,2755537881,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537878,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755538253,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755537878,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755538253,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537605,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537844,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537756,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537570,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
+initial,2420589,2755537756,Automotive,DUNNINGS ROADHOUSE S SOUTHERN CRO,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS ROADHOUSE S SOUTHERN CRO, merchant=DUNNINGS ROADHOUSE S SOUTHERN CRO",,1
+initial,2420589,2755537570,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755538222,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538001,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537882,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755538351,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537915,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537882,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755538351,Automotive,DUNNINGS NORTHAM NORTHAM,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS NORTHAM NORTHAM, merchant=DUNNINGS NORTHAM NORTHAM",,1
+initial,2420589,2755537759,Gyms and other memberships,CITY OF MELVILLE BOORAGOON,merchant_kb_match,"category=Gyms and other memberships; rule=merchant_kb_match; evidence=keyword=CITY OF, merchant=CITY OF MELVILLE BOORAGOON",,1
+initial,2420589,2755537679,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
+initial,2420589,2755537915,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537577,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538123,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755538123,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537816,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537668,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538200,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
-initial,2420589,2755538093,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
-initial,2420589,2755537584,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755538093,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
+initial,2420589,2755537584,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755538291,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755537767,Automotive,AMPOL AUSTRALIA PETROLEUM PTY LTD,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=AMPOL, merchant=AMPOL AUSTRALIA PETROLEUM PTY LTD",,1
 initial,2420589,2755537803,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537635,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537749,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=MOORA IGA, merchant=MOORA GROCERY PTY LTD",,1
-initial,2420589,2755537873,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537586,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537873,Automotive,DUNNINGS NORTHAM NORTHAM,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS NORTHAM NORTHAM, merchant=DUNNINGS NORTHAM NORTHAM",,1
+initial,2420589,2755537586,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755538346,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755538283,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538183,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537989,Retail,Sparklers Midland,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPARKLERS MIDLAND, merchant=Sparklers Midland",,1
+initial,2420589,2755537989,Automotive,Sparklers Midland,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=SPARKLERS MIDLAND, merchant=Sparklers Midland",,1
 initial,2420589,2755538292,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537824,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537824,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538223,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755537976,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538081,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755538046,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755538081,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755538046,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537739,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538090,Health,Medihire & Sales,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MEDIHIRE SALES, merchant=Medihire & Sales",,1
+initial,2420589,2755538161,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538018,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537589,Travel,Kondinin Hotel,merchant_kb_match,"category=Travel; rule=merchant_kb_match; evidence=keyword=KONDININ HOTEL, merchant=Kondinin Hotel",,1
+initial,2420589,2755537589,Dining Out,Kondinin Hotel,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=KONDININ HOTEL KONDININ, merchant=Kondinin Hotel",,1
 initial,2420589,2755537987,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537929,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538016,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING, merchant=Optus",,1
+initial,2420589,2755538016,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
 initial,2420589,2755537769,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755537748,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538002,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
+initial,2420589,2755538002,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755537736,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537925,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538184,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537821,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537821,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755538321,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537872,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537757,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537560,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537941,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537757,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
+initial,2420589,2755537560,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755537941,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538336,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=KMART, merchant=KMART AUSTRALIA LIMITED",,1
 initial,2420589,2755538249,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538015,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -341,46 +370,59 @@ initial,2420589,2755538007,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb
 initial,2420589,2755538234,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538150,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537604,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537696,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537719,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537696,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538143,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537980,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755537652,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755538021,Groceries,VAPE,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=VAPE, merchant=VAPE",,1
 initial,2420589,2755538153,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537875,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
+initial,2420589,2755538190,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537851,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537741,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538343,Health,St John Subiaco Hospital,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=ST JOHN SUBIACO, merchant=St John Subiaco Hospital",,1
+initial,2420589,2755538343,Health,ST JOHN SUBIACO,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=ST JOHN SUBIACO, merchant=ST JOHN SUBIACO",,1
+initial,2420589,2755537940,Pet Care,NORTHAM FEED &,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=NORTHAM FEED HIRE, merchant=NORTHAM FEED &",,1
 initial,2420589,2755538296,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538122,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537681,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755538263,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538281,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538177,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755538177,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538352,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538279,Dining Out,KFC,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=KFC, merchant=KFC",,1
-initial,2420589,2755538238,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING, merchant=Optus",,1
+initial,2420589,2755538279,Health,MUNDARING PHARMACY,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MUNDARING, merchant=MUNDARING PHARMACY",,1
+initial,2420589,2755538239,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
+initial,2420589,2755538238,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
 initial,2420589,2755537883,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=MOORA IGA, merchant=MOORA GROCERY PTY LTD",,1
-initial,2420589,2755537580,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537602,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
+initial,2420589,2755537580,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755537602,Dining Out,THE LAKES,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=THE LAKES, merchant=THE LAKES",,1
 initial,2420589,2755537894,Pet Care,PETBARN PTY LIMITED,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=PETBARN, merchant=PETBARN PTY LIMITED",,1
-initial,2420589,2755538275,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
+initial,2420589,2755538275,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755537776,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
+initial,2420589,2755538103,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755538229,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
+initial,2420589,2755537800,Health,MIDOC.COM.AU UPPER MOUNT G,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MIDOC COM AU, merchant=MIDOC.COM.AU UPPER MOUNT G",,1
+initial,2420589,2755537758,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537751,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537923,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538075,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538304,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537926,Entertainment,Spotify,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=Spotify",,1
+initial,2420589,2755537926,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538309,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537916,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538216,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755537891,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755538215,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=KMART, merchant=KMART AUSTRALIA LIMITED",,1
 initial,2420589,2755537640,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537928,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538338,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537571,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538157,Retail,Thingz Gifts,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS, merchant=Thingz Gifts",,1
-initial,2420589,2755538133,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
-initial,2420589,2755537913,Dining Out,McDonald's,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=McDonald's",,1
-initial,2420589,2755537829,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
+initial,2420589,2755538131,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755538157,Retail,THINGZ,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ",,1
+initial,2420589,2755538133,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537825,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537913,Dining Out,MCDONALDS,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=MCDONALDS",,1
+initial,2420589,2755537829,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537744,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537801,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537546,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -389,30 +431,34 @@ initial,2420589,2755537835,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537845,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537935,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537691,Groceries,Quin's Gourmet Butcher,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=QUINS GOURMET BUTCH, merchant=Quin's Gourmet Butcher",,1
-initial,2420589,2755538029,Dining Out,McDonald's,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=McDonald's",,1
-initial,2420589,2755537921,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING, merchant=Optus",,1
-initial,2420589,2755537618,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
+initial,2420589,2755538029,Dining Out,MCDONALDS,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=MCDONALDS",,1
+initial,2420589,2755537811,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537921,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
+initial,2420589,2755537618,Retail,EAST MAITLAND,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=EAST MAITLAND",,1
 initial,2420589,2755538119,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537735,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537762,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
+initial,2420589,2755537717,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537870,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538147,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755537720,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755538277,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537608,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
-initial,2420589,2755537745,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755538317,Groceries,FRESH TRADING CO OPS,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=FRESH TRADING CO OPS MALABAINE, merchant=FRESH TRADING CO OPS",,1
+initial,2420589,2755538147,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537720,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755538277,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755537608,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
+initial,2420589,2755537745,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538272,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538073,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
-initial,2420589,2755537559,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
+initial,2420589,2755537559,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755538305,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538345,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538337,Health,St John of God Subiaco Hospital,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=ST JOHN OF GOD SUBIACO, merchant=St John of God Subiaco Hospital",,1
+initial,2420589,2755538337,Health,ST JOHN OF GOD MIDLAND,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=ST JOHN OF GOD SUBIACO, merchant=ST JOHN OF GOD MIDLAND",,1
 initial,2420589,2755537848,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538151,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538271,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538031,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
-initial,2420589,2755538294,Retail,OFFICEWORKS LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=OFFICEWORKS LTD",,1
+initial,2420589,2755538031,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755538294,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755537678,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755538359,Health,THE TRUSTEE FOR LIM,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=THE TRUSTEE FOR LIM, merchant=THE TRUSTEE FOR LIM",,1
 initial,2420589,2755538278,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538365,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538053,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
@@ -420,30 +466,32 @@ initial,2420589,2755538149,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537563,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755538165,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538152,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538008,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
+initial,2420589,2755538008,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755538082,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755537795,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
-initial,2420589,2755537815,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
+initial,2420589,2755537815,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755538342,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538032,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=MOORA IGA, merchant=MOORA GROCERY PTY LTD",,1
 initial,2420589,2755538251,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538148,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537876,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537603,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING, merchant=Optus",,1
-initial,2420589,2755538074,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
+initial,2420589,2755537603,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
+initial,2420589,2755538074,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755538118,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538019,Automotive,Stewart's Savemor,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=Stewart's Savemor",,1
-initial,2420589,2755537813,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755538088,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755537930,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
+initial,2420589,2755538156,Pet Care,NORTHAM FEED &,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=NORTHAM FEED HIRE, merchant=NORTHAM FEED &",,1
+initial,2420589,2755538019,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537813,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755538088,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537930,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM MELBOURNE VI, merchant=Netflix",,1
 initial,2420589,2755537874,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537729,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537729,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538221,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537998,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538306,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755538273,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537686,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538009,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537675,Entertainment,Spotify,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=Spotify",,1
+initial,2420589,2755537675,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538206,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537625,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538044,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -451,61 +499,67 @@ initial,2420589,2755537806,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755538288,Groceries,Zepto,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=ZEPTO, merchant=Zepto",,1
 initial,2420589,2755537852,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537846,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537695,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755538301,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537695,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
+initial,2420589,2755538301,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537955,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538242,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755537596,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537688,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537753,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537753,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537629,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=MOORA IGA, merchant=MOORA GROCERY PTY LTD",,1
-initial,2420589,2755537740,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755537740,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538164,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755538072,Groceries,Spud Shed,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=SPUD SHED, merchant=Spud Shed",,1
-initial,2420589,2755537901,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
+initial,2420589,2755538037,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537901,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537698,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537843,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537587,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537743,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538354,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537814,Retail,Warricks Newsagency,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=WARRICKS NEWSAGENCY, merchant=Warricks Newsagency",,1
-initial,2420589,2755538051,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755537854,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
-initial,2420589,2755537988,Health,St John of God Subiaco Hospital,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=ST JOHN OF GOD SUBIACO, merchant=St John of God Subiaco Hospital",,1
-initial,2420589,2755537683,Transport,WA Transport DVS,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=WA TRANSPORT DVS, merchant=WA Transport DVS",,1
+initial,2420589,2755537814,Retail,Warricks Newsagency,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=WARRICKS NEWSAGENCY NORTHAM, merchant=Warricks Newsagency",,1
+initial,2420589,2755538051,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
+initial,2420589,2755537854,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
+initial,2420589,2755537988,Health,ST JOHN OF GOD MIDLAND,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=ST JOHN OF GOD SUBIACO, merchant=ST JOHN OF GOD MIDLAND",,1
+initial,2420589,2755537683,Automotive,WA Transport DVS,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=WA TRANSPORT DVS COMMBANK APP BPAY, merchant=WA Transport DVS",,1
 initial,2420589,2755538290,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538030,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755538030,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537945,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538080,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755538080,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538233,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538162,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755538022,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755538162,Dining Out,THE LAKES,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=THE LAKES, merchant=THE LAKES",,1
+initial,2420589,2755538022,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537999,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
 initial,2420589,2755537638,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538237,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537778,Transport,Lime,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=LIME, merchant=Lime",,1
-initial,2420589,2755537573,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
+initial,2420589,2755537778,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
+initial,2420589,2755537573,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755537823,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755538028,Groceries,YORK QUALITY,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=YORK QUALITY, merchant=YORK QUALITY",,1
 initial,2420589,2755537646,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538289,Dining Out,Hong Kong Chinese Restaurant,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG, merchant=Hong Kong Chinese Restaurant",,1
+initial,2420589,2755537992,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
+initial,2420589,2755538289,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755537611,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538142,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755537752,Personal Care,JACK WESTLAND | COSMETIC INJECTOR | PTY LTD,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=JACK WESTLAND | COSMETIC INJECTOR | PTY LTD",,1
+initial,2420589,2755538330,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755537752,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755537909,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538104,Retail,Red Dot Stores,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=RED DOT STORES, merchant=Red Dot Stores",,1
-initial,2420589,2755538245,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755538146,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755538104,Retail,Red Dot,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=RED DOT STORES, merchant=Red Dot",,1
+initial,2420589,2755538245,Dining Out,THE LAKES,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=THE LAKES, merchant=THE LAKES",,1
+initial,2420589,2755538146,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537765,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755537903,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537805,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
+initial,2420589,2755537599,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755537819,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537626,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537626,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538100,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537693,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS, merchant=Great Southern Fuels",,1
+initial,2420589,2755537693,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537593,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537606,Automotive,Caltex,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=CALTEX, merchant=Caltex",,1
 initial,2420589,2755538079,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538011,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
-initial,2420589,2755538300,Department Stores,Dunnings,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=DUNNINGS, merchant=Dunnings",,1
+initial,2420589,2755538011,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
+initial,2420589,2755538300,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538132,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 transfer,2420589,2755538124,External Transfers,Direct Debit Transfer,external_direct_debit_with_bsb,"category=External Transfers; rule=external_direct_debit_with_bsb; evidence=confidence=high, dr_cr_used",External Transfers,100
 transfer,2420589,2755537983,External Transfers,Direct Debit Transfer,external_direct_debit_with_bsb,"category=External Transfers; rule=external_direct_debit_with_bsb; evidence=confidence=high, dr_cr_used",External Transfers,100

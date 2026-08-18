@@ -17,6 +17,7 @@ priority,rule_name,pattern,dr_cr,description
 16,internal_orange_everyday_from,^internal transfer - receipt \d+ - from orange everyday$,, "Internal transfer from Orange Everyday"
 17,internal_savings_maximiser,^internal transfer - internal transfer - receipt \d+ savings maximiser \d+$,, "Internal transfer Savings Maximiser"
 18,internal_ibank_mobile_banking,^ibank trf ref: \d+ transferred to \d+ mobile banking$,, "IBank TRF mobile banking"
-19,internal_internet_banking,\binternet withdrawal\b.*\bto \d{7,}\b,, "Internet withdrawal to own account"
+19,internal_internet_banking,"\binternet withdrawal\b.*\bto \d{7,}\b",, "Internet withdrawal to own account"
 20,internal_internet_transfer_credit,^internet transfer credit from \d+ ref no \d+$,, "Internet transfer credit from account"
 21,internal_internet_transfer_debit,^internet transfer debit to \d+ reference no \d+$,, "Internet transfer debit to account"
+22,internal_orange_everyday,\borange everyday\b,, "ING Orange Everyday account transfer (round-up / to-from own account)"
