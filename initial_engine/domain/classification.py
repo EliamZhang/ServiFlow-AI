@@ -43,6 +43,17 @@ _CHANNEL_PREFIX_RE = re.compile(
     re.IGNORECASE,
 )
 
+# EFTPOS receipt timestamps ("EFTPOS DEBIT EFTPOS 21/05 10:14") are glued to the
+# merchant name in the raw text ("...10:14Subway").  They must be stripped
+# *before* non-alphanumerics become spaces — after that step the minute field is
+# glued to the merchant ("14SUBWAY") and the whole-word boundary check rejects the
+# merchant keyword.  The optional second "EFTPOS" covers the common
+# "EFTPOS DEBIT EFTPOS DD/MM HH:MM<merchant>" shape.
+_EFTPOS_TS_RE = re.compile(
+    r"^EFTPOS\s+DEBIT\s+(?:EFTPOS\s+)?\d{1,2}/\d{1,2}\s+\d{1,2}:\d{1,2}",
+    re.IGNORECASE,
+)
+
 
 def _clean_transaction_text(series: pd.Series) -> pd.Series:
     """Vectorized: normalise transaction text and strip payment-channel prefixes.
@@ -50,8 +61,10 @@ def _clean_transaction_text(series: pd.Series) -> pd.Series:
     Equivalent to the scalar clean_text() + _CHANNEL_PREFIX_RE chain, but
     operates on the entire Series at C level — no per-row Python calls.
     """
-    # Step 1 — clean_text equivalent (uppercase → alphanumerics → collapse spaces)
+    # Step 0 — strip EFTPOS receipt timestamps before alnum cleaning
     s = series.fillna("").str.upper()
+    s = s.str.replace(_EFTPOS_TS_RE, "", regex=True)
+    # Step 1 — clean_text equivalent (alphanumerics → collapse spaces)
     s = s.str.replace(r"[^A-Z0-9]+", " ", regex=True)
     s = s.str.replace(r"\s+", " ", regex=True).str.strip()
     # Step 2 — strip payment-channel prefixes
