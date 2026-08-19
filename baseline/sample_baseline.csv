@@ -34,7 +34,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537630,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755537600,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755537582,Automotive,Puma York Roadhouse,initial,
-2420589,2755537877,Retail,RAMPAGE RETAIL PTY LTD,initial,
+2420589,2755537877,Automotive,RAMPAGE RETAIL PTY LTD,initial,
 2420589,2755537660,Unknown Loans,Credit Corp,liability,unknown_001
 2420589,2755537944,Automotive,DUNNINGS GOOMALLING GOOMALLING,initial,
 2420589,2755537947,Automotive,Puma York Roadhouse,initial,
@@ -221,7 +221,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538198,Information,Google,initial,
 2420589,2755537737,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755538116,Information,Google,initial,
-2420589,2755537727,Retail,RAMPAGE RETAIL PTY LTD,initial,
+2420589,2755537727,Automotive,RAMPAGE RETAIL PTY LTD,initial,
 2420589,2755537783,Information,Google,initial,
 2420589,2755538012,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755537595,Information,Google,initial,

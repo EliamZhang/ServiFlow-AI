@@ -73,7 +73,7 @@
       "fee_engine/resources/fee_classification_rules.csv": "d4a42bab5e5cf80c5aee2ecb9d50611063ced3c9f5637dd683e140db69f31132",
       "income_engine/resources/income_config.csv": "3b563d881f57f3799da50cf6130a6154bec55eeda1314f749c95dbdaa90707e9",
       "income_engine/resources/income_pattern_rules.csv": "730e2d46053176400a823b2230dad758d855bed81402cd6a818554495bd12ce7",
-      "initial_engine/merchant_kb.csv": "9831aa9777e38986e1a2f644a8e987d9401bfedb03c4592b600e1beeece77ee5",
+      "initial_engine/merchant_kb.csv": "5955e8b482b149cd304ec5080f16ac85f1992eb56f254744b7b88342405c718b",
       "liability_engine/resources/bnpl_maximum_limits.csv": "c141037edadd9c22bef53257620c7404cba4fb57878176a25a7b45ebb104f551",
       "liability_engine/resources/counterparty_keyword_rules.csv": "334d42c5d2d73e264246a1a32300a2e3dc6829eec384bd8f7aa7a36cde0b4abf",
       "liability_engine/resources/credit_card_rules.csv": "445a27dd3f8120440d28ec1cff9b94603225e385b220534becb7be5fe7a634fb",
