@@ -297,6 +297,14 @@ def identify_contract_loan_streams(
     assign_grouped_product_streams(output, eligible_mask, "contract_loan")
 
 
+def identify_generic_loan_streams(
+    output: pd.DataFrame,
+    eligible_mask: pd.Series,
+    _: list[str],
+) -> None:
+    assign_grouped_product_streams(output, eligible_mask, "generic_loan")
+
+
 def identify_car_loan_streams(
     output: pd.DataFrame,
     eligible_mask: pd.Series,
@@ -1874,6 +1882,7 @@ PRODUCT_RULES: tuple[ProductRule, ...] = (
     ProductRule(27, "car_loan", identify_car_loan_streams),
     ProductRule(30, "bank", identify_bank_streams),
     ProductRule(35, "contract_loan", identify_contract_loan_streams),
+    ProductRule(37, "generic_loan", identify_generic_loan_streams),
     ProductRule(40, PERSONAL_LOAN, assign_personal_loan_rule),
     ProductRule(50, "loc", identify_loc_streams),
 )
@@ -1886,6 +1895,7 @@ FINV_CATEGORY_MAP = {
     "personal_loan_unknown": "Unknown Loans",
     "personal_loan_non_sacc": "Non SACC Loans",
     "contract_loan": "Non SACC Loans",
+    "generic_loan": "Non SACC Loans",
     "loc": "Non SACC Loans",
     "home_loan": "Non SACC Loans",
     "car_loan": "Non SACC Loans",
@@ -2388,8 +2398,7 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
     # list comprehension that called ``zip`` on Series slices).
     if valid_mask.any():
         special_bases = stream_base.loc[valid_mask].isin({
-            "bnpl", "wage_advance", "home_loan", "bank", "loc", "contract_loan",
-            "car_loan",
+            "bnpl", "wage_advance", "home_loan", "bank", "loc", "contract_loan", "generic_loan", "car_loan",
         })
         output.loc[valid_mask, "finv_category"] = np.where(
             special_bases,

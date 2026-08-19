@@ -24,7 +24,7 @@ initial,2420589,2755537578,Groceries,Foodworks Dalwallinu,merchant_kb_match,"cat
 initial,2420589,2755537738,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537630,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537582,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537877,Retail,RAMPAGE RETAIL PTY LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=BP MUCHEA, merchant=RAMPAGE RETAIL PTY LTD",,1
+initial,2420589,2755537877,Automotive,RAMPAGE RETAIL PTY LTD,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP MUCHEA, merchant=RAMPAGE RETAIL PTY LTD",,1
 initial,2420589,2755537944,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755537947,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537793,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
@@ -154,7 +154,7 @@ initial,2420589,2755537869,Automotive,BP,merchant_kb_match,"category=Automotive;
 initial,2420589,2755537689,Home Improvement,TWO DOGS HARDWARE MERREDIN,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=TWO DOGS HARDWARE MERREDIN, merchant=TWO DOGS HARDWARE MERREDIN",,1
 initial,2420589,2755538198,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538116,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537727,Retail,RAMPAGE RETAIL PTY LTD,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=BP MUCHEA, merchant=RAMPAGE RETAIL PTY LTD",,1
+initial,2420589,2755537727,Automotive,RAMPAGE RETAIL PTY LTD,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP MUCHEA, merchant=RAMPAGE RETAIL PTY LTD",,1
 initial,2420589,2755537783,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538012,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537595,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -298,7 +298,7 @@ initial,2420589,2755538244,Dining Out,MANDARIN DUCK CANNINGTON,merchant_kb_match
 initial,2420589,2755537572,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538293,Health,York Pharmacy,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=YORK PHARMACY PTY LTD YORK, merchant=York Pharmacy",,1
 initial,2420589,2755538115,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538323,Gyms and other memberships,SURRY HILLS,merchant_kb_match,"category=Gyms and other memberships; rule=merchant_kb_match; evidence=keyword=SURRY HILLS NS, merchant=SURRY HILLS",,1
+initial,2420589,2755538323,Dining Out,SURRY CLUB HOTEL,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SURRY, merchant=SURRY CLUB HOTEL",,1
 initial,2420589,2755537881,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537878,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538253,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
@@ -434,7 +434,6 @@ initial,2420589,2755537691,Groceries,Quin's Gourmet Butcher,merchant_kb_match,"c
 initial,2420589,2755538029,Dining Out,MCDONALDS,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=MCDONALDS",,1
 initial,2420589,2755537811,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537921,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
-initial,2420589,2755537618,Retail,EAST MAITLAND,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=PTY LTD, merchant=EAST MAITLAND",,1
 initial,2420589,2755538119,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537735,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537762,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
