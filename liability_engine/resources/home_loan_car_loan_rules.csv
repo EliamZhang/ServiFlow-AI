@@ -33,7 +33,7 @@ CL021,is_car_loan,Cars On Terms,text_or_counterparty,regex,cars\s*on\s*terms,*,*
 CL022,is_car_loan,RACV Finance,text_or_counterparty,regex,racv\s*finance,*,*,*,,90,1
 CL023,is_car_loan,RACQ Finance,text_or_counterparty,regex,racq\s*finance,*,*,*,,90,1
 CL024,is_car_loan,Affordable Car Loans,text_or_counterparty,regex,affordable\s*car\s*loans,*,*,*,,90,1
-HL010,is_home_loan,AFG Home Loans,text_or_counterparty,regex,afg\s*(home\s*loans|retro|bright|align|alpha|options),*,*,*,,90,1
+HL010,is_home_loan,AFG Home Loans,text_or_counterparty,regex,afg\s*(?:home\s*loans|retro|bright|align|alpha|options),*,*,*,,90,1
 HL011,is_home_loan,APS Home Loans,text_or_counterparty,regex,aps\s*home\s*loans,*,*,*,,90,1
 HL012,is_home_loan,Advantedge,text_or_counterparty,regex,advantedge,*,*,*,,90,1
 HL013,is_home_loan,Athena Home Loan,text_or_counterparty,regex,athena\s*home\s*loan,*,*,*,,90,1
@@ -66,15 +66,15 @@ CL025,is_car_loan,AHA Money Car Finance,text_or_counterparty,regex,aha\s*money\s
 CL026,is_car_loan,APS Car Loans,text_or_counterparty,regex,aps\s*car\s*loans,*,*,*,,90,1
 CL027,is_car_loan,Allied Credit,text_or_counterparty,regex,allied\s*credit,*,*,*,,90,1
 CL028,is_car_loan,Allied Retail Finance,text_or_counterparty,regex,allied\s*retail\s*finance,*,*,*,,90,1
-CL029,is_car_loan,Angle Auto Finance,text_or_counterparty,regex,angle\s*(finance|auto\s*finance),*,*,*,,90,1
-CL030,is_car_loan,Aotea Car Loans,text_or_counterparty,regex,aotea\s*(car|vehicle)\s*loans,*,*,*,,90,1
+CL029,is_car_loan,Angle Auto Finance,text_or_counterparty,regex,angle\s*(?:finance|auto\s*finance),*,*,*,,90,1
+CL030,is_car_loan,Aotea Car Loans,text_or_counterparty,regex,aotea\s*(?:car|vehicle)\s*loans,*,*,*,,90,1
 CL031,is_car_loan,Astute Motor Finance,text_or_counterparty,regex,astute\s*motor\s*finance,*,*,*,,90,1
 CL032,is_car_loan,Australian Motorcycle and Marine Finance,text_or_counterparty,regex,australian\s*motorcycle\s*and\s*marine\s*finance,*,*,*,,90,1
 CL033,is_car_loan,Australian Premier Finance,text_or_counterparty,regex,australian\s*premier\s*finance,*,*,*,,90,1
 CL034,is_car_loan,Auto Car Finance,text_or_counterparty,regex,auto\s*car\s*finance,*,*,*,,90,1
 CL035,is_car_loan,Automotive Financial Services,text_or_counterparty,regex,automotive\s*financial\s*services,*,*,*,,90,1
 CL036,is_car_loan,Autopay,text_or_counterparty,regex,autopay|moneyme\s*car\s*loans,*,*,*,,90,1
-CL037,is_car_loan,Avanti Car Loans,text_or_counterparty,regex,avanti\s*(car|auto)\s*loans,*,*,*,,90,1
+CL037,is_car_loan,Avanti Car Loans,text_or_counterparty,regex,avanti\s*(?:car|auto)\s*loans,*,*,*,,90,1
 CL038,is_car_loan,Branded Financial Services,text_or_counterparty,regex,branded\s*financial\s*services,*,*,*,,90,1
 CL039,is_car_loan,C1 Car Loans,text_or_counterparty,regex,c1\s*finance|c1\s*car\s*loans,*,*,*,,90,1
 CL040,is_car_loan,CarCoop,text_or_counterparty,regex,carcoop,*,*,*,,90,1
@@ -87,20 +87,20 @@ CL046,is_car_loan,Finance One Car Loans,text_or_counterparty,regex,finance\s*one
 CL047,is_car_loan,FlexiBuy,text_or_counterparty,regex,flexibuy,*,*,*,,90,1
 CL048,is_car_loan,Freedom Leisure Finance,text_or_counterparty,regex,freedom\s*leisure\s*finance,*,*,*,,90,1
 CL049,is_car_loan,Gamma Duo / Gedda Money,text_or_counterparty,regex,gamma\s*duo|gedda\s*money|gedda,*,*,*,,90,1
-CL050,is_car_loan,Geneva Vehicle Finance,text_or_counterparty,regex,geneva\s*(vehicle\s*finance|car\s*loans),*,*,*,,90,1
-CL051,is_car_loan,Harmoney Vehicle Loan,text_or_counterparty,regex,harmoney\s*(vehicle|car)\s*loan,*,*,*,,90,1
+CL050,is_car_loan,Geneva Vehicle Finance,text_or_counterparty,regex,geneva\s*(?:vehicle\s*finance|car\s*loans),*,*,*,,90,1
+CL051,is_car_loan,Harmoney Vehicle Loan,text_or_counterparty,regex,harmoney\s*(?:vehicle|car)\s*loan,*,*,*,,90,1
 CL052,is_car_loan,Holden Financial,text_or_counterparty,regex,holden\s*financial,*,*,*,,90,1
 CL053,is_car_loan,Hyundai Capital,text_or_counterparty,regex,hyundai\s*capital,*,*,*,,90,1
 CL054,is_car_loan,Jacaranda Car Loans,text_or_counterparty,regex,jacaranda\s*car\s*loans,*,*,*,,90,1
 CL055,is_car_loan,John Hughes Finance,text_or_counterparty,regex,john\s*hughes\s*finance,*,*,*,,90,1
 CL056,is_car_loan,Kiwi Auto Finance,text_or_counterparty,regex,kiwi\s*auto\s*finance,*,*,*,,90,1
-CL057,is_car_loan,Latitude Motor Finance,text_or_counterparty,regex,latitude\s*(motor|car)\s*finance,*,*,*,,90,1
+CL057,is_car_loan,Latitude Motor Finance,text_or_counterparty,regex,latitude\s*(?:motor|car)\s*finance,*,*,*,,90,1
 CL058,is_car_loan,Liberty Car Loans,text_or_counterparty,regex,liberty\s*car\s*loans,*,*,*,,90,1
 CL059,is_car_loan,Metro Finance,text_or_counterparty,regex,metro\s*finance,*,*,*,,90,1
 CL060,is_car_loan,Money3 Car Loans,text_or_counterparty,regex,money3\s*car\s*loans,*,*,*,,90,1
 CL061,is_car_loan,MONEYME Car Loan,text_or_counterparty,regex,moneyme\s*car\s*loan|autopay,*,*,*,,90,1
-CL062,is_car_loan,NOW Finance Car Loans,text_or_counterparty,regex,now\s*finance\s*(car|vehicle)\s*loans,*,*,*,,90,1
-CL063,is_car_loan,Pepper Car Loans,text_or_counterparty,regex,pepper\s*(car\s*loans|ev\s*loan),*,*,*,,90,1
+CL062,is_car_loan,NOW Finance Car Loans,text_or_counterparty,regex,now\s*finance\s*(?:car|vehicle)\s*loans,*,*,*,,90,1
+CL063,is_car_loan,Pepper Car Loans,text_or_counterparty,regex,pepper\s*(?:car\s*loans|ev\s*loan),*,*,*,,90,1
 CL064,is_car_loan,Plenti Car Loans,text_or_counterparty,regex,plenti\s*car\s*loans|ratesetter,*,*,*,,90,1
 CL065,is_car_loan,RAA Finance,text_or_counterparty,regex,raa\s*finance,*,*,*,,90,1
 CL066,is_car_loan,RAC Finance,text_or_counterparty,regex,rac\s*finance,*,*,*,,90,1

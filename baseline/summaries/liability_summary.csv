@@ -7,7 +7,6 @@ application_id,bank_account_id,finv_category,stream_id,funded_amount,repaid_amou
 2420589,4689355,Non SACC Loans,wage_advance_003,0,17013.94,1134.27,
 2420589,4689355,Dishonours,wage_advance_003,0,0,,
 2420589,4689355,Dishonours,wage_advance_001,0,0,,
-2420589,4689355,Non SACC Loans,non_sacc_001,0,10257,789,789
 2420589,4689355,Non SACC Loans,contract_loan_001,0,297.8,,0
 2420589,4689355,SACC Loans,sacc_001,1000,1320,,0
 2420589,4689355,SACC Loans,sacc_002,500,105.72,52.86,52.86
