@@ -22,7 +22,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537591,Automotive,BP,initial,
 2420589,2755538045,Information,Google,initial,
 2420589,2755537917,Automotive,BP,initial,
-2420589,2755537715,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537715,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538160,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755537673,Information,Google,initial,
 2420589,2755538219,Information,Google,initial,
@@ -76,7 +76,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538099,Information,Google,initial,
 2420589,2755538006,Groceries,Coles,initial,
 2420589,2755537549,External Transfers,CBA Funds Transfer,transfer,External Transfers
-2420589,2755537975,Dishonours,Salt and Lime,liability,non_sacc_001
+2420589,2755537975,Dishonours,-,dishonour,
 2420589,2755538310,Non SACC Loans,Afterpay,liability,bnpl_001
 2420589,2755538353,Information,Google,initial,
 2420589,2755537631,Automotive,DUNNINGS TOODYAY JUN TOODYAY,initial,
@@ -89,7 +89,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537779,Non SACC Loans,Wagepay,liability,wage_advance_003
 2420589,2755538218,Information,Google,initial,
 2420589,2755537677,Information,Google,initial,
-2420589,2755537644,Dishonours,Salt and Lime,liability,non_sacc_001
+2420589,2755537644,Dishonours,-,dishonour,
 2420589,2755538199,SACC Loans,Fundo Loans,liability,sacc_001
 2420589,2755537721,Health,STEWART'S SAVEMOR PH,initial,
 2420589,2755537802,Information,Google,initial,
@@ -137,7 +137,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538269,,,,
 2420589,2755537936,Information,Google,initial,
 2420589,2755537565,Automotive,BP,initial,
-2420589,2755538318,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755538318,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538010,Information,Google,initial,
 2420589,2755538350,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755538023,Non SACC Loans,Afterpay,liability,bnpl_001
@@ -189,7 +189,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538208,Information,Google,initial,
 2420589,2755538111,Dishonours,-,dishonour,
 2420589,2755537617,Non SACC Loans,Wagetap,liability,wage_advance_004
-2420589,2755537978,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537978,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537598,Information,Google,initial,
 2420589,2755537780,Retail,THINGZ,initial,
 2420589,2755537807,Telecommunications,Optus,initial,
@@ -203,7 +203,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538236,Groceries,Coles,initial,
 2420589,2755537545,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755538060,Non SACC Loans,Wagetap,liability,wage_advance_004
-2420589,2755537548,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537548,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538227,Information,Google,initial,
 2420589,2755537968,Dining Out,Hungry Jacks,initial,
 2420589,2755537760,Automotive,Puma York Roadhouse,initial,
@@ -293,8 +293,8 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538325,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755537789,Pet Care,NORTHAM FEED &,initial,
 2420589,2755538098,Non SACC Loans,Afterpay,liability,bnpl_001
-2420589,2755537899,Dishonours,Salt and Lime,liability,non_sacc_001
-2420589,2755537855,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537899,Dishonours,-,dishonour,
+2420589,2755537855,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537590,Automotive,Puma York Roadhouse,initial,
 2420589,2755538086,Automotive,DUNNINGS TOODYAY JUN TOODYAY,initial,
 2420589,2755537910,External Transfers,Direct Debit Transfer,transfer,External Transfers
@@ -315,7 +315,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538201,Non SACC Loans,Humm,liability,bnpl_002
 2420589,2755537957,Information,Google,initial,
 2420589,2755538092,Information,Google,initial,
-2420589,2755537650,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537650,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538129,Dining Out,FOOLOK MIDLAND,initial,
 2420589,2755538250,Retail,eBay,initial,
 2420589,2755538059,External Transfers,CBA Funds Transfer,transfer,External Transfers
@@ -340,7 +340,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537919,Wages,Main Roads,income,salary_payg_001
 2420589,2755538112,Dishonours,Wagepay,liability,wage_advance_003
 2420589,2755537554,External Transfers,Direct Debit Transfer,transfer,External Transfers
-2420589,2755538185,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755538185,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537879,Information,Google,initial,
 2420589,2755538307,Information,Google,initial,
 2420589,2755538247,Dishonours,Wagepay,liability,wage_advance_003
@@ -445,7 +445,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537918,,,,
 2420589,2755538228,Non SACC Loans,Afterpay,liability,bnpl_001
 2420589,2755537558,Overdrawn,Overdrawn Fee,fee,
-2420589,2755538253,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755538253,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537996,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755537605,Automotive,Puma York Roadhouse,initial,
 2420589,2755537796,Non SACC Loans,Humm,liability,bnpl_002
@@ -474,7 +474,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537615,Non SACC Loans,Credit Corp,liability,loc_001
 2420589,2755537613,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537942,External Transfers,CBA Funds Transfer,transfer,External Transfers
-2420589,2755538123,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755538123,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537816,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755537859,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755537986,,,,
@@ -506,7 +506,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538313,Overdrawn,Overdrawn Fee,fee,
 2420589,2755537976,Information,Google,initial,
 2420589,2755538081,Automotive,Great Southern Fuels,initial,
-2420589,2755538046,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755538046,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537739,Information,Google,initial,
 2420589,2755537616,Unknown Loans,Credit Corp,liability,unknown_001
 2420589,2755537658,Non SACC Loans,Beforepay,liability,wage_advance_001
@@ -577,7 +577,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537681,Home Improvement,BUNNINGS GROUP LIMITED,initial,
 2420589,2755538263,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755538281,Information,Google,initial,
-2420589,2755538177,Dishonours,Salt and Lime,liability,non_sacc_001
+2420589,2755538177,Dishonours,-,dishonour,
 2420589,2755538193,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537787,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755537839,Overdrawn,Overdrawn Fee,fee,
@@ -665,7 +665,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537557,Unknown Loans,Credit Corp,liability,unknown_001
 2420589,2755538277,Automotive,DUNNINGS TOODYAY JUN TOODYAY,initial,
 2420589,2755537810,External Transfers,CBA Funds Transfer,transfer,External Transfers
-2420589,2755537608,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537608,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537897,Dishonours,Wagepay,liability,wage_advance_003
 2420589,2755537745,Automotive,Great Southern Fuels,initial,
 2420589,2755538272,Information,Google,initial,
@@ -751,7 +751,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538164,Automotive,Puma York Roadhouse,initial,
 2420589,2755538072,Groceries,Spud Shed,initial,
 2420589,2755538037,Non SACC Loans,Beforepay,liability,wage_advance_001
-2420589,2755537901,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537901,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537698,Information,Google,initial,
 2420589,2755537843,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755538197,,,,
@@ -779,7 +779,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537999,Groceries,Coles,initial,
 2420589,2755537638,Information,Google,initial,
 2420589,2755538237,Information,Google,initial,
-2420589,2755537778,Non SACC Loans,Salt and Lime,liability,non_sacc_001
+2420589,2755537778,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755537573,Dining Out,HONG KONG BBQ,initial,
 2420589,2755537620,,,,
 2420589,2755538204,Dishonours,-,dishonour,
