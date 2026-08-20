@@ -74,7 +74,6 @@ wage_advance,\bWAGETAP\b,regex,WAGETAP
 wage_advance,\bSTEPPAY\b,regex,STEPPAY
 wage_advance,\bPRESS\s*PAY\b,regex,PRESS PAY
 wage_advance,\bPRESSPAY\b,regex,PRESSPAY
-wage_advance,\bWAGE\s*PAY\b,regex,WAGE PAY
 wage_advance,\bWAGEPAY\b,regex,WAGEPAY
 return_like,\bRETURN\b,regex,RETURN
 return_like,\bDISHONOU?R(?:ED)?\b,regex,DISHONOUR/DISHONOURED
@@ -114,3 +113,6 @@ centrelink,\bCHILD\s*SUPPORT\b,regex,Child Support (government agency)
 centrelink,\bCHILD\s*ASSIST\w*\b,regex,CHILDASSISTPYMT etc.
 centrelink,\bCARER\s*SUPPLEM\w*\b,regex,CARERSUPPLEMTCA (carer supplement)
 gig_exclusion_extra,UBER\s*\*?\s*EATS,regex,Uber Eats refund/reversal (not gig income)
+transfer_from,\bTRANSFER\s+FROM\b,regex,TRANSFER FROM flag (hard negative is waived when a strong wage keyword is present)
+hard_negative,\bLOANAD\b,regex,MONEYSPOT LOANAD payday-loan product code
+hard_negative,\bFIN\s+ONE\b,regex,FIN ONE PTY LTD payday lender

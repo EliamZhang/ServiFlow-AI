@@ -140,6 +140,13 @@ RETURN_LIKE_PATTERNS = _make_pattern_list("return_like")
 # Hard negative = return_like + additional hard_negative patterns
 HARD_NEGATIVE_PATTERNS = RETURN_LIKE_PATTERNS + _make_pattern_list("hard_negative")
 
+# TRANSFER FROM texts are flagged separately so the hard gate can waive the
+# hard negative when a strong wage keyword is also present: fast-transfer
+# payroll texts like "FAST TRANSFER FROM X WAGES" are real wages and must
+# flow to rule_transfer_strong_wage_keyword, while bare "TRANSFER FROM X"
+# (no wage signal) stays blocked.
+TRANSFER_FROM_PATTERNS = _make_pattern_list("transfer_from")
+
 # Soft negative patterns for wage detection.
 SOFT_NEGATIVE_PATTERNS = _make_pattern_list("soft_negative")
 
@@ -214,6 +221,7 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "rule_small_amount_same_known_wage_payer",
     "rule_recurring_payer_behavior",
     "hard_exclusion",
+    "effective_hard_negative",
 
     # Income rule flags
     "rule_income_salary_packaging",
@@ -237,6 +245,7 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "has_return_like_keyword",
     "has_hard_negative_keyword",
     "has_soft_negative_keyword",
+    "has_transfer_from_keyword",
     "has_gig_exclusion_keyword",
     "has_negative_keyword",
     "is_common_wage_amount",
@@ -271,6 +280,7 @@ HARD_NEGATIVE_REGEX = compile_patterns(HARD_NEGATIVE_PATTERNS)
 SOFT_NEGATIVE_REGEX = compile_patterns(SOFT_NEGATIVE_PATTERNS)
 NEGATIVE_REGEX = compile_patterns(NEGATIVE_PATTERNS)
 GIG_EXCLUSION_REGEX = compile_patterns(GIG_EXCLUSION_PATTERNS)
+TRANSFER_FROM_REGEX = compile_patterns(TRANSFER_FROM_PATTERNS)
 
 
 def count_matches(text: str, patterns: List[re.Pattern]) -> int:
@@ -391,6 +401,7 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
         ("soft_negative_keyword_count", "has_soft_negative_keyword", SOFT_NEGATIVE_REGEX),
         ("negative_keyword_count", "has_negative_keyword", NEGATIVE_REGEX),
         ("gig_exclusion_keyword_count", "has_gig_exclusion_keyword", GIG_EXCLUSION_REGEX),
+        ("transfer_from_keyword_count", "has_transfer_from_keyword", TRANSFER_FROM_REGEX),
     ]:
         out[count_col] = out["text_clean"].apply(lambda x: count_matches(x, patterns))
         out[flag_col] = (out[count_col] > 0).astype(int)
@@ -458,7 +469,18 @@ def add_hard_gate_flags(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     out["rule_pass_credit"] = (out["is_credit"] == 1).astype(int)
     out["rule_pass_amount"] = (out["amount_num"] >= MIN_NORMAL_WAGE_AMOUNT).astype(int)
-    out["rule_pass_no_hard_negative_keyword"] = (out["has_hard_negative_keyword"] == 0).astype(int)
+    # The TRANSFER FROM hard negative is waived when the text also carries a
+    # strong wage keyword: fast-transfer payroll texts ("FAST TRANSFER FROM
+    # X WAGES") are claimed by rule_transfer_strong_wage_keyword, while bare
+    # "TRANSFER FROM X" texts with no wage signal stay hard-blocked.
+    out["effective_hard_negative"] = (
+        (out["has_hard_negative_keyword"] == 1)
+        & ~(
+            (out["has_transfer_from_keyword"] == 1)
+            & (out["has_strong_wage_keyword"] == 1)
+        )
+    ).astype(int)
+    out["rule_pass_no_hard_negative_keyword"] = (out["effective_hard_negative"] == 0).astype(int)
     out["rule_pass_possible_wage_amount"] = (out["is_possible_wage_amount"] == 1).astype(int)
 
     gate_cols = [
@@ -589,7 +611,7 @@ def add_small_amount_history_override(df: pd.DataFrame) -> pd.DataFrame:
         & (out["is_credit"] == 1)
         & (out["amount_num"] < MIN_NORMAL_WAGE_AMOUNT)
         & (out["has_strong_wage_keyword"] == 1)
-        & (out["has_hard_negative_keyword"] == 0)
+        & (out["effective_hard_negative"] == 0)
         & (out["prior_detected_wages_same_payer_count"] >= 2)
     ).astype(int)
 
@@ -640,7 +662,7 @@ def add_soft_negative_alias_to_known_wage_payer_rule(df: pd.DataFrame) -> pd.Dat
                 (row.get("is_credit", 0) == 1)
                 and (row.get("base_wages_pred", 0) == 0)
                 and (row.get("small_amount_wage_history_override", 0) == 0)
-                and (row.get("has_hard_negative_keyword", 0) == 0)
+                and (row.get("effective_hard_negative", 0) == 0)
                 and (row.get("has_soft_negative_keyword", 0) == 1)
                 and (row.get("has_wage_advance_keyword", 0) == 0)
                 and (row.get("has_valid_payer_key", 0) == 1)
@@ -652,7 +674,7 @@ def add_soft_negative_alias_to_known_wage_payer_rule(df: pd.DataFrame) -> pd.Dat
                 (row.get("is_credit", 0) == 1)
                 and (row.get("base_wages_pred", 0) == 0)
                 and (row.get("small_amount_wage_history_override", 0) == 0)
-                and (row.get("has_hard_negative_keyword", 0) == 0)
+                and (row.get("effective_hard_negative", 0) == 0)
                 and (row.get("has_soft_negative_keyword", 0) == 1)
                 and (row.get("has_wage_advance_keyword", 0) == 0)
                 and (row.get("has_valid_payer_key", 0) == 1)
@@ -670,7 +692,7 @@ def add_soft_negative_alias_to_known_wage_payer_rule(df: pd.DataFrame) -> pd.Dat
         & (out["small_amount_wage_history_override"] == 0)
         & (out["is_credit"] == 1)
         & (out["amount_num"] < MIN_NORMAL_WAGE_AMOUNT)
-        & (out["has_hard_negative_keyword"] == 0)
+        & (out["effective_hard_negative"] == 0)
         & (out["has_soft_negative_keyword"] == 0)
         & (out["has_wage_advance_keyword"] == 0)
         & (out["has_medium_income_keyword"] == 1)
@@ -683,7 +705,7 @@ def add_soft_negative_alias_to_known_wage_payer_rule(df: pd.DataFrame) -> pd.Dat
         & (out["small_amount_wage_history_override"] == 0)
         & (out["is_credit"] == 1)
         & (out["amount_num"] < MIN_NORMAL_WAGE_AMOUNT)
-        & (out["has_hard_negative_keyword"] == 0)
+        & (out["effective_hard_negative"] == 0)
         & (out["has_soft_negative_keyword"] == 0)
         & (out["has_wage_advance_keyword"] == 0)
         & (out["has_medium_income_keyword"] == 1)
