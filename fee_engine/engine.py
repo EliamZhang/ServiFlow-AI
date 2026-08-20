@@ -12,6 +12,16 @@ from classification_core.models import (
 from .pipeline import run_pipeline
 
 
+def _prior_claim_keys(context: EngineContext) -> set[tuple[str, str]]:
+    """Keys (application_id, transaction_id) already claimed by earlier engines."""
+    claims = context.prior_claims
+    if claims is None or claims.empty:
+        return set()
+    key_frame = claims.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
+    key_frame = key_frame.astype("string").fillna("")
+    return {tuple(row) for row in key_frame.itertuples(index=False, name=None)}
+
+
 class FeeEngine:
     """Classify fee transactions by matching text against regex patterns.
 
@@ -36,6 +46,28 @@ class FeeEngine:
         details = result.transactions
 
         matched = details[details["is_fee_pred"].eq(1)].copy()
+
+        # Rules flagged ``unclassified_only`` (the fee keyword catch-all) only
+        # apply to rows no earlier engine has claimed — otherwise they would
+        # override correct classifications (school fees → Education,
+        # "Body Corp Fees" in a rent transfer, DISHONOUR FEE → Dishonours, …).
+        if "fee_unclassified_only" in matched.columns:
+            uncl_only = (
+                matched["fee_unclassified_only"].fillna(False)
+            )
+            if uncl_only.any():
+                prior_keys = _prior_claim_keys(context)
+                key_frame = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].astype(
+                    "string"
+                ).fillna("")
+                key_tuples = [
+                    tuple(row)
+                    for row in key_frame.itertuples(index=False, name=None)
+                ]
+                drop_mask = uncl_only & pd.Series(
+                    [k in prior_keys for k in key_tuples], index=matched.index
+                )
+                matched = matched[~drop_mask]
         predictions = pd.DataFrame(
             {
                 **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},

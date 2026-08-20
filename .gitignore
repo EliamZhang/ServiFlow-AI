@@ -6,3 +6,6 @@ __pycache__/
 .coverage
 output/
 /model_output_*.json
+
+# 大样本导出文件(如 sample-100.csv),不纳入版本控制
+sample-*.csv
