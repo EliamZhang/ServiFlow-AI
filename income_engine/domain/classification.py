@@ -147,9 +147,12 @@ SOFT_NEGATIVE_PATTERNS = _make_pattern_list("soft_negative")
 NEGATIVE_PATTERNS = HARD_NEGATIVE_PATTERNS + SOFT_NEGATIVE_PATTERNS
 
 # Extra exclusions used only for self-employed / gig classification.
-GIG_EXCLUSION_PATTERNS = HARD_NEGATIVE_PATTERNS + SOFT_NEGATIVE_PATTERNS + [
-    r"\bLOAN\s*DEPOSIT\b",
-]
+# Loaded from the CSV-backed ``gig_exclusion_extra`` group (was hardcoded
+# before — CSV edits to that group had no effect).
+GIG_EXCLUSION_EXTRA_PATTERNS = _make_pattern_list("gig_exclusion_extra")
+GIG_EXCLUSION_PATTERNS = (
+    HARD_NEGATIVE_PATTERNS + SOFT_NEGATIVE_PATTERNS + GIG_EXCLUSION_EXTRA_PATTERNS
+)
 
 PAYER_STOP_WORDS = {
     "DIRECT", "CREDIT", "DIR", "DEPOSIT", "SALARY", "PAYROLL", "WAGE", "WAGES",
@@ -478,7 +481,10 @@ def add_base_wage_rules(df: pd.DataFrame) -> pd.DataFrame:
     no_wage_advance = out["has_wage_advance_keyword"] == 0
 
     out["rule_strong_wage_keyword"] = (
-        eligible & no_soft_negative & (out["has_strong_wage_keyword"] == 1)
+        eligible
+        & no_soft_negative
+        & no_wage_advance
+        & (out["has_strong_wage_keyword"] == 1)
     ).astype(int)
 
     out["rule_transfer_strong_wage_keyword"] = (
@@ -811,6 +817,7 @@ def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
 
     out["rule_income_self_employed_gig"] = (
         credit
+        & (out["amount_num"] > 0)
         & (out["has_self_employed_gig_keyword"] == 1)
         & (out["has_gig_exclusion_keyword"] == 0)
         & (out["has_wage_advance_keyword"] == 0)
