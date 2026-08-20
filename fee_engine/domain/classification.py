@@ -18,6 +18,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason
@@ -37,6 +38,8 @@ class FeePrediction:
     category: str | None
     counterparty: str | None
     rule_name: str | None
+    unclassified_only: bool = False
+    dr_cr: str = ""
 
 
 # =============================================================================
@@ -56,16 +59,19 @@ def normalize_text(value: object) -> str:
 
 def load_fee_rules(
     rules_file: str | Path,
-) -> tuple[list[tuple[str, str, re.Pattern, str]], set[str]]:
+) -> tuple[
+    list[tuple[str, str, re.Pattern, str, bool, str]], set[str]
+]:
     """Load fee classification rules from CSV.
 
     Returns:
-        rules: list of ``(rule_name, category, compiled_pattern, counterparty)``
-               sorted by priority ascending (lower priority = matched first).
+        rules: list of ``(rule_name, category, compiled_pattern, counterparty,
+               unclassified_only, dr_cr)`` sorted by priority ascending (lower
+               priority = matched first).
         zero_amount_reject: set of *rule_name* values whose matches should be
                             discarded when the transaction amount is $0.
     """
-    raw: list[tuple[int, str, str, str, str, bool]] = []
+    raw: list[tuple[int, str, str, str, str, bool, bool, str]] = []
 
     with open(rules_file, encoding="utf-8-sig", newline="") as f:
         for row in csv.DictReader(f):
@@ -77,27 +83,44 @@ def load_fee_rules(
             zero_reject = (
                 str(row.get("zero_amount_reject", "false")).strip().lower() == "true"
             )
+            unclassified_only = (
+                str(row.get("unclassified_only", "false")).strip().lower() == "true"
+            )
+            dr_cr = str(row.get("dr_cr", "")).strip().lower()
 
             if not rule_name or not pattern:
                 continue
 
             category = _CATEGORY_MAP.get(category_raw, category_raw)
             raw.append(
-                (priority, rule_name, category, pattern, counterparty, zero_reject)
+                (
+                    priority,
+                    rule_name,
+                    category,
+                    pattern,
+                    counterparty,
+                    zero_reject,
+                    unclassified_only,
+                    dr_cr,
+                )
             )
 
     # Sort by priority ascending — lower number = higher priority = checked first.
     raw.sort(key=lambda r: r[0])
 
-    rules: list[tuple[str, str, re.Pattern, str]] = []
+    rules: list[tuple[str, str, re.Pattern, str, bool, str]] = []
     zero_amount_reject: set[str] = set()
 
-    for _, rule_name, category, pattern, counterparty, zero_reject in raw:
+    for _, rule_name, category, pattern, counterparty, zero_reject, unclassified_only, dr_cr in raw:
         try:
-            compiled = re.compile(pattern)
+            # Case-insensitive: bank statement text mixes ALL CAPS / Title Case /
+            # lowercase for the same fee phrase (e.g. "ANNUAL FEE" vs "Annual Fee").
+            compiled = re.compile(pattern, re.IGNORECASE)
         except re.error:
             continue
-        rules.append((rule_name, category, compiled, counterparty))
+        rules.append(
+            (rule_name, category, compiled, counterparty, unclassified_only, dr_cr)
+        )
         if zero_reject:
             zero_amount_reject.add(rule_name)
 
@@ -116,19 +139,21 @@ class FeeClassifier:
     """
 
     def __init__(
-        self, rules: list[tuple[str, str, re.Pattern, str]]
+        self, rules: list[tuple[str, str, re.Pattern, str, bool, str]]
     ) -> None:
         self.rules = rules
 
     def predict(self, text: str) -> FeePrediction:
         """Apply rules in priority order — first match wins."""
-        for rule_name, category, pattern, counterparty in self.rules:
+        for rule_name, category, pattern, counterparty, unclassified_only, dr_cr in self.rules:
             if pattern.search(text):
                 return FeePrediction(
                     is_fee=True,
                     category=category,
                     counterparty=counterparty,
                     rule_name=rule_name,
+                    unclassified_only=unclassified_only,
+                    dr_cr=dr_cr,
                 )
         return FeePrediction(
             is_fee=False,
@@ -169,21 +194,66 @@ def classify_fees(
     output["_text_original"] = raw_text
     output["text_norm"] = raw_text.apply(normalize_text)
 
-    predictions = [
-        classifier.predict(text)
-        for text in output["text_norm"]
-    ]
+    n = len(output)
+    is_fee = np.zeros(n, dtype=bool)
+    categories = np.empty(n, dtype=object)
+    counterparties = np.empty(n, dtype=object)
+    rule_names = np.empty(n, dtype=object)
+    uncl_only_flags = np.zeros(n, dtype=bool)
 
-    output["is_fee_pred"] = [int(p.is_fee) for p in predictions]
+    texts = output["text_norm"].values
+    dr_cr_vals = (
+        output.get("dr_cr", pd.Series("", index=output.index))
+        .fillna("").astype(str).str.lower().values
+    )
+
+    # Per-rule vectorised matching, first rule that matches a row wins.
+    # Rules with a dr_cr constraint only apply to rows of that direction
+    # (e.g. bare "Interest" is a credit — interest earned, not a fee).
+    for rule_name, category, pattern, counterparty, unclassified_only, dr_cr in classifier.rules:
+        remain = np.where(~is_fee)[0]
+        if len(remain) == 0:
+            break
+        hits = np.fromiter(
+            (pattern.search(texts[i]) is not None for i in remain),
+            dtype=bool,
+            count=len(remain),
+        )
+        if dr_cr:
+            hits &= dr_cr_vals[remain] == dr_cr
+        if not hits.any():
+            continue
+        matched_idx = remain[hits]
+        is_fee[matched_idx] = True
+        categories[matched_idx] = category
+        counterparties[matched_idx] = counterparty
+        rule_names[matched_idx] = rule_name
+        uncl_only_flags[matched_idx] = unclassified_only
+
+    # Preserve any pre-existing classification on non-fee rows.
+    existing_cat = (
+        output["finv_category"]
+        if "finv_category" in output.columns
+        else pd.Series("", index=output.index)
+    )
+    existing_cp = (
+        output["counterparty"]
+        if "counterparty" in output.columns
+        else pd.Series("", index=output.index)
+    )
+    output["is_fee_pred"] = is_fee.astype(int)
     output["finv_category"] = [
-        p.category if p.is_fee else "" for p in predictions
+        cat if f else prev
+        for f, cat, prev in zip(is_fee, categories, existing_cat)
     ]
     output["counterparty"] = [
-        p.counterparty if p.is_fee else "" for p in predictions
+        cp if f else prev
+        for f, cp, prev in zip(is_fee, counterparties, existing_cp)
     ]
     output["fee_rule_name"] = [
-        p.rule_name if p.is_fee else "" for p in predictions
+        rn if f else "" for f, rn in zip(is_fee, rule_names)
     ]
+    output["fee_unclassified_only"] = uncl_only_flags
 
     # ── Post-processing: reject $0 informational fee lines ──────────
     _reject_zero_amount_informational(output, zero_amount_reject)
