@@ -9,6 +9,13 @@ strong_wage,\bEMPLOYER\b,regex,EMPLOYER mention
 strong_wage,\bSTAFF\s*PAY\b,regex,STAFF PAY
 strong_wage,\bEFT\s*SALARY\b,regex,EFT SALARY
 strong_wage,\bDEPOSIT\s*SALARY\b,regex,DEPOSIT SALARY
+strong_wage,\bHUMANFORCE\b,regex,Humanforce payroll platform deposit
+strong_wage,\bTHRIVE\s*PAY\b,regex,Humanforce Thrive Pay earnings deposit
+strong_wage,\bPAY\s*INCOME\b,regex,PAY INCOME payroll text
+strong_wage,\bPAY\s*CHEQUE\b,regex,PAY CHEQUE transfer payroll
+strong_wage,\bWEEKLY\s*PAY\b,regex,WEEKLY PAY transfer payroll
+strong_wage,\bFAST\s*PYMT\s*IN\b,regex,CBA FAST PYMT IN payroll deposit
+strong_wage,\bPAY\s*CREDIT\b,regex,PAY CREDIT payroll text
 medium_income,\bDIRECT\s*CREDIT\b,regex,DIRECT CREDIT
 medium_income,\bDIR\s*CREDIT\b,regex,DIR CREDIT
 medium_income,\bDEPOSIT[-\s]*SALARY\b,regex,DEPOSIT-SALARY
@@ -107,8 +114,9 @@ hard_negative,\bMCARE\b,regex,MCARE benefits (Medicare)
 hard_negative,\bNIB\b,regex,NIB health insurance rebate
 hard_negative,\bREDRAW\b,regex,Loan redraw proceeds
 hard_negative,\bMORTGAGE\b,regex,Mortgage-related credit
-hard_negative,\bTRANSFER\s+FROM\b,regex,Transfer from own/other account (self-transfer)
 wage_advance,\bWAGE\s*ACCESS\b,regex,Earned Wage Access / wage advance service
+wage_advance,\bEARNED\s*WAGE\s*ACCESS\b,regex,Earned Wage Access explicit variant
+wage_advance,\bEARNEDWAGE\s*ACCESS\b,regex,Earned Wage Access concatenated (EARNEDWAGE ACCESS / EARNEDWAGEACCESS; aligns with liability engine keyword)
 centrelink,\bCHILD\s*SUPPORT\b,regex,Child Support (government agency)
 centrelink,\bCHILD\s*ASSIST\w*\b,regex,CHILDASSISTPYMT etc.
 centrelink,\bCARER\s*SUPPLEM\w*\b,regex,CARERSUPPLEMTCA (carer supplement)
@@ -116,3 +124,27 @@ gig_exclusion_extra,UBER\s*\*?\s*EATS,regex,Uber Eats refund/reversal (not gig i
 transfer_from,\bTRANSFER\s+FROM\b,regex,TRANSFER FROM flag (hard negative is waived when a strong wage keyword is present)
 hard_negative,\bLOANAD\b,regex,MONEYSPOT LOANAD payday-loan product code
 hard_negative,\bFIN\s+ONE\b,regex,FIN ONE PTY LTD payday lender
+pay_signal,\bPAY\b,regex,Standalone PAY word (transfer-from payroll signal)
+behavior_exclusion,\bDEPOSIT\s*ONLINE\s+\d+\s+TFR\b,regex,Self-transfer: deposit online transfer
+behavior_exclusion,\bTFR\s*FROM\s+\d{6,}\b,regex,Self-transfer: TFR FROM with account number
+behavior_exclusion,\bFUNDS\s*TFER\b.*\bFROM\s+\d{6,}\b,regex,Self-transfer: funds transfer from account number
+behavior_exclusion,\bPAY\s*BACK\b,regex,Repayment of money
+behavior_exclusion,\bSAVINGS\b,regex,Savings transfer
+behavior_exclusion,\bCONVERA\b,regex,Convera international remittance
+behavior_exclusion,\bRPYMT\b,regex,Repayment abbreviation
+behavior_exclusion,\bREPAY(?:MENT)?\b,regex,Repayment
+behavior_exclusion,\bCASH\s*DEPOSIT\b,regex,Cash deposit
+behavior_exclusion,\bDEPOSIT\s*CASH\b,regex,Cash deposit
+behavior_exclusion,\bRFUNDS\b,regex,Refund variant
+behavior_exclusion,\bOTHER\s*ACCOUNT\b,regex,Other account transfer
+behavior_exclusion,\bRENT\b,regex,Rent payment
+behavior_exclusion,\bATM\b,regex,ATM cash deposit
+behavior_exclusion,\bE\s*BANKING\s*TRANSFER\b,regex,Internet banking self-transfer
+behavior_exclusion,\bPAYMENT\s*THANK\s*YOU\b,regex,Payment acknowledgement
+behavior_exclusion,\bNABATM\b,regex,NAB ATM cash deposit
+behavior_exclusion,\bGIRLFRIEND\b,regex,Personal transfer (girlfriend)
+behavior_exclusion,\bPSP\d+\b,regex,Financial product reference
+behavior_exclusion,\bQUICK\s*ZONE\b,regex,Quick Zone money transfer service
+behavior_exclusion,\bEXPENSES\s+ACCOUNT\b,regex,Expenses account transfer
+behavior_exclusion,\bINTERNET\s*TRANSFER\s*CREDIT\s*FROM\s*X+\d+\b,regex,Internet transfer from masked account
+behavior_exclusion,\bBET\s*365\b,regex,BET365 gambling

@@ -144,8 +144,23 @@ HARD_NEGATIVE_PATTERNS = RETURN_LIKE_PATTERNS + _make_pattern_list("hard_negativ
 # hard negative when a strong wage keyword is also present: fast-transfer
 # payroll texts like "FAST TRANSFER FROM X WAGES" are real wages and must
 # flow to rule_transfer_strong_wage_keyword, while bare "TRANSFER FROM X"
-# (no wage signal) stays blocked.
+# (no wage signal) stays blocked.  NOTE: TRANSFER FROM is no longer part of
+# the hard_negative group itself (removed from the CSV): the transfer_from
+# group is the single source of that signal, and the high-repeat behavior
+# rules gate on it directly (TF texts only flow via the PAY-signal rule).
 TRANSFER_FROM_PATTERNS = _make_pattern_list("transfer_from")
+
+# Standalone PAY word: weak wage signal used by rule_transfer_from_pay_signal
+# ("FAST TRANSFER FROM X PAY" texts), mirroring rule_transfer_strong_wage_keyword
+# but with a standalone PAY instead of a strong keyword.
+PAY_SIGNAL_PATTERNS = _make_pattern_list("pay_signal")
+
+# Exclusions for the high-repeat behavior rules only.  Kept separate from the
+# hard_negative group so the existing strong/medium keyword rules are
+# unaffected; these patterns carry clear non-wage semantics (self-transfers,
+# refunds, rent, gambling, invoices, cash deposits, ...) that the behavior
+# rules must not claim.
+BEHAVIOR_EXCLUSION_PATTERNS = _make_pattern_list("behavior_exclusion")
 
 # Soft negative patterns for wage detection.
 SOFT_NEGATIVE_PATTERNS = _make_pattern_list("soft_negative")
@@ -220,6 +235,9 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "rule_small_amount_medium_income_high_repeat",
     "rule_small_amount_same_known_wage_payer",
     "rule_recurring_payer_behavior",
+    "rule_transfer_from_pay_signal",
+    "rule_high_repeat_no_keyword",
+    "rule_high_repeat_soft_negative",
     "hard_exclusion",
     "effective_hard_negative",
 
@@ -248,6 +266,9 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "has_transfer_from_keyword",
     "has_gig_exclusion_keyword",
     "has_negative_keyword",
+    "has_pay_signal",
+    "has_behavior_exclusion",
+    "has_payer_debit",
     "is_common_wage_amount",
     "is_possible_wage_amount",
     "same_payer_credit_count",
@@ -281,6 +302,8 @@ SOFT_NEGATIVE_REGEX = compile_patterns(SOFT_NEGATIVE_PATTERNS)
 NEGATIVE_REGEX = compile_patterns(NEGATIVE_PATTERNS)
 GIG_EXCLUSION_REGEX = compile_patterns(GIG_EXCLUSION_PATTERNS)
 TRANSFER_FROM_REGEX = compile_patterns(TRANSFER_FROM_PATTERNS)
+PAY_SIGNAL_REGEX = compile_patterns(PAY_SIGNAL_PATTERNS)
+BEHAVIOR_EXCLUSION_REGEX = compile_patterns(BEHAVIOR_EXCLUSION_PATTERNS)
 
 
 def count_matches(text: str, patterns: List[re.Pattern]) -> int:
@@ -402,6 +425,8 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
         ("negative_keyword_count", "has_negative_keyword", NEGATIVE_REGEX),
         ("gig_exclusion_keyword_count", "has_gig_exclusion_keyword", GIG_EXCLUSION_REGEX),
         ("transfer_from_keyword_count", "has_transfer_from_keyword", TRANSFER_FROM_REGEX),
+        ("pay_signal_keyword_count", "has_pay_signal", PAY_SIGNAL_REGEX),
+        ("behavior_exclusion_keyword_count", "has_behavior_exclusion", BEHAVIOR_EXCLUSION_REGEX),
     ]:
         out[count_col] = out["text_clean"].apply(lambda x: count_matches(x, patterns))
         out[flag_col] = (out[count_col] > 0).astype(int)
@@ -420,6 +445,24 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
 def add_payer_history_features(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     out["_group_key"] = make_group_key(out)
+
+    # Two-way payer flag: the same payer key also appears on a debit of the
+    # same account (money flowed back to that payer).  Personal transfers
+    # between people often go both ways; employers virtually never receive
+    # money back from the employee's transaction account.  Used by the
+    # high-repeat behavior rules to drop person-to-person transfers.
+    out["_payer_debit_key"] = np.where(
+        (out["is_credit"] == 0)
+        & out["payer_key_from_text"].notna()
+        & (out["payer_key_from_text"].str.len() > 0),
+        out["bank_account_id"].astype(str) + "||" + out["payer_key_from_text"].astype(str),
+        np.nan,
+    )
+    debit_keys = set(out["_payer_debit_key"].dropna().unique())
+    out["has_payer_debit"] = (
+        out["bank_account_id"].astype(str) + "||" + out["payer_key_from_text"].astype(str)
+    ).isin(debit_keys).astype(int)
+    out = out.drop(columns="_payer_debit_key")
 
     # Keep original script behavior: sort by payer group and transaction date.
     out = out.sort_values(["_group_key", "txn_date"], na_position="last").copy()
@@ -595,6 +638,90 @@ def add_base_wage_rules(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def add_high_repeat_behavior_rules(df: pd.DataFrame) -> pd.DataFrame:
+    """Rescue no-keyword payroll texts with strong behavioral evidence.
+
+    Closes two gaps found by the Wages miss analysis:
+
+    1. rule_transfer_from_pay_signal: "FAST TRANSFER FROM X PAY" texts were
+       hard-blocked by the TRANSFER FROM hard negative (the waiver only
+       covered strong keywords).  A standalone PAY word now waives it, mirroring
+       rule_transfer_strong_wage_keyword with PAY in place of a strong keyword.
+    2. rule_high_repeat_no_keyword / rule_high_repeat_soft_negative: texts with
+       no strong/medium keyword at all (INTER BANK CREDIT <name>, DEPOSIT OSKO
+       PAYMENT <name>, PAYMENT FROM <name>, ...) can still be wages when the
+       payer repeats >= STABLE_PAYER_REPEAT_COUNT_MIN times with a regular
+       salary cycle or stable amount and a common wage amount.
+
+    Guard rails:
+    - TRANSFER FROM texts flow ONLY through rule_transfer_from_pay_signal
+      (they must carry the PAY signal); the behavior rules require no TF so
+      bare self-transfer texts stay blocked.
+    - has_behavior_exclusion / has_repeat_employer_like_exclusion_keyword /
+      has_payer_debit drop self-transfers, refunds, rent, gambling, invoices
+      and person-to-person transfers with clear non-wage semantics.
+    - Deliberately NOT fed into base_wages_pred: these rows must not amplify
+      the soft-negative alias / small-amount chains.
+    """
+    out = df.copy()
+    eligible = out["hard_exclusion"] == 0
+    transfer_from = out["has_transfer_from_keyword"] == 1
+    no_wage_advance = out["has_wage_advance_keyword"] == 0
+    no_keyword = (
+        (out["has_strong_wage_keyword"] == 0) & (out["has_medium_income_keyword"] == 0)
+    )
+    high_repeat = out["same_payer_credit_count"].fillna(0) >= STABLE_PAYER_REPEAT_COUNT_MIN
+    cycle_or_stable = (
+        (out["has_regular_salary_cycle"] == 1) | (out["has_stable_amount"] == 1)
+    )
+    valid_payer = out["has_valid_payer_key"] == 1
+    no_behavior_exclusion = out["has_behavior_exclusion"] == 0
+    no_employer_like_exclusion = out["has_repeat_employer_like_exclusion_keyword"] == 0
+    no_two_way = out["has_payer_debit"] == 0
+
+    out["rule_transfer_from_pay_signal"] = (
+        eligible
+        & transfer_from
+        & (out["has_pay_signal"] == 1)
+        & no_wage_advance
+        & valid_payer
+        & (out["is_possible_wage_amount"] == 1)
+        & no_behavior_exclusion
+    ).astype(int)
+
+    out["rule_high_repeat_no_keyword"] = (
+        eligible
+        & (transfer_from == 0)
+        & no_keyword
+        & (out["has_soft_negative_keyword"] == 0)
+        & no_wage_advance
+        & high_repeat
+        & cycle_or_stable
+        & (out["is_common_wage_amount"] == 1)
+        & valid_payer
+        & no_behavior_exclusion
+        & no_employer_like_exclusion
+        & no_two_way
+    ).astype(int)
+
+    out["rule_high_repeat_soft_negative"] = (
+        eligible
+        & (transfer_from == 0)
+        & no_keyword
+        & (out["has_soft_negative_keyword"] == 1)
+        & no_wage_advance
+        & high_repeat
+        & cycle_or_stable
+        & (out["is_common_wage_amount"] == 1)
+        & valid_payer
+        & no_behavior_exclusion
+        & no_employer_like_exclusion
+        & no_two_way
+    ).astype(int)
+
+    return out
+
+
 def add_small_amount_history_override(df: pd.DataFrame) -> pd.DataFrame:
     out = df.copy()
     out["_history_group_key"] = make_group_key(out)
@@ -658,11 +785,17 @@ def add_soft_negative_alias_to_known_wage_payer_rule(df: pd.DataFrame) -> pd.Dat
             matched_known_wage_payer_key.at[idx] = best_payer
             known_wage_payer_token_overlap.at[idx] = best_overlap
 
+            # TRANSFER FROM texts stay hard-blocked here even though the
+            # effective_hard_negative gate no longer includes TRANSFER FROM
+            # (it was removed from the hard_negative group for the PAY-signal
+            # rule): known-wage-payer alias rescue must not re-open the
+            # self-transfer channel (eval: 16 TF rows, 0 Wages-labelled).
             rule_hits.at[idx] = int(
                 (row.get("is_credit", 0) == 1)
                 and (row.get("base_wages_pred", 0) == 0)
                 and (row.get("small_amount_wage_history_override", 0) == 0)
                 and (row.get("effective_hard_negative", 0) == 0)
+                and (row.get("has_transfer_from_keyword", 0) == 0)
                 and (row.get("has_soft_negative_keyword", 0) == 1)
                 and (row.get("has_wage_advance_keyword", 0) == 0)
                 and (row.get("has_valid_payer_key", 0) == 1)
@@ -675,6 +808,7 @@ def add_soft_negative_alias_to_known_wage_payer_rule(df: pd.DataFrame) -> pd.Dat
                 and (row.get("base_wages_pred", 0) == 0)
                 and (row.get("small_amount_wage_history_override", 0) == 0)
                 and (row.get("effective_hard_negative", 0) == 0)
+                and (row.get("has_transfer_from_keyword", 0) == 0)
                 and (row.get("has_soft_negative_keyword", 0) == 1)
                 and (row.get("has_wage_advance_keyword", 0) == 0)
                 and (row.get("has_valid_payer_key", 0) == 1)
@@ -731,6 +865,9 @@ def choose_rule_name(df: pd.DataFrame) -> pd.Series:
         df["rule_medium_income_high_repeat"] == 1,
         df["rule_stable_payer_without_keywords"] == 1,
         df["rule_recurring_payer_behavior"] == 1,
+        df["rule_transfer_from_pay_signal"] == 1,
+        df["rule_high_repeat_no_keyword"] == 1,
+        df["rule_high_repeat_soft_negative"] == 1,
         df["is_credit"] != 1,
         df["has_hard_negative_keyword"] == 1,
         df["has_soft_negative_keyword"] == 1,
@@ -751,6 +888,9 @@ def choose_rule_name(df: pd.DataFrame) -> pd.Series:
         "medium_income_high_repeat",
         "stable_payer_without_keywords",
         "recurring_payer_behavior",
+        "transfer_from_pay_signal",
+        "high_repeat_no_keyword",
+        "high_repeat_soft_negative",
         "not_wages_not_credit",
         "not_wages_hard_negative_keyword",
         "not_wages_soft_negative_keyword",
@@ -766,6 +906,7 @@ def build_wages_reason(row: pd.Series) -> str:
         ("credit", row.get("is_credit", 0) == 1),
         ("strong_wage_keyword", row.get("has_strong_wage_keyword", 0) == 1),
         ("medium_income_keyword", row.get("has_medium_income_keyword", 0) == 1),
+        ("pay_signal", row.get("has_pay_signal", 0) == 1),
         ("repeat_payer", row.get("same_payer_credit_count", 0) >= 2),
         ("regular_cycle", row.get("has_regular_salary_cycle", 0) == 1),
         ("stable_amount", row.get("has_stable_amount", 0) == 1),
@@ -782,10 +923,14 @@ def build_wages_reason(row: pd.Series) -> str:
 def apply_wages_rules(df: pd.DataFrame) -> pd.DataFrame:
     out = add_hard_gate_flags(df)
     out = add_base_wage_rules(out)
+    out = add_high_repeat_behavior_rules(out)
     out = add_small_amount_history_override(out)
     out = add_soft_negative_alias_to_known_wage_payer_rule(out)
     out["is_wages_pred"] = (
         (out["base_wages_pred"] == 1)
+        | (out["rule_transfer_from_pay_signal"] == 1)
+        | (out["rule_high_repeat_no_keyword"] == 1)
+        | (out["rule_high_repeat_soft_negative"] == 1)
         | (out["small_amount_wage_history_override"] == 1)
         | (out["rule_soft_negative_alias_to_known_wage_payer"] == 1)
         | (out["rule_small_amount_same_known_wage_payer"] == 1)
