@@ -1,4 +1,4 @@
-keyword,counterparty,product_type,match_type
+﻿keyword,counterparty,product_type,match_type
 360 Cash Loans; LazerMoney; 30/12 Financier,360 Cash Loans,personal_loan,keyword
 FINANCIER,360 Cash Loans,personal_loan,keyword
 A1 Cars Finance; A1 CARS,A1 Cars Finance,car_loan,keyword
@@ -66,7 +66,7 @@ CASHSTOP,Cash Stop,personal_loan,keyword
 Cash Train,Cash Train,personal_loan,keyword
 EZI*CASHTRAIN; CASHTRAINBRANCH,Cash Train,personal_loan,keyword
 Cashee; CASHEE,Cashee Loans,personal_loan,keyword
-CashFaster,CashFaster,personal_loan,keyword
+CashFaster; CashFasterLoan; Cash Faster,CashFaster,personal_loan,keyword
 PAYFASTER; FASTER FINANCIAL,CashFaster,personal_loan,keyword
 CashPal,CashPal,personal_loan,keyword
 SIMPLE FINANCE GROUP,CashPal,personal_loan,keyword
@@ -95,7 +95,7 @@ Direct Finance; DIRECT FINANCE,Direct Finance,personal_loan,keyword
 Dollar Dealers; DOLLAR DEALERS,Dollar Dealers,personal_loan,keyword
 Douugh; DOUUGH; Douugh Spot Loan,Douugh Loan,personal_loan,keyword
 Drive Car Finance; DRIVE CAR FINANCE,Drive Car Finance,car_loan,keyword
-SWAG INSTAPAY; INSTAPAY; EARNEDWAGEACCESS,Earned Wage Access,wage_advance,keyword
+SWAG INSTAPAY; INSTAPAY; EARNEDWAGEACCESS;Earned Wage Access,Earned Wage Access,wage_advance,keyword
 EBP Money; EBP MONEY,EBP Money,personal_loan,keyword
 Elevant; ELEVANT,Elevant,personal_loan,keyword
 Etika; ETIKA AUSTRALIA,Etika Australia,personal_loan,keyword
@@ -167,10 +167,10 @@ MONEY CENTER; MONEYCENTRECROYD; CASH LOAN MONEY CENTRES; CASHLOANMONEYCENTRES,Mo
 Money Place,Money Place,personal_loan,keyword
 MONEYPLACE LENDI,Money Place,personal_loan,keyword
 Money3; MONEY3 SACC; MONEY3SACC,Money3,personal_loan,keyword
-M3 COLLECTIONS; M3 LOAN CENTRE,Money3,personal_loan,keyword
+M3 COLLECTIONS; M3 LOAN CENTRE; MONEY3BROKER; M3,Money3,personal_loan,keyword
 MoneyMe; MME,MoneyMe,personal_loan,keyword
 MoneyPlus; Money Plus,MoneyPlus,personal_loan,keyword
-ABAZ PTY LTD,MoneyPlus,personal_loan,keyword
+ABAZ PTY LTD; Abaz,MoneyPlus,personal_loan,keyword
 Moneyspot; Moneys,MoneySpot,personal_loan,keyword
 Mooch Money; @mooch.mon,Mooch Money,personal_loan,keyword
 Mortgage House Capital; MORTGAGE HOUSE,Mortgage House Capital,home_loan,keyword
@@ -256,7 +256,7 @@ VW FINANCE,Volkswagen Financial,car_loan,keyword
 Wageflo; WAGEFLO,Wageflo,wage_advance,keyword
 Wagepay; Wagepay: Instant Pay Advance; WAGEPAYCT,Wagepay,wage_advance,keyword
 WAGEPA,Wagepay,wage_advance,keyword
-Wagetap; Wagetap: Instant Cash Advance; WAGETAP,Wagetap,wage_advance,keyword
+Wagetap; Wagetap: Instant Cash Advance; WAGETAP; WagetapCT,Wagetap,wage_advance,keyword
 PartPay; PARTPAY,Westpac PartPay,bnpl,keyword
 Wisr; Wisr-smarter money habits,Wisr,personal_loan,keyword
 Wizpay; WIZPAY,Wizpay,bnpl,keyword
@@ -343,3 +343,5 @@ Thornmoney; THORNMONEY,Thornmoney,personal_loan,keyword
 Online Credit 365; Online Credit 365,Online Credit 365,personal_loan,keyword
 Swoosh Finance; Ausfinancial Pty Ltd; AusFinancial Pty; Ref: Swoosh,Swoosh Finance,personal_loan,keyword
 SWOOSH LOSS RECO,Swoosh Finance,personal_loan,keyword
+Unipay Finance,Unipay Loans,personal_loan,keyword
+POL PL,Police Bank Personal Loan,personal_loan,keyword
