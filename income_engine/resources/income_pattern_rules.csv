@@ -75,6 +75,25 @@ self_employed_gig,\bSTRIPE\b,regex,STRIPE
 self_employed_gig,\bSQUARE\b,regex,SQUARE
 self_employed_gig,\bPAYPAL\b,regex,PAYPAL
 self_employed_gig,\bSHOPIFY\b,regex,SHOPIFY
+self_employed_gig,\bPARTNER\s+PAYMENT\b,regex,Gig platform partner payment (approx)
+self_employed_gig,\bPAYMENT\s*LINK\b,regex,PaymentLink gig platform payout
+self_employed_gig,\bDIDI\s+PARTNER\s+PAYMENT\b,regex,DiDi partner payment (not PayID-name DiDi)
+self_employed_gig,\bTRANSPORT\s+PARTNER\s+PAYMENT\b,regex,Transport gig partner payment
+self_employed_gig,\bAMAZON\s+PAYMENT\b,regex,Amazon gig payout (not employer Amazon SEV)
+self_employed_gig,\bTHERIGHTFIT\b,regex,TheRightFit gig platform
+self_employed_gig,\bJIMMY\s+BRINGS\b,regex,Jimmy Brings delivery platform
+self_employed_gig,\bTIPALTI\b,regex,Tipalti gig payout platform
+self_employed_gig,\bHUNGRY\s*PANDA\b,regex,HungryPanda delivery platform
+self_employed_gig,\bSPOTTO\b,regex,Spotto gig platform
+self_employed_gig,\bEFTPOS\s+PAYMENT\b,regex,EFTPOS payment (self-employed income)
+self_employed_gig,\bEFTPOS\s+TERMINAL\b,regex,EFTPOS terminal payment (self-employed)
+self_employed_gig,\bNATIONAL\s+BILLING\b,regex,National Billing self-employed payout
+self_employed_gig,\bHNRY\b,regex,Hnry self-employed tax/payout service
+self_employed_gig,\bTIMELY\s*PAY\b,regex,TimelyPay self-employed payout
+self_employed_gig,\bMERCHANT\s+WARRIOR\b,regex,Merchant Warrior payment gateway
+self_employed_gig,\bLIGHTSPEED\b,regex,Lightspeed POS self-employed payout
+self_employed_gig,\bNAYAX\b,regex,Nayax payment platform
+self_employed_gig,\bB2B\s*PAY\b,regex,B2BPay business-to-business payout
 wage_advance,\bBEFOREPAY\b,regex,BEFOREPAY
 wage_advance,\bMYPAYNOW\b,regex,MYPAYNOW
 wage_advance,\bWAGETAP\b,regex,WAGETAP
@@ -114,6 +133,7 @@ hard_negative,\bMCARE\b,regex,MCARE benefits (Medicare)
 hard_negative,\bNIB\b,regex,NIB health insurance rebate
 hard_negative,\bREDRAW\b,regex,Loan redraw proceeds
 hard_negative,\bMORTGAGE\b,regex,Mortgage-related credit
+hard_negative,\bUNPAID\b,regex,UNPAID item / returned cheque (not income)
 wage_advance,\bWAGE\s*ACCESS\b,regex,Earned Wage Access / wage advance service
 wage_advance,\bEARNED\s*WAGE\s*ACCESS\b,regex,Earned Wage Access explicit variant
 wage_advance,\bEARNEDWAGE\s*ACCESS\b,regex,Earned Wage Access concatenated (EARNEDWAGE ACCESS / EARNEDWAGEACCESS; aligns with liability engine keyword)

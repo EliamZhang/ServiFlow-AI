@@ -191,6 +191,7 @@ PAYER_STOP_WORDS = {
 # Config values — loaded from CSV, with built-in defaults as fallback.
 _config = _get_config()
 MIN_NORMAL_WAGE_AMOUNT = int(_config.get("MIN_NORMAL_WAGE_AMOUNT", 100))
+SMALL_WAGE_AMOUNT_MIN = int(_config.get("SMALL_WAGE_AMOUNT_MIN", 50))
 COMMON_WAGE_AMOUNT_MIN = int(_config.get("COMMON_WAGE_AMOUNT_MIN", 300))
 COMMON_WAGE_AMOUNT_MAX = int(_config.get("COMMON_WAGE_AMOUNT_MAX", 10000))
 POSSIBLE_WAGE_AMOUNT_MAX = int(_config.get("POSSIBLE_WAGE_AMOUNT_MAX", 20000))
@@ -552,12 +553,42 @@ def add_base_wage_rules(df: pd.DataFrame) -> pd.DataFrame:
         & (out["has_strong_wage_keyword"] == 1)
     ).astype(int)
 
+    # Strong wage keyword + small amount in [SMALL_WAGE_AMOUNT_MIN, 100).
+    # The standard amount gate (MIN_NORMAL_WAGE_AMOUNT = 100) blocks small but
+    # genuine wage deposits (e.g. HUMANFORCE part-time pay at <$100); a strong
+    # keyword with no soft-negative / wage-advance signal is sufficient alone
+    # for this band.  Same guard rails as rule_strong_wage_keyword.
+    out["rule_strong_wage_keyword_small_amount"] = (
+        (out["is_credit"] == 1)
+        & (out["amount_num"] >= SMALL_WAGE_AMOUNT_MIN)
+        & (out["amount_num"] < MIN_NORMAL_WAGE_AMOUNT)
+        & (out["has_strong_wage_keyword"] == 1)
+        & (out["effective_hard_negative"] == 0)
+        & no_soft_negative
+        & no_wage_advance
+    ).astype(int)
+
     out["rule_transfer_strong_wage_keyword"] = (
         eligible
         & (out["has_soft_negative_keyword"] == 1)
         & no_wage_advance
         & (out["has_strong_wage_keyword"] == 1)
         & (out["has_valid_payer_key"] == 1)
+        & (out["is_possible_wage_amount"] == 1)
+    ).astype(int)
+
+    # TRANSFER FROM + strong keyword where the payer key cannot be extracted:
+    # "TRANSFER FROM PAYROLL SALARY" has every token in PAYER_STOP_WORDS, so
+    # has_valid_payer_key=0 and rule_transfer_strong_wage_keyword never fires.
+    # A strong keyword + TRANSFER FROM is already the exact pair the hard-gate
+    # waiver trusts, so a missing payer key alone should not block it.
+    out["rule_transfer_strong_wage_keyword_no_payer_key"] = (
+        eligible
+        & (out["has_soft_negative_keyword"] == 1)
+        & no_wage_advance
+        & (out["has_strong_wage_keyword"] == 1)
+        & (out["has_transfer_from_keyword"] == 1)
+        & (out["has_valid_payer_key"] == 0)
         & (out["is_possible_wage_amount"] == 1)
     ).astype(int)
 
@@ -626,7 +657,9 @@ def add_base_wage_rules(df: pd.DataFrame) -> pd.DataFrame:
 
     rule_cols = [
         "rule_strong_wage_keyword",
+        "rule_strong_wage_keyword_small_amount",
         "rule_transfer_strong_wage_keyword",
+        "rule_transfer_strong_wage_keyword_no_payer_key",
         "rule_transfer_with_wage_signal",
         "rule_repeat_employer_like_payment",
         "rule_direct_credit_with_repeat",
@@ -857,7 +890,9 @@ def choose_rule_name(df: pd.DataFrame) -> pd.Series:
         df["rule_small_amount_medium_income_high_repeat"] == 1,
         df["small_amount_wage_history_override"] == 1,
         df["rule_strong_wage_keyword"] == 1,
+        df["rule_strong_wage_keyword_small_amount"] == 1,
         df["rule_transfer_strong_wage_keyword"] == 1,
+        df["rule_transfer_strong_wage_keyword_no_payer_key"] == 1,
         df["rule_transfer_with_wage_signal"] == 1,
         df["rule_repeat_employer_like_payment"] == 1,
         df["rule_soft_negative_alias_to_known_wage_payer"] == 1,
@@ -880,7 +915,9 @@ def choose_rule_name(df: pd.DataFrame) -> pd.Series:
         "small_amount_medium_income_high_repeat",
         "small_amount_wage_history_override",
         "strong_wage_keyword",
+        "strong_wage_keyword_small_amount",
         "transfer_strong_wage_keyword",
+        "transfer_strong_wage_keyword_no_payer_key",
         "transfer_with_wage_signal",
         "repeat_employer_like_payment",
         "soft_negative_alias_to_known_wage_payer",
