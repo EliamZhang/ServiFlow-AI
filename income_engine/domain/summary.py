@@ -16,6 +16,11 @@ WEEKDAY_NAMES = {
     6: "Sunday",
 }
 
+# All three Wages income subtypes share one coarse stream label
+# ("wage_001", "wage_002", ...).  The fine subtype remains available via
+# income_category on summary rows.  centrelink keeps its own label.
+WAGES_INCOME_TYPES = frozenset({"salary_payg", "salary_packaging", "self_employed_gig"})
+
 SUMMARY_COLUMNS = [
     "finv_category",
     "stream_id",
@@ -181,9 +186,12 @@ def assign_stream_ids(transactions: pd.DataFrame) -> pd.DataFrame:
     counters: dict[str, int] = {}
     for _, row in stream_order.iterrows():
         category = str(row["income_type_pred"])
-        counters[category] = counters.get(category, 0) + 1
+        stream_label = (
+            "wage" if category in WAGES_INCOME_TYPES else category
+        )
+        counters[stream_label] = counters.get(stream_label, 0) + 1
         stream_ids[row["_income_stream_group_key"]] = (
-            f"{category}_{counters[category]:03d}"
+            f"{stream_label}_{counters[stream_label]:03d}"
         )
 
     output.loc[income_mask, "stream_id"] = (

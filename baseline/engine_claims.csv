@@ -519,19 +519,19 @@ dishonour,2420589,2755538204,Dishonours,-,dishonour:generic,Dishonour transactio
 dishonour,2420589,2755537974,Dishonours,-,dishonour:generic,Dishonour transaction detected,,150
 dishonour,2420589,2755538174,Dishonours,-,dishonour:generic,Dishonour transaction detected,,150
 dishonour,2420589,2755537643,Dishonours,-,dishonour:generic,Dishonour transaction detected,,150
-income,2420589,2755538332,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538266,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538200,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538143,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538067,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537994,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537919,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537866,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537795,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537736,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537665,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537623,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537563,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
+income,2420589,2755538332,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538266,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538200,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538143,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538067,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537994,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537919,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537866,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537795,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537736,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537665,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537623,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537563,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
 liability,2420589,2755538243,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
 liability,2420589,2755538124,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
 liability,2420589,2755537983,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
