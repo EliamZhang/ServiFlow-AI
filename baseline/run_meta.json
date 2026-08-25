@@ -82,7 +82,7 @@
       "liability_engine/resources/dishonours_rules.csv": "b3ddb6ae83460a3d5d33f2a244e76f3908878c1e34cfead98c160998e5128ac5",
       "liability_engine/resources/home_loan_car_loan_rules.csv": "f64310b9e9d2958375a506d2a7f3ce29b59334098c0b182a0e38791714a2c14c",
       "liability_engine/resources/overdrawn_rules.csv": "62f3342ac6609f74e57558383e8567c75cfec824ab4b8dde45e7ae5cd4ae0f16",
-      "rent_engine/resources/rent_rules.csv": "624cadd4108928ebf74d1f9a1770fcf6cb87cbfe095ea9a90ab1cf124eb98afb",
+      "rent_engine/resources/rent_rules.csv": "6de691eac24338bad7749e47492e157e75a0fde74f07b46f1ef2c861f01f08ed",
       "transfer_engine/resources/transfer_counterparty_rules.csv": "b5eb5120da669e3ec0cbb3b6d649bf01c70f2b111144fefbe4b0f46509f36e08",
       "transfer_engine/resources/transfer_external_high_confidence_rules.csv": "f6daefb05bec7881b7a80a5e29c463e7987bd901c88faff46fb278605bb9c72c",
       "transfer_engine/resources/transfer_external_medium_confidence_rules.csv": "d83e080b0ecfabd9165f891f134046f121bce179c8fe76fc3591ccaecaeb996b",

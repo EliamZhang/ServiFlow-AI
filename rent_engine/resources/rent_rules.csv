@@ -4,6 +4,7 @@ tenancy_rent,Rent,TENANCY,keyword,0.85
 landlord_rent,Rent,LANDLORD,keyword,0.85
 property_management_rent,Rent,PROPERTY MANAG,keyword,0.85
 real_estate_rent,Rent,REAL ESTATE,keyword,0.80
+real_es_rent,Rent,REAL ES,keyword,0.80
 realty_rent,Rent,REALTY,keyword,0.80
 owners_corp_rent,Rent,OWNERS CORP,keyword,0.85
 rent_word,Rent,RENT,keyword,0.90
