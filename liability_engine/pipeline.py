@@ -17,7 +17,11 @@ from .domain.counterparty import (
 )
 from .domain.dishonours import apply_dishonour_rules
 from .domain.special_rules import apply_special_rules
-from .domain.streams import add_finv_category, identify_streams
+from .domain.streams import (
+    add_finv_category,
+    identify_streams,
+    renumber_stream_ids_uniform,
+)
 
 
 DEFAULT_RESOURCES_DIR = Path(__file__).resolve().parent / "resources"
@@ -55,6 +59,9 @@ def run_pipeline(
     output = identify_streams(output, reset_stream_ids=True)
     output = add_finv_category(output)
     output = apply_generic_loan_catchall(output)
+    # Must stay last: finv_category derivation (add_finv_category) and every
+    # product/type check inside identify_streams read the stream_id prefix.
+    output = renumber_stream_ids_uniform(output)
     return PipelineResult(
         transactions=output,
     )
