@@ -104,7 +104,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537553,SACC Loans,MoneySpot,liability,sacc_002
 2420589,2755538180,,,,
 2420589,2755537961,Non SACC Loans,Afterpay,liability,bnpl_001
-2420589,2755538332,Wages,Main Roads,income,salary_payg_001
+2420589,2755538332,Wages,Main Roads,income,wage_001
 2420589,2755538003,Non SACC Loans,Afterpay,liability,bnpl_001
 2420589,2755538220,Non SACC Loans,Afterpay,liability,bnpl_001
 2420589,2755538357,,,,
@@ -122,7 +122,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538089,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755537672,,,,
 2420589,2755538186,Non SACC Loans,Wagepay,liability,wage_advance_003
-2420589,2755537623,Wages,Main Roads,income,salary_payg_001
+2420589,2755537623,Wages,Main Roads,income,wage_001
 2420589,2755537746,Automotive,Great Southern Fuels,initial,
 2420589,2755538000,,,,
 2420589,2755538225,,,,
@@ -157,7 +157,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537943,Retail,CALINGIRI TRADERS,initial,
 2420589,2755537766,,,,
 2420589,2755538264,,,,
-2420589,2755537994,Wages,Main Roads,income,salary_payg_001
+2420589,2755537994,Wages,Main Roads,income,wage_001
 2420589,2755538055,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755537832,,,,
 2420589,2755538020,Groceries,DUN DIRECT,initial,
@@ -170,7 +170,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538209,,,,
 2420589,2755537657,Subscription TV,Netflix,initial,
 2420589,2755537804,Retail,SPOTIFY GB,initial,
-2420589,2755537866,Wages,Main Roads,income,salary_payg_001
+2420589,2755537866,Wages,Main Roads,income,wage_001
 2420589,2755537830,,,,
 2420589,2755537551,Retail,SPOTIFY GB,initial,
 2420589,2755538095,Non SACC Loans,Afterpay,liability,bnpl_001
@@ -193,7 +193,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537598,,,,
 2420589,2755537780,Retail,THINGZ GIFTS MIDLAND G HIGH WYCOMBE,initial,
 2420589,2755537807,Telecommunications,OPTUS BILLING SERVICES MACQUARIE PAR,initial,
-2420589,2755537665,Wages,Main Roads,income,salary_payg_001
+2420589,2755537665,Wages,Main Roads,income,wage_001
 2420589,2755538066,SACC Loans,Fundo Loans,liability,sacc_001
 2420589,2755537699,,,,
 2420589,2755537645,Groceries,WOOLWORTHS GROUP LIMITED,initial,
@@ -337,7 +337,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537670,Groceries,THIRSTYCAMEL NORTHAM NORTHAM,initial,
 2420589,2755538363,Dining Out,Hungry Jacks,initial,
 2420589,2755537676,Dining Out,HONG KONG BBQ,initial,
-2420589,2755537919,Wages,Main Roads,income,salary_payg_001
+2420589,2755537919,Wages,Main Roads,income,wage_001
 2420589,2755538112,Dishonours,Wagepay,liability,wage_advance_003
 2420589,2755537554,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538185,External Transfers,Direct Debit Transfer,transfer,External Transfers
@@ -381,7 +381,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538054,External Transfers,Direct Debit Transfer,transfer,External Transfers
 2420589,2755538230,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755538268,Non SACC Loans,MyPayNow,liability,wage_advance_002
-2420589,2755538067,Wages,Main Roads,income,salary_payg_001
+2420589,2755538067,Wages,Main Roads,income,wage_001
 2420589,2755537831,,,,
 2420589,2755537906,Dishonours,-,dishonour,
 2420589,2755538328,Overdrawn,Overdrawn Fee,fee,
@@ -412,7 +412,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538145,Automotive,Puma York Roadhouse,initial,
 2420589,2755538181,Automotive,Puma York Roadhouse,initial,
 2420589,2755538064,Groceries,IGA,initial,
-2420589,2755538266,Wages,Main Roads,income,salary_payg_001
+2420589,2755538266,Wages,Main Roads,income,wage_001
 2420589,2755537601,Dining Out,HJS UPPER COOMERA UPPER COOMERA,initial,
 2420589,2755537703,,,,
 2420589,2755538042,Groceries,WOOLWORTHS GROUP LIMITED,initial,
@@ -479,7 +479,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537859,Non SACC Loans,MyPayNow,liability,wage_advance_002
 2420589,2755537986,,,,
 2420589,2755537668,,,,
-2420589,2755538200,Wages,Main Roads,income,salary_payg_001
+2420589,2755538200,Wages,Main Roads,income,wage_001
 2420589,2755538093,Dining Out,HONG KONG BBQ,initial,
 2420589,2755537584,Automotive,DUNNINGS TOODYAY JUN TOODYAY,initial,
 2420589,2755538291,Automotive,ATLAS SAWYERS SAWYERS VALLE,initial,
@@ -526,7 +526,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538349,Non SACC Loans,CBA Loans,liability,contract_loan_001
 2420589,2755537723,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755538002,Dining Out,HONG KONG BBQ,initial,
-2420589,2755537736,Wages,Main Roads,income,salary_payg_001
+2420589,2755537736,Wages,Main Roads,income,wage_001
 2420589,2755537925,Groceries,WOOLWORTHS GROUP LIMITED,initial,
 2420589,2755537860,Non SACC Loans,Beforepay,liability,wage_advance_001
 2420589,2755538184,,,,
@@ -558,7 +558,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537604,,,,
 2420589,2755537719,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755537696,Automotive,DUNNINGS TOODYAY JUN TOODYAY,initial,
-2420589,2755538143,Wages,Main Roads,income,salary_payg_001
+2420589,2755538143,Wages,Main Roads,income,wage_001
 2420589,2755537980,,,,
 2420589,2755537652,External Transfers,CBA Funds Transfer,transfer,External Transfers
 2420589,2755538021,External Transfers,CBA Funds Transfer,transfer,External Transfers
@@ -689,13 +689,13 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538053,,,,
 2420589,2755538136,,,,
 2420589,2755538149,,,,
-2420589,2755537563,Wages,Main Roads,income,salary_payg_001
+2420589,2755537563,Wages,Main Roads,income,wage_001
 2420589,2755538165,,,,
 2420589,2755538152,,,,
 2420589,2755538008,Health,STEWART'S SAVEMOR PH,initial,
 2420589,2755537788,Unknown Loans,Credit Corp,liability,unknown_001
 2420589,2755538082,,,,
-2420589,2755537795,Wages,Main Roads,income,salary_payg_001
+2420589,2755537795,Wages,Main Roads,income,wage_001
 2420589,2755537815,Groceries,DUN DIRECT,initial,
 2420589,2755538342,,,,
 2420589,2755538032,Groceries,MOORA GROCERY PTY LTD,initial,
