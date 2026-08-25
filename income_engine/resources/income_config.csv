@@ -1,5 +1,6 @@
 config_key,config_value,config_type,description
 MIN_NORMAL_WAGE_AMOUNT,100,int,"Minimum amount for a normal wage transaction"
+SMALL_WAGE_AMOUNT_MIN,50,int,"Minimum amount for strong-keyword small wage deposits"
 COMMON_WAGE_AMOUNT_MIN,300,int,"Lower bound of common wage amount range"
 COMMON_WAGE_AMOUNT_MAX,10000,int,"Upper bound of common wage amount range"
 POSSIBLE_WAGE_AMOUNT_MAX,20000,int,"Maximum possible wage amount"

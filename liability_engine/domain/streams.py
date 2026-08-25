@@ -2318,6 +2318,58 @@ def renumber_stream_ids_by_application(df: pd.DataFrame) -> pd.DataFrame:
     return output
 
 
+def renumber_stream_ids_uniform(output: pd.DataFrame) -> pd.DataFrame:
+    """Renumber every assigned stream_id as ``loan_001``-style IDs.
+
+    Runs at the very end of the liability pipeline, after stream
+    identification and finv_category derivation, so it is a purely cosmetic
+    rename: nothing downstream may read product/type semantics from the
+    stream_id prefix anymore (use product_type / finv_category instead).
+    Numbering is global across applications, ordered by each stream's
+    earliest transaction date so it does not depend on the raw input row
+    order.
+    """
+
+    result = output.copy()
+    sid_text = result["stream_id"].astype("string")
+    has_sid = sid_text.notna() & sid_text.str.strip().ne("")
+    if not has_sid.any():
+        return result
+
+    sid_clean = sid_text.str.strip()
+    dated = pd.to_datetime(result["transaction_date"], errors="coerce")
+
+    # One stable ordering key per stream: earliest transaction date, then
+    # application_id, then the old stream_id as a tiebreaker.
+    stream_meta = (
+        pd.DataFrame(
+            {
+                "stream_id": sid_clean.loc[has_sid],
+                "first_date": dated.loc[has_sid],
+                "application_id": result.loc[has_sid, "application_id"],
+            }
+        )
+        .groupby("stream_id", sort=False)
+        .agg(
+            first_date=("first_date", "min"),
+            application_id=("application_id", "first"),
+        )
+        .reset_index()
+        .sort_values(
+            ["first_date", "application_id", "stream_id"],
+            kind="stable",
+            na_position="last",
+        )
+    )
+
+    mapping = {
+        old: f"loan_{index:03d}"
+        for index, old in enumerate(stream_meta["stream_id"], start=1)
+    }
+    result.loc[has_sid, "stream_id"] = sid_clean.loc[has_sid].map(mapping)
+    return result
+
+
 def identify_streams(
     df: pd.DataFrame,
     group_columns: list[str] | None = None,

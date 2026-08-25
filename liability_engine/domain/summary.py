@@ -116,6 +116,10 @@ def stream_base(stream_id: object) -> str:
 
 
 def derive_finv_category(product_type: object, stream_id: object) -> object:
+    # NOTE: only a fallback safety net (ensure_finv_category) — reads the
+    # sacc_/non_sacc_/unknown_ semantics from the stream_id prefix, which is
+    # only valid for pre-rename data.  Normal pipeline data always carries a
+    # finv_category already, so this path should not be relied upon.
     product = normalize_text(product_type)
     base = stream_base(stream_id)
     if not product or not base:
@@ -282,16 +286,20 @@ def filter_product_streams(
     df: pd.DataFrame,
     stream_prefix: str,
 ) -> pd.DataFrame:
-    """Return rows whose stream_id starts with *stream_prefix*.
+    """Return rows belonging to the product named *stream_prefix*.
 
-    finv_category holds coarse categories now (multiple products share one),
-    so product-level summary builders filter by the stream_id prefix instead.
+    Stream IDs no longer carry the product prefix (renumber_stream_ids_uniform
+    renames them to ``loan_001``-style IDs at the end of the pipeline), so
+    product-level summary builders filter by ``product_type`` instead.
+    ``unknown`` has no product_type of its own (its rows keep product_type
+    ``personal_loan``), so it is matched via finv_category.
     """
-    stream_text = df["stream_id"].astype("string").str.strip()
-    return df[
-        stream_text.str.startswith(stream_prefix, na=False)
-        & stream_text.ne("")
-    ].copy()
+    if stream_prefix == "unknown":
+        return df[
+            df["finv_category"].astype("string").eq("Unknown Loans")
+        ].copy()
+    product = df["product_type"].astype("string").str.strip()
+    return df[product.eq(stream_prefix)].copy()
 
 
 def get_valid_credits(group: pd.DataFrame) -> pd.DataFrame:
@@ -433,7 +441,7 @@ def _derive_repayment_amounts(
 
 
 def calculate_predicted_closing_date(
-    stream_id: str,
+    finv_category: object,
     status: str,
     funded_amount: Decimal,
     repaid_amount: Decimal,
@@ -441,7 +449,9 @@ def calculate_predicted_closing_date(
     frequency: str,
     transaction_end_date: pd.Timestamp | pd.NaT,
 ) -> str:
-    if not stream_id.lower().startswith("sacc_"):
+    # Stream IDs no longer carry the "sacc_" prefix (they are renamed to
+    # loan_001-style IDs), so use the derived category instead.
+    if str(finv_category).strip().casefold() != "sacc loans":
         return "NA"
     if status == "Closed":
         return "NA"
@@ -788,7 +798,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
         )
 
         predicted_closing_date = calculate_predicted_closing_date(
-            normalize_text(stream_id_value),
+            finv_category,
             status,
             funded_amount,
             repaid_amount,

@@ -1,4 +1,4 @@
-rule_id,target_field,rule_name,match_scope,match_type,pattern,account_type,dr_cr,bank,amount_gt,priority,enabled
+﻿rule_id,target_field,rule_name,match_scope,match_type,pattern,account_type,dr_cr,bank,amount_gt,priority,enabled
 HL001,is_home_loan,Home Loan,text,keyword,home loan,*,*,*,,100,1
 HL002,is_home_loan,HomeLoan,text,keyword,homeloan,*,*,*,,100,1
 HL003,is_home_loan,Home_Loan,text,keyword,home_loan,*,*,*,,100,1
@@ -110,3 +110,31 @@ CL069,is_car_loan,Trinity Auto Finance,text_or_counterparty,regex,trinity\s*auto
 CL070,is_car_loan,UDC Finance,text_or_counterparty,regex,udc\s*finance,*,*,*,,90,1
 CL071,is_car_loan,Wisr Car Loans,text_or_counterparty,regex,wisr\s*car\s*loans,*,*,*,,90,1
 CL072,is_car_loan,Yamaha Motor Finance,text_or_counterparty,regex,yamaha\s*motor\s*finance,*,*,*,,90,1
+HL044,is_home_loan,Police Bank Home Loan,text_or_counterparty,regex,pol\s*hl,*,*,*,,90,1
+HL045,is_home_loan,Police Bank Home Loan,text_or_counterparty,regex,pol\s*home\s*loan,*,*,*,,90,1
+HL039,is_home_loan,Firstmac,text_or_counterparty,regex,firstmac,*,*,*,,90,1
+HL040,is_home_loan,Loans.com.au,text_or_counterparty,regex,loanscomau,*,*,*,,90,1
+HL041,is_home_loan,State Custodians,text_or_counterparty,regex,statecustodians,*,*,*,,90,1
+HL042,is_home_loan,Tiimely Home,text_or_counterparty,regex,tiimelyhome,*,*,*,,90,1
+HL043,is_home_loan,Unloan,text_or_counterparty,regex,unloan,*,*,*,,90,1
+CL074,is_car_loan,Car Finance Australia,text_or_counterparty,regex,carfinanceaustralia,*,*,*,,90,1
+CL075,is_car_loan,Dealer Finance,text_or_counterparty,regex,dealerfinance,*,*,*,,90,1
+CL076,is_car_loan,Dealer Motor Finance,text_or_counterparty,regex,dealermotorfinance,*,*,*,,90,1
+CL077,is_car_loan,FleetPartners Group,text_or_counterparty,regex,fleetpartnersgroup,*,*,*,,90,1
+CL078,is_car_loan,Honda Financial Services,text_or_counterparty,regex,hondafinancialservices,*,*,*,,90,1
+CL079,is_car_loan,Hyundai Finance,text_or_counterparty,regex,hyundaifinance,*,*,*,,90,1
+CL080,is_car_loan,Kia Finance,text_or_counterparty,regex,kiafinance,*,*,*,,90,1
+CL081,is_car_loan,Last Chance Car Finance,text_or_counterparty,regex,lastchancecarfinance,*,*,*,,90,1
+CL082,is_car_loan,Miracle Car Finance,text_or_counterparty,regex,miraclecarfinance,*,*,*,,90,1
+CL083,is_car_loan,Mitsubishi Motors Financial Services,text_or_counterparty,regex,mitsubishimotorsfinancialservices,*,*,*,,90,1
+CL084,is_car_loan,Motor Finance Australia,text_or_counterparty,regex,motorfinanceaustralia,*,*,*,,90,1
+CL085,is_car_loan,Motor Finance Wizard,text_or_counterparty,regex,motorfinancewizard,*,*,*,,90,1
+CL086,is_car_loan,National Motor Loans,text_or_counterparty,regex,nationalmotorloans,*,*,*,,90,1
+CL087,is_car_loan,PACCAR Financial,text_or_counterparty,regex,paccarfinancial,*,*,*,,90,1
+CL088,is_car_loan,RideLend,text_or_counterparty,regex,ridelend,*,*,*,,90,1
+CL089,is_car_loan,Scania Finance,text_or_counterparty,regex,scaniafinance,*,*,*,,90,1
+CL090,is_car_loan,SG Fleet Group,text_or_counterparty,regex,sgfleetgroup,*,*,*,,90,1
+CL091,is_car_loan,Summit Fleet,text_or_counterparty,regex,summitfleet,*,*,*,,90,1
+CL092,is_car_loan,Toyota Fleet Management,text_or_counterparty,regex,toyotafleetmanagement,*,*,*,,90,1
+CL093,is_car_loan,Vehicle Finance Australia,text_or_counterparty,regex,vehiclefinanceaustralia,*,*,*,,90,1
+CL094,is_car_loan,Volvo Car Financial Services,text_or_counterparty,regex,volvocarfinancialservices,*,*,*,,90,1

@@ -1,23 +1,19 @@
 engine_id,application_id,transaction_id,finv_category,counterparty,classification_rule_id,classification_reason,stream_id,priority
 initial,2420589,2755538076,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755537885,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537654,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537642,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538013,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537997,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537777,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537809,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537692,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
-initial,2420589,2755537952,Retail,THINGZ,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ",,1
+initial,2420589,2755537952,Retail,THINGZ GIFTS MIDLAND G HIGH WYCOMBE,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ GIFTS MIDLAND G HIGH WYCOMBE",,1
 initial,2420589,2755538362,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537954,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537543,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537946,Groceries,7-ELEVEN STORES PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=7 ELEVEN, merchant=7-ELEVEN STORES PTY LTD",,1
 initial,2420589,2755537591,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538045,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537917,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755537715,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
-initial,2420589,2755538160,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537673,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538219,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537578,Groceries,Foodworks Dalwallinu,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DALWALLINU FOODWORKS, merchant=Foodworks Dalwallinu",,1
@@ -28,7 +24,6 @@ initial,2420589,2755537877,Automotive,RAMPAGE RETAIL PTY LTD,merchant_kb_match,"
 initial,2420589,2755537944,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755537947,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537793,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
-initial,2420589,2755537967,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537761,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537965,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538327,Dining Out,Hungry Birds Pizza,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HUNGRY BIRDS PIZZA, merchant=Hungry Birds Pizza",,1
@@ -43,16 +38,11 @@ initial,2420589,2755537639,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537826,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537956,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538134,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538061,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538282,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537637,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537755,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538005,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755538027,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538099,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538006,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
-initial,2420589,2755537549,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755537975,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538353,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537631,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538211,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
@@ -62,8 +52,7 @@ initial,2420589,2755537880,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755538169,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538218,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537677,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537644,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
-initial,2420589,2755537721,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537721,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537802,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537934,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538295,Dining Out,Bucking Bull,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=BUCKING BULL, merchant=Bucking Bull",,1
@@ -76,9 +65,7 @@ initial,2420589,2755537731,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755538180,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538332,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755538357,Dining Out,MCDONALDS,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=MCDONALDS",,1
-initial,2420589,2755537653,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537634,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755537632,Groceries,Quin's Gourmet Butcher,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=QUINS GOURMET BUTCH, merchant=Quin's Gourmet Butcher",,1
 initial,2420589,2755538170,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537836,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538252,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
@@ -94,14 +81,12 @@ initial,2420589,2755537784,Dining Out,Settlers Cafe,merchant_kb_match,"category=
 initial,2420589,2755538308,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537936,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537565,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
-initial,2420589,2755538318,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538010,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538350,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537949,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537684,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537669,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755537680,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=KMART, merchant=KMART AUSTRALIA LIMITED",,1
-initial,2420589,2755538014,Personal Care,SOUTHERN,merchant_kb_match,"category=Personal Care; rule=merchant_kb_match; evidence=keyword=SOUTHERN, merchant=SOUTHERN",,1
+initial,2420589,2755538014,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755537808,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538261,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755537886,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -113,13 +98,13 @@ initial,2420589,2755538020,Groceries,DUN DIRECT,merchant_kb_match,"category=Groc
 initial,2420589,2755537933,Automotive,DUNNINGS WYALKATCHEM WYALKATCHEM,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS WYALKATCHEM WYALKATCHEM, merchant=DUNNINGS WYALKATCHEM WYALKATCHEM",,1
 initial,2420589,2755538335,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538324,Groceries,IGA,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=IGA, merchant=IGA",,1
-initial,2420589,2755538083,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
+initial,2420589,2755538083,Subscription TV,SPOTIFY GB,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538209,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537657,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM MELBOURNE VI, merchant=Netflix",,1
-initial,2420589,2755537804,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
+initial,2420589,2755537804,Subscription TV,SPOTIFY GB,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755537866,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537830,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537551,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
+initial,2420589,2755537551,Subscription TV,SPOTIFY GB,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538070,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537959,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538320,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -130,18 +115,15 @@ initial,2420589,2755537700,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537588,Dining Out,Kondinin Hotel,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=KONDININ HOTEL KONDININ, merchant=Kondinin Hotel",,1
 initial,2420589,2755537707,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538208,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537978,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537598,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537780,Retail,THINGZ,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ",,1
-initial,2420589,2755537807,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
+initial,2420589,2755537780,Retail,THINGZ GIFTS MIDLAND G HIGH WYCOMBE,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ GIFTS MIDLAND G HIGH WYCOMBE",,1
+initial,2420589,2755537807,Telecommunications,OPTUS BILLING SERVICES MACQUARIE PAR,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=OPTUS BILLING SERVICES MACQUARIE PAR",,1
 initial,2420589,2755537665,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537699,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537645,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538179,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
-initial,2420589,2755537837,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538236,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
 initial,2420589,2755537545,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755537548,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538227,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537968,Dining Out,Hungry Jacks,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HUNGRY JACKS, merchant=Hungry Jacks",,1
 initial,2420589,2755537760,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
@@ -193,7 +175,7 @@ initial,2420589,2755537785,Retail,AUSPOST PO BOX,merchant_kb_match,"category=Ret
 initial,2420589,2755538232,Department Stores,Big W,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=BIG W, merchant=Big W",,1
 initial,2420589,2755537990,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755538358,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537685,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537685,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537927,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537567,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537701,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -201,8 +183,6 @@ initial,2420589,2755537953,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537950,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537834,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537789,Pet Care,NORTHAM FEED &,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=NORTHAM FEED HIRE, merchant=NORTHAM FEED &",,1
-initial,2420589,2755537899,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
-initial,2420589,2755537855,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537590,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755538086,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537747,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
@@ -217,28 +197,25 @@ initial,2420589,2755538077,Entertainment,Innovative Retail,merchant_kb_match,"ca
 initial,2420589,2755538033,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537957,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538092,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537650,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538129,Dining Out,FOOLOK MIDLAND,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=FOOLOK MIDLAND, merchant=FOOLOK MIDLAND",,1
 initial,2420589,2755538250,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
-initial,2420589,2755538059,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755538235,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
+initial,2420589,2755538235,Subscription TV,SPOTIFY GB,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755537711,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537566,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538217,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537569,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538212,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
-initial,2420589,2755537794,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537794,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755538063,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538065,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537647,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537833,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538341,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537798,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
-initial,2420589,2755537670,Groceries,THIRSTYCAMEL,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=THIRSTYCAMEL NORTHAM NORTHAM, merchant=THIRSTYCAMEL",,1
+initial,2420589,2755537670,Groceries,THIRSTYCAMEL NORTHAM NORTHAM,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=THIRSTYCAMEL NORTHAM NORTHAM, merchant=THIRSTYCAMEL NORTHAM NORTHAM",,1
 initial,2420589,2755538363,Dining Out,Hungry Jacks,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HUNGRY JACKS, merchant=Hungry Jacks",,1
 initial,2420589,2755537676,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755537919,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
-initial,2420589,2755538185,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537879,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538307,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537597,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -258,7 +235,6 @@ initial,2420589,2755538144,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,
 initial,2420589,2755538355,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537674,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537932,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb_match,"category=Department Stores; rule=merchant_kb_match; evidence=keyword=KMART, merchant=KMART AUSTRALIA LIMITED",,1
-initial,2420589,2755538154,Health,CHEMIST SEAFORD,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=CHEMIST, merchant=CHEMIST SEAFORD",,1
 initial,2420589,2755537763,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=MOORA IGA, merchant=MOORA GROCERY PTY LTD",,1
 initial,2420589,2755537671,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538067,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
@@ -272,7 +248,6 @@ initial,2420589,2755537939,Automotive,BP,merchant_kb_match,"category=Automotive;
 initial,2420589,2755537905,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
 initial,2420589,2755538105,Transport,Australia Post,merchant_kb_match,"category=Transport; rule=merchant_kb_match; evidence=keyword=AUST POST, merchant=Australia Post",,1
 initial,2420589,2755538084,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537754,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537893,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755538087,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537822,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -287,25 +262,23 @@ initial,2420589,2755538266,Utilities,Main Roads,merchant_kb_match,"category=Util
 initial,2420589,2755537601,Dining Out,HJS UPPER COOMERA UPPER COOMERA,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HJS, merchant=HJS UPPER COOMERA UPPER COOMERA",,1
 initial,2420589,2755537703,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538042,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538121,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755538121,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537900,Groceries,Greenway Grocers,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=GREENWAY GROCERS PTY L WYALKATCHEM, merchant=Greenway Grocers",,1
 initial,2420589,2755537850,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538340,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537958,Health,MUNDARING PHARMACY,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MUNDARING, merchant=MUNDARING PHARMACY",,1
+initial,2420589,2755537958,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
 initial,2420589,2755537884,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755537581,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538244,Dining Out,MANDARIN DUCK CANNINGTON,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MANDARIN DUCK CANNINGTON, merchant=MANDARIN DUCK CANNINGTON",,1
 initial,2420589,2755537572,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538293,Health,York Pharmacy,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=YORK PHARMACY PTY LTD YORK, merchant=York Pharmacy",,1
 initial,2420589,2755538115,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538323,Dining Out,SURRY CLUB HOTEL,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SURRY, merchant=SURRY CLUB HOTEL",,1
 initial,2420589,2755537881,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537878,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
-initial,2420589,2755538253,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537605,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537844,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537756,Automotive,DUNNINGS ROADHOUSE S SOUTHERN CRO,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS ROADHOUSE S SOUTHERN CRO, merchant=DUNNINGS ROADHOUSE S SOUTHERN CRO",,1
-initial,2420589,2755537570,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537570,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755538222,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538001,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537882,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
@@ -314,7 +287,6 @@ initial,2420589,2755537759,Gyms and other memberships,CITY OF MELVILLE BOORAGOON
 initial,2420589,2755537679,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755537915,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537577,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538123,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537816,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537668,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538200,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
@@ -336,15 +308,13 @@ initial,2420589,2755537824,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_m
 initial,2420589,2755538223,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755537976,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538081,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
-initial,2420589,2755538046,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537739,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538090,Health,Medihire & Sales,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MEDIHIRE SALES, merchant=Medihire & Sales",,1
-initial,2420589,2755538161,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755538018,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537589,Dining Out,Kondinin Hotel,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=KONDININ HOTEL KONDININ, merchant=Kondinin Hotel",,1
 initial,2420589,2755537987,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537929,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538016,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
+initial,2420589,2755538016,Telecommunications,OPTUS BILLING SERVICES MACQUARIE PAR,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=OPTUS BILLING SERVICES MACQUARIE PAR",,1
 initial,2420589,2755537769,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755537748,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538002,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
@@ -370,15 +340,11 @@ initial,2420589,2755538007,Department Stores,KMART AUSTRALIA LIMITED,merchant_kb
 initial,2420589,2755538234,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538150,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537604,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537719,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537696,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538143,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537980,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537652,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755538021,Groceries,VAPE,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=VAPE, merchant=VAPE",,1
 initial,2420589,2755538153,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537875,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538190,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537851,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537741,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538343,Health,ST JOHN SUBIACO,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=ST JOHN SUBIACO, merchant=ST JOHN SUBIACO",,1
@@ -388,11 +354,10 @@ initial,2420589,2755538122,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537681,Home Improvement,BUNNINGS GROUP LIMITED,merchant_kb_match,"category=Home Improvement; rule=merchant_kb_match; evidence=keyword=BUNNINGS, merchant=BUNNINGS GROUP LIMITED",,1
 initial,2420589,2755538263,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538281,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538177,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755538352,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538279,Health,MUNDARING PHARMACY,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MUNDARING, merchant=MUNDARING PHARMACY",,1
+initial,2420589,2755538279,Dining Out,KFC,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=KFC, merchant=KFC",,1
 initial,2420589,2755538239,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
-initial,2420589,2755538238,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
+initial,2420589,2755538238,Telecommunications,OPTUS BILLING SERVICES MACQUARIE PAR,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=OPTUS BILLING SERVICES MACQUARIE PAR",,1
 initial,2420589,2755537883,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=MOORA IGA, merchant=MOORA GROCERY PTY LTD",,1
 initial,2420589,2755537580,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755537602,Dining Out,THE LAKES,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=THE LAKES, merchant=THE LAKES",,1
@@ -402,12 +367,10 @@ initial,2420589,2755537776,Automotive,Puma York Roadhouse,merchant_kb_match,"cat
 initial,2420589,2755538103,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755538229,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
 initial,2420589,2755537800,Health,MIDOC.COM.AU UPPER MOUNT G,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=MIDOC COM AU, merchant=MIDOC.COM.AU UPPER MOUNT G",,1
-initial,2420589,2755537758,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755537751,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537923,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538075,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538304,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537926,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
+initial,2420589,2755537926,Subscription TV,SPOTIFY GB,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538309,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755537916,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538216,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -417,12 +380,10 @@ initial,2420589,2755537640,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537928,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538338,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537571,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538131,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755538157,Retail,THINGZ,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ",,1
-initial,2420589,2755538133,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
-initial,2420589,2755537825,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
+initial,2420589,2755538157,Retail,THINGZ GIFTS MIDLAND G HIGH WYCOMBE,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=THINGZ GIFTS NORTHAM, merchant=THINGZ GIFTS MIDLAND G HIGH WYCOMBE",,1
+initial,2420589,2755538133,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537913,Dining Out,MCDONALDS,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=MCDONALDS",,1
-initial,2420589,2755537829,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755537829,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537744,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537801,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537546,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -430,20 +391,16 @@ initial,2420589,2755538207,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537835,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537845,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537935,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537691,Groceries,Quin's Gourmet Butcher,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=QUINS GOURMET BUTCH, merchant=Quin's Gourmet Butcher",,1
 initial,2420589,2755538029,Dining Out,MCDONALDS,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=MCDONALDS, merchant=MCDONALDS",,1
-initial,2420589,2755537811,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755537921,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
+initial,2420589,2755537921,Telecommunications,OPTUS BILLING SERVICES MACQUARIE PAR,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=OPTUS BILLING SERVICES MACQUARIE PAR",,1
 initial,2420589,2755538119,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537735,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537762,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755537717,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537870,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538317,Groceries,FRESH TRADING CO OPS,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=FRESH TRADING CO OPS MALABAINE, merchant=FRESH TRADING CO OPS",,1
 initial,2420589,2755538147,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537720,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538277,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
-initial,2420589,2755537608,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537745,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538272,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538073,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM, merchant=Netflix",,1
@@ -454,7 +411,7 @@ initial,2420589,2755538337,Health,ST JOHN OF GOD MIDLAND,merchant_kb_match,"cate
 initial,2420589,2755537848,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538151,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538271,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755538031,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755538031,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755538294,Retail,PURCHASE OFFICEWORKS,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=OFFICEWORKS, merchant=PURCHASE OFFICEWORKS",,1
 initial,2420589,2755537678,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538359,Health,THE TRUSTEE FOR LIM,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=THE TRUSTEE FOR LIM, merchant=THE TRUSTEE FOR LIM",,1
@@ -465,7 +422,7 @@ initial,2420589,2755538149,Information,Google,merchant_kb_match,"category=Inform
 initial,2420589,2755537563,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755538165,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538152,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538008,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755538008,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755538082,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755537795,Utilities,Main Roads,merchant_kb_match,"category=Utilities; rule=merchant_kb_match; evidence=keyword=MAIN ROADS, merchant=Main Roads",,1
 initial,2420589,2755537815,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
@@ -474,11 +431,11 @@ initial,2420589,2755538032,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"ca
 initial,2420589,2755538251,Retail,eBay,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=EBAY, merchant=eBay",,1
 initial,2420589,2755538148,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537876,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
-initial,2420589,2755537603,Telecommunications,Optus,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=Optus",,1
+initial,2420589,2755537603,Telecommunications,OPTUS BILLING SERVICES MACQUARIE PAR,merchant_kb_match,"category=Telecommunications; rule=merchant_kb_match; evidence=keyword=OPTUS BILLING MACQUARIEPARK NS, merchant=OPTUS BILLING SERVICES MACQUARIE PAR",,1
 initial,2420589,2755538074,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755538118,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538156,Pet Care,NORTHAM FEED &,merchant_kb_match,"category=Pet Care; rule=merchant_kb_match; evidence=keyword=NORTHAM FEED HIRE, merchant=NORTHAM FEED &",,1
-initial,2420589,2755538019,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH NORTHAM, merchant=STEWART'S SAVEMOR PH",,1
+initial,2420589,2755538019,Health,STEWART'S SAVEMOR PH,merchant_kb_match,"category=Health; rule=merchant_kb_match; evidence=keyword=STEWART S SAVEMOR PH, merchant=STEWART'S SAVEMOR PH",,1
 initial,2420589,2755537813,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755538088,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537930,Subscription TV,Netflix,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=NETFLIX COM MELBOURNE VI, merchant=Netflix",,1
@@ -487,15 +444,13 @@ initial,2420589,2755537729,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_m
 initial,2420589,2755538221,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537998,Automotive,BP,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=BP, merchant=BP",,1
 initial,2420589,2755538306,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538273,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537686,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538009,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537675,Retail,SPOTIFY GB,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
+initial,2420589,2755537675,Subscription TV,SPOTIFY GB,merchant_kb_match,"category=Subscription TV; rule=merchant_kb_match; evidence=keyword=SPOTIFY, merchant=SPOTIFY GB",,1
 initial,2420589,2755538206,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537625,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755538044,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537806,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755538288,Groceries,Zepto,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=ZEPTO, merchant=Zepto",,1
 initial,2420589,2755537852,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537846,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537695,Automotive,DUNNINGS GOOMALLING GOOMALLING,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS GOOMALLING GOOMALLING, merchant=DUNNINGS GOOMALLING GOOMALLING",,1
@@ -509,8 +464,6 @@ initial,2420589,2755537629,Groceries,MOORA GROCERY PTY LTD,merchant_kb_match,"ca
 initial,2420589,2755537740,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=DUNNINGS TOODYAY JUN TOODYAY, merchant=DUNNINGS TOODYAY JUN TOODYAY",,1
 initial,2420589,2755538164,Automotive,Puma York Roadhouse,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=PUMA YORK ROADHOUSE, merchant=Puma York Roadhouse",,1
 initial,2420589,2755538072,Groceries,Spud Shed,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=SPUD SHED, merchant=Spud Shed",,1
-initial,2420589,2755538037,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
-initial,2420589,2755537901,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537698,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537843,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
 initial,2420589,2755537587,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
@@ -531,7 +484,6 @@ initial,2420589,2755538022,Automotive,DUNNINGS TOODYAY JUN TOODYAY,merchant_kb_m
 initial,2420589,2755537999,Groceries,Coles,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=COLES, merchant=Coles",,1
 initial,2420589,2755537638,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538237,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537778,Dining Out,SALT,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=SALT, merchant=SALT",,1
 initial,2420589,2755537573,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755537823,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538028,Groceries,YORK QUALITY,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=YORK QUALITY, merchant=YORK QUALITY",,1
@@ -540,14 +492,12 @@ initial,2420589,2755537992,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_ma
 initial,2420589,2755538289,Dining Out,HONG KONG BBQ,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=HONG KONG BBQ, merchant=HONG KONG BBQ",,1
 initial,2420589,2755537611,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538142,Groceries,WOOLWORTHS GROUP LIMITED,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=WOOLWORTHS, merchant=WOOLWORTHS GROUP LIMITED",,1
-initial,2420589,2755538330,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537752,Groceries,DUN DIRECT,merchant_kb_match,"category=Groceries; rule=merchant_kb_match; evidence=keyword=DUN DIRECT PTY LTD WONGAN HILLS, merchant=DUN DIRECT",,1
 initial,2420589,2755537909,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755538104,Retail,Red Dot,merchant_kb_match,"category=Retail; rule=merchant_kb_match; evidence=keyword=RED DOT STORES, merchant=Red Dot",,1
 initial,2420589,2755538245,Dining Out,THE LAKES,merchant_kb_match,"category=Dining Out; rule=merchant_kb_match; evidence=keyword=THE LAKES, merchant=THE LAKES",,1
 initial,2420589,2755538146,Automotive,Great Southern Fuels,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=GREAT SOUTHERN FUELS NORTHAM, merchant=Great Southern Fuels",,1
 initial,2420589,2755537765,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
-initial,2420589,2755537903,Entertainment,COMMBANK STADIUM,merchant_kb_match,"category=Entertainment; rule=merchant_kb_match; evidence=keyword=COMMBANK, merchant=COMMBANK STADIUM",,1
 initial,2420589,2755537805,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
 initial,2420589,2755537599,Automotive,ATLAS SAWYERS SAWYERS VALLE,merchant_kb_match,"category=Automotive; rule=merchant_kb_match; evidence=keyword=ATLAS SAWYERS SAWYERS VALLE, merchant=ATLAS SAWYERS SAWYERS VALLE",,1
 initial,2420589,2755537819,Information,Google,merchant_kb_match,"category=Information; rule=merchant_kb_match; evidence=keyword=GOOGLE, merchant=Google",,1
@@ -767,222 +717,222 @@ dishonour,2420589,2755538204,Dishonours,-,dishonour:generic,Dishonour transactio
 dishonour,2420589,2755537974,Dishonours,-,dishonour:generic,Dishonour transaction detected,,150
 dishonour,2420589,2755538174,Dishonours,-,dishonour:generic,Dishonour transaction detected,,150
 dishonour,2420589,2755537643,Dishonours,-,dishonour:generic,Dishonour transaction detected,,150
-income,2420589,2755538332,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538266,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538200,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538143,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755538067,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537994,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537919,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537866,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537795,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537736,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537665,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537623,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
-income,2420589,2755537563,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",salary_payg_001,200
+income,2420589,2755538332,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538266,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538200,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538143,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755538067,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537994,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537919,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537866,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537795,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537736,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537665,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537623,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
+income,2420589,2755537563,Wages,Main Roads,salary_payg_wages_rule,"category=salary_payg; rule=salary_payg_wages_rule; evidence=credit, wages_detector, strong_wage_keyword",wage_001,200
 liability,2420589,2755538243,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538124,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755537983,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
+liability,2420589,2755538124,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755537983,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
 liability,2420589,2755538196,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
 liability,2420589,2755537694,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
 liability,2420589,2755538058,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538262,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538334,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537600,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537660,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755538071,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538173,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",contract_loan_001,300
-liability,2420589,2755538192,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537544,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538047,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538039,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537782,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538326,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537981,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538310,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537890,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537779,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538199,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",sacc_001,300
-liability,2420589,2755537553,SACC Loans,MoneySpot,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=MoneySpot",sacc_002,300
-liability,2420589,2755537961,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538003,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538220,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538048,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538097,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538128,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538175,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538186,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538172,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538171,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538023,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537995,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755538114,Dishonours,Beforepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537948,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538055,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537728,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537920,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755538095,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537655,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
+liability,2420589,2755538262,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538334,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537600,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537660,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755538071,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538173,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",loan_002,300
+liability,2420589,2755538192,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537544,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538047,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538039,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537782,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538326,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537981,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538310,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537890,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537779,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538199,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",loan_009,300
+liability,2420589,2755537553,SACC Loans,MoneySpot,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=MoneySpot",loan_012,300
+liability,2420589,2755537961,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538003,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538220,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538048,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538097,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538128,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538175,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538186,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538172,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538171,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538023,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537995,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755538114,Dishonours,Beforepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537948,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538055,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537728,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537920,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755538095,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537655,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
 liability,2420589,2755537619,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537617,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538066,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",sacc_001,300
+liability,2420589,2755537617,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538066,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",loan_009,300
 liability,2420589,2755537662,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538060,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538139,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755537964,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538356,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537737,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538286,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",contract_loan_001,300
-liability,2420589,2755537750,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538056,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537612,SACC Loans,MoneySpot,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=MoneySpot",sacc_002,300
+liability,2420589,2755538060,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538139,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755537964,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538356,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537737,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538286,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",loan_002,300
+liability,2420589,2755537750,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538056,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537612,SACC Loans,MoneySpot,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=MoneySpot",loan_012,300
 liability,2420589,2755537773,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
 liability,2420589,2755537708,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538057,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
+liability,2420589,2755538057,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
 liability,2420589,2755537579,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537840,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537962,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538141,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537718,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537963,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538101,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
+liability,2420589,2755537840,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537962,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538141,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537718,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537963,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538101,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
 liability,2420589,2755537838,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538325,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538098,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538267,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
+liability,2420589,2755538325,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538098,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538267,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
 liability,2420589,2755537863,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538034,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538201,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
+liability,2420589,2755538034,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538201,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
 liability,2420589,2755538038,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538256,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538112,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538247,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537725,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loc_001,300
-liability,2420589,2755537799,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loc_001,300
-liability,2420589,2755538333,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755538258,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537609,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
+liability,2420589,2755538256,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538112,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538247,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537725,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537799,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755538333,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755538258,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537609,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
 liability,2420589,2755537984,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537842,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538265,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",sacc_001,300
-liability,2420589,2755537971,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537706,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537993,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",sacc_001,300
-liability,2420589,2755537985,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538230,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538268,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
+liability,2420589,2755537842,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538265,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",loan_009,300
+liability,2420589,2755537971,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537706,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537993,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",loan_009,300
+liability,2420589,2755537985,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538230,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538268,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
 liability,2420589,2755538328,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537868,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538036,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538130,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537552,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538194,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537772,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537895,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537931,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loc_001,300
-liability,2420589,2755537862,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
+liability,2420589,2755537868,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538036,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538130,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537552,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538194,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537772,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537895,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537931,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537862,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
 liability,2420589,2755538187,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537973,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538024,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537710,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538323,Unknown Loans,Fundo Loans,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",unknown_002,300
-liability,2420589,2755538166,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538228,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
+liability,2420589,2755537973,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538024,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537710,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538323,Unknown Loans,Fundo Loans,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",loan_007,300
+liability,2420589,2755538166,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538228,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
 liability,2420589,2755537558,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537996,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537796,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755538125,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537888,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537775,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538025,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538344,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
+liability,2420589,2755537996,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537796,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755538125,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537888,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537775,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538025,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538344,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
 liability,2420589,2755538260,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537812,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loc_001,300
-liability,2420589,2755537615,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loc_001,300
-liability,2420589,2755537859,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538319,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537912,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537867,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755537594,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537937,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537633,SACC Loans,MoneySpot,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=MoneySpot",sacc_002,300
-liability,2420589,2755537907,Dishonours,Beforepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
+liability,2420589,2755537812,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537615,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537859,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538319,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537912,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537867,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755537594,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537937,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537633,SACC Loans,MoneySpot,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=MoneySpot",loan_012,300
+liability,2420589,2755537907,Dishonours,Beforepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
 liability,2420589,2755538313,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537616,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537658,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538117,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537561,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538285,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755538349,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",contract_loan_001,300
-liability,2420589,2755537723,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537860,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538311,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",contract_loan_001,300
-liability,2420589,2755538191,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537904,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538035,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537712,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537663,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538167,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538138,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",sacc_001,300
-liability,2420589,2755538069,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537787,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
+liability,2420589,2755537616,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537658,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538117,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537561,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538285,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755538349,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",loan_002,300
+liability,2420589,2755537723,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537860,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538311,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",loan_002,300
+liability,2420589,2755538191,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537904,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538035,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537712,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537663,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538167,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538138,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",loan_009,300
+liability,2420589,2755538069,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537787,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
 liability,2420589,2755537839,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537902,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537797,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538316,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537716,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537656,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538041,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537914,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755537856,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538026,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537751,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537621,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538205,Dishonours,CBA Loans,liability_product:contract_loan,"category=Dishonours; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",contract_loan_001,300
-liability,2420589,2755538110,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537556,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loc_001,300
+liability,2420589,2755537902,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537797,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538316,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537716,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537656,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538041,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537914,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755537856,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538026,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537751,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537621,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538205,Dishonours,CBA Loans,liability_product:contract_loan,"category=Dishonours; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",loan_002,300
+liability,2420589,2755538110,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537556,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
 liability,2420589,2755538287,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538068,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755537889,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538127,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537911,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537864,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538202,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537618,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538259,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537661,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loc_001,300
-liability,2420589,2755537820,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755537557,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537897,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537628,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755537788,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537724,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",unknown_001,300
-liability,2420589,2755537791,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",wage_advance_004,300
-liability,2420589,2755538254,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755537887,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
+liability,2420589,2755538068,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755537889,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538127,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537911,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537864,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538202,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537618,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538259,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537661,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537820,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755537557,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537897,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537628,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755537788,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537724,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
+liability,2420589,2755537791,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
+liability,2420589,2755538254,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755537887,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
 liability,2420589,2755538137,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537960,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538096,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
-liability,2420589,2755538288,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",sacc_001,300
-liability,2420589,2755537966,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",bnpl_002,300
-liability,2420589,2755537666,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537624,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537979,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
-liability,2420589,2755538037,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755538214,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",contract_loan_001,300
-liability,2420589,2755538102,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",bnpl_001,300
+liability,2420589,2755537960,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538096,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
+liability,2420589,2755538288,SACC Loans,Fundo Loans,liability_product:personal_loan,"category=SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Fundo Loans",loan_009,300
+liability,2420589,2755537966,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
+liability,2420589,2755537666,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537624,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537979,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
+liability,2420589,2755538037,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755538214,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",loan_002,300
+liability,2420589,2755538102,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
 liability,2420589,2755537726,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538240,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",contract_loan_001,300
-liability,2420589,2755537651,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",wage_advance_003,300
+liability,2420589,2755538240,Non SACC Loans,CBA Loans,liability_product:contract_loan,"category=Non SACC Loans; rule=liability_product:contract_loan; evidence=product_type=contract_loan, counterparty=CBA Loans",loan_002,300
+liability,2420589,2755537651,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
 liability,2420589,2755537790,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537614,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
+liability,2420589,2755537614,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
 liability,2420589,2755537969,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537903,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
-liability,2420589,2755537564,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
+liability,2420589,2755537903,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
+liability,2420589,2755537564,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
 liability,2420589,2755538108,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755538314,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755538140,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",wage_advance_002,300
-liability,2420589,2755537555,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",wage_advance_001,300
+liability,2420589,2755538314,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755538140,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
+liability,2420589,2755537555,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
 all_other_credit,2420589,2755538361,All Other Credits,-,,,,400
 fee,2420589,2755538243,Overdrawn,Overdrawn Fee,overdraw_fee,category=Overdrawn; rule=overdraw_fee; evidence=counterparty=Overdrawn Fee,,500
 fee,2420589,2755538196,Overdrawn,Overdrawn Fee,overdraw_fee,category=Overdrawn; rule=overdraw_fee; evidence=counterparty=Overdrawn Fee,,500

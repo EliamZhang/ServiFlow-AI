@@ -4,8 +4,11 @@ tenancy_rent,Rent,TENANCY,keyword,0.85
 landlord_rent,Rent,LANDLORD,keyword,0.85
 property_management_rent,Rent,PROPERTY MANAG,keyword,0.85
 real_estate_rent,Rent,REAL ESTATE,keyword,0.80
+real_es_rent,Rent,REAL ES,keyword,0.80
 realty_rent,Rent,REALTY,keyword,0.80
 owners_corp_rent,Rent,OWNERS CORP,keyword,0.85
 rent_word,Rent,RENT,keyword,0.90
 strata_rent,Rent,STRATA,keyword,0.80
 tenant_ref_rent,Rent,TEN[0-9],regex,0.75
+estate_agent_rent,Rent,ESTATE AGENT,keyword,0.85
+housing_rent,Rent,HOUSING,keyword,0.80

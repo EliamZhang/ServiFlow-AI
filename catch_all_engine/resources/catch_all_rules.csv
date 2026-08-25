@@ -353,13 +353,6 @@ paws_pet_care,Pet Care,PAWS,keyword,0.8
 pet_resort_pet_care,Pet Care,PET RESORT,keyword,0.8
 boarding_pet_care,Pet Care,BOARDING,keyword,0.75
 grooming_pet_care,Pet Care,GROOMING,keyword,0.75
-real_estate_rent,Rent,REAL ESTATE,keyword,0.9
-estate_agent_rent,Rent,ESTATE AGENT,keyword,0.85
-property_management_rent,Rent,PROPERTY MANAGEMENT,keyword,0.85
-realty_rent,Rent,REALTY,keyword,0.85
-housing_rent,Rent,HOUSING,keyword,0.8
-property_rent,Rent,PROPERTY,keyword,0.8
-strata_rent,Rent,STRATA,keyword,0.8
 apparel_retail,Retail,APPAREL,keyword,0.85
 bookshop_retail,Retail,BOOKSHOP,keyword,0.85
 bookstore_retail,Retail,BOOKSTORE,keyword,0.85
