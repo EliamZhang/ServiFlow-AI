@@ -84,13 +84,13 @@
       "liability_engine/resources/overdrawn_rules.csv": "62f3342ac6609f74e57558383e8567c75cfec824ab4b8dde45e7ae5cd4ae0f16",
       "rent_engine/resources/rent_rules.csv": "6de691eac24338bad7749e47492e157e75a0fde74f07b46f1ef2c861f01f08ed",
       "transfer_engine/resources/transfer_counterparty_rules.csv": "b5eb5120da669e3ec0cbb3b6d649bf01c70f2b111144fefbe4b0f46509f36e08",
-      "transfer_engine/resources/transfer_external_high_confidence_rules.csv": "f6daefb05bec7881b7a80a5e29c463e7987bd901c88faff46fb278605bb9c72c",
+      "transfer_engine/resources/transfer_external_high_confidence_rules.csv": "856bc607b72e4157d3032d500e9c16b4aec4c0e0237cfee1fbf0690f3d5e5695",
       "transfer_engine/resources/transfer_external_medium_confidence_rules.csv": "d83e080b0ecfabd9165f891f134046f121bce179c8fe76fc3591ccaecaeb996b",
       "transfer_engine/resources/transfer_group_exclusion_patterns.csv": "d203aad3501d6c3158bfd9cdbffe38be26fd8f2721b68dcc7991f8d01c2de250",
-      "transfer_engine/resources/transfer_indicator_patterns.csv": "487a9f15f459b53ab5713912d1c53630943b3703299f239e2f6d082cc9f59702",
-      "transfer_engine/resources/transfer_internal_regex_rules.csv": "2aa8608daff0a5d303b3e5e96dc3483994b8182aecc7f232c2a07e511e2e929b",
+      "transfer_engine/resources/transfer_indicator_patterns.csv": "6da6628254a98396916d2d79f517b0cd9141a067fe5d0158a530431d8e6d87c7",
+      "transfer_engine/resources/transfer_internal_regex_rules.csv": "38870fc5ceb7257596d38bd1136ba9bc5a8ce93e8cdabfbf450b29ce16632c6f",
       "transfer_engine/resources/transfer_pairing_exclusions.csv": "03f832dea7ec1b10d49aff4f3d86154681b1c04d0088810b05ddd77381031acc",
-      "transfer_engine/resources/transfer_row_exclusion_patterns.csv": "b51526c63e1000bfefa071a7be2d61301c402301e4d9d966de1237b3b2e52109"
+      "transfer_engine/resources/transfer_row_exclusion_patterns.csv": "fec290c16a9a529c4c9c831c4b5521788bfc8df0803b1a0e41f8acc2f1747699"
     }
   }
 }
