@@ -20,4 +20,4 @@ priority,rule_name,pattern,dr_cr,description
 19,internal_internet_banking,"\binternet withdrawal\b.*\bto \d{7,}\b",, "Internet withdrawal to own account"
 20,internal_internet_transfer_credit,^internet transfer credit from \d+ ref no \d+$,, "Internet transfer credit from account"
 21,internal_internet_transfer_debit,^internet transfer debit to \d+ reference no \d+$,, "Internet transfer debit to account"
-22,internal_orange_everyday,\borange everyday\b,, "ING Orange Everyday account transfer (round-up / to-from own account)"
+22,internal_orange_everyday,^(?!.*\bosko\b).*\borange everyday\b,, "ING Orange Everyday account transfer (round-up / to-from own account; Osko send from the account is external)"
