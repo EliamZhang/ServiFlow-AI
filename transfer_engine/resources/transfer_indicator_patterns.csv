@@ -16,5 +16,4 @@ pattern_id,pattern,description
 15,\b(?:osko|payid|npp)\b,"Osko/PayID/NPP"
 16,\bpaypal\b,"PayPal"
 17,\bbpay\b,"BPAY"
-18,\bdirect\s+(?:debit|credit)\b,"Direct Debit/Credit"
 19,\bscheduled\s+payment\b,"Scheduled Payment"

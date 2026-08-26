@@ -1,8 +1,9 @@
 pattern_id,pattern,description
-R001,\bOsko (?:Payment|Deposit)\b,"Osko Payment/Deposit (P2P)"
+R001,\bosko\b,"Osko (P2P, incl. Osko + person name)"
 R002,\bIBank Trf\b,"IBank Trf (Greater Bank P2P)"
 R003,\b(?:MRS?|MR|MS|MISS)\s+[A-Z][A-Za-z]*\b,"Person title (Mr/Mrs/Ms/Miss + name)"
-R004,\b(?:PayID|PayTo)\b,"PayID / PayTo (P2P)"
+R004,\b(?:PayID|PayTo|NPP)\b,"PayID / PayTo / NPP (P2P)"
 R005,"^TRANSFER\s+(?:DEBIT|CREDIT)\s+(?!ONLINE\b)[A-Z]{2,}\b","TRANSFER DEBIT/CREDIT + person name (NAB P2P)"
-R006,\bFast Transfer (?:From|To)\s+[A-Z][A-Za-z]+,"Fast Transfer From/To + person name"
+R006,\bFast Transfer (?:From|To)\s+(?:[A-Z][A-Za-z]*\.?\s*)+,"Fast Transfer From/To + person name (incl. initials)"
 R007,\bTransfer To\s+(?!xx\d{4}|cba a/c)[A-Za-z0-9].*?\s+CommBank App\b,"Transfer To [NAME] CommBank App (P2P)"
+R008,\bpaypal\b,"PayPal (payment platform, never internal)"
