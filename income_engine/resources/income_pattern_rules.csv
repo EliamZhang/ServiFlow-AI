@@ -168,3 +168,49 @@ behavior_exclusion,\bQUICK\s*ZONE\b,regex,Quick Zone money transfer service
 behavior_exclusion,\bEXPENSES\s+ACCOUNT\b,regex,Expenses account transfer
 behavior_exclusion,\bINTERNET\s*TRANSFER\s*CREDIT\s*FROM\s*X+\d+\b,regex,Internet transfer from masked account
 behavior_exclusion,\bBET\s*365\b,regex,BET365 gambling
+gig_family_exclusion,\bMUM\b,regex,Family transfer: MUM
+gig_family_exclusion,\bMOM\b,regex,Family transfer: MOM
+gig_family_exclusion,\bDAD\b,regex,Family transfer: DAD
+gig_family_exclusion,\bDADDY\b,regex,Family transfer: DADDY
+gig_family_exclusion,\bGIRLFRIEND\b,regex,Family transfer: GIRLFRIEND
+gig_family_exclusion,\bBOYFRIEND\b,regex,Family transfer: BOYFRIEND
+gig_family_exclusion,\bWIFE\b,regex,Family transfer: WIFE
+gig_family_exclusion,\bHUSBAND\b,regex,Family transfer: HUSBAND
+gig_family_exclusion,\bSON\b,regex,Family transfer: SON
+gig_family_exclusion,\bDAUGHTER\b,regex,Family transfer: DAUGHTER
+gig_family_exclusion,\bBROTHER\b,regex,Family transfer: BROTHER
+gig_family_exclusion,\bSISTER\b,regex,Family transfer: SISTER
+gig_family_exclusion,\bFAMILY\b,regex,Family transfer: FAMILY
+gig_family_exclusion,\bFUEL\b,regex,Living expense: FUEL
+gig_family_exclusion,\bPETROL\b,regex,Living expense: PETROL
+gig_family_exclusion,\bFOOD\b,regex,Living expense: FOOD
+gig_family_exclusion,\bGROCER\w*\b,regex,Living expense: GROCERY
+gig_family_exclusion,\bSHOPPING\b,regex,Living expense: SHOPPING
+gig_family_exclusion,\bME\b,regex,Personal transfer: ME
+gig_personal_transfer,\bOSKO\b,regex,Personal transfer signal: OSKO
+gig_personal_transfer,\bPAYMENT\s+FROM\b,regex,Personal transfer signal: PAYMENT FROM
+gig_personal_transfer,\bFAST\s+TRANSFER\b,regex,Personal transfer signal: FAST TRANSFER
+gig_personal_transfer,\bTRANSFER\s+CREDIT\b,regex,Personal transfer signal: TRANSFER CREDIT
+gig_personal_transfer,\bNPP\s+FROM\b,regex,Personal transfer signal: NPP FROM
+gig_personal_transfer,\bPAYID\b,regex,Personal transfer signal: PAYID
+gig_personal_transfer,\bTRANSFER\s+IN\b,regex,Personal transfer signal: TRANSFER IN
+gig_personal_transfer,\bM-BANKING\s+TRANSFER\b,regex,Personal transfer signal: M-BANKING TRANSFER
+gig_personal_exclusion,\bNEXTBET\b,regex,Gambling payout: NEXTBET
+gig_personal_exclusion,\bKENOGO\b,regex,Gambling payout: KENOGO
+gig_personal_exclusion,\bGOAL\s*SAVER\b,regex,Self-transfer: GOAL SAVER savings account
+gig_personal_exclusion,\bMETWAY\b,regex,Payment gateway: METWAY (merchant acquirer)
+gig_personal_exclusion,\bSCHOOL\s*FEES?\b,regex,School fees
+gig_personal_exclusion,\bDIRECT\s+DR\b,regex,Direct debit/return
+gig_personal_exclusion,\bTFC\b,regex,Transfer suffix: TFC
+gig_personal_exclusion,\bTFD\b,regex,Transfer suffix: TFD
+gig_personal_exclusion,\bFROM\s+\d{3,4}-\d{3}-\d{3,}\b,regex,Self-transfer: transfer from account number
+gig_personal_exclusion,\bFROM\s+\d{7,}\b,regex,Self-transfer: transfer from long account number
+gig_personal_exclusion,\bSENT\s+FROM\s+REVOLUT\b,regex,International remittance: REVOLUT
+gig_personal_exclusion,\bCARD\s+USE\b,regex,Card use
+gig_personal_exclusion,\bEXPENSES\b,regex,Expense reimbursement
+gig_personal_exclusion,\bCAR\b,regex,Car loan/repayment
+gig_personal_exclusion,\bTNX\b,regex,Personal transfer: TNX (thanks)
+gig_personal_exclusion,\bBEEM\b,regex,Personal transfer app: BEEM
+gig_personal_exclusion,\bPAYMENT\s+LINK\b,regex,Payment link
+gig_personal_exclusion,\bRECEIPT\b(?!\s*\d+),regex,Receipt (Osko system ref "Receipt <digits>" is not a receipt document)
+gig_personal_exclusion,\bINVOICE\b,regex,Invoice (keyword rule handles platform invoices separately)
