@@ -249,7 +249,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755538360,Information,Google,initial,
 2420589,2755537705,Automotive,DUNNINGS WYALKATCHEM WYALKATCHEM,initial,
 2420589,2755537734,Information,Google,initial,
-2420589,2755538107,External Transfers,CBA Funds Transfer,transfer,External Transfers
+2420589,2755538107,Automotive,WA Transport DVS,initial,
 2420589,2755538057,Non SACC Loans,Wagetap,liability,loan_010
 2420589,2755538322,Information,Google,initial,
 2420589,2755537579,Overdrawn,Overdrawn Fee,fee,
@@ -767,7 +767,7 @@ application_id,transaction_id,finv_category,counterparty,classification_engine,s
 2420589,2755537726,Overdrawn,Overdrawn Fee,fee,
 2420589,2755537988,Health,ST JOHN OF GOD MIDLAND,initial,
 2420589,2755538213,External Transfers,CBA Funds Transfer,transfer,External Transfers
-2420589,2755537683,External Transfers,CBA Funds Transfer,transfer,External Transfers
+2420589,2755537683,Automotive,WA Transport DVS,initial,
 2420589,2755538290,Information,Google,initial,
 2420589,2755538030,Automotive,Great Southern Fuels,initial,
 2420589,2755537709,Dishonours,-,dishonour,

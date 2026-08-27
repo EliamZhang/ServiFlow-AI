@@ -117,7 +117,6 @@ hard_negative,\bCENTRE\s*LINK\b,regex,CENTRE LINK
 hard_negative,\bCENTRELINK\b,regex,CENTRELINK
 hard_negative,\bCTRLINK\b,regex,CTRLINK
 hard_negative,\bSERVICES\s*AUSTRALIA\b,regex,SERVICES AUSTRALIA
-hard_negative,\bATO\b,regex,ATO
 hard_negative,\bTAX\b,regex,TAX
 hard_negative,\bINTEREST\b,regex,INTEREST
 hard_negative,\bDIVIDEND\b,regex,DIVIDEND
@@ -134,6 +133,7 @@ hard_negative,\bNIB\b,regex,NIB health insurance rebate
 hard_negative,\bREDRAW\b,regex,Loan redraw proceeds
 hard_negative,\bMORTGAGE\b,regex,Mortgage-related credit
 hard_negative,\bUNPAID\b,regex,UNPAID item / returned cheque (not income)
+hard_negative,\bDIRECT\s*CREDIT\b.*\bATO\b,regex,ATO tax transfer (Direct Credit ... ATO ...); keeps "Salary ATO PAYROLL" intact (no DIRECT CREDIT)
 wage_advance,\bWAGE\s*ACCESS\b,regex,Earned Wage Access / wage advance service
 wage_advance,\bEARNED\s*WAGE\s*ACCESS\b,regex,Earned Wage Access explicit variant
 wage_advance,\bEARNEDWAGE\s*ACCESS\b,regex,Earned Wage Access concatenated (EARNEDWAGE ACCESS / EARNEDWAGEACCESS; aligns with liability engine keyword)
@@ -145,6 +145,7 @@ transfer_from,\bTRANSFER\s+FROM\b,regex,TRANSFER FROM flag (hard negative is wai
 hard_negative,\bLOANAD\b,regex,MONEYSPOT LOANAD payday-loan product code
 hard_negative,\bFIN\s+ONE\b,regex,FIN ONE PTY LTD payday lender
 pay_signal,\bPAY\b,regex,Standalone PAY word (transfer-from payroll signal)
+pay_signal,\bPAYRO\b,regex,Truncated PAYROLL (50-char bank description cut; PAYROLL intact is matched by strong_wage)
 behavior_exclusion,\bDEPOSIT\s*ONLINE\s+\d+\s+TFR\b,regex,Self-transfer: deposit online transfer
 behavior_exclusion,\bTFR\s*FROM\s+\d{6,}\b,regex,Self-transfer: TFR FROM with account number
 behavior_exclusion,\bFUNDS\s*TFER\b.*\bFROM\s+\d{6,}\b,regex,Self-transfer: funds transfer from account number
@@ -163,11 +164,12 @@ behavior_exclusion,\bE\s*BANKING\s*TRANSFER\b,regex,Internet banking self-transf
 behavior_exclusion,\bPAYMENT\s*THANK\s*YOU\b,regex,Payment acknowledgement
 behavior_exclusion,\bNABATM\b,regex,NAB ATM cash deposit
 behavior_exclusion,\bGIRLFRIEND\b,regex,Personal transfer (girlfriend)
-behavior_exclusion,\bPSP\d+\b,regex,Financial product reference
+behavior_exclusion,\bPSP\s*\d+\b,regex,Financial product reference
 behavior_exclusion,\bQUICK\s*ZONE\b,regex,Quick Zone money transfer service
 behavior_exclusion,\bEXPENSES\s+ACCOUNT\b,regex,Expenses account transfer
-behavior_exclusion,\bINTERNET\s*TRANSFER\s*CREDIT\s*FROM\s*X+\d+\b,regex,Internet transfer from masked account
+behavior_exclusion,\bINTERNET\s*TRANSFER\s*CREDIT\s*FROM\s*X+\s*\d+\b,regex,Internet transfer from masked account (tolerates digit-letter seam split of XXXX1234)
 behavior_exclusion,\bBET\s*365\b,regex,BET365 gambling
+behavior_exclusion,\bDIRECT\s*CREDIT\b.*\bATO\b,regex,ATO tax transfer (Direct Credit ... ATO ...) not wages; strong wage keywords still claim via rule_strong_wage_keyword
 gig_family_exclusion,\bMUM\b,regex,Family transfer: MUM
 gig_family_exclusion,\bMOM\b,regex,Family transfer: MOM
 gig_family_exclusion,\bDAD\b,regex,Family transfer: DAD
