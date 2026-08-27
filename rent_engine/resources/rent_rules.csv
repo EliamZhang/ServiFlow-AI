@@ -12,3 +12,5 @@ strata_rent,Rent,STRATA,keyword,0.80
 tenant_ref_rent,Rent,TEN[0-9],regex,0.75
 estate_agent_rent,Rent,ESTATE AGENT,keyword,0.85
 housing_rent,Rent,HOUSING,keyword,0.80
+body_corp_rent,Rent,BODY CORP,keyword,0.85
+body_corporate_rent,Rent,BODY CORPORATE,keyword,0.85
