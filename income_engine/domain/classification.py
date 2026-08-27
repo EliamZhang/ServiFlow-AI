@@ -40,7 +40,7 @@ import numpy as np
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason
-from classification_core.text import clean_text
+from classification_core.text import clean_text_with_seams
 
 
 # =============================================================================
@@ -465,7 +465,7 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
 
     out["txn_date"] = pd.to_datetime(out["transaction_date"], errors="coerce", dayfirst=False)
     out["amount_num"] = pd.to_numeric(out["amount"], errors="coerce").fillna(0)
-    out["text_clean"] = out["text"].apply(clean_text)
+    out["text_clean"] = out["text"].apply(clean_text_with_seams)
     out["is_credit"] = out["dr_cr"].astype(str).str.lower().str.strip().eq("credit").astype(int)
 
     for count_col, flag_col, patterns in [
