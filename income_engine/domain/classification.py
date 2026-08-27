@@ -172,9 +172,43 @@ NEGATIVE_PATTERNS = HARD_NEGATIVE_PATTERNS + SOFT_NEGATIVE_PATTERNS
 # Loaded from the CSV-backed ``gig_exclusion_extra`` group (was hardcoded
 # before — CSV edits to that group had no effect).
 GIG_EXCLUSION_EXTRA_PATTERNS = _make_pattern_list("gig_exclusion_extra")
+# SOFT_NEGATIVE (OSKO/TRANSFER) deliberately excluded from the gig gate:
+# gig classification already requires a platform/merchant keyword plus the
+# hard-negative gate, so the transfer-suspicion signal caused a structural
+# deadlock ("Osko + UBER" texts could never classify as gig income).
 GIG_EXCLUSION_PATTERNS = (
-    HARD_NEGATIVE_PATTERNS + SOFT_NEGATIVE_PATTERNS + GIG_EXCLUSION_EXTRA_PATTERNS
+    HARD_NEGATIVE_PATTERNS + GIG_EXCLUSION_EXTRA_PATTERNS
 )
+
+# Gig personal-transfer gates (CSV-backed, loaded by group).
+# - gig_family_exclusion: family/living-expense words.  The gate fires only
+#   when the payer key consists *entirely* of family words (e.g. "Transfer
+#   from Mum and Dad", "Internet Deposit Food" — the payer is a family
+#   member / living-expense transfer, not an employer).  Names that merely
+#   contain a family word ("NATALIE VAN SCHOOR Mum", "MRS PAULA MINUTOLI
+#   Mum") are real people and must NOT be blocked — checked on
+#   payer_key_from_text only, not the raw memo text (memo fragments like
+#   "food"/"fuel" would otherwise block every named payer).
+# - gig_personal_transfer: personal-transfer semantics (Osko/PayID/...).
+#   The gig keyword rule defers such texts to rule_income_self_employed_gig_repeat_payer
+#   (behavior-based); platform settlements (UBERBV/SQUARE/PAYPAL) carry no
+#   transfer word and stay with the keyword rule.
+# - gig_personal_exclusion: gambling payouts, self-transfers, acquirer
+#   gateways, school fees, car loans, friend-transfer markers, ...
+GIG_FAMILY_EXCLUSION_PATTERNS = _make_pattern_list("gig_family_exclusion")
+GIG_PERSONAL_TRANSFER_PATTERNS = _make_pattern_list("gig_personal_transfer")
+GIG_PERSONAL_EXCLUSION_PATTERNS = _make_pattern_list("gig_personal_exclusion")
+# Strong collection keyword: "PAYMENT FROM X ... INVOICE" is invoice income
+# (already claimed in production) and is exempt from the personal-transfer
+# deferral above.
+GIG_INVOICE_PATTERNS = [r"\bINVOICE\b"]
+# PSP reference number: standard Osko/NPP personal-transfer reference
+# ("PAYMENT FROM X, PSP123456789").  behaviour_exclusion's \bPSP\d+\b was
+# intended for PSP financial products but also blocks every Osko personal
+# transfer (hundreds of high-frequency payers in sample data).  The gig
+# repeat-payer rule waives the behaviour-exclusion gate for PSP references —
+# all other gates (repeat count, one-way, family/exclusion words) still apply.
+GIG_PSP_REFERENCE_PATTERNS = [r"\bPSP\d+\b"]
 
 PAYER_STOP_WORDS = {
     "DIRECT", "CREDIT", "DIR", "DEPOSIT", "SALARY", "PAYROLL", "WAGE", "WAGES",
@@ -204,6 +238,9 @@ REGULAR_GAP_RANGES = (
 HIGH_REPEAT_PAYER_COUNT_MIN = int(_config.get("HIGH_REPEAT_PAYER_COUNT_MIN", 4))
 VERY_HIGH_REPEAT_PAYER_COUNT_MIN = int(_config.get("VERY_HIGH_REPEAT_PAYER_COUNT_MIN", 8))
 STABLE_PAYER_REPEAT_COUNT_MIN = int(_config.get("STABLE_PAYER_REPEAT_COUNT_MIN", 6))
+# Gig repeat-payer rule thresholds (user-confirmed: amount floor 20, repeat count 4)
+GIG_REPEAT_PAYER_AMOUNT_MIN = int(_config.get("GIG_REPEAT_PAYER_AMOUNT_MIN", 20))
+GIG_REPEAT_PAYER_COUNT_MIN = int(_config.get("GIG_REPEAT_PAYER_COUNT_MIN", 4))
 
 IMPORTANT_OUTPUT_COLUMNS = [
     # New income classification fields
@@ -247,6 +284,7 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "rule_income_centrelink",
     "rule_income_salary_payg",
     "rule_income_self_employed_gig",
+    "rule_income_self_employed_gig_repeat_payer",
     "rule_known_non_income_wage_advance",
 
     # Explainable features
@@ -266,6 +304,11 @@ IMPORTANT_OUTPUT_COLUMNS = [
     "has_soft_negative_keyword",
     "has_transfer_from_keyword",
     "has_gig_exclusion_keyword",
+    "has_gig_family_exclusion_keyword",
+    "has_gig_personal_transfer_pattern",
+    "has_gig_personal_exclusion_keyword",
+    "has_gig_invoice_keyword",
+    "has_gig_psp_reference",
     "has_negative_keyword",
     "has_pay_signal",
     "has_behavior_exclusion",
@@ -302,6 +345,11 @@ HARD_NEGATIVE_REGEX = compile_patterns(HARD_NEGATIVE_PATTERNS)
 SOFT_NEGATIVE_REGEX = compile_patterns(SOFT_NEGATIVE_PATTERNS)
 NEGATIVE_REGEX = compile_patterns(NEGATIVE_PATTERNS)
 GIG_EXCLUSION_REGEX = compile_patterns(GIG_EXCLUSION_PATTERNS)
+GIG_FAMILY_EXCLUSION_REGEX = compile_patterns(GIG_FAMILY_EXCLUSION_PATTERNS)
+GIG_PERSONAL_TRANSFER_REGEX = compile_patterns(GIG_PERSONAL_TRANSFER_PATTERNS)
+GIG_PERSONAL_EXCLUSION_REGEX = compile_patterns(GIG_PERSONAL_EXCLUSION_PATTERNS)
+GIG_INVOICE_REGEX = compile_patterns(GIG_INVOICE_PATTERNS)
+GIG_PSP_REFERENCE_REGEX = compile_patterns(GIG_PSP_REFERENCE_PATTERNS)
 TRANSFER_FROM_REGEX = compile_patterns(TRANSFER_FROM_PATTERNS)
 PAY_SIGNAL_REGEX = compile_patterns(PAY_SIGNAL_PATTERNS)
 BEHAVIOR_EXCLUSION_REGEX = compile_patterns(BEHAVIOR_EXCLUSION_PATTERNS)
@@ -311,6 +359,19 @@ def count_matches(text: str, patterns: List[re.Pattern]) -> int:
     if not text:
         return 0
     return sum(1 for pattern in patterns if pattern.search(text))
+
+
+def _payer_key_is_family_only(payer_key: str) -> int:
+    """Family gate for the gig rules: 1 iff the payer key is *entirely* family
+    words ("MUM DAD", "FOOD").  Keys that also contain a name
+    ("NATALIE VAN SCHOOR MUM") are real people and return 0."""
+    if not payer_key:
+        return 0
+    tokens = payer_key.split()
+    family = {t for t in tokens if any(p.match(t) for p in GIG_FAMILY_EXCLUSION_REGEX)}
+    if not family:
+        return 0
+    return int(len(family) == len(tokens))
 
 
 def make_payer_key(text: str) -> str:
@@ -428,6 +489,10 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
         ("transfer_from_keyword_count", "has_transfer_from_keyword", TRANSFER_FROM_REGEX),
         ("pay_signal_keyword_count", "has_pay_signal", PAY_SIGNAL_REGEX),
         ("behavior_exclusion_keyword_count", "has_behavior_exclusion", BEHAVIOR_EXCLUSION_REGEX),
+        ("gig_personal_transfer_pattern_count", "has_gig_personal_transfer_pattern", GIG_PERSONAL_TRANSFER_REGEX),
+        ("gig_personal_exclusion_keyword_count", "has_gig_personal_exclusion_keyword", GIG_PERSONAL_EXCLUSION_REGEX),
+        ("gig_invoice_keyword_count", "has_gig_invoice_keyword", GIG_INVOICE_REGEX),
+        ("gig_psp_reference_count", "has_gig_psp_reference", GIG_PSP_REFERENCE_REGEX),
     ]:
         out[count_col] = out["text_clean"].apply(lambda x: count_matches(x, patterns))
         out[flag_col] = (out[count_col] > 0).astype(int)
@@ -440,6 +505,13 @@ def add_basic_features(df: pd.DataFrame) -> pd.DataFrame:
     ).astype(int)
     out["payer_key_from_text"] = out["text_clean"].apply(make_payer_key)
     out["has_valid_payer_key"] = (out["payer_key_from_text"].str.len() >= 3).astype(int)
+    # Family gate: fires only when the payer key is *entirely* family words
+    # ("Transfer from Mum and Dad" -> key "MUM DAD").  A named payer whose
+    # name happens to contain a family word ("NATALIE VAN SCHOOR Mum") has
+    # non-family tokens in the key and is a real person — not blocked.
+    out["has_gig_family_exclusion_keyword"] = out["payer_key_from_text"].apply(
+        lambda x: _payer_key_is_family_only(x)
+    ).astype(int)
     return out
 
 
@@ -1028,6 +1100,38 @@ def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
         & (out["rule_income_salary_packaging"] == 0)
         & (out["rule_income_centrelink"] == 0)
         & (out["rule_income_salary_payg"] == 0)
+        & (out["has_gig_family_exclusion_keyword"] == 0)
+        & (
+            (out["has_gig_personal_transfer_pattern"] == 0)
+            | (out["has_gig_invoice_keyword"] == 1)
+        )
+    ).astype(int)
+
+    # Behavioral gig rule: repeated one-way personal transfers from the same
+    # payer = personal-employer gig income (same coarse Wages bucket as
+    # platform gig income).  Deliberately no cycle/stability requirement —
+    # gig payouts are irregular, which is exactly why the wage behavior rules
+    # miss them.  Gates mirror the wage rules (amount band, repeat count,
+    # one-way, no hard negatives) plus the gig personal-transfer gates above.
+    out["rule_income_self_employed_gig_repeat_payer"] = (
+        credit
+        & (out["amount_num"] > 0)
+        & (out["amount_num"] <= POSSIBLE_WAGE_AMOUNT_MAX)
+        & (out["amount_num"] >= GIG_REPEAT_PAYER_AMOUNT_MIN)
+        & (out["same_payer_credit_count"].fillna(0) >= GIG_REPEAT_PAYER_COUNT_MIN)
+        & (out["has_payer_debit"] == 0)
+        & (out["has_valid_payer_key"] == 1)
+        & (out["effective_hard_negative"] == 0)
+        & (out["has_wage_advance_keyword"] == 0)
+        & (out["has_transfer_from_keyword"] == 0)
+        & ((out["has_behavior_exclusion"] == 0) | (out["has_gig_psp_reference"] == 1))
+        & (out["has_gig_family_exclusion_keyword"] == 0)
+        & (out["has_gig_personal_transfer_pattern"] == 1)
+        & (out["has_gig_personal_exclusion_keyword"] == 0)
+        & (out["rule_income_salary_packaging"] == 0)
+        & (out["rule_income_centrelink"] == 0)
+        & (out["rule_income_salary_payg"] == 0)
+        & (out["rule_income_self_employed_gig"] == 0)
     ).astype(int)
 
     out["rule_known_non_income_wage_advance"] = (
@@ -1037,6 +1141,7 @@ def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
         & (out["rule_income_centrelink"] == 0)
         & (out["rule_income_salary_payg"] == 0)
         & (out["rule_income_self_employed_gig"] == 0)
+        & (out["rule_income_self_employed_gig_repeat_payer"] == 0)
     ).astype(int)
 
     conditions = [
@@ -1044,11 +1149,13 @@ def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
         out["rule_income_centrelink"] == 1,
         out["rule_income_salary_payg"] == 1,
         out["rule_income_self_employed_gig"] == 1,
+        out["rule_income_self_employed_gig_repeat_payer"] == 1,
     ]
     income_types = [
         "salary_packaging",
         "centrelink",
         "salary_payg",
+        "self_employed_gig",
         "self_employed_gig",
     ]
     rule_names = [
@@ -1056,6 +1163,7 @@ def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
         "centrelink_government_benefit_keyword",
         "salary_payg_wages_rule",
         "self_employed_gig_keyword_without_exclusion",
+        "self_employed_gig_repeat_payer",
     ]
 
     out["income_type_pred"] = np.select(conditions, income_types, default="non_income")

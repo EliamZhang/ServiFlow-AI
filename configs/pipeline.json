@@ -2,7 +2,7 @@
   "pipeline": [
     {
       "engine_id": "initial",
-      "priority": 1,
+      "priority": 10,
       "enabled": true
     },
     {
@@ -17,7 +17,7 @@
     },
     {
       "engine_id": "transfer",
-      "priority": 100,
+      "priority": 1,
       "enabled": true
     },
     {
