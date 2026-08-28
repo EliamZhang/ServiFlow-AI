@@ -3,7 +3,7 @@ from __future__ import annotations
 import pandas as pd
 
 from classification_core.models import PipelineResult
-from classification_core.text import clean_text
+from classification_core.text import clean_text_with_seams
 from initial_engine.domain.classification import get_cached_automaton
 
 from .domain.classification import (
@@ -26,7 +26,7 @@ def _add_kb_counterparty(transactions: pd.DataFrame) -> pd.DataFrame:
     """
     automaton = get_cached_automaton()
     out = transactions.copy()
-    texts = out["text"].apply(clean_text)
+    texts = out["text"].apply(clean_text_with_seams)
     kb_counterparties: list[str] = []
 
     for text_clean in texts:

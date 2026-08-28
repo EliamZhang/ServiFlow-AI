@@ -3,7 +3,7 @@
   "engines": [
     {
       "engine_id": "initial",
-      "priority": 1,
+      "priority": 10,
       "enabled": true
     },
     {
@@ -18,7 +18,7 @@
     },
     {
       "engine_id": "transfer",
-      "priority": 100,
+      "priority": 1,
       "enabled": true
     },
     {
@@ -68,12 +68,12 @@
       "all_other_credit_engine/resources/all_other_credit_rules.csv": "c14640abf2a18ffabd99db574ddacf81bd85ca870be89af4beea52367a33e686",
       "catch_all_engine/resources/catch_all_rules.csv": "8e98107f6a344938691961b15c343beaa1ecd435b0bdd1c70b6e9403d286bf78",
       "configs/category_catalog.json": "6fe8b416aedeee0aa69d3ddc566dd2fb306877e8376bc86a6ac1f0be53a22aac",
-      "configs/pipeline.json": "4d91e3bce479ff82d832a7558cee85b22c679f4e1d0ff854e3e93ed1fa8bb463",
+      "configs/pipeline.json": "76a7b788ad8b2ebea6f547caac0b7839e7af7350ab3cfa490c72835091c5ec3d",
       "dishonour_engine/resources/dishonour_rules.csv": "fd3c80d229fd7d30b3920412af94cc9e9c55416c98cdc66c603f392eed5b9fcf",
       "fee_engine/resources/fee_classification_rules.csv": "67cc3ebcd9a6924d94b5fc0e729ba7d55601b120d6958315e646710b4ce98b03",
-      "income_engine/resources/income_config.csv": "bc650003a13832c8d9613f996c6f242fd5a51b6ed17fc08af759219bcc9ec609",
-      "income_engine/resources/income_pattern_rules.csv": "42ed5be204d5c25ef1e52d68aea64698dcd13984e599646033da53995f9edb0a",
-      "initial_engine/merchant_kb.csv": "059695210bf6d34540926f3525b32f9ef6a098a9adf8a5d4b8ca2a1854eb2644",
+      "income_engine/resources/income_config.csv": "a1fb5792075bd500ad15ac7b8b8c7c41a28513d9d5fd1e7f8292c3c6700a3e2a",
+      "income_engine/resources/income_pattern_rules.csv": "ded251fa30ab9c06e6bde2aa0931f55edb6efc9915dc2a0ddf932479e9f96cee",
+      "initial_engine/merchant_kb.csv": "66c7521a81f2695ca3c732ec6a405227c1eb7622aaddda8cba9b63495a0abc93",
       "liability_engine/resources/bnpl_maximum_limits.csv": "c141037edadd9c22bef53257620c7404cba4fb57878176a25a7b45ebb104f551",
       "liability_engine/resources/counterparty_keyword_rules.csv": "fb7297c6417ef5161f4d0d0aad2a94724e9fb3a829a2e4de0165347aca4ba280",
       "liability_engine/resources/credit_card_rules.csv": "546c6bd36eff12b89f82179b10127b3a35d970c39a69e5c5800ef10a846a9f0d",
@@ -82,7 +82,7 @@
       "liability_engine/resources/dishonours_rules.csv": "b3ddb6ae83460a3d5d33f2a244e76f3908878c1e34cfead98c160998e5128ac5",
       "liability_engine/resources/home_loan_car_loan_rules.csv": "f64310b9e9d2958375a506d2a7f3ce29b59334098c0b182a0e38791714a2c14c",
       "liability_engine/resources/overdrawn_rules.csv": "62f3342ac6609f74e57558383e8567c75cfec824ab4b8dde45e7ae5cd4ae0f16",
-      "rent_engine/resources/rent_rules.csv": "6de691eac24338bad7749e47492e157e75a0fde74f07b46f1ef2c861f01f08ed",
+      "rent_engine/resources/rent_rules.csv": "29fc226dd87c9aa79be7664472fcd5a23fba6bdbc8a8c4f75ed6c0b8026bd6d3",
       "transfer_engine/resources/transfer_counterparty_rules.csv": "b5eb5120da669e3ec0cbb3b6d649bf01c70f2b111144fefbe4b0f46509f36e08",
       "transfer_engine/resources/transfer_external_high_confidence_rules.csv": "856bc607b72e4157d3032d500e9c16b4aec4c0e0237cfee1fbf0690f3d5e5695",
       "transfer_engine/resources/transfer_external_medium_confidence_rules.csv": "d83e080b0ecfabd9165f891f134046f121bce179c8fe76fc3591ccaecaeb996b",
