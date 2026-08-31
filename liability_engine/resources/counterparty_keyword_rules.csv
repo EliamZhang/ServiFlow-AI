@@ -133,6 +133,7 @@ Heartland Bank Loans; HEARTLAND BANK LOANS,Heartland Bank Loans,personal_loan,ke
 Hippo Cash; HIPPOCASH,Hippo Cash,personal_loan,keyword
 Holden Financial; HOLDEN FINANCIAL,Holden Financial,car_loan,keyword
 HomeStart Finance; HOMESTART FINANCE,HomeStart Finance,home_loan,keyword
+humm cards,Humm Cards,bank,keyword
 Humm; humm loan,Humm,bnpl,keyword
 CERTEGY EZIPAY; COXIPAY,Humm,bnpl,keyword
 Hyundai Capital; HYUNDAI CAPITAL,Hyundai Capital,car_loan,keyword
@@ -160,6 +161,7 @@ Mega Cash; MEGA CASH,Mega Cash Loans,personal_loan,keyword
 Mercedes-Benz Financial Services,Mercedes-Benz Financial Services,car_loan,keyword
 Mercedes-Benz Fin; MERCEDES-BENZ FIN,Mercedes-Benz Financial Services,car_loan,keyword
 MB FINANCIAL; MB FINANCIAL CONTRACT,Mercedes-Benz Financial Services,car_loan,keyword
+MELOAN,Meloan,personal_loan,keyword
 Metro Finance; METRO FINANCE,Metro Finance,car_loan,keyword
 Metro Money; METROMONEYLOANS,Metro Money,personal_loan,keyword
 Money Centre,Money Centre,personal_loan,keyword
@@ -167,7 +169,7 @@ MONEY CENTER; MONEYCENTRECROYD; CASH LOAN MONEY CENTRES; CASHLOANMONEYCENTRES,Mo
 Money Place,Money Place,personal_loan,keyword
 MONEYPLACE LENDI,Money Place,personal_loan,keyword
 Money3; MONEY3 SACC; MONEY3SACC,Money3,personal_loan,keyword
-M3 COLLECTIONS; M3 LOAN CENTRE; MONEY3BROKER; M3,Money3,personal_loan,keyword
+M3 COLLECTIONS; M3 LOAN CENTRE; MONEY3BROKER; M3 REFUND,Money3,personal_loan,keyword
 MoneyMe; MME,MoneyMe,personal_loan,keyword
 MoneyPlus; Money Plus,MoneyPlus,personal_loan,keyword
 ABAZ PTY LTD; Abaz,MoneyPlus,personal_loan,keyword
