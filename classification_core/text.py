@@ -20,6 +20,54 @@ def clean_text(value: object) -> str:
     return " ".join(text.split())
 
 
+# Payment-channel prefixes that should not be treated as merchant names.
+# Stripped from the beginning of transaction text before keyword matching so the
+# actual counterparty name can be matched at position 0.  Mirrors the private
+# _CHANNEL_PREFIX_RE in initial_engine/domain/classification.py — keep in sync.
+_CHANNEL_PREFIX_RE = re.compile(
+    r"^(?:"
+    r"BILL\s*PAY(?:MENT)?\s+|"
+    r"VISA\s+(?:WDL|PURCHASE|DEBIT)\s+(?:PURCHASE\s+)?(?:\d+\w+\s+)?\s*|"
+    r"VISA\s+CREDIT\s+\d*\s*|"
+    r"EFTPOS\s+(?:DEBIT|WDL)(?:\s+\d+)?\s+|"
+    r"MISCELLANEOUS\s+DEBIT\s+V\d+\s+\d+\s+\d+\s+|"
+    r"DEBIT\s+CARD\s+PURCHASE\s+|"
+    r"EFT\s+Dep\s+"
+    r")",
+    re.IGNORECASE,
+)
+
+# EFTPOS receipt timestamps ("EFTPOS DEBIT EFTPOS 21/05 10:14") are glued to the
+# merchant name in the raw text ("...10:14Subway").  They must be stripped
+# *before* non-alphanumerics become spaces — after that step the minute field is
+# glued to the merchant ("14SUBWAY") and the whole-word boundary check rejects the
+# merchant keyword.  Mirrors the private _EFTPOS_TS_RE in
+# initial_engine/domain/classification.py — keep in sync.
+_EFTPOS_TS_RE = re.compile(
+    r"^EFTPOS\s+DEBIT\s+(?:EFTPOS\s+)?\d{1,2}/\d{1,2}\s+\d{1,2}:\d{1,2}",
+    re.IGNORECASE,
+)
+
+
+def clean_text_with_channel_prefix(value: object) -> str:
+    """clean_text() plus payment-channel prefix stripping.
+
+    Used by the rent engine's institution layer so merchant-KB keywords match
+    the same texts the initial engine matched before the rent categories moved
+    out of the KB: BILL PAY / VISA / EFTPOS / EFT Dep prefixes are removed from
+    the start of the transaction text (after the EFTPOS-timestamp strip), letting
+    the institution name match at position 0.
+    """
+    if pd.isna(value):
+        return ""
+    text = str(value).upper()
+    text = _EFTPOS_TS_RE.sub("", text)
+    text = _CLEAN_RE.sub(" ", text)
+    text = _CHANNEL_PREFIX_RE.sub("", text)
+    text = _CLEAN_RE.sub(" ", text)
+    return " ".join(text.split())
+
+
 def clean_text_with_seams(value: object) -> str:
     """Income-engine variant of :func:`clean_text` that also inserts a space
     at digit-letter seams ("3780.7Salary" -> "3780 7 SALARY", "IBMAUPAY986915"

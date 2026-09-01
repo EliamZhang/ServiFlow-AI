@@ -24,7 +24,7 @@ class InitialClassificationEngine:
     """
 
     engine_id = "initial"
-    engine_version = "1.0"
+    engine_version = "1.1"
 
     # ------------------------------------------------------------------
     # ClassificationEngine protocol

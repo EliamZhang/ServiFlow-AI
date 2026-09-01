@@ -16,6 +16,11 @@
       "enabled": true
     },
     {
+      "engine_id": "gambling",
+      "priority": 700,
+      "enabled": true
+    },
+    {
       "engine_id": "transfer",
       "priority": 1,
       "enabled": true

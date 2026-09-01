@@ -97,7 +97,7 @@ class ClassificationOrchestrator:
                     ["Wages", "Centrelink"]
                 )
                 candidates_df = original.loc[~already_income_mask].copy()
-            if spec.engine_id == "rent":
+            if spec.engine_id in ("rent", "gambling"):
                 already_protected_mask = output["classification_engine"].isin(
                     ["income", "liability"]
                 )
@@ -114,6 +114,7 @@ class ClassificationOrchestrator:
                         "counterparty",
                         "finv_category",
                         "classification_engine",
+                        "classification_reason",
                     ],
                 ].copy(),
             )
