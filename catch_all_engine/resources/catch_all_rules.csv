@@ -159,22 +159,6 @@ aquarium_entertainment,Entertainment,AQUARIUM,keyword,0.7
 bowling_entertainment,Entertainment,BOWLING,keyword,0.7
 karaoke_entertainment,Entertainment,KARAOKE,keyword,0.7
 sports_entertainment,Entertainment,SPORTS,keyword,0.70
-pokies_gambling,Gambling,POKIES,keyword,0.90
-wagering_gambling,Gambling,WAGERING,keyword,0.90
-art_union_gambling,Gambling,ART UNION,keyword,0.85
-betting_gambling,Gambling,BETTING,keyword,0.85
-greyhound_racing_gambling,Gambling,GREYHOUND RACING,keyword,0.85
-harness_racing_gambling,Gambling,HARNESS RACING,keyword,0.85
-keno_gambling,Gambling,KENO,keyword,0.85
-lottery_gambling,Gambling,LOTTERY,keyword,0.85
-lotto_gambling,Gambling,LOTTO,keyword,0.85
-slots_gambling,Gambling,SLOTS,keyword,0.85
-turf_club_gambling,Gambling,TURF CLUB,keyword,0.85
-jockey_club_gambling,Gambling,JOCKEY CLUB,keyword,0.8
-poker_gambling,Gambling,POKER,keyword,0.8
-racing_club_gambling,Gambling,RACING CLUB,keyword,0.8
-bingo_gambling,Gambling,BINGO,keyword,0.75
-casino_gambling,Gambling,CASINO,keyword,0.7
 supermarket_groceries,Groceries,SUPERMARKET,keyword,0.9
 bottle_shop_groceries,Groceries,BOTTLE SHOP,keyword,0.85
 bottleshop_groceries,Groceries,BOTTLESHOP,keyword,0.85
