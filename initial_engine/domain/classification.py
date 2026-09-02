@@ -13,6 +13,8 @@ Performance characteristics
 
 from __future__ import annotations
 
+import os
+import pickle
 import re
 from pathlib import Path
 
@@ -92,6 +94,15 @@ class _Automaton:
         self._a = automaton
         self.keyword_count = keyword_count
 
+    def __getstate__(self) -> dict:
+        """Pickle the C automaton alongside the metadata so the whole object
+        can be persisted and restored in ~2s instead of rebuilding (~6-8s)."""
+        return {"_a": self._a, "keyword_count": self.keyword_count}
+
+    def __setstate__(self, state: dict) -> None:
+        self._a = state["_a"]
+        self.keyword_count = state["keyword_count"]
+
     def iter(self, text: str):
         """Yield ``(end_pos, value)`` tuples from the underlying automaton."""
         return self._a.iter(text)
@@ -127,20 +138,85 @@ class _Automaton:
 # KB loader
 # ---------------------------------------------------------------------------
 
-def load_merchant_kb(kb_path: str | Path) -> _Automaton:
-    """Chunk-read *kb_path* and return a ready-to-use automaton.
+def _keyword_map_cache_path(kb_path: Path) -> Path:
+    """Sidecar path for the pickled keyword map (ignored by git via *.pickle)."""
+    return kb_path.with_name(f"{kb_path.name}_keywords.pickle")
+
+
+def _cache_fingerprint(kb_path: Path) -> tuple[int, int] | None:
+    """Return (mtime_ns, size) of the KB, or None if it cannot be stat'ed."""
+    try:
+        st = kb_path.stat()
+    except OSError:
+        return None
+    return st.st_mtime_ns, st.st_size
+
+
+def _automaton_cache_path(kb_path: Path) -> Path:
+    """Sidecar path for the pickled automaton (ignored by git via *.pickle)."""
+    return kb_path.with_name(f"{kb_path.name}.automaton.pickle")
+
+
+def _pyahocorasick_version() -> str:
+    """pyahocorasick exposes no __version__; fall back to package metadata.
+
+    The version is part of the automaton-cache fingerprint because pickled
+    C automata are tied to the exact extension build — a version upgrade
+    makes stale pickles unloadable, so they must be rebuilt rather than
+    resurrected."""
+    try:
+        from importlib.metadata import version
+
+        return version("pyahocorasick")
+    except Exception:
+        return "unknown"
+
+
+def _load_keyword_map_cached(kb_path: Path) -> dict[str, tuple[str, str]]:
+    """Return {keyword: (merchant_name, category)} from the disk cache or rebuild.
+
+    The sidecar pickle stores the deduplicated keyword map keyed by the KB's
+    (mtime_ns, size) fingerprint.  This is the *lower* tier of the cache:
+    it removes the pandas parse + dedup phase when the automaton sidecar
+    (see load_merchant_kb) is missing or stale, e.g. right after the KB
+    changes.  Any cache miss, corrupt file, or write failure falls back to a
+    full rebuild — a broken cache never breaks classification.
+    """
+    fp = _cache_fingerprint(kb_path)
+    cache_path = _keyword_map_cache_path(kb_path)
+    if fp is not None and cache_path.is_file():
+        try:
+            with open(cache_path, "rb") as fh:
+                cached_fp, kw_map = pickle.load(fh)
+            if cached_fp == fp:
+                return kw_map
+        except Exception:
+            pass  # corrupt or version-incompatible cache -> rebuild
+
+    kw_map = _build_keyword_map(kb_path)
+    if fp is not None:
+        tmp_path = cache_path.with_suffix(cache_path.suffix + ".tmp")
+        try:
+            # Write to a temp file and rename so a killed process never leaves
+            # a half-written cache behind.
+            with open(tmp_path, "wb") as fh:
+                pickle.dump((fp, kw_map), fh, protocol=pickle.HIGHEST_PROTOCOL)
+            os.replace(tmp_path, cache_path)
+        except Exception:
+            pass  # cache write failure must never break classification
+    return kw_map
+
+
+def _build_keyword_map(kb_path: Path) -> dict[str, tuple[str, str]]:
+    """Chunk-read *kb_path* into {keyword: (merchant_name, category)}.
 
     All rows are indexed regardless of whether *category* is populated.
-    Each pipe-separated variant in the *keywords* column is inserted as an
-    independent keyword.
+    Each pipe-separated variant in the *keywords* column becomes an independent
+    keyword.  Last row wins for a keyword listed under several merchants —
+    exactly mirroring add_word's overwrite semantics, so replaying the dict
+    through add_word yields an automaton identical to a triple-based build.
     """
-    kb_path = Path(kb_path)
-    automaton = ahocorasick.Automaton()
-    # (keyword_upper, merchant, cat) keyed in file order.  A dict (not a set)
-    # preserves insertion order, so rebuilds are deterministic even when the
-    # KB lists the same keyword under several merchants — the last row wins,
-    # exactly mirroring add_word's overwrite semantics.
-    seen: dict[tuple[str, str, str], None] = {}
+    kw_map: dict[str, tuple[str, str]] = {}
 
     chunks = pd.read_csv(
         kb_path,
@@ -197,27 +273,75 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
         exploded["merchant_name"] = exploded["merchant_name"].str.strip()
         exploded["category"] = exploded["category"].fillna("").str.strip()
 
-        # Cross-chunk dedup via fast zip() over raw numpy arrays — avoids
-        # pandas Series iterator overhead.  iterrows() is ~13× slower.
+        # Dict assignment implements cross-chunk "last row wins" in a single
+        # pass — replaces the separate cross-chunk dedup dict + add_word loop.
         for kw, merchant, category in zip(
             exploded["_kw_raw"].values,
             exploded["merchant_name"].values,
             exploded["category"].values,
         ):
-            key = (kw, merchant, category)
-            if key not in seen:
-                seen[key] = None
+            kw_map[kw] = (merchant, category)
 
-    for kw, merchant, cat in seen:
-        kw_len = len(kw)
-        automaton.add_word(kw, (kw, kw_len, merchant, cat))
+    return kw_map
 
+
+def _build_automaton(kb_path: Path) -> _Automaton:
+    """Build the automaton from the (cached) keyword map."""
+    kw_map = _load_keyword_map_cached(kb_path)
+    automaton = ahocorasick.Automaton()
+    for kw, (merchant, category) in kw_map.items():
+        automaton.add_word(kw, (kw, len(kw), merchant, category))
     automaton.make_automaton()
-    return _Automaton(automaton, len(seen))
+    return _Automaton(automaton, len(kw_map))
+
+
+def load_merchant_kb(kb_path: str | Path) -> _Automaton:
+    """Return a ready-to-use automaton, loaded from disk cache when fresh.
+
+    The entire automaton — C-level pyahocorasick object included — is
+    persisted to a sidecar pickle after the first build (see
+    _automaton_cache_path).  A warm run restores it via pickle.load in ~2s,
+    avoiding the ~9s add_word + make_automaton rebuild that used to be paid
+    once per process; the sidecar is ~736MB uncompressed (uncompressed load
+    was chosen over a ~143MB gzip variant because the extra ~1.5s
+    decompression per process outweighs the disk savings).  The cache is
+    keyed by the KB's (mtime_ns, size) fingerprint plus the pyahocorasick
+    version (pickled C automata are tied to the extension build).  Any miss,
+    corrupt file, or write failure falls back to a full rebuild — a broken
+    cache never breaks classification.
+    """
+    kb_path = Path(kb_path)
+    fp = _cache_fingerprint(kb_path)
+    cache_path = _automaton_cache_path(kb_path)
+    if fp is not None and cache_path.is_file():
+        try:
+            with open(cache_path, "rb") as fh:
+                cached_fp, automaton = pickle.load(fh)
+            if cached_fp == (*fp, _pyahocorasick_version()) and automaton.keyword_count:
+                return automaton
+        except Exception:
+            pass  # corrupt or version-incompatible cache -> rebuild
+
+    automaton = _build_automaton(kb_path)
+    if fp is not None:
+        tmp_path = cache_path.with_suffix(cache_path.suffix + ".tmp")
+        try:
+            # Write to a temp file and rename so a killed process never leaves
+            # a half-written cache behind.
+            with open(tmp_path, "wb") as fh:
+                pickle.dump(
+                    ((*fp, _pyahocorasick_version()), automaton),
+                    fh,
+                    protocol=pickle.HIGHEST_PROTOCOL,
+                )
+            os.replace(tmp_path, cache_path)
+        except Exception:
+            pass  # cache write failure must never break classification
+    return automaton
 
 
 # Module-level cache so that downstream engines (e.g. income) can reuse the
-# same automaton without reloading the 395 MB CSV.
+# same automaton without reloading the ~74 MB CSV.
 _cached_automaton: _Automaton | None = None
 _cached_kb_path: str | None = None
 _DEFAULT_KB_PATH: str | None = None
@@ -227,8 +351,9 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> _Automaton:
     """Return a cached automaton, building it on first call.
 
     The automaton is cached in memory within the same process so that downstream
-    engines (e.g. income) can reuse it without reloading the 395 MB CSV.  Each
-    invocation rebuilds from CSV — there is no persistent disk cache.
+    engines (e.g. income) can reuse it without reloading the ~74 MB CSV.  It is
+    also persisted to disk as a pickle sidecar — a warm run restores it in ~2s
+    via pickle.load instead of rebuilding (~6-8s); see load_merchant_kb.
     """
     global _cached_automaton, _cached_kb_path, _DEFAULT_KB_PATH
     if _DEFAULT_KB_PATH is None:

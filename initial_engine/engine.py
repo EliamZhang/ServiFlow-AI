@@ -17,10 +17,10 @@ from .pipeline import DEFAULT_KB_PATH, run_pipeline
 class InitialClassificationEngine:
     """Classify transactions by matching text against a merchant knowledge base.
 
-    The engine compares each transaction's ``text`` field against ~30k keyword
-    variants sourced from ~9k categorised merchant rows.  Matching uses a
-    pure-Python Aho-Corasick automaton — construction is a one-off cost and
-    per-text search is linear in text length.
+    The engine compares each transaction's ``text`` field against ~1.2M keyword
+    variants sourced from ~876k categorised merchant rows.  Matching uses a
+    pyahocorasick (C-extension) Aho-Corasick automaton — construction is a
+    one-off cost per process and per-text search is linear in text length.
     """
 
     engine_id = "initial"
