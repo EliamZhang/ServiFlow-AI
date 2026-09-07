@@ -17,7 +17,7 @@
     },
     {
       "engine_id": "gambling",
-      "priority": 700,
+      "priority": 180,
       "enabled": true
     },
     {

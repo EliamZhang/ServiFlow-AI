@@ -1,7 +1,8 @@
 """Gambling classification engine — merchant-KB institutions + keyword/regex.
 
-Runs after fee (priority 700) and before rent (priority 800), using two layers
-of rules loaded from ``gambling_rules.csv``:
+Runs after dishonour (priority 150) and BEFORE income (200) / liability (300) /
+all_other_credit (400) / fee (500), using two layers of rules loaded from
+``gambling_rules.csv``:
 
 * **institution rows** (``source=institution``) — merchants that were moved out
   of ``initial_engine/merchant_kb.csv`` (category Gambling) so gambling
@@ -19,22 +20,27 @@ of rules loaded from ``gambling_rules.csv``:
     won the row then as well (equal lengths resolve in the initial engine's
     favour).
 
-  Rows claimed by all_other_credit are NOT dropped: before the move the
-  initial engine claimed gambling credit rows, which made all_other_credit
-  skip them; now all_other_credit (priority 400) claims them first and the
-  institution layer must re-claim them to keep the outcome.
+  Note: since gambling moved BEFORE income/liability (2026-09), the fee skip
+  branch above never fires for fee (fee runs later now; fee double-match rows
+  are instead settled by fee's own later-wins claims at priority 500 — only the
+  fee keyword catch-all, which requires unclaimed rows, defers to gambling).
 
 * **keyword / regex rows** (``source=rule``) — the original catch_all rules.
   Before the move these lived in the catch_all engine (priority 999), which
   only claims rows no earlier engine claimed — so this layer defers to ALL
   prior claims via ``exclude_prior_claimed`` (unlike the rent engine's keyword
-  layer, which may re-claim anything).  Each rule carries a confidence score;
-  when multiple rule rows match the same transaction the highest confidence
-  wins.  Counterparty is "-".
+  layer, which may re-claim anything).  With gambling at priority 180 the only
+  prior claims that can exist at run time come from transfer / initial /
+  dishonour.  Each rule carries a confidence score; when multiple rule rows
+  match the same transaction the highest confidence wins.  Counterparty is "-".
 
-Income/liability protection is handled at the orchestrator level (candidates
-are pre-filtered).  When both layers match, the institution wins (confidence
-0.95 > rules <= 0.90) and its merchant name is used as counterparty.
+Gambling-owned rows are final against income/liability: income (200) and
+liability (300) predictions on rows gambling claimed are dropped by the
+orchestrator before commit, so gambling payouts (withdrawals/refunds from
+bookmakers) are never re-labelled Wages.  Other later engines (aoc/fee/rent/
+catch_all) keep their later-wins semantics.  When both layers match, the
+institution wins (confidence 0.95 > rules <= 0.90) and its merchant name is
+used as counterparty.
 """
 
 from __future__ import annotations

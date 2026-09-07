@@ -90,7 +90,10 @@ class ClassificationOrchestrator:
             engine = self.engine_factory(spec.engine_id)
 
             # All engines see all transactions; later engines overwrite earlier ones
-            # at the row level (finv_category + counterparty as a pair).
+            # at the row level (finv_category + counterparty as a pair).  Sole
+            # exception: gambling (priority 180, before income/liability) owns its
+            # rows — income/liability predictions on gambling-owned rows are dropped
+            # below, so gambling payouts are never re-labelled Wages.
             candidates_df = original.copy()
             if spec.engine_id == "liability":
                 already_income_mask = output["finv_category"].isin(
@@ -122,6 +125,26 @@ class ClassificationOrchestrator:
             engine_started = perf_counter()
             engine_result = engine.classify(context)
             accepted = self._validate_predictions(engine, context, engine_result)
+            # gambling(180) runs before income(200)/liability(300) and its claims
+            # are final against them (user-confirmed 2026-09): rows gambling owns
+            # must not be re-labelled Wages/income streams.  Filtering happens here
+            # (commit layer), NOT in the candidate set: income's behaviour features
+            # (repeat payer, two-way debit flag, wage-payer alias chain) are computed
+            # over all rows, and dropping gambling rows from its candidates would
+            # distort features of unrelated rows.  Other later engines (fee/rent/
+            # catch_all, priority > 300) keep their later-wins semantics.
+            # NOTE: this guard depends on gambling priority < income/liability; if a
+            # future reorder moves gambling after them, revisit this filter AND the
+            # income/liability candidate exclusion for ("rent","gambling") above,
+            # which is now inert for gambling (income/liability claims cannot exist
+            # yet at priority 180) and kept only as a defensive guard.
+            if spec.engine_id in ("income", "liability"):
+                gambling_owned = set(
+                    _key_tuples(output.loc[output["classification_engine"].eq("gambling")])
+                )
+                accepted = accepted.loc[
+                    [key not in gambling_owned for key in _key_tuples(accepted)]
+                ]
             claim_archive = self._archive_claims(accepted, spec.priority)
             self._commit(
                 output=output,
@@ -296,7 +319,9 @@ class ClassificationOrchestrator:
         predictions: pd.DataFrame,
     ) -> None:
         """Write predictions to output, overwriting both finv_category and
-        counterparty as a pair.  Later engines always win at the row level."""
+        counterparty as a pair.  Later engines always win at the row level,
+        except gambling-owned rows which income/liability predictions were
+        already filtered from before reaching this point."""
         for (_, prediction), key in zip(
             predictions.iterrows(),
             _key_tuples(predictions),
