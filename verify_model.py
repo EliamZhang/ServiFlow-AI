@@ -95,10 +95,10 @@ def main() -> None:
     total_seconds = perf_counter() - started
     stats = output.get("stats", {})
     print(
-        f"application_no={output.get('applicationNo')} | "
+        f"application_no={output.get('application_id')} | "
         f"status={output.get('status')} | "
-        f"transactions={stats.get('txnRawInputCnt')} | "
-        f"date_max={stats.get('transactionDateMax')}"
+        f"transactions={stats.get('txn_raw_input_cnt')} | "
+        f"date_max={stats.get('transaction_date_max')}"
     )
     engine_times = " | ".join(
         f"{execution.engine_id} {execution.duration_seconds:.2f}s"
