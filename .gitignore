@@ -4,6 +4,7 @@ __pycache__/
 .venv-backfill/
 *.pickle
 .pytest_cache/
+.ipynb_checkpoints/
 .coverage
 output/
 /model_output_*.json
