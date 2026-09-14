@@ -86,7 +86,7 @@
       "liability_engine/resources/credit_card_rules.csv": "af17824206eb7d9e22680af5450144389373dbcf5a4c57b67e5615dac661612f",
       "liability_engine/resources/debt_collection_rules.csv": "daf8960b5f9167593500afd8879ef9370ee9b56084d19c38f1a82ea2d58c25f3",
       "liability_engine/resources/debt_consolidation_rules.csv": "2e0f1e7e9108b710b883eb031ea1c5f9511db5d4ee63e66360326b641ffee7bf",
-      "liability_engine/resources/dishonours_rules.csv": "b3ddb6ae83460a3d5d33f2a244e76f3908878c1e34cfead98c160998e5128ac5",
+      "liability_engine/resources/dishonours_rules.csv": "1442088ed88e2402a1aab93bc0fea14901f3d7e25bac48178f8a73bf423404f3",
       "liability_engine/resources/home_loan_car_loan_rules.csv": "f64310b9e9d2958375a506d2a7f3ce29b59334098c0b182a0e38791714a2c14c",
       "liability_engine/resources/overdrawn_rules.csv": "62f3342ac6609f74e57558383e8567c75cfec824ab4b8dde45e7ae5cd4ae0f16",
       "rent_engine/resources/rent_rules.csv": "0d3cdb7f6464b04922b60d23c319127cffcd9604bd5c46f31d1ae7bbf9c22d9a",
