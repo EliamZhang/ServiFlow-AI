@@ -16,7 +16,10 @@ from .pipeline import run_pipeline
 
 class IncomeEngine:
     engine_id = "income"
-    engine_version = "1.0"
+    # 1.1: "MTS" added to PAYER_STOP_WORDS (payer-key split fix).  Row-level
+    # effect is invisible on the baseline sample (no MTS rows there), so the
+    # version bump is what makes the change visible in baseline/run_meta.json.
+    engine_version = "1.1"
 
     def classify(self, context: EngineContext) -> EngineResult:
         result = run_pipeline(context.candidates)

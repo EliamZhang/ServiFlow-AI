@@ -215,6 +215,10 @@ PAYER_STOP_WORDS = {
     "PAY", "PAYMENT", "PAYMENTS", "TRANSFER", "TRANS", "FROM", "TO", "REF",
     "REFERENCE", "ONLINE", "INTERNET", "EFT", "DEP", "OSKO", "VISA", "CARD",
     "PURCHASE", "DEBIT", "MISCELLANEOUS", "BPAY", "WITHDRAWAL", "ATM",
+    # ANZ transaction-type prefix ("MTS ARB MELTON PAY ARB", "PENDING - MTS
+    # ..."); never part of a payer name.  Left in, it splits one payer into two
+    # groups and voids the repeat / stable-amount evidence.
+    "MTS",
     "TRNS", "ACC", "ACCOUNT", "LINKED", "AU", "AUS", "THE", "AND", "PTY",
     "LTD", "LIMITED", "PACKAGING", "CENTRELINK", "CENTRE", "LINK",
     "SERVICES", "AUSTRALIA", "GOV", "GOVERNMENT", "RETURN", "VALUE", "DATE",

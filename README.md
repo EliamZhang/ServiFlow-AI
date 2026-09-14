@@ -6,7 +6,9 @@ Australian bank transaction classification service: a multi-engine classificatio
 
 ##### Python version
 
-3.11
+3.10
+
+Note: the pinned `numpy==1.21.6` / `pandas==1.3.5` install on Python **3.8 – 3.10** only — on 3.11+ neither has a matching distribution (verified with `pip download --only-binary`; the oldest versions published for 3.11 are numpy 1.23.2 / pandas 1.5.0). The code itself uses no version-specific syntax beyond `from __future__ import annotations`.
 
 ##### Processor
 
@@ -15,10 +17,12 @@ CPU
 ##### PIP dependencies
 
 ```txt
-numpy>=1.24.0
-pandas>=2.0.0
-openpyxl>=3.1.0
-pyahocorasick>=2.0.0
+numpy==1.21.6
+pandas==1.3.5
+openpyxl==3.1.3
+pyahocorasick==2.0.0
+typing_extensions==4.7.1
+tqdm==4.66.1
 ```
 
 ## Model API
@@ -91,130 +95,167 @@ Field description:
 | userId | int | User ID |
 | applicationId | int | Application ID, echoed back at the transaction row level |
 | flowTime | string | Request time, echoed back unchanged |
-| bank_accounts | array | Account list providing account metadata (account_type / bank / credit_limit) missing from transaction rows; metadata does not participate in classification and is only written to the `bankAccounts` output |
+| bank_accounts | array | Account list providing account metadata (account_type / bank / credit_limit) missing from transaction rows; metadata does not participate in classification and is only written to the `bank_accounts` output |
 | illion_raw_transactions | array | Illion raw transactions; each must contain at least transaction_id, transaction_date, amount, dr_cr, text; when application_id is absent it is filled from the top-level applicationId; an **empty array (zero transactions) is legal** and returns an empty success result (see edge-case examples below) |
 
 ##### Output example
 
 ```json
 {
-  "customerId": 484579009,
-  "applicationNo": 2513560,
-  "sampleDatetime": "2026-07-05 23:52:48.0",
-  "runId": "8f0d3c9e-7a1b-4c2d-9e3f-0a1b2c3d4e5f",
+  "user_id": 484579009,
+  "application_id": 2513560,
+  "sample_datetime": "2026-07-05 23:52:48.0",
+  "run_id": "3fce407b-5c10-4dd9-ad29-06dbb7678893",
   "status": "success",
   "error": null,
   "stats": {
-    "txnRawInputCnt": 881,
-    "transactionDateMax": "2026-07-09"
+    "txn_raw_input_cnt": 1,
+    "transaction_date_max": "2026-02-05"
   },
-  "bankAccounts": [
+  "bank_accounts": [
     {
-      "bankAccountId": 1042813323,
-      "accountType": "transaction",
+      "bank_account_id": 1042813323,
+      "account_type": "transaction",
       "bank": "cba",
-      "creditLimit": null
+      "credit_limit": null
+    },
+    {
+      "bank_account_id": 1525527792,
+      "account_type": "credit card",
+      "bank": "cba",
+      "credit_limit": 5000
     }
   ],
   "transactions": [
     {
       "amount": -12.32,
       "balance": -126.28,
-      "bankAccountId": 1042813323,
+      "bank_account_id": 1042813323,
       "category": "Transport",
-      "drCr": "debit",
-      "illionTrxUuid": "0e63679d-ff62-5a55-bb5f-ae03d4dec068",
+      "dr_cr": "debit",
+      "illion_trx_uuid": "0e63679d-ff62-5a55-bb5f-ae03d4dec068",
       "text": "UBER *TRIP HELP.UBER.C 14518236738 AUS",
-      "thirdParty": "UBER",
-      "transactionDate": "2026-02-05",
-      "transactionId": 1423884392,
-      "trxType": null,
-      "applicationNo": 2513560,
+      "third_party": "UBER",
+      "transaction_date": "2026-02-05",
+      "transaction_id": 1423884392,
+      "trx_type": null,
+      "application_id": 2513560,
       "counterparty": "Uber",
-      "finvCategory": "Transport",
-      "streamId": null
+      "finv_category": "Transport",
+      "stream_id": null
     }
   ],
   "summaries": {
-    "income_summary": [
-      {
-        "finvCategory": "Wages",
-        "streamId": "salary_payg_001",
-        "incomeCategory": "salary_payg",
-        "bankAccountId": 459428115,
-        "applicationNo": 2513560,
-        "counterparty": "DELIVERY SERVICE JOB",
-        "transactionStartDate": "2026-02-13",
-        "transactionEndDate": "2026-07-09",
-        "status": "active",
-        "transactionCount": 9,
-        "totalIncomeAmount": 2072.44,
-        "averageIncomeAmount": 230.2711111111111,
-        "medianIncomeAmount": 224.8,
-        "latestIncomeAmount": 225.8,
-        "estimatedMonthlyIncome": 487.06666666666666,
-        "frequency": "fortnightly",
-        "frequencyDay": "Thursday",
-        "predictedNextIncomeDate": "2026-07-23"
-      }
-    ],
-    "liability_summary": [
-      {
-        "finvCategory": "Non SACC Loans",
-        "streamId": "bnpl_003",
-        "liabilityCategory": "Non SACC Loans",
-        "bankAccountId": "1534823854",
-        "applicationNo": "2513560",
-        "counterparty": "CBA StepPay",
-        "transactionStartDate": "2026-02-07",
-        "transactionEndDate": "2026-06-25",
-        "status": "Closed",
-        "fundedAmount": 0.0,
-        "repaidAmount": 2817.35,
-        "repaymentAmount": null,
-        "recentFnRepayAmount": 0.0,
-        "frequency": "fortnightly",
-        "frequencyDay": "Wednesday",
-        "predictedClosingDate": null
-      }
-    ],
+    "income_summary": [],
+    "liability_summary": [],
     "category_summary": [
       {
-        "finvCategory": "All Other Credits",
-        "bankAccountId": 1534823854,
-        "transactionStartDate": "2026-04-15",
-        "transactionEndDate": "2026-04-15",
-        "transactionCount": 1,
-        "totalAmount": 10.0,
-        "averageAmount": 10.0,
-        "medianAmount": 10.0,
-        "latestAmount": 10.0
+        "finv_category": "Transport",
+        "bank_account_id": 1042813323,
+        "transaction_start_date": "2026-02-05",
+        "transaction_end_date": "2026-02-05",
+        "transaction_count": 1,
+        "total_amount": 12.32,
+        "average_amount": 12.32,
+        "median_amount": 12.32,
+        "latest_amount": 12.32
       }
     ]
   }
 }
 ```
 
+`summaries` sub-arrays are empty when the application has no income / liability stream detected. Excerpt of the same fields from an application that does (one row per sub-array shown):
+
+```json
+{
+  "income_summary": [
+    {
+      "finv_category": "Wages",
+      "stream_id": "wage_001",
+      "income_category": "salary_payg",
+      "bank_account_id": 4689355,
+      "application_id": 2420589,
+      "counterparty": "Main Roads",
+      "transaction_start_date": "2025-11-20",
+      "transaction_end_date": "2026-05-07",
+      "status": "active",
+      "transaction_count": 13,
+      "total_income_amount": 39962.91,
+      "average_income_amount": 3074.07,
+      "median_income_amount": 3214.0,
+      "latest_income_amount": 3314.01,
+      "estimated_monthly_income": 6963.666666666667,
+      "frequency": "fortnightly",
+      "frequency_day": "Thursday",
+      "predicted_next_income_date": "2026-05-21"
+    }
+  ],
+  "liability_summary": [
+    {
+      "finv_category": "Non SACC Loans",
+      "stream_id": "loan_004",
+      "liability_category": "Non SACC Loans",
+      "bank_account_id": "4689355",
+      "application_id": "2420589",
+      "counterparty": "Humm",
+      "transaction_start_date": "2025-11-19",
+      "transaction_end_date": "2026-03-11",
+      "status": "Closed",
+      "funded_amount": 0.0,
+      "repaid_amount": 750.48,
+      "repayment_amount": null,
+      "recent_fn_repay_amount": 0.0,
+      "frequency": "fortnightly",
+      "frequency_day": "Wednesday",
+      "predicted_closing_date": null
+    }
+  ],
+  "category_summary": [
+    {
+      "finv_category": "Transport",
+      "bank_account_id": 1042813323,
+      "transaction_start_date": "2026-02-05",
+      "transaction_end_date": "2026-02-05",
+      "transaction_count": 1,
+      "total_amount": 12.32,
+      "average_amount": 12.32,
+      "median_amount": 12.32,
+      "latest_amount": 12.32
+    }
+  ]
+}
+```
+
+Notes on the summary fields: `stream_id` for Wages is a coarse label shared by all three Wages subtypes (`wage_001`, `wage_002`, …, the fine subtype stays in `income_category`). Value types are not normalized across summary layers — income emits `bank_account_id` / `application_id` as numbers, liability as strings; cast on the consumer side.
+
 Field description:
+
+All output field names are snake_case, matching the Excel report column names produced by `backfill.py`.
 
 | Field | Type | Description |
 | --- | --- | --- |
-| runId | string | Unique ID of a single inference run (uuid4); null in `failed` outputs |
+| user_id | int | Echo of the input `userId` |
+| application_id | int | Echo of the input `applicationId` |
+| sample_datetime | string | Echo of the input `flowTime` |
+| run_id | string | Unique ID of a single inference run (uuid4); null in `failed` outputs |
 | status | string | `success` / `failed`; a zero-transaction input (empty `illion_raw_transactions`) is legal and returns `success` with empty transactions / summaries; on malformed input no exception is raised, instead `failed` + error message is returned with empty transactions / summaries |
 | error | string/null | Failure reason |
-| stats.txnRawInputCnt | int | Input transaction count |
-| stats.transactionDateMax | string | Max transaction date in input |
-| bankAccounts | array | Account metadata (bankAccountId / accountType / bank / creditLimit), not repeated at the transaction row level |
-| transactions | array | Original transaction fields + classification results; the core new fields are `finvCategory` (fine-grained category), `counterparty` (counterparty name), `streamId` (income/liability stream id, null for rows not belonging to any stream), plus the `applicationNo` echo |
-| summaries | object | Summaries grouped by type: income_summary (income streams, incl. estimatedMonthlyIncome / predictedNextIncomeDate), liability_summary (liability streams, incl. fundedAmount / repaidAmount / predictedClosingDate), category_summary (aggregate stats by finvCategory) |
+| stats.txn_raw_input_cnt | int | Input transaction count |
+| stats.transaction_date_max | string | Latest `transaction_date` among input rows; null when there are no rows |
+| bank_accounts | array | Account metadata (bank_account_id / account_type / bank / credit_limit), not repeated at the transaction row level |
+| transactions | array | Original transaction fields + classification results; the core new fields are `finv_category` (fine-grained category), `counterparty` (counterparty name), `stream_id` (income/liability stream id, null for rows not belonging to any stream), plus the `application_id` echo |
+| summaries | object | Summaries grouped by type: income_summary (income streams, incl. estimated_monthly_income / predicted_next_income_date), liability_summary (liability streams, incl. funded_amount / repaid_amount / predicted_closing_date), category_summary (aggregate stats by finv_category). Empty arrays / `{}` when nothing applies |
+
+The three echo keys (`user_id` / `application_id` / `sample_datetime`) are only present when the corresponding input key is present; they come first in `success` outputs and last in `failed` outputs.
 
 ##### Input/output examples by scenario
 
 | Scenario | illion_raw_transactions | bank_accounts | status | Output shape |
 | --- | --- | --- | --- | --- |
 | Standard application | non-empty | any | success | classified transactions + summaries (input / output examples above) |
-| Zero transactions, no accounts | `[]` | `[]` | success | empty result: empty transactions / summaries, `txnRawInputCnt` = 0 |
-| Zero transactions, accounts present | `[]` | non-empty | success | same empty result, but `bankAccounts` still carries the account list |
+| Zero transactions, no accounts | `[]` | `[]` | success | empty result: empty transactions / summaries, `stats.txn_raw_input_cnt` = 0 |
+| Zero transactions, accounts present | `[]` | non-empty | success | same empty result, but `bank_accounts` still carries the account list |
 | Malformed input | missing / null / non-list | any | failed | empty transactions / summaries + `error` message |
 
 **Scenario: zero transactions, no accounts** — a user profile with no bank cards and no statement rows is still a valid application; it returns `success` with an empty result instead of failing:
@@ -235,17 +276,17 @@ Output:
 
 ```json
 {
-  "customerId": 484579009,
-  "applicationNo": 2513560,
-  "sampleDatetime": "2026-07-05 23:52:48.0",
-  "runId": "2b25687c-537f-4985-97f8-a1f634fc74e6",
+  "user_id": 484579009,
+  "application_id": 2513560,
+  "sample_datetime": "2026-07-05 23:52:48.0",
+  "run_id": "abcdf92d-5bda-4f49-abcd-c9261c77fec5",
   "status": "success",
   "error": null,
   "stats": {
-    "txnRawInputCnt": 0,
-    "transactionDateMax": null
+    "txn_raw_input_cnt": 0,
+    "transaction_date_max": null
   },
-  "bankAccounts": [],
+  "bank_accounts": [],
   "transactions": [],
   "summaries": {}
 }
@@ -276,22 +317,22 @@ Output:
 
 ```json
 {
-  "customerId": 484579009,
-  "applicationNo": 2513560,
-  "sampleDatetime": "2026-07-05 23:52:48.0",
-  "runId": "efcd837a-cae4-416b-9faa-a9b5eb01ef59",
+  "user_id": 484579009,
+  "application_id": 2513560,
+  "sample_datetime": "2026-07-05 23:52:48.0",
+  "run_id": "5550bad2-931e-480b-9d82-fd09f0f35546",
   "status": "success",
   "error": null,
   "stats": {
-    "txnRawInputCnt": 0,
-    "transactionDateMax": null
+    "txn_raw_input_cnt": 0,
+    "transaction_date_max": null
   },
-  "bankAccounts": [
+  "bank_accounts": [
     {
-      "bankAccountId": 1042813323,
-      "accountType": "transaction",
+      "bank_account_id": 1042813323,
+      "account_type": "transaction",
       "bank": "cba",
-      "creditLimit": null
+      "credit_limit": null
     }
   ],
   "transactions": [],
@@ -299,7 +340,7 @@ Output:
 }
 ```
 
-**Scenario: malformed input** — `illion_raw_transactions` missing, `null`, or not a list is a structural error; no exception is raised, the call returns `failed` (note: no `bankAccounts` key in failed outputs):
+**Scenario: malformed input** — `illion_raw_transactions` missing, `null`, or not a list is a structural error; no exception is raised, the call returns `failed` (note: no `bank_accounts` key in failed outputs):
 
 Input:
 
@@ -315,16 +356,16 @@ Output:
 
 ```json
 {
-  "customerId": 484579009,
-  "applicationNo": 2513560,
-  "sampleDatetime": "2026-07-05 23:52:48.0",
-  "runId": null,
+  "run_id": null,
   "status": "failed",
   "error": "Input JSON must contain an 'illion_raw_transactions' list.",
   "stats": {
-    "txnRawInputCnt": 0,
-    "transactionDateMax": null
+    "txn_raw_input_cnt": 0,
+    "transaction_date_max": null
   },
+  "user_id": 484579009,
+  "application_id": 2513560,
+  "sample_datetime": "2026-07-05 23:52:48.0",
   "transactions": [],
   "summaries": {}
 }
@@ -355,20 +396,27 @@ Three entry scripts serve different purposes but run the **same core pipeline** 
 
 ## Classification pipeline
 
-8 classification engines run in ascending priority order; each engine matches all transactions line by line and later engines overwrite the classification of earlier ones:
+10 classification engines run in **ascending `priority` order** (the array order in `configs/pipeline.json` is irrelevant); each engine matches transactions line by line and later engines overwrite the classification of earlier ones:
 
 | priority | engine | responsibility |
 | --- | --- | --- |
-| 1 | initial | Initial classification via merchant knowledge base (merchant_kb.csv) and basic rules |
-| 100 | transfer | Internal / external transfer identification |
+| 1 | transfer | Internal / external transfer identification |
+| 10 | initial | Initial classification via merchant knowledge base (merchant_kb.csv) and basic rules |
 | 150 | dishonour | Dishonour identification |
+| 180 | gambling | Gambling merchant / keyword identification (gambling_rules.csv) |
 | 200 | income | Income stream identification (Wages / Centrelink, etc.) |
-| 300 | liability | Liability stream identification (loan / BNPL, etc.), skips transactions already classified as income |
+| 300 | liability | Liability stream identification (loan / BNPL, etc.) |
 | 400 | all_other_credit | Collects remaining credits, only processes credit rows |
 | 500 | fee | Fee identification |
+| 800 | rent | Rent identification (rent_rules.csv: institution layer + keyword layer) |
 | 999 | catch_all | Fallback: only matches transactions not yet classified |
 
-Engine rules are externalized as CSV files under each engine's `resources/` directory (liability_engine, transfer_engine, catch_all_engine, etc.); the pipeline configuration lives in `configs/pipeline.json` and the category catalog in `configs/category_catalog.json`.
+Overwrite (later-wins) exceptions, i.e. where a later engine does **not** take a row:
+
+- `liability` and `rent` skip transactions already classified as income or liability; `all_other_credit` only touches `dr_cr == credit` rows and skips everything already classified — except rows labelled `External Transfers`, which it may re-match; `catch_all` only matches unclassified rows.
+- Rows claimed by `gambling` cannot be overwritten by `income` / `liability`; every other later engine still wins them.
+
+Engine rules are externalized as CSV files under each engine's `resources/` directory (rent_engine, gambling_engine, liability_engine, transfer_engine, catch_all_engine, etc.); the pipeline configuration lives in `configs/pipeline.json` and the category catalog in `configs/category_catalog.json`. Add a rule by appending a row to the engine's CSV — no engine code change needed.
 
 ## Regression check on code changes
 

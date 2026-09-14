@@ -13,6 +13,7 @@ Performance characteristics
 
 from __future__ import annotations
 
+import hashlib
 import os
 import pickle
 import re
@@ -138,18 +139,27 @@ class _Automaton:
 # KB loader
 # ---------------------------------------------------------------------------
 
-def _keyword_map_cache_path(kb_path: Path) -> Path:
-    """Sidecar path for the pickled keyword map (ignored by git via *.pickle)."""
-    return kb_path.with_name(f"{kb_path.name}_keywords.pickle")
+def _module_fingerprint() -> str:
+    """SHA-256 of this module, so the cache follows the code that builds it.
+
+    The KB-extraction rules that decide the automaton's contents — _STOPWORDS,
+    _MAX_VARIANTS_PER_MERCHANT, _build_keyword_map — all live in this file and
+    leave no trace in the KB's (mtime, size), so without this an edit to them
+    would silently keep serving the old automaton.
+    """
+    try:
+        return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    except OSError:
+        return "unknown"
 
 
-def _cache_fingerprint(kb_path: Path) -> tuple[int, int] | None:
-    """Return (mtime_ns, size) of the KB, or None if it cannot be stat'ed."""
+def _cache_fingerprint(kb_path: Path) -> tuple[int, int, str] | None:
+    """Return (mtime_ns, size, module_sha256) of the KB, or None if unstattable."""
     try:
         st = kb_path.stat()
     except OSError:
         return None
-    return st.st_mtime_ns, st.st_size
+    return st.st_mtime_ns, st.st_size, _module_fingerprint()
 
 
 def _automaton_cache_path(kb_path: Path) -> Path:
@@ -170,41 +180,6 @@ def _pyahocorasick_version() -> str:
         return version("pyahocorasick")
     except Exception:
         return "unknown"
-
-
-def _load_keyword_map_cached(kb_path: Path) -> dict[str, tuple[str, str]]:
-    """Return {keyword: (merchant_name, category)} from the disk cache or rebuild.
-
-    The sidecar pickle stores the deduplicated keyword map keyed by the KB's
-    (mtime_ns, size) fingerprint.  This is the *lower* tier of the cache:
-    it removes the pandas parse + dedup phase when the automaton sidecar
-    (see load_merchant_kb) is missing or stale, e.g. right after the KB
-    changes.  Any cache miss, corrupt file, or write failure falls back to a
-    full rebuild — a broken cache never breaks classification.
-    """
-    fp = _cache_fingerprint(kb_path)
-    cache_path = _keyword_map_cache_path(kb_path)
-    if fp is not None and cache_path.is_file():
-        try:
-            with open(cache_path, "rb") as fh:
-                cached_fp, kw_map = pickle.load(fh)
-            if cached_fp == fp:
-                return kw_map
-        except Exception:
-            pass  # corrupt or version-incompatible cache -> rebuild
-
-    kw_map = _build_keyword_map(kb_path)
-    if fp is not None:
-        tmp_path = cache_path.with_suffix(cache_path.suffix + ".tmp")
-        try:
-            # Write to a temp file and rename so a killed process never leaves
-            # a half-written cache behind.
-            with open(tmp_path, "wb") as fh:
-                pickle.dump((fp, kw_map), fh, protocol=pickle.HIGHEST_PROTOCOL)
-            os.replace(tmp_path, cache_path)
-        except Exception:
-            pass  # cache write failure must never break classification
-    return kw_map
 
 
 def _build_keyword_map(kb_path: Path) -> dict[str, tuple[str, str]]:
@@ -286,8 +261,8 @@ def _build_keyword_map(kb_path: Path) -> dict[str, tuple[str, str]]:
 
 
 def _build_automaton(kb_path: Path) -> _Automaton:
-    """Build the automaton from the (cached) keyword map."""
-    kw_map = _load_keyword_map_cached(kb_path)
+    """Build the automaton from the keyword map parsed out of the KB."""
+    kw_map = _build_keyword_map(kb_path)
     automaton = ahocorasick.Automaton()
     for kw, (merchant, category) in kw_map.items():
         automaton.add_word(kw, (kw, len(kw), merchant, category))
@@ -305,10 +280,10 @@ def load_merchant_kb(kb_path: str | Path) -> _Automaton:
     once per process; the sidecar is ~736MB uncompressed (uncompressed load
     was chosen over a ~143MB gzip variant because the extra ~1.5s
     decompression per process outweighs the disk savings).  The cache is
-    keyed by the KB's (mtime_ns, size) fingerprint plus the pyahocorasick
-    version (pickled C automata are tied to the extension build).  Any miss,
-    corrupt file, or write failure falls back to a full rebuild — a broken
-    cache never breaks classification.
+    keyed by the KB's (mtime_ns, size) fingerprint, this module's SHA-256, and
+    the pyahocorasick version (pickled C automata are tied to the extension
+    build).  Any miss, corrupt file, or write failure falls back to a full
+    rebuild — a broken cache never breaks classification.
     """
     kb_path = Path(kb_path)
     fp = _cache_fingerprint(kb_path)
