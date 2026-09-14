@@ -36,48 +36,20 @@ _INTERNAL_OUTPUT_COLUMNS = frozenset(
     }
 )
 
-# Top-level input fields echoed back: {input key: output key}
+# Top-level input fields echoed back: {input key: output key}. Output keys are
+# snake_case to match the Excel report column names (user_id / application_id /
+# sample_datetime); values are carried through unchanged.
 _INPUT_ECHO_TOP_KEYS = {
-    "userId": "customerId",
-    "applicationId": "applicationNo",
-    "flowTime": "sampleDatetime",
+    "userId": "user_id",
+    "applicationId": "application_id",
+    "flowTime": "sample_datetime",
 }
 
-# Input original columns that need renamed output keys when serializing
-_TRANSACTION_OUTPUT_MAP = {
-    "application_id": "applicationNo",
-    "bank_account_id": "bankAccountId",
-    "transaction_id": "transactionId",
-    "transaction_date": "transactionDate",
-    "dr_cr": "drCr",
-    "third_party": "thirdParty",
-    "trx_type": "trxType",
-    "illion_trx_uuid": "illionTrxUuid",
-}
-
-# Account metadata stays at the top-level bankAccounts only; not repeated per row
+# Account metadata stays at the top-level bank_accounts only; not repeated per row
 _ACCOUNT_METADATA_COLUMNS = frozenset({"account_type", "bank", "credit_limit"})
-
-_SUMMARY_OUTPUT_MAP = {
-    "finv_category": "finvCategory",
-    "income_category": "incomeCategory",
-    "liability_category": "liabilityCategory",
-    "bank_account_id": "bankAccountId",
-    "transaction_start_date": "transactionStartDate",
-    "transaction_end_date": "transactionEndDate",
-    "total_income_amount": "totalIncomeAmount",
-    "average_income_amount": "averageIncomeAmount",
-    "median_income_amount": "medianIncomeAmount",
-    "latest_income_amount": "latestIncomeAmount",
-    "estimated_monthly_income": "estimatedMonthlyIncome",
-    "frequency_day": "frequencyDay",
-    "predicted_next_income_date": "predictedNextIncomeDate",
-    "funded_amount": "fundedAmount",
-    "repaid_amount": "repaidAmount",
-    "repayment_amount": "repaymentAmount",
-    "recent_fn_repay_amount": "recentFnRepayAmount",
-    "predicted_closing_date": "predictedClosingDate",
-}
+# Record keys are the frame column names verbatim (snake_case) so the JSON output
+# field names line up with the Excel report columns written by
+# classification_core/reporting.write_report.
 
 
 class ModelService:
@@ -103,11 +75,6 @@ class ModelService:
         return serialize_result(result, payload)
 
 
-def _to_camel(snake: str) -> str:
-    head, *rest = snake.split("_")
-    return head + "".join(part.capitalize() for part in rest)
-
-
 def _serialize_value(value: Any) -> Any:
     if value is None or pd.isna(value):
         return None
@@ -128,7 +95,6 @@ def _serialize_value(value: Any) -> Any:
 
 def _serialize_records(
     frame: pd.DataFrame,
-    field_map: dict[str, str] | None = None,
     exclude: frozenset[str] = frozenset(),
 ) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
@@ -137,12 +103,7 @@ def _serialize_records(
         for column in frame.columns:
             if column in exclude:
                 continue
-            name = (
-                field_map.get(column, _to_camel(column))
-                if field_map is not None
-                else _to_camel(column)
-            )
-            record[name] = _serialize_value(row[column])
+            record[column] = _serialize_value(row[column])
         records.append(record)
     return records
 
@@ -198,10 +159,10 @@ def build_bank_accounts(payload: dict) -> list[dict[str, Any]]:
     bank_accounts = payload.get("bank_accounts", [])
     return [
         {
-            "bankAccountId": account.get("bank_account_id"),
-            "accountType": account.get("account_type"),
+            "bank_account_id": account.get("bank_account_id"),
+            "account_type": account.get("account_type"),
             "bank": account.get("bank"),
-            "creditLimit": account.get("credit_limit"),
+            "credit_limit": account.get("credit_limit"),
         }
         for account in bank_accounts
         if isinstance(account, dict)
@@ -217,8 +178,8 @@ def build_stats(
     transactions: pd.DataFrame,
 ) -> dict[str, Any]:
     return {
-        "txnRawInputCnt": len(transactions),
-        "transactionDateMax": _max_date(
+        "txn_raw_input_cnt": len(transactions),
+        "transaction_date_max": _max_date(
             transactions["transaction_date"].tolist()
         ),
     }
@@ -232,16 +193,15 @@ def serialize_result(
     for input_key, output_key in _INPUT_ECHO_TOP_KEYS.items():
         if input_key in payload:
             output[output_key] = payload[input_key]
-    output["runId"] = result.run_id
+    output["run_id"] = result.run_id
     output["status"] = "success"
     output["error"] = None
     output["stats"] = build_stats(result.transactions)
-    output["bankAccounts"] = build_bank_accounts(payload)
+    output["bank_accounts"] = build_bank_accounts(payload)
 
     transactions_frame = result.transactions
     transactions = _serialize_records(
         transactions_frame,
-        field_map=_TRANSACTION_OUTPUT_MAP,
         exclude=_INTERNAL_OUTPUT_COLUMNS | _ACCOUNT_METADATA_COLUMNS,
     )
     output["transactions"] = transactions
@@ -250,7 +210,6 @@ def serialize_result(
     for artifact in result.summaries:
         summaries[artifact.name] = _serialize_records(
             artifact.data,
-            field_map=_SUMMARY_OUTPUT_MAP,
             exclude=_ACCOUNT_METADATA_COLUMNS,
         )
     output["summaries"] = summaries
@@ -259,12 +218,12 @@ def serialize_result(
 
 def _build_error_output(payload: dict, error: str) -> dict:
     output: dict[str, Any] = {
-        "runId": None,
+        "run_id": None,
         "status": "failed",
         "error": error,
         "stats": {
-            "txnRawInputCnt": 0,
-            "transactionDateMax": None,
+            "txn_raw_input_cnt": 0,
+            "transaction_date_max": None,
         },
     }
     for input_key, output_key in _INPUT_ECHO_TOP_KEYS.items():

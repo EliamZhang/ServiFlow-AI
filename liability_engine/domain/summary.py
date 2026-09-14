@@ -468,9 +468,14 @@ def calculate_predicted_closing_date(
         FORTNIGHTLY: 14,
         MONTHLY: 31,
     }.get(frequency, 14)
-    predicted_date = transaction_end_date + pd.Timedelta(
-        days=freq_days * rpmnts_rmning
-    )
+    # 病态还款数据（如 0.01 元借记被识别为还款）会让剩余期数大到预测日期超出
+    # pandas 可表示时间范围，Timedelta 溢出会炸掉整 app 的回溯；超界时与
+    # Closed / 无还款数据等分支同语义，返回 "NA"。
+    days_to_close = freq_days * rpmnts_rmning
+    max_days = int((pd.Timestamp.max - transaction_end_date).days)
+    if days_to_close > max_days:
+        return "NA"
+    predicted_date = transaction_end_date + pd.Timedelta(days=days_to_close)
     return predicted_date.strftime("%Y-%m-%d")
 
 

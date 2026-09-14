@@ -6,6 +6,7 @@ from all_other_credit_engine import AllOtherCreditEngine
 from catch_all_engine import CatchAllEngine
 from dishonour_engine import DishonourEngine
 from fee_engine import FeeEngine
+from gambling_engine import GamblingEngine
 from income_engine import IncomeEngine
 from initial_engine import InitialClassificationEngine
 from liability_engine import LiabilityEngine
@@ -20,6 +21,7 @@ ENGINE_FACTORIES: dict[str, Callable[[], ClassificationEngine]] = {
     "catch_all": CatchAllEngine,
     "dishonour": DishonourEngine,
     "fee": FeeEngine,
+    "gambling": GamblingEngine,
     "initial": InitialClassificationEngine,
     "income": IncomeEngine,
     "liability": LiabilityEngine,

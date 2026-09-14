@@ -125,6 +125,35 @@ def clean_dataframe_columns(df):
     return df.loc[:, valid_columns].copy()
 
 
+def _merge_keyword_groups(keyword_rules):
+    """Merge consecutive keyword rules with identical output into one regex.
+
+    ``load_rules`` expands ``;``-separated keywords so the same counterparty
+    frequently has several rules.  Running one ``str.contains`` per keyword
+    is the dominant cost of the liability pipeline (hundreds of regex passes
+    over the full text column), so consecutive rules that write the same
+    (counterparty, product_type) are merged into a single alternation regex
+    ``(?<![A-Za-z])(?:kw1|kw2|...)(?![A-Za-z])``.
+
+    Merging is restricted to *consecutive* rules so the original rule order
+    semantics are preserved exactly: within a merged group every keyword
+    writes the same output, and groups run in their first-appearance order.
+    Longer keywords are placed first to reduce failed alternation attempts.
+    """
+    merged = []
+    for keyword, counterparty, product_type in keyword_rules:
+        if merged and merged[-1][0] == (counterparty, product_type):
+            merged[-1][1].append(keyword)
+        else:
+            merged.append([(counterparty, product_type), [keyword]])
+
+    result = []
+    for (counterparty, product_type), keywords in merged:
+        unique_keywords = sorted(set(keywords), key=len, reverse=True)
+        result.append([(counterparty, product_type), unique_keywords])
+    return result
+
+
 def apply_counterparty_rules(df, rules_file):
     """Apply counterparty keyword/regex rules using vectorised operations.
 
@@ -133,7 +162,10 @@ def apply_counterparty_rules(df, rules_file):
     O(rows × rules) Python-level iterations.  This version achieves the
     identical result with vectorised ``str.contains()`` passes — one per
     keyword / regex rule — and an early-exit tracker so later rules only
-    process still-unmatched rows.
+    process still-unmatched rows.  Consecutive keyword rules with identical
+    output are merged into one alternation regex (see
+    ``_merge_keyword_groups``), cutting the number of ``str.contains``
+    passes roughly in half.
     """
     keyword_rules, regex_rules = load_rules(rules_file)
     output = clean_dataframe_columns(df)
@@ -149,39 +181,52 @@ def apply_counterparty_rules(df, rules_file):
     output["product_type"] = ""
     already = pd.Series(False, index=output.index)
 
-    # Keyword rules — processed in original priority order.
-    for keyword, counterparty, product_type in keyword_rules:
-        mask = (
-            ~already
-            & text_normalised.str.contains(
-                r"(?<![A-Za-z])" + re.escape(keyword) + r"(?![A-Za-z])",
-                na=False,
-                regex=True,
-            )
+    # Keyword rules — processed in original priority order (merged groups
+    # run in first-appearance order, which is equivalent per group).  Only
+    # still-unmatched rows are scanned: ``str.contains`` runs on the
+    # ``~already`` subset so the scanned row count shrinks as rules match,
+    # instead of re-scanning the full column for every rule.
+    for (counterparty, product_type), keywords in _merge_keyword_groups(
+        keyword_rules
+    ):
+        pattern = (
+            r"(?<![A-Za-z])"
+            + r"(?:"
+            + "|".join(re.escape(keyword) for keyword in keywords)
+            + r")"
+            + r"(?![A-Za-z])"
         )
-        if not mask.any():
+        remaining = text_normalised[~already]
+        if remaining.empty:
+            break
+        hit_indices = remaining.index[remaining.str.contains(
+            pattern,
+            na=False,
+            regex=True,
+        )]
+        if hit_indices.empty:
             continue
-        output.loc[mask, "counterparty"] = counterparty
-        output.loc[mask, "product_type"] = product_type
-        already |= mask
+        output.loc[hit_indices, "counterparty"] = counterparty
+        output.loc[hit_indices, "product_type"] = product_type
+        already.loc[hit_indices] = True
 
     # Regex rules — compiled patterns, matched against the normalised text
     # (same as the original ``match_text`` behaviour).
     for pattern, counterparty, product_type in regex_rules:
-        mask = (
-            ~already
-            & text_normalised.str.contains(
-                pattern.pattern,
-                na=False,
-                regex=True,
-                flags=re.IGNORECASE,
-            )
-        )
-        if not mask.any():
+        remaining = text_normalised[~already]
+        if remaining.empty:
+            break
+        hit_indices = remaining.index[remaining.str.contains(
+            pattern.pattern,
+            na=False,
+            regex=True,
+            flags=re.IGNORECASE,
+        )]
+        if hit_indices.empty:
             continue
-        output.loc[mask, "counterparty"] = counterparty
-        output.loc[mask, "product_type"] = product_type
-        already |= mask
+        output.loc[hit_indices, "counterparty"] = counterparty
+        output.loc[hit_indices, "product_type"] = product_type
+        already.loc[hit_indices] = True
 
     return output
 
@@ -204,6 +249,16 @@ def apply_credit_card_rules(df, rules_file):
     pt_col = output["product_type"].fillna("").astype(str).str.strip()
     already = pt_col.ne("")
 
+    # Pre-compute the normalised constraint columns once.  The previous
+    # implementation rebuilt these inside _col_mask for every rule (379
+    # fillna/astype/strip/lower passes over the full dataframe).
+    constraint_cols = {
+        field_name: (
+            output[field_name].fillna("").astype(str).str.strip().str.lower()
+        )
+        for field_name in ("bank", "account_type", "dr_cr")
+    }
+
     def _col_mask(rule):
         """Build a boolean mask for bank / account_type / dr_cr constraints."""
         mask = pd.Series(True, index=output.index)
@@ -211,21 +266,30 @@ def apply_credit_card_rules(df, rules_file):
             rv = rule[field_name]
             if rv in ("*", "-"):
                 continue
-            col = output[field_name].fillna("").astype(str).str.strip().str.lower()
-            mask &= col.eq(rv)
+            mask &= constraint_cols[field_name].eq(rv)
         return mask
 
     def _apply_tier(rule_list):
         nonlocal already
         for rule in rule_list:
-            text_hit = text_col.str.contains(rule["pattern"], na=False, regex=True)
-            mask = text_hit & _col_mask(rule) & ~already
-            if not mask.any():
+            # Constraint columns are cheap boolean Series; the regex scan is
+            # the expensive part, so it only runs on rows that still pass
+            # the constraints and have not been matched yet.
+            eligible = _col_mask(rule) & ~already
+            if not eligible.any():
                 continue
-            output.loc[mask, "counterparty"] = rule["counterparty"]
+            subset_text = text_col[eligible]
+            hit_indices = subset_text.index[subset_text.str.contains(
+                rule["pattern"],
+                na=False,
+                regex=True,
+            )]
+            if hit_indices.empty:
+                continue
+            output.loc[hit_indices, "counterparty"] = rule["counterparty"]
             if rule["product_type"]:
-                output.loc[mask, "product_type"] = rule["product_type"]
-            already |= mask
+                output.loc[hit_indices, "product_type"] = rule["product_type"]
+            already.loc[hit_indices] = True
 
     import warnings
     with warnings.catch_warnings():
@@ -447,49 +511,87 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         target = _resolve_target(rule, output_columns)
         if not target:
             continue
-        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
-        if not mask.any():
+        eligible = output[target].eq(0)
+        if not eligible.any():
             continue
-        output.loc[mask, target] = 1
-        _write_metadata(mask, rule, target)
+        subset_text = text_col[eligible]
+        hits = subset_text.str.contains(
+            rule["pattern"].pattern,
+            na=False,
+            regex=True,
+            flags=re.IGNORECASE,
+        )
+        hit_mask = _subset_mask(eligible, hits)
+        if not hit_mask.any():
+            continue
+        output.loc[hit_mask, target] = 1
+        _write_metadata(hit_mask, rule, target)
 
     # -- text_regex (each rule has its own compiled pattern) --
     for rule in rules.get("text_regex", []):
         target = _resolve_target(rule, output_columns)
         if not target:
             continue
-        mask = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
-        if not mask.any():
+        eligible = output[target].eq(0)
+        if not eligible.any():
             continue
-        output.loc[mask, target] = 1
-        _write_metadata(mask, rule, target)
+        subset_text = text_col[eligible]
+        hits = subset_text.str.contains(
+            rule["pattern"].pattern,
+            na=False,
+            regex=True,
+            flags=re.IGNORECASE,
+        )
+        hit_mask = _subset_mask(eligible, hits)
+        if not hit_mask.any():
+            continue
+        output.loc[hit_mask, target] = 1
+        _write_metadata(hit_mask, rule, target)
 
     # -- text_or_counterparty_keyword --
     for rule in rules.get("text_or_counterparty_keyword", []):
         target = _resolve_target(rule, output_columns)
         if not target:
             continue
-        pattern = rule["pattern"]
-        hit_text = text_col.str.contains(pattern.pattern, na=False, regex=True, flags=re.IGNORECASE)
-        hit_cp = counterparty_col.str.contains(pattern.pattern, na=False, regex=True, flags=re.IGNORECASE)
-        mask = (hit_text | hit_cp) & output[target].eq(0)
-        if not mask.any():
+        eligible = output[target].eq(0)
+        if not eligible.any():
             continue
-        output.loc[mask, target] = 1
-        _write_metadata(mask, rule, target)
+        pattern = rule["pattern"]
+        subset_text = text_col[eligible]
+        subset_cp = counterparty_col[eligible]
+        hit_text = subset_text.str.contains(
+            pattern.pattern, na=False, regex=True, flags=re.IGNORECASE
+        )
+        hit_cp = subset_cp.str.contains(
+            pattern.pattern, na=False, regex=True, flags=re.IGNORECASE
+        )
+        hit_mask = _subset_mask(eligible, hit_text | hit_cp)
+        if not hit_mask.any():
+            continue
+        output.loc[hit_mask, target] = 1
+        _write_metadata(hit_mask, rule, target)
 
     # -- text_or_counterparty_regex --
     for rule in rules.get("text_or_counterparty_regex", []):
         target = _resolve_target(rule, output_columns)
         if not target:
             continue
-        hit_text = text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE)
-        hit_cp = counterparty_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE)
-        mask = (hit_text | hit_cp) & output[target].eq(0)
-        if not mask.any():
+        eligible = output[target].eq(0)
+        if not eligible.any():
             continue
-        output.loc[mask, target] = 1
-        _write_metadata(mask, rule, target)
+        subset_text = text_col[eligible]
+        subset_cp = counterparty_col[eligible]
+        hit_text = subset_text.str.contains(
+            rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE
+        )
+        hit_cp = subset_cp.str.contains(
+            rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE
+        )
+        hit_mask = _subset_mask(eligible, hit_text | hit_cp)
+        if not hit_mask.any():
+            continue
+        output.loc[hit_mask, target] = 1
+        _write_metadata(hit_mask, rule, target)
 
     # -- all_rules --
     for rule in rules.get("all_rules", []):
@@ -499,16 +601,24 @@ def _apply_flag_rules(df, rules, output_columns, overwrite=False):
         cond_mask = _get_all_rules_mask(output, rule)
         if cond_mask is None or not cond_mask.any():
             continue
-        if "pattern" in rule:
-            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
-        elif "keywords" in rule:
-            mask = cond_mask & text_col.str.contains(rule["pattern"].pattern, na=False, regex=True, flags=re.IGNORECASE) & output[target].eq(0)
-        else:
-            mask = cond_mask & output[target].eq(0)
-        if not mask.any():
+        eligible = cond_mask & output[target].eq(0)
+        if not eligible.any():
             continue
-        output.loc[mask, target] = 1
-        _write_metadata(mask, rule, target)
+        if "pattern" in rule:
+            subset_text = text_col[eligible]
+            hits = subset_text.str.contains(
+                rule["pattern"].pattern,
+                na=False,
+                regex=True,
+                flags=re.IGNORECASE,
+            )
+            hit_mask = _subset_mask(eligible, hits)
+        else:
+            hit_mask = eligible
+        if not hit_mask.any():
+            continue
+        output.loc[hit_mask, target] = 1
+        _write_metadata(hit_mask, rule, target)
 
     return output
 
@@ -527,6 +637,19 @@ def _get_all_rules_mask(output, rule):
     if amount_gt is not None and "amount" in output.columns:
         amount = pd.to_numeric(output["amount"], errors="coerce").abs()
         mask &= amount.gt(amount_gt)
+    return mask
+
+
+def _subset_mask(eligible: pd.Series, hits: pd.Series) -> pd.Series:
+    """Re-expand a subset hits Series into a full-length boolean mask.
+
+    ``eligible`` selects the rows a rule's ``str.contains`` ran on and
+    ``hits`` carries the per-row match results *within that subset*.  The
+    returned Series has the original index and is True exactly where the
+    rule matched (subset rows that failed the regex stay False).
+    """
+    mask = pd.Series(False, index=eligible.index)
+    mask.loc[hits.index[hits]] = True
     return mask
 
 

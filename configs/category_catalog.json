@@ -13,7 +13,7 @@
     "Personal Care": {"owner_engine_id": "initial,catch_all", "active": true},
     "Transport": {"owner_engine_id": "initial,catch_all", "active": true},
     "Education": {"owner_engine_id": "initial,catch_all", "active": true},
-    "Gambling": {"owner_engine_id": "initial,catch_all", "active": true},
+    "Gambling": {"owner_engine_id": "initial,gambling", "active": true},
     "Gyms and other memberships": {"owner_engine_id": "initial,catch_all", "active": true},
     "Pet Care": {"owner_engine_id": "initial,catch_all", "active": true},
     "Donations": {"owner_engine_id": "initial,catch_all", "active": true},
