@@ -6,7 +6,9 @@ Australian bank transaction classification service: a multi-engine classificatio
 
 ##### Python version
 
-3.11
+3.10
+
+Note: the pinned `numpy==1.21.6` / `pandas==1.3.5` install on Python **3.8 – 3.10** only — on 3.11+ neither has a matching distribution (verified with `pip download --only-binary`; the oldest versions published for 3.11 are numpy 1.23.2 / pandas 1.5.0). The code itself uses no version-specific syntax beyond `from __future__ import annotations`.
 
 ##### Processor
 
@@ -15,10 +17,12 @@ CPU
 ##### PIP dependencies
 
 ```txt
-numpy>=1.24.0
-pandas>=2.0.0
-openpyxl>=3.1.0
-pyahocorasick>=2.0.0
+numpy==1.21.6
+pandas==1.3.5
+openpyxl==3.1.3
+pyahocorasick==2.0.0
+typing_extensions==4.7.1
+tqdm==4.66.1
 ```
 
 ## Model API
@@ -254,6 +258,8 @@ Field description:
 (1 of 825 classified transactions and 1 record per summary are shown.)
 
 Field description:
+
+All output field names are snake_case, matching the Excel report column names produced by `backfill.py`.
 
 | Field | Type | Description |
 | --- | --- | --- |
@@ -734,7 +740,7 @@ Three entry scripts serve different purposes but run the **same core pipeline** 
 
 ## Classification pipeline
 
-10 classification engines run in ascending priority order; each engine matches all transactions line by line and later engines overwrite the classification of earlier ones:
+10 classification engines run in **ascending `priority` order** (the array order in `configs/pipeline.json` is irrelevant); each engine matches all transactions line by line and later engines overwrite the classification of earlier ones:
 
 | priority | engine | responsibility |
 | --- | --- | --- |
@@ -743,13 +749,21 @@ Three entry scripts serve different purposes but run the **same core pipeline** 
 | 150 | dishonour | Dishonour identification |
 | 180 | gambling | Gambling identification (keyword rules + migrated institution rows) |
 | 200 | income | Income stream identification (Wages / Centrelink, etc.) |
-| 300 | liability | Liability stream identification (loan / BNPL, etc.), skips transactions already classified as income |
+| 300 | liability | Liability stream identification (loan / BNPL, etc.) |
 | 400 | all_other_credit | Collects remaining credits, only processes credit rows |
 | 500 | fee | Fee identification |
 | 800 | rent | Rent identification (keyword rules + migrated institution rows) |
 | 999 | catch_all | Fallback: only matches transactions not yet classified |
 
-Engine rules are externalized as CSV files under each engine's `resources/` directory (liability_engine, transfer_engine, catch_all_engine, etc.); the pipeline configuration lives in `configs/pipeline.json` and the category catalog in `configs/category_catalog.json`. The `priority` column decides execution order only; two documented exceptions to the plain "later engine wins" rule apply (gambling wins are protected from income / liability, and the rent / gambling institution layers yield to fee / dishonour and to longer initial keywords) — see `CLAUDE.md` for the full overwrite rules.
+Engine rules are externalized as CSV files under each engine's `resources/` directory (rent_engine, gambling_engine, liability_engine, transfer_engine, catch_all_engine, etc.); the pipeline configuration lives in `configs/pipeline.json` and the category catalog in `configs/category_catalog.json`. Add a rule by appending a row to the engine's CSV — no engine code change needed.
+
+Overwrite (later-wins) exceptions, i.e. where a later engine does **not** take a row:
+
+- `liability` skips transactions already classified as income, and `rent` / `gambling` skip rows owned by income / liability; `all_other_credit` only touches `dr_cr == credit` rows and skips everything already classified — except rows labelled `External Transfers`, which it may re-match; `catch_all` only matches unclassified rows.
+- Rows claimed by `gambling` cannot be overwritten by `income` / `liability`; every other later engine still wins them.
+- The `rent` / `gambling` institution layers yield to `fee` / `dishonour` claims and to `initial` claims matched by an equally long or longer keyword.
+
+The `priority` column decides execution order only — see `CLAUDE.md` for the full overwrite rules.
 
 ## Regression check on code changes
 
