@@ -19,7 +19,7 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
-from classification_core.text import parse_decimal_amount
+from classification_core.text import is_missing_value, parse_decimal_amount
 
 
 # ---------------------------------------------------------------------------
@@ -162,7 +162,7 @@ class PersonalLoanStreamIdGenerator:
 def normalize_amount_key(value: object) -> str:
     amount = parse_decimal_amount(value)
     if amount is None:
-        return "" if pd.isna(value) else str(value).strip()
+        return "" if is_missing_value(value) else str(value).strip()
     return format(amount.normalize(), "f")
 
 
@@ -177,7 +177,7 @@ def amount_within_tolerance(
 
 
 def normalize_group_value(value: object) -> object:
-    return "" if pd.isna(value) else value
+    return "" if is_missing_value(value) else value
 
 
 def ensure_stream_id_column(df: pd.DataFrame, reset: bool = False) -> pd.DataFrame:
@@ -1887,7 +1887,7 @@ PRODUCT_RULES: tuple[ProductRule, ...] = (
     ProductRule(50, "loc", identify_loc_streams),
 )
 
-FINV_CATEGORY_MAP = {
+BSCAT_MAP = {
     "bank": "Credit Card Repayments",
     "bnpl": "Non SACC Loans",
     "wage_advance": "Non SACC Loans",
@@ -2322,9 +2322,9 @@ def renumber_stream_ids_uniform(output: pd.DataFrame) -> pd.DataFrame:
     """Renumber every assigned stream_id as ``loan_001``-style IDs.
 
     Runs at the very end of the liability pipeline, after stream
-    identification and finv_category derivation, so it is a purely cosmetic
+    identification and bscat derivation, so it is a purely cosmetic
     rename: nothing downstream may read product/type semantics from the
-    stream_id prefix anymore (use product_type / finv_category instead).
+    stream_id prefix anymore (use product_type / bscat instead).
     Numbering is global across applications, ordered by each stream's
     earliest transaction date so it does not depend on the raw input row
     order.
@@ -2427,7 +2427,7 @@ def validate_columns(df: pd.DataFrame, group_columns: list[str]) -> None:
         )
 
 
-def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
+def add_bscat(df: pd.DataFrame) -> pd.DataFrame:
     output = df.copy()
     product_type = output["product_type"].astype("string").str.strip()
     stream_base = (
@@ -2443,30 +2443,30 @@ def add_finv_category(df: pd.DataFrame) -> pd.DataFrame:
         & stream_base.notna()
         & stream_base.ne("")
     )
-    existing = output.get("finv_category", pd.Series(index=output.index))
-    output["finv_category"] = pd.NA
+    existing = output.get("bscat", pd.Series(index=output.index))
+    output["bscat"] = pd.NA
 
-    # Vectorised finv_category assignment (replaces the original per-row
+    # Vectorised bscat assignment (replaces the original per-row
     # list comprehension that called ``zip`` on Series slices).
     if valid_mask.any():
         special_bases = stream_base.loc[valid_mask].isin({
             "bnpl", "wage_advance", "home_loan", "bank", "loc", "contract_loan", "generic_loan", "car_loan",
         })
-        output.loc[valid_mask, "finv_category"] = np.where(
+        output.loc[valid_mask, "bscat"] = np.where(
             special_bases,
             stream_base.loc[valid_mask],
             product_type.loc[valid_mask] + "_" + stream_base.loc[valid_mask],
         )
 
     preserved_mask = (
-        output["finv_category"].isna()
+        output["bscat"].isna()
         & existing.notna()
         & existing.astype("string").str.strip().ne("")
     )
-    output.loc[preserved_mask, "finv_category"] = existing.loc[preserved_mask]
+    output.loc[preserved_mask, "bscat"] = existing.loc[preserved_mask]
     dishonour_mask = (
         output["is_dishonours"].astype("string").str.lower().eq("yes")
     )
-    output.loc[dishonour_mask, "finv_category"] = "Dishonours"
-    output["finv_category"] = output["finv_category"].replace(FINV_CATEGORY_MAP)
+    output.loc[dishonour_mask, "bscat"] = "Dishonours"
+    output["bscat"] = output["bscat"].replace(BSCAT_MAP)
     return output

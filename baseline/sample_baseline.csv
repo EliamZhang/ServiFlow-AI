@@ -1,4 +1,4 @@
-application_id,transaction_id,finv_category,counterparty,classification_engine,stream_id
+application_id,transaction_id,bscat,counterparty,classification_engine,stream_id
 2420589,2755538076,Automotive,ATLAS SAWYERS SAWYERS VALLE,initial,
 2420589,2755538243,Overdrawn,Overdrawn Fee,fee,
 2420589,2755538124,Non SACC Loans,Humm,liability,loan_004

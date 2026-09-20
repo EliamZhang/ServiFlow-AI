@@ -4,7 +4,7 @@ from __future__ import annotations
 Rule-based income classification pipeline for bank transactions.
 
 Main output fields:
-- finv_category: production income category used by downstream FInv output.
+- bscat: production income category used by downstream output.
 - is_wages_pred: whether the transaction is predicted as wages / salary-like income.
 - wages_rule_name: the wage detection rule that matched.
 - wages_pred_reason: readable reason for wage detection.
@@ -244,7 +244,7 @@ GIG_REPEAT_PAYER_COUNT_MIN = int(_config.get("GIG_REPEAT_PAYER_COUNT_MIN", 4))
 
 IMPORTANT_OUTPUT_COLUMNS = [
     # New income classification fields
-    "finv_category",
+    "bscat",
     "counterparty",
     "stream_id",
     "income_type_pred",
@@ -1169,10 +1169,10 @@ def add_income_type_rules(df: pd.DataFrame) -> pd.DataFrame:
     out["income_type_pred"] = np.select(conditions, income_types, default="non_income")
     out["income_type_rule_name"] = np.select(conditions, rule_names, default="no_income_type_rule")
     out["is_income_pred"] = out["income_type_pred"].ne("non_income").astype(int)
-    # finv_category is the coarse illion category.  The fine-grained income type
+    # bscat is the coarse illion category.  The fine-grained income type
     # (salary_packaging / centrelink / salary_payg / self_employed_gig) stays in
     # income_type_pred for stream grouping and reasoning.
-    out["finv_category"] = (
+    out["bscat"] = (
         out["income_type_pred"]
         .map({"salary_packaging": "Wages", "salary_payg": "Wages", "self_employed_gig": "Wages", "centrelink": "Centrelink"})
         .where(out["is_income_pred"].eq(1), "")

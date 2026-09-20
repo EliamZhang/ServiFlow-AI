@@ -17,10 +17,10 @@ _HIDDEN_COLUMNS = frozenset({
 
 # Columns to highlight with a coloured header.
 _RED_COLUMNS = frozenset({"category", "third_party"})
-_GREEN_COLUMNS = frozenset({"counterparty", "finv_category"})
+_GREEN_COLUMNS = frozenset({"counterparty", "bscat"})
 
 # These four columns should be adjacent for easy comparison.
-_COMPARISON_COLUMNS = ["category", "third_party", "counterparty", "finv_category"]
+_COMPARISON_COLUMNS = ["category", "third_party", "counterparty", "bscat"]
 
 
 def _reorder_columns(df: pd.DataFrame) -> pd.DataFrame:

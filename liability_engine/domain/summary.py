@@ -10,10 +10,10 @@ import re
 
 import pandas as pd
 
-from classification_core.text import parse_decimal_amount
+from classification_core.text import is_missing_value, parse_decimal_amount
 
 SUMMARY_COLUMNS = [
-    "finv_category",
+    "bscat",
     "stream_id",
     "liability_category",
     "bank_account_id",
@@ -55,7 +55,7 @@ PERSONAL_LOAN_PRODUCT_TYPES = [
 SUMMARY_GROUP_COLUMNS = [
     "application_id",
     "counterparty",
-    "finv_category",
+    "bscat",
     "stream_id",
 ]
 
@@ -78,7 +78,7 @@ def decimal_to_output(value: Decimal | None) -> float | None:
 
 
 def normalize_text(value: object) -> str:
-    if pd.isna(value):
+    if is_missing_value(value):
         return ""
     return str(value).strip()
 
@@ -115,11 +115,11 @@ def stream_base(stream_id: object) -> str:
     return re.sub(r"_\d+$", "", text)
 
 
-def derive_finv_category(product_type: object, stream_id: object) -> object:
-    # NOTE: only a fallback safety net (ensure_finv_category) — reads the
+def derive_bscat(product_type: object, stream_id: object) -> object:
+    # NOTE: only a fallback safety net (ensure_bscat) — reads the
     # sacc_/non_sacc_/unknown_ semantics from the stream_id prefix, which is
     # only valid for pre-rename data.  Normal pipeline data always carries a
-    # finv_category already, so this path should not be relied upon.
+    # bscat already, so this path should not be relied upon.
     product = normalize_text(product_type)
     base = stream_base(stream_id)
     if not product or not base:
@@ -130,16 +130,16 @@ def derive_finv_category(product_type: object, stream_id: object) -> object:
     else:
         key = f"{product}_{base}"
 
-    from .streams import FINV_CATEGORY_MAP  # noqa: E402
+    from .streams import BSCAT_MAP  # noqa: E402
 
-    return FINV_CATEGORY_MAP.get(key, key)
+    return BSCAT_MAP.get(key, key)
 
 
-def ensure_finv_category(df: pd.DataFrame) -> pd.DataFrame:
+def ensure_bscat(df: pd.DataFrame) -> pd.DataFrame:
     output = df.copy()
-    if "finv_category" not in output.columns:
-        output["finv_category"] = [
-            derive_finv_category(product_type, stream_id)
+    if "bscat" not in output.columns:
+        output["bscat"] = [
+            derive_bscat(product_type, stream_id)
             for product_type, stream_id in zip(
                 output.get("product_type", pd.Series(index=output.index)),
                 output.get("stream_id", pd.Series(index=output.index)),
@@ -256,7 +256,7 @@ def calculate_frequency_day(
 
 
 def prepare_summary_input(df: pd.DataFrame) -> pd.DataFrame:
-    output = ensure_finv_category(df)
+    output = ensure_bscat(df)
     output["_row_order"] = range(len(output))
     output["_transaction_date"] = pd.to_datetime(
         output["transaction_date"],
@@ -292,11 +292,11 @@ def filter_product_streams(
     renames them to ``loan_001``-style IDs at the end of the pipeline), so
     product-level summary builders filter by ``product_type`` instead.
     ``unknown`` has no product_type of its own (its rows keep product_type
-    ``personal_loan``), so it is matched via finv_category.
+    ``personal_loan``), so it is matched via bscat.
     """
     if stream_prefix == "unknown":
         return df[
-            df["finv_category"].astype("string").eq("Unknown Loans")
+            df["bscat"].astype("string").eq("Unknown Loans")
         ].copy()
     product = df["product_type"].astype("string").str.strip()
     return df[product.eq(stream_prefix)].copy()
@@ -441,7 +441,7 @@ def _derive_repayment_amounts(
 
 
 def calculate_predicted_closing_date(
-    finv_category: object,
+    bscat: object,
     status: str,
     funded_amount: Decimal,
     repaid_amount: Decimal,
@@ -451,7 +451,7 @@ def calculate_predicted_closing_date(
 ) -> str:
     # Stream IDs no longer carry the "sacc_" prefix (they are renamed to
     # loan_001-style IDs), so use the derived category instead.
-    if str(finv_category).strip().casefold() != "sacc loans":
+    if str(bscat).strip().casefold() != "sacc loans":
         return "NA"
     if status == "Closed":
         return "NA"
@@ -483,7 +483,7 @@ def build_bnpl_summary(
     df: pd.DataFrame,
     limits: pd.DataFrame | None = None,
 ) -> pd.DataFrame:
-    """Return one BNPL summary row per finv_category + stream_id."""
+    """Return one BNPL summary row per bscat + stream_id."""
 
     bnpl = filter_product_streams(df, "bnpl")
 
@@ -500,7 +500,7 @@ def build_bnpl_summary(
 
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, finv_category, stream_id_value), group in bnpl.groupby(
+    for (_, _, bscat, stream_id_value), group in bnpl.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
@@ -561,8 +561,8 @@ def build_bnpl_summary(
 
         summary_rows.append(
             {
-                "finv_category": finv_category,
-                "liability_category": finv_category,
+                "bscat": bscat,
+                "liability_category": bscat,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -635,7 +635,7 @@ def build_bnpl_summary(
 
 
 def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
-    """Return one wage-advance summary row per finv_category + stream_id."""
+    """Return one wage-advance summary row per bscat + stream_id."""
 
     wage_advance = filter_product_streams(df, "wage_advance")
 
@@ -645,7 +645,7 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
     due_date_columns = get_due_date_columns(wage_advance)
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, finv_category, stream_id_value), group in wage_advance.groupby(
+    for (_, _, bscat, stream_id_value), group in wage_advance.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
@@ -722,8 +722,8 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": finv_category,
-                "liability_category": finv_category,
+                "bscat": bscat,
+                "liability_category": bscat,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -758,7 +758,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per personal-loan non-sacc/sacc stream."""
 
     personal_loans = df[
-        df["finv_category"].astype("string").isin(
+        df["bscat"].astype("string").isin(
             PERSONAL_LOAN_PRODUCT_TYPES
         )
         & df["stream_id"].notna()
@@ -771,7 +771,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     due_date_columns = get_due_date_columns(personal_loans)
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, finv_category, stream_id_value), group in personal_loans.groupby(
+    for (_, _, bscat, stream_id_value), group in personal_loans.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
@@ -803,7 +803,7 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
         )
 
         predicted_closing_date = calculate_predicted_closing_date(
-            finv_category,
+            bscat,
             status,
             funded_amount,
             repaid_amount,
@@ -814,8 +814,8 @@ def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": finv_category,
-                "liability_category": finv_category,
+                "bscat": bscat,
+                "liability_category": bscat,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),
@@ -856,7 +856,7 @@ def build_standard_summary(df: pd.DataFrame, stream_prefix: str) -> pd.DataFrame
     due_date_columns = get_due_date_columns(product)
     summary_rows: list[dict[str, object]] = []
 
-    for (_, _, finv_category, stream_id_value), group in product.groupby(
+    for (_, _, bscat, stream_id_value), group in product.groupby(
         SUMMARY_GROUP_COLUMNS,
         dropna=False,
         sort=False,
@@ -884,8 +884,8 @@ def build_standard_summary(df: pd.DataFrame, stream_prefix: str) -> pd.DataFrame
 
         summary_rows.append(
             {
-                "finv_category": finv_category,
-                "liability_category": finv_category,
+                "bscat": bscat,
+                "liability_category": bscat,
                 "stream_id": stream_id_value,
                 **stream_detail_fields(group),
                 "application_id": normalize_text(group["application_id"].iloc[0]),

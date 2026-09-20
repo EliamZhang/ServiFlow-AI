@@ -11,9 +11,21 @@ _CLEAN_RE = re.compile(r"[^A-Z0-9]+")
 _DIGIT_LETTER_SEAM_RE = re.compile(r"(?<=\d)(?=[A-Z])|(?<=[A-Z])(?=\d)")
 
 
+def is_missing_value(value: object) -> bool:
+    """Missing-value test for one payload value; array-safe.
+
+    A JSON array or object in a payload field is not a value these helpers can
+    render as text, and calling pd.isna() on one returns an *array* whose truth
+    value raises -- so every guard reading a single payload value screens
+    non-scalars out first.  Treating them as missing keeps a malformed field
+    from reaching the string conversions below.
+    """
+    return not pd.api.types.is_scalar(value) or pd.isna(value)
+
+
 def clean_text(value: object) -> str:
     """Normalise text for keyword matching: uppercase, alphanumerics only."""
-    if pd.isna(value):
+    if is_missing_value(value):
         return ""
     text = str(value).upper()
     text = _CLEAN_RE.sub(" ", text)
@@ -58,7 +70,7 @@ def clean_text_with_channel_prefix(value: object) -> str:
     the start of the transaction text (after the EFTPOS-timestamp strip), letting
     the institution name match at position 0.
     """
-    if pd.isna(value):
+    if is_missing_value(value):
         return ""
     text = str(value).upper()
     text = _EFTPOS_TS_RE.sub("", text)
@@ -79,7 +91,7 @@ def clean_text_with_seams(value: object) -> str:
     tenant reference was split and lost its match, producing Rent ->
     External Transfers regressions), so the seam-splitting stays scoped here.
     """
-    if pd.isna(value):
+    if is_missing_value(value):
         return ""
     return _DIGIT_LETTER_SEAM_RE.sub(" ", clean_text(value))
 
@@ -89,7 +101,7 @@ def is_blank(series: pd.Series) -> pd.Series:
 
 
 def parse_decimal_amount(value: object) -> Decimal | None:
-    if pd.isna(value):
+    if is_missing_value(value):
         return None
 
     text = str(value).strip().replace(",", "")

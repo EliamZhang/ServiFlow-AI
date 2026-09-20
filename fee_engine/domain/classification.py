@@ -22,6 +22,7 @@ import numpy as np
 import pandas as pd
 
 from classification_core.reasons import format_classification_reason
+from classification_core.text import is_missing_value
 
 
 # Category value normalisation — CSV uses lowercase "fee", engine outputs "Fees".
@@ -48,7 +49,7 @@ class FeePrediction:
 
 def normalize_text(value: object) -> str:
     """Normalize text for stable rule matching — preserve original case."""
-    if pd.isna(value):
+    if is_missing_value(value):
         return ""
     return re.sub(r"\s+", " ", str(value)).strip()
 
@@ -232,8 +233,8 @@ def classify_fees(
 
     # Preserve any pre-existing classification on non-fee rows.
     existing_cat = (
-        output["finv_category"]
-        if "finv_category" in output.columns
+        output["bscat"]
+        if "bscat" in output.columns
         else pd.Series("", index=output.index)
     )
     existing_cp = (
@@ -242,7 +243,7 @@ def classify_fees(
         else pd.Series("", index=output.index)
     )
     output["is_fee_pred"] = is_fee.astype(int)
-    output["finv_category"] = [
+    output["bscat"] = [
         cat if f else prev
         for f, cat, prev in zip(is_fee, categories, existing_cat)
     ]
@@ -261,7 +262,7 @@ def classify_fees(
     output["fee_pred_reason"] = output.apply(_build_reason, axis=1)
 
     # stream_id (legacy value "fee" — keep as-is for baseline parity)
-    output["stream_id"] = output["finv_category"].map(
+    output["stream_id"] = output["bscat"].map(
         {"Fees": "fee"}
     ).where(output["is_fee_pred"].eq(1), "")
 
@@ -303,7 +304,7 @@ def _reject_zero_amount_informational(
 
     # Unset the prediction columns for rejected rows.
     df.loc[reject_mask, "is_fee_pred"] = 0
-    df.loc[reject_mask, "finv_category"] = ""
+    df.loc[reject_mask, "bscat"] = ""
     df.loc[reject_mask, "counterparty"] = ""
     df.loc[reject_mask, "fee_rule_name"] = ""
 
@@ -317,7 +318,7 @@ def _build_reason(row: pd.Series) -> str:
         )
 
     rule_name = str(row.get("fee_rule_name", ""))
-    category = str(row.get("finv_category", ""))
+    category = str(row.get("bscat", ""))
     counterparty = str(row.get("counterparty", ""))
 
     return format_classification_reason(

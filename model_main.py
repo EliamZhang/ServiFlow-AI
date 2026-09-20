@@ -9,11 +9,17 @@ repo aus_old_risk_bid_submodel_v1_2_20260327_txn):
   the return value must be a JSON-serializable object
 - Hosted by uWSGI
 
-Input keys:
-    userId / applicationId / flowTime / bank_accounts / illion_raw_transactions
-Additional keys passed by upstream (e.g. illion_day_end_balances) are ignored.
-Output structure is identical to verify_model.py's output (transactions + summaries + stats);
-on error a status="failed" result dict is returned instead of raising an exception.
+Input keys (either contract; `product` picks the chain -- "fundo" -> illion v1, "wagego" ->
+wagego v2 -- and a payload without a registered `product` falls back to key detection; see
+classification_core/service.py):
+    illion v1: userId / applicationId / flowTime / bank_accounts / illion_raw_transactions
+    wagego v2: userId / applicationId / flowTime / bank_accounts / raw_transactions
+Additional keys passed by upstream (e.g. illion_day_end_balances, day_end_balances and
+the wagego feature keys) are ignored.
+Output structure is identical to verify_model.py's output: the echoed input identifiers
+(userId / applicationId / flowTime) followed by bscat_stats + bank_accounts +
+bscat_transactions + bscat_summaries.  A successful run carries no status/error keys; on
+error a status="failed" result dict is returned instead of raising an exception.
 """
 
 from __future__ import annotations

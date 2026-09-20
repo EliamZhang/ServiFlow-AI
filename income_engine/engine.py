@@ -27,7 +27,7 @@ class IncomeEngine:
                 **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},
                 "matched": True,
                 "counterparty": matched["counterparty"].values,
-                "finv_category": matched["finv_category"].values,
+                "bscat": matched["bscat"].values,
                 "stream_id": matched["stream_id"].values,
                 "classification_rule_id": matched[
                     "income_type_rule_name"

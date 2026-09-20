@@ -12,14 +12,14 @@ def exclude_prior_claimed(
 ) -> pd.DataFrame:
     """Return *candidates* rows not already claimed by prior engines.
 
-    Rows whose finv_category is in *keep_categories* are always kept (e.g.
+    Rows whose bscat is in *keep_categories* are always kept (e.g.
     ``{"External Transfers"}`` allows re-matching by a later engine).
     """
     if prior_claims.empty:
         return candidates
     prior_map: dict[tuple[str, str], str] = {
         (str(row["application_id"]), str(row["transaction_id"])): str(
-            row["finv_category"]
+            row["bscat"]
         )
         for _, row in prior_claims.iterrows()
     }
