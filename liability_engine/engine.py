@@ -30,7 +30,7 @@ class LiabilityEngine:
             resources_dir=self.resources_dir,
         )
         details = result.transactions
-        category = details["finv_category"].astype("string").str.strip()
+        category = details["bscat"].astype("string").str.strip()
         matched = details[
             category.notna()
             & category.ne("")
@@ -48,7 +48,7 @@ class LiabilityEngine:
                     **{col: pd.Series(dtype="int64") for col in TRANSACTION_KEY_COLUMNS},
                     "matched": pd.Series(dtype="bool"),
                     "counterparty": pd.Series(dtype="object"),
-                    "finv_category": pd.Series(dtype="object"),
+                    "bscat": pd.Series(dtype="object"),
                     "stream_id": pd.Series(dtype="object"),
                     "classification_rule_id": pd.Series(dtype="object"),
                     "classification_reason": pd.Series(dtype="object"),
@@ -64,14 +64,14 @@ class LiabilityEngine:
                 **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},
                 "matched": True,
                 "counterparty": matched["counterparty"].values,
-                "finv_category": matched["finv_category"].values,
+                "bscat": matched["bscat"].values,
                 "stream_id": matched["stream_id"].values,
                 "classification_rule_id": matched["product_type"].map(
                     lambda value: f"liability_product:{value}"
                 ).values,
                 "classification_reason": matched.apply(
                     lambda row: format_classification_reason(
-                        category=row["finv_category"],
+                        category=row["bscat"],
                         rule=f"liability_product:{row['product_type']}",
                         evidence=[
                             f"product_type={row['product_type']}",

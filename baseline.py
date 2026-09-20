@@ -5,7 +5,7 @@ Usage:
     python baseline.py diff [--input sample.csv] [--baseline baseline/sample_baseline.csv]
 
 ``save`` runs the full pipeline and stores each transaction's final
-classification (finv_category, counterparty, winning engine, stream_id) as a
+classification (bscat, counterparty, winning engine, stream_id) as a
 baseline CSV, plus per-engine claim snapshots (engine_claims.csv), pipeline
 config/engine versions (run_meta.json), and deterministic summary metrics
 (baseline/summaries/: category_summary all columns, liability_summary amount
@@ -44,7 +44,7 @@ DEFAULT_ENGINE_BASELINE = Path("baseline/engine_claims.csv")
 DEFAULT_RUN_META = Path("baseline/run_meta.json")
 DEFAULT_SUMMARIES_DIR = Path("baseline/summaries")
 PROJECT_ROOT = Path(__file__).resolve().parent
-BASELINE_FORMAT_VERSION = 3
+BASELINE_FORMAT_VERSION = 4
 
 # Only deterministic summary artifacts are compared.  liability_summary rows
 # mix time-sensitive fields (status, predicted_closing_date, frequency) with
@@ -58,18 +58,18 @@ SUMMARY_ARTIFACTS = (
 SUMMARY_KEY_COLUMNS = (
     "application_id",
     "bank_account_id",
-    "finv_category",
+    "bscat",
     "stream_id",
 )
 
 KEY_COLUMNS = ("application_id", "transaction_id")
-RESULT_COLUMNS = ("finv_category", "counterparty", "classification_engine", "stream_id")
+RESULT_COLUMNS = ("bscat", "counterparty", "classification_engine", "stream_id")
 BASELINE_COLUMNS = (*KEY_COLUMNS, *RESULT_COLUMNS)
 
 ENGINE_CLAIM_COLUMNS = (
     "engine_id",
     *KEY_COLUMNS,
-    "finv_category",
+    "bscat",
     "counterparty",
     "classification_rule_id",
     "classification_reason",
@@ -78,7 +78,7 @@ ENGINE_CLAIM_COLUMNS = (
 )
 
 CLAIM_RESULT_COLUMNS = (
-    "finv_category",
+    "bscat",
     "counterparty",
     "classification_rule_id",
     "classification_reason",
@@ -330,7 +330,7 @@ def extract_summary_baseline(
         for col in amount_columns:
             if col not in output.columns:
                 output[col] = ""
-    # Multiple streams can share one (bank_account_id, finv_category) key in
+    # Multiple streams can share one (bank_account_id, bscat) key in
     # category_summary; keep the first row so keys stay unique for alignment.
     return output.drop_duplicates(subset=key_columns, keep="first").reset_index(drop=True)
 

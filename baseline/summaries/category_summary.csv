@@ -1,4 +1,4 @@
-bank_account_id,finv_category,transaction_start_date,transaction_end_date,transaction_count,total_amount,average_amount,median_amount,latest_amount
+bank_account_id,bscat,transaction_start_date,transaction_end_date,transaction_count,total_amount,average_amount,median_amount,latest_amount
 4689355,All Other Credits,2025-11-13,2025-11-13,1,48.6,48.6,48.6,48.6
 4689355,Automotive,2025-11-12,2026-05-09,127,5998.31,47.2307874016,25,21.9
 4689355,Department Stores,2025-11-18,2026-04-06,7,405.25,57.8928571429,26,11.5

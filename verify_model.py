@@ -1,5 +1,11 @@
 """Local verification script: run the pipeline on a single application JSON input and write JSON output.
 
+Accepts either supported input contract (illion v1 / wagego v2) and writes the
+matching output contract; see classification_core/service.py.  The output carries the
+echoed input identifiers (userId / applicationId / flowTime), `bscat_stats`,
+`bank_accounts`, `bscat_transactions` and `bscat_summaries` -- no run envelope: this
+script re-raises instead of returning the failed shape.
+
 Usage: python verify_model.py [--input model_input.json] [--output ...]
 [--config configs/pipeline.json] [--category-catalog configs/category_catalog.json]
 """
@@ -8,10 +14,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from datetime import datetime
 from pathlib import Path
 from time import perf_counter
+from typing import Any
 
 from classification_core.config import (
     DEFAULT_CATEGORY_CATALOG,
@@ -19,9 +27,14 @@ from classification_core.config import (
 )
 from classification_core.service import (
     ModelService,
-    build_transactions_frame,
-    serialize_result,
+    application_id_from_payload,
+    build_input_frame,
+    serialize_output,
 )
+
+# Windows forbids these in filenames; control chars for good measure
+_UNSAFE_FILENAME_CHARS = re.compile(r'[<>:"/\\|?*\x00-\x1f]')
+_MAX_APPLICATION_ID_IN_FILENAME = 80
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output"
@@ -62,12 +75,26 @@ def load_input(path: str | Path) -> dict:
         return json.load(file)
 
 
+def _safe_filename_part(value: Any) -> str:
+    """Render an application id safe to embed in a filename.
+
+    v2 flowIds look like "1000008272@1002818@10001@<uuid>" (already safe); the
+    sanitizing is defensive for arbitrary upstream ids.
+    """
+    if value is None:
+        return "unknown"
+    text = _UNSAFE_FILENAME_CHARS.sub("_", str(value)).strip().strip(".")
+    return text[:_MAX_APPLICATION_ID_IN_FILENAME] or "unknown"
+
+
 def _resolve_output_path(output_arg: str | None, payload: dict) -> Path:
     if output_arg:
         return Path(output_arg)
-    application_id = payload.get("applicationId")
+    application_id = application_id_from_payload(payload)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return DEFAULT_OUTPUT_DIR / f"model_output_{application_id}_{timestamp}.json"
+    return DEFAULT_OUTPUT_DIR / (
+        f"model_output_{_safe_filename_part(application_id)}_{timestamp}.json"
+    )
 
 
 def main() -> None:
@@ -77,7 +104,7 @@ def main() -> None:
 
     started = perf_counter()
     try:
-        transactions = build_transactions_frame(payload)
+        transactions = build_input_frame(payload)
         service = ModelService(
             pipeline_config_path=args.config,
             category_catalog_path=args.category_catalog,
@@ -87,16 +114,16 @@ def main() -> None:
         print(f"Error: {exc}", file=sys.stderr)
         raise
 
-    output = serialize_result(result, payload)
+    output = serialize_output(result, payload)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as file:
         json.dump(output, file, ensure_ascii=False, indent=2)
 
     total_seconds = perf_counter() - started
-    stats = output.get("stats", {})
+    stats = output.get("bscat_stats", {})
     print(
-        f"application_no={output.get('application_id')} | "
-        f"status={output.get('status')} | "
+        f"application_no={application_id_from_payload(payload)} | "
+        f"product={stats.get('product')} | "
         f"transactions={stats.get('txn_raw_input_cnt')} | "
         f"date_max={stats.get('transaction_date_max')}"
     )

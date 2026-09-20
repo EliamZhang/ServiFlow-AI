@@ -636,7 +636,10 @@ def _get_all_rules_mask(output, rule):
     amount_gt = rule.get("amount_gt")
     if amount_gt is not None and "amount" in output.columns:
         amount = pd.to_numeric(output["amount"], errors="coerce").abs()
-        mask &= amount.gt(amount_gt)
+        # Compare as float: the threshold is a Decimal, and comparing a Decimal against
+        # a missing (NaN) amount raises decimal.InvalidOperation instead of returning
+        # False, so a single transaction without an amount used to kill the whole run.
+        mask &= amount.gt(float(amount_gt))
     return mask
 
 
@@ -654,14 +657,14 @@ def _subset_mask(eligible: pd.Series, hits: pd.Series) -> pd.Series:
 
 
 def _bulk_write_metadata(output, mask, rule, target):
-    """Bulk-assign counterparty/finv_category/product_type for hit rows."""
+    """Bulk-assign counterparty/bscat/product_type for hit rows."""
     if target in _TARGET_METADATA_MAP:
         meta = _TARGET_METADATA_MAP[target]
         if meta.get("counterparty"):
             cp_empty = output["counterparty"].fillna("").astype(str).str.strip().eq("")
             output.loc[mask & cp_empty, "counterparty"] = meta["counterparty"]
-        if meta.get("finv_category"):
-            output.loc[mask, "finv_category"] = meta["finv_category"]
+        if meta.get("bscat"):
+            output.loc[mask, "bscat"] = meta["bscat"]
         if meta.get("product_type"):
             output.loc[mask, "product_type"] = meta["product_type"]
     else:
@@ -670,7 +673,7 @@ def _bulk_write_metadata(output, mask, rule, target):
             output.loc[mask, "counterparty"] = counterparty
             product_type = rule.get("product_type", "")
             if product_type:
-                output.loc[mask, "finv_category"] = product_type
+                output.loc[mask, "bscat"] = product_type
 
 
 def _resolve_target(rule, output_columns):
@@ -685,24 +688,24 @@ def _resolve_target(rule, output_columns):
 _TARGET_METADATA_MAP = {
     "is_home_loan": {
         "counterparty": "Home Loan",
-        "finv_category": "Non SACC Loans",
+        "bscat": "Non SACC Loans",
         "product_type": "home_loan",
     },
     "is_overdrawn": {
         "counterparty": "Overdrawn",
-        "finv_category": "Overdrawn",
+        "bscat": "Overdrawn",
     },
     "is_debt_collection": {
         "counterparty": "Debt Collection",
-        "finv_category": "Debt Collection",
+        "bscat": "Debt Collection",
     },
     "is_debt_consolidation": {
         "counterparty": "Debt Consolidation",
-        "finv_category": "Debt Consolidation",
+        "bscat": "Debt Consolidation",
     },
     "is_car_loan": {
         "counterparty": "Car Loan",
-        "finv_category": "Non SACC Loans",
+        "bscat": "Non SACC Loans",
         "product_type": "car_loan",
     },
 }
@@ -746,13 +749,13 @@ def apply_generic_loan_catchall(df):
 
     Runs after all other rules (counterparty, credit card, home loan, car loan,
     overdrawn, debt collection, debt consolidation, dishonours, stream assignment)
-    have been exhausted.  Transactions whose finv_category is still empty and whose
+    have been exhausted.  Transactions whose bscat is still empty and whose
     text contains the word ``LOAN`` are assigned counterparty ``Generic Loans`` and
-    finv_category ``Non SACC Loans``.
+    bscat ``Non SACC Loans``.
     """
     output = df.copy()
 
-    fc_col = output.get("finv_category", pd.Series(index=output.index))
+    fc_col = output.get("bscat", pd.Series(index=output.index))
     fc_empty = fc_col.isna() | fc_col.astype(str).str.strip().eq("")
 
     if not fc_empty.any():
@@ -765,6 +768,6 @@ def apply_generic_loan_catchall(df):
 
     output.loc[catchall_mask, "counterparty"] = "Generic Loans"
     output.loc[catchall_mask, "product_type"] = "generic_loan"
-    output.loc[catchall_mask, "finv_category"] = "Non SACC Loans"
+    output.loc[catchall_mask, "bscat"] = "Non SACC Loans"
 
     return output

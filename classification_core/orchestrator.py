@@ -24,14 +24,14 @@ PREDICTION_REQUIRED_COLUMNS = {
     *TRANSACTION_KEY_COLUMNS,
     "matched",
     "counterparty",
-    "finv_category",
+    "bscat",
 }
 
 _UNCLASSIFIED_SENTINEL = "unclassified"
 
 CLAIM_ARCHIVE_COLUMNS = (
     *TRANSACTION_KEY_COLUMNS,
-    "finv_category",
+    "bscat",
     "counterparty",
     "classification_rule_id",
     "classification_reason",
@@ -90,13 +90,13 @@ class ClassificationOrchestrator:
             engine = self.engine_factory(spec.engine_id)
 
             # All engines see all transactions; later engines overwrite earlier ones
-            # at the row level (finv_category + counterparty as a pair).  Sole
+            # at the row level (bscat + counterparty as a pair).  Sole
             # exception: gambling (priority 180, before income/liability) owns its
             # rows — income/liability predictions on gambling-owned rows are dropped
             # below, so gambling payouts are never re-labelled Wages.
             candidates_df = original.copy()
             if spec.engine_id == "liability":
-                already_income_mask = output["finv_category"].isin(
+                already_income_mask = output["bscat"].isin(
                     ["Wages", "Centrelink"]
                 )
                 candidates_df = original.loc[~already_income_mask].copy()
@@ -115,7 +115,7 @@ class ClassificationOrchestrator:
                     [
                         *TRANSACTION_KEY_COLUMNS,
                         "counterparty",
-                        "finv_category",
+                        "bscat",
                         "classification_engine",
                         "classification_reason",
                     ],
@@ -170,7 +170,7 @@ class ClassificationOrchestrator:
                 )
             )
 
-        # Category-level summary for every finv_category, per bank account.
+        # Category-level summary for every bscat, per bank account.
         # income_summary / liability_summary are separate stream-level views.
         category_summary = build_category_summary(output)
         if not category_summary.empty:
@@ -214,7 +214,7 @@ class ClassificationOrchestrator:
     def _initialize_output(self, original: pd.DataFrame) -> pd.DataFrame:
         output = original.copy()
         output["counterparty"] = pd.NA
-        output["finv_category"] = pd.NA
+        output["bscat"] = pd.NA
         output["classification_status"] = _UNCLASSIFIED_SENTINEL
         output["classification_engine"] = pd.NA
         output["classification_engine_version"] = pd.NA
@@ -275,7 +275,7 @@ class ClassificationOrchestrator:
                 f"{int(blank_core.sum())} matched transaction(s)."
             )
 
-        categories = predictions["finv_category"].astype(str)
+        categories = predictions["bscat"].astype(str)
         invalid_categories = sorted(
             {
                 category
@@ -318,7 +318,7 @@ class ClassificationOrchestrator:
         priority: int,
         predictions: pd.DataFrame,
     ) -> None:
-        """Write predictions to output, overwriting both finv_category and
+        """Write predictions to output, overwriting both bscat and
         counterparty as a pair.  Later engines always win at the row level,
         except gambling-owned rows which income/liability predictions were
         already filtered from before reaching this point."""
@@ -328,7 +328,7 @@ class ClassificationOrchestrator:
         ):
             row_index = key_to_index[key]
 
-            output.at[row_index, "finv_category"] = prediction["finv_category"]
+            output.at[row_index, "bscat"] = prediction["bscat"]
             output.at[row_index, "classification_status"] = "classified"
             output.at[row_index, "classification_engine"] = engine.engine_id
             output.at[row_index, "classification_engine_version"] = (

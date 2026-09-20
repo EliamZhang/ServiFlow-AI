@@ -47,7 +47,7 @@ class DishonourEngine:
                 **{col: matched[col].values for col in TRANSACTION_KEY_COLUMNS},
                 "matched": True,
                 "counterparty": "-",
-                "finv_category": "Dishonours",
+                "bscat": "Dishonours",
                 "stream_id": pd.NA,
                 "classification_rule_id": "dishonour:generic",
                 "classification_reason": "Dishonour transaction detected",

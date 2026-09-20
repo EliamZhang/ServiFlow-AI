@@ -1,4 +1,4 @@
-application_id,bank_account_id,finv_category,stream_id,funded_amount,repaid_amount,repayment_amount,recent_fn_repay_amount
+application_id,bank_account_id,bscat,stream_id,funded_amount,repaid_amount,repayment_amount,recent_fn_repay_amount
 2420589,4689355,Non SACC Loans,loan_004,0,750.48,,0
 2420589,4689355,Non SACC Loans,loan_003,0,682.28,37.25,27.27
 2420589,4689355,Non SACC Loans,loan_010,12000,12716.71,1271.04,60

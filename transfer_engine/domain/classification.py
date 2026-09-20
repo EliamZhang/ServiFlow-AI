@@ -30,6 +30,8 @@ from .transfer_rules import (
     load_exclusion_rules,
 )
 
+from classification_core.text import is_missing_value
+
 # Default paths to knowledge-base CSV files.
 _RESOURCES_DIR = Path(__file__).resolve().parent.parent / "resources"
 _DEFAULT_RULES_FILE = _RESOURCES_DIR / "transfer_counterparty_rules.csv"
@@ -185,7 +187,7 @@ _KeywordRuleList = List[Tuple[List[str], str]]
 
 def normalize_text(value: object) -> str:
     """Normalize text so rule matching is stable."""
-    if pd.isna(value):
+    if is_missing_value(value):
         return ""
     return re.sub(r"\s+", " ", str(value).lower()).strip()
 
@@ -233,7 +235,7 @@ def classify_transfers(
     raw_text = output.get("text", pd.Series("", index=output.index))
     output["text_norm"] = raw_text.apply(normalize_text)
     output["is_transfer_pred"] = 0
-    output["finv_category"] = ""
+    output["bscat"] = ""
     output["prediction_confidence"] = ""
     output["prediction_rule"] = ""
     output["prediction_dr_cr_used"] = False
@@ -261,7 +263,7 @@ def classify_transfers(
     output["transfer_pred_reason"] = _build_reason_vectorised(output)
 
     # ── stream id ──
-    output["stream_id"] = output["finv_category"].where(
+    output["stream_id"] = output["bscat"].where(
         output["is_transfer_pred"].eq(1), ""
     )
 
@@ -338,7 +340,7 @@ def _detect_internal_transfers(
 
     if internal_mask.any():
         output.loc[internal_mask[df.index], "is_transfer_pred"] = 1
-        output.loc[internal_mask[df.index], "finv_category"] = "Internal Transfer"
+        output.loc[internal_mask[df.index], "bscat"] = "Internal Transfer"
         output.loc[internal_mask[df.index], "prediction_confidence"] = "high"
         output.loc[internal_mask[df.index], "prediction_rule"] = "internal_pairing_rule"
 
@@ -391,7 +393,7 @@ def _match_rules(
     """Apply regex rules to unclassified rows (vectorised).
 
     Only rows with ``is_transfer_pred == 0`` are considered.  Matched rows
-    receive *category_label* as their ``finv_category``.
+    receive *category_label* as their ``bscat``.
     """
     output = df.copy()
     remaining_mask = output["is_transfer_pred"] == 0
@@ -438,7 +440,7 @@ def _match_rules(
 
         # Assign predictions
         output.loc[matched_idx, "is_transfer_pred"] = 1
-        output.loc[matched_idx, "finv_category"] = category_label
+        output.loc[matched_idx, "bscat"] = category_label
         output.loc[matched_idx, "prediction_confidence"] = confidence
         output.loc[matched_idx, "prediction_rule"] = rule_name
         output.loc[matched_idx, "prediction_dr_cr_used"] = dr_cr_constraint is not None
@@ -523,7 +525,7 @@ def _match_deposit_to_known_accounts(df: pd.DataFrame) -> pd.DataFrame:
             match_mask[idx] = True
 
     if match_mask.any():
-        output.loc[match_mask, ["is_transfer_pred", "finv_category",
+        output.loc[match_mask, ["is_transfer_pred", "bscat",
                                  "prediction_confidence", "prediction_rule"]] = [
             1, "External Transfers", "high",
             "internal_internet_deposit_known_account",
@@ -539,7 +541,7 @@ def _filter_personal_osko_credits(df: pd.DataFrame) -> pd.DataFrame:
 
     et_credit_mask = (
         (output["is_transfer_pred"] == 1)
-        & (output["finv_category"] == "External Transfers")
+        & (output["bscat"] == "External Transfers")
         & (output["dr_cr"].astype(str).str.lower() == "credit")
     )
     if not et_credit_mask.any():
@@ -565,7 +567,7 @@ def _filter_personal_osko_credits(df: pd.DataFrame) -> pd.DataFrame:
     unmark = osko_mask & (~has_ref | (has_ref & has_person_name))
 
     if unmark.any():
-        output.loc[unmark, ["is_transfer_pred", "finv_category",
+        output.loc[unmark, ["is_transfer_pred", "bscat",
                             "prediction_confidence", "prediction_rule"]] = [0, "", "", ""]
         output.loc[unmark, "prediction_dr_cr_used"] = False
 
@@ -654,7 +656,7 @@ def _build_reason_vectorised(df: pd.DataFrame) -> pd.Series:
         idx = df.index[is_transfer]
         conf = df.loc[idx, "prediction_confidence"].astype(str)
         rule = df.loc[idx, "prediction_rule"].fillna("").astype(str)
-        cat = df.loc[idx, "finv_category"].astype(str)
+        cat = df.loc[idx, "bscat"].astype(str)
         dr_cr_flag = df.loc[idx, "prediction_dr_cr_used"].fillna(False).astype(bool)
 
         base = (
