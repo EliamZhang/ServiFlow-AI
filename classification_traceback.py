@@ -429,8 +429,7 @@ def _rule_files() -> list[Path]:
     """全部规则数据文件：各引擎 resources/**/*.csv + initial_engine/merchant_kb.csv。
 
     口径与 baseline.py 的规则指纹一致（含 engine resources 递归 glob，追加
-    merchant_kb；不含 *.pickle 自动机缓存——引擎自管的可再生产物）。configs/
-    两个 JSON 不走这里，单独记录在 fingerprints.configs。
+    merchant_kb）。configs/ 两个 JSON 不走这里，单独记录在 fingerprints.configs。
     """
     files = list(PROJECT_ROOT.glob("*_engine/resources/**/*.csv"))
     files.append(PROJECT_ROOT / "initial_engine" / "merchant_kb.csv")

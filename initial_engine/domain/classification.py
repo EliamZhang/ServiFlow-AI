@@ -7,15 +7,12 @@ then scans transaction text in a single pass per row.
 
 Performance characteristics
 ---------------------------
-- Build: O(total keyword characters) — one-off cost (C level).
+- Build: O(total keyword characters) — paid once per process, no disk cache.
 - Search: O(text length + number of matches) per transaction (C level).
 """
 
 from __future__ import annotations
 
-import hashlib
-import os
-import pickle
 import re
 from pathlib import Path
 
@@ -95,15 +92,6 @@ class _Automaton:
         self._a = automaton
         self.keyword_count = keyword_count
 
-    def __getstate__(self) -> dict:
-        """Pickle the C automaton alongside the metadata so the whole object
-        can be persisted and restored in ~2s instead of rebuilding (~6-8s)."""
-        return {"_a": self._a, "keyword_count": self.keyword_count}
-
-    def __setstate__(self, state: dict) -> None:
-        self._a = state["_a"]
-        self.keyword_count = state["keyword_count"]
-
     def iter(self, text: str):
         """Yield ``(end_pos, value)`` tuples from the underlying automaton."""
         return self._a.iter(text)
@@ -138,49 +126,6 @@ class _Automaton:
 # ---------------------------------------------------------------------------
 # KB loader
 # ---------------------------------------------------------------------------
-
-def _module_fingerprint() -> str:
-    """SHA-256 of this module, so the cache follows the code that builds it.
-
-    The KB-extraction rules that decide the automaton's contents — _STOPWORDS,
-    _MAX_VARIANTS_PER_MERCHANT, _build_keyword_map — all live in this file and
-    leave no trace in the KB's (mtime, size), so without this an edit to them
-    would silently keep serving the old automaton.
-    """
-    try:
-        return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
-    except OSError:
-        return "unknown"
-
-
-def _cache_fingerprint(kb_path: Path) -> tuple[int, int, str] | None:
-    """Return (mtime_ns, size, module_sha256) of the KB, or None if unstattable."""
-    try:
-        st = kb_path.stat()
-    except OSError:
-        return None
-    return st.st_mtime_ns, st.st_size, _module_fingerprint()
-
-
-def _automaton_cache_path(kb_path: Path) -> Path:
-    """Sidecar path for the pickled automaton (ignored by git via *.pickle)."""
-    return kb_path.with_name(f"{kb_path.name}.automaton.pickle")
-
-
-def _pyahocorasick_version() -> str:
-    """pyahocorasick exposes no __version__; fall back to package metadata.
-
-    The version is part of the automaton-cache fingerprint because pickled
-    C automata are tied to the exact extension build — a version upgrade
-    makes stale pickles unloadable, so they must be rebuilt rather than
-    resurrected."""
-    try:
-        from importlib.metadata import version
-
-        return version("pyahocorasick")
-    except Exception:
-        return "unknown"
-
 
 def _build_keyword_map(kb_path: Path) -> dict[str, tuple[str, str]]:
     """Chunk-read *kb_path* into {keyword: (merchant_name, category)}.
@@ -271,48 +216,16 @@ def _build_automaton(kb_path: Path) -> _Automaton:
 
 
 def load_merchant_kb(kb_path: str | Path) -> _Automaton:
-    """Return a ready-to-use automaton, loaded from disk cache when fresh.
+    """Return a ready-to-use automaton built from *kb_path*.
 
-    The entire automaton — C-level pyahocorasick object included — is
-    persisted to a sidecar pickle after the first build (see
-    _automaton_cache_path).  A warm run restores it via pickle.load in ~2s,
-    avoiding the ~9s add_word + make_automaton rebuild that used to be paid
-    once per process; the sidecar is ~736MB uncompressed (uncompressed load
-    was chosen over a ~143MB gzip variant because the extra ~1.5s
-    decompression per process outweighs the disk savings).  The cache is
-    keyed by the KB's (mtime_ns, size) fingerprint, this module's SHA-256, and
-    the pyahocorasick version (pickled C automata are tied to the extension
-    build).  Any miss, corrupt file, or write failure falls back to a full
-    rebuild — a broken cache never breaks classification.
+    The KB is parsed and the automaton built once per process (~11s for the
+    current 74 MB / 1.2 M-keyword KB).  There is deliberately no persistent
+    cache: the former pickle sidecar weighed ~700 MB per KB version and had to
+    be invalidated on any change to the KB, to this module, or to the
+    pyahocorasick build.  Within a process the automaton is built once and
+    reused across engines -- see get_cached_automaton.
     """
-    kb_path = Path(kb_path)
-    fp = _cache_fingerprint(kb_path)
-    cache_path = _automaton_cache_path(kb_path)
-    if fp is not None and cache_path.is_file():
-        try:
-            with open(cache_path, "rb") as fh:
-                cached_fp, automaton = pickle.load(fh)
-            if cached_fp == (*fp, _pyahocorasick_version()) and automaton.keyword_count:
-                return automaton
-        except Exception:
-            pass  # corrupt or version-incompatible cache -> rebuild
-
-    automaton = _build_automaton(kb_path)
-    if fp is not None:
-        tmp_path = cache_path.with_suffix(cache_path.suffix + ".tmp")
-        try:
-            # Write to a temp file and rename so a killed process never leaves
-            # a half-written cache behind.
-            with open(tmp_path, "wb") as fh:
-                pickle.dump(
-                    ((*fp, _pyahocorasick_version()), automaton),
-                    fh,
-                    protocol=pickle.HIGHEST_PROTOCOL,
-                )
-            os.replace(tmp_path, cache_path)
-        except Exception:
-            pass  # cache write failure must never break classification
-    return automaton
+    return _build_automaton(Path(kb_path))
 
 
 # Module-level cache so that downstream engines (e.g. income) can reuse the
@@ -326,9 +239,9 @@ def get_cached_automaton(kb_path: str | Path | None = None) -> _Automaton:
     """Return a cached automaton, building it on first call.
 
     The automaton is cached in memory within the same process so that downstream
-    engines (e.g. income) can reuse it without reloading the ~74 MB CSV.  It is
-    also persisted to disk as a pickle sidecar — a warm run restores it in ~2s
-    via pickle.load instead of rebuilding (~6-8s); see load_merchant_kb.
+    engines (e.g. income) can reuse it without rebuilding it from the ~74 MB
+    CSV.  The first call in a process pays the full build (~11s); see
+    load_merchant_kb.
     """
     global _cached_automaton, _cached_kb_path, _DEFAULT_KB_PATH
     if _DEFAULT_KB_PATH is None:
