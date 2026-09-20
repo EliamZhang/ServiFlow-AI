@@ -84,7 +84,7 @@ class RentEngine:
                     *TRANSACTION_KEY_COLUMNS,
                     "matched",
                     "counterparty",
-                    "finv_category",
+                    "bscat",
                 ]
             ),
             transactions=pd.DataFrame(),
@@ -208,7 +208,7 @@ class RentEngine:
             matched_mask, list(TRANSACTION_KEY_COLUMNS)
         ].copy()
         predictions["matched"] = True
-        predictions["finv_category"] = "Rent"
+        predictions["bscat"] = "Rent"
 
         counterparts = [
             (

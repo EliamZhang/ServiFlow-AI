@@ -1,4 +1,4 @@
-engine_id,application_id,transaction_id,finv_category,counterparty,classification_rule_id,classification_reason,stream_id,priority
+engine_id,application_id,transaction_id,bscat,counterparty,classification_rule_id,classification_reason,stream_id,priority
 transfer,2420589,2755538124,External Transfers,Direct Debit Transfer,external_direct_debit_with_bsb,"category=External Transfers; rule=external_direct_debit_with_bsb; evidence=confidence=high, dr_cr_used",External Transfers,1
 transfer,2420589,2755537983,External Transfers,Direct Debit Transfer,external_direct_debit_with_bsb,"category=External Transfers; rule=external_direct_debit_with_bsb; evidence=confidence=high, dr_cr_used",External Transfers,1
 transfer,2420589,2755537654,External Transfers,CBA Funds Transfer,external_commbank_name,category=External Transfers; rule=external_commbank_name; evidence=confidence=high,External Transfers,1

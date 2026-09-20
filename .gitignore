@@ -14,6 +14,10 @@ output/
 # 大样本导出文件(如 sample-100.csv),不纳入版本控制
 sample-*.csv
 
+# 含真实 PII 的线上样例(真实姓名/账号),不纳入版本控制;
+# 回归请用匿名样例 wagego_sample.json(生成脚本 output/_make_wagego_sample.py)
+wagego_example.json
+
 # 回溯工具产物与测试数据
 backfill/
 

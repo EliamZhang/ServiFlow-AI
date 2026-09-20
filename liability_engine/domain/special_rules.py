@@ -88,6 +88,6 @@ def apply_special_rules(df):
         retail_mask = cashies_mask & ~is_loan_contract & is_retail
         output.loc[retail_mask, "counterparty"] = "Cash Converters Retail"
         output.loc[retail_mask, "product_type"] = ""
-        output.loc[retail_mask, "finv_category"] = "Retail"
+        output.loc[retail_mask, "bscat"] = "Retail"
 
     return output

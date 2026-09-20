@@ -22,7 +22,7 @@ WEEKDAY_NAMES = {
 WAGES_INCOME_TYPES = frozenset({"salary_payg", "salary_packaging", "self_employed_gig"})
 
 SUMMARY_COLUMNS = [
-    "finv_category",
+    "bscat",
     "stream_id",
     "income_category",
     "bank_account_id",
@@ -247,7 +247,7 @@ def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
 
         summary_rows.append(
             {
-                "finv_category": str(first_non_null(group["finv_category"]) or ""),
+                "bscat": str(first_non_null(group["bscat"]) or ""),
                 "stream_id": first_non_null(group["stream_id"]),
                 "income_category": first_non_null(group["income_type_pred"]),
                 "bank_account_id": first_non_null(group["bank_account_id"]),
@@ -293,7 +293,7 @@ def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
 
     return (
         pd.DataFrame(summary_rows, columns=SUMMARY_COLUMNS)
-        .sort_values(["finv_category", "stream_id"])
+        .sort_values(["bscat", "stream_id"])
         .reset_index(drop=True)
     )
 

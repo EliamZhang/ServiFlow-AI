@@ -1,7 +1,7 @@
 """Category-level summary for the final classification output.
 
 A single cross-engine aggregator runs after every engine has committed, so
-every finv_category gets one row of basic statistics per bank account.
+every bscat gets one row of basic statistics per bank account.
 Statistics are computed from the final winning labels, so the numbers always
 match what the downstream consumer sees.  income_summary / liability_summary
 are separate stream-level views and do not conflict with this category-level
@@ -16,7 +16,7 @@ import pandas as pd
 from .text import is_blank
 
 CATEGORY_SUMMARY_COLUMNS = [
-    "finv_category",
+    "bscat",
     "bank_account_id",
     "transaction_start_date",
     "transaction_end_date",
@@ -29,12 +29,12 @@ CATEGORY_SUMMARY_COLUMNS = [
 
 
 def build_category_summary(transactions: pd.DataFrame) -> pd.DataFrame:
-    """Aggregate the final output per finv_category.  Returns an empty frame
+    """Aggregate the final output per bscat.  Returns an empty frame
     with CATEGORY_SUMMARY_COLUMNS when there is nothing to summarise."""
-    if transactions.empty or "finv_category" not in transactions.columns:
+    if transactions.empty or "bscat" not in transactions.columns:
         return pd.DataFrame(columns=CATEGORY_SUMMARY_COLUMNS)
 
-    categorized = transactions.loc[~is_blank(transactions["finv_category"])].copy()
+    categorized = transactions.loc[~is_blank(transactions["bscat"])].copy()
     if categorized.empty:
         return pd.DataFrame(columns=CATEGORY_SUMMARY_COLUMNS)
 
@@ -46,7 +46,7 @@ def build_category_summary(transactions: pd.DataFrame) -> pd.DataFrame:
 
     rows = []
     for (category, bank_account_id), group in categorized.groupby(
-        [categorized["finv_category"].str.strip(), categorized["bank_account_id"]],
+        [categorized["bscat"].str.strip(), categorized["bank_account_id"]],
         dropna=False,
         sort=True,
     ):
@@ -58,7 +58,7 @@ def build_category_summary(transactions: pd.DataFrame) -> pd.DataFrame:
         end_date = dates.max() if not dates.empty else pd.NaT
         rows.append(
             {
-                "finv_category": category,
+                "bscat": category,
                 "bank_account_id": bank_account_id,
                 "transaction_start_date": start_date.date()
                 if not pd.isna(start_date)

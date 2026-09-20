@@ -40,7 +40,7 @@ class CatchAllEngine:
 
     Inspects the ``text`` field of each candidate for category-indicating words
     (e.g. "BAKERY", "PHARMACY", "SALON") and maps them to the corresponding
-    finv_category.  Rules are loaded from a CSV file with per-rule confidence
+    bscat.  Rules are loaded from a CSV file with per-rule confidence
     scores — the highest-confidence match wins.
     """
 
@@ -66,7 +66,7 @@ class CatchAllEngine:
                     *TRANSACTION_KEY_COLUMNS,
                     "matched",
                     "counterparty",
-                    "finv_category",
+                    "bscat",
                 ]
             ),
             transactions=pd.DataFrame(),
@@ -140,7 +140,7 @@ class CatchAllEngine:
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
         predictions["matched"] = True
         predictions["counterparty"] = "-"
-        predictions["finv_category"] = [
+        predictions["bscat"] = [
             c for i, c in enumerate(best_categories)
             if matched_mask.iloc[i]
         ]
@@ -154,7 +154,7 @@ class CatchAllEngine:
             r for i, r in enumerate(best_rule_names)
             if matched_mask.iloc[i]
         ]
-        m_cats = predictions["finv_category"].tolist()
+        m_cats = predictions["bscat"].tolist()
 
         reasons: list[tuple[str, str]] = []
         for cat, rule, conf in zip(m_cats, m_rule_names, m_confidences):

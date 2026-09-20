@@ -553,7 +553,7 @@ def match_transactions(
     transactions: pd.DataFrame,
     automaton: _Automaton,
 ) -> pd.DataFrame:
-    """Add *counterparty*, *finv_category* and match metadata columns.
+    """Add *counterparty*, *bscat* and match metadata columns.
 
     Returns a DataFrame with the same row order as *transactions*, containing
     the original columns plus the classification columns defined by the engine
@@ -572,7 +572,7 @@ def match_transactions(
     (
         out["matched"],
         out["counterparty"],
-        out["finv_category"],
+        out["bscat"],
         out["_matched_keyword"],
         out["classification_rule_id"],
         out["classification_reason"],

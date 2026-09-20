@@ -522,7 +522,7 @@ CLAIM_OUTPUT_MAP = {
     "engine_id": "engineId",
     "application_id": "applicationNo",
     "transaction_id": "transactionId",
-    "finv_category": "finvCategory",
+    "bscat": "bscat",
     "counterparty": "counterparty",
     "classification_rule_id": "classificationRuleId",
     "classification_reason": "classificationReason",
@@ -544,7 +544,7 @@ CLAIM_KEY_COLUMNS = ("application_id", "transaction_id")
 ENGINE_CLAIM_COLUMNS = (
     "engine_id",
     *CLAIM_KEY_COLUMNS,
-    "finv_category",
+    "bscat",
     "counterparty",
     "classification_rule_id",
     "classification_reason",
@@ -671,9 +671,10 @@ def generate_classification(
 ) -> dict[str, Any]:
     """单函数入口：一个申请 JSON 进，分类结果 JSON 出。
 
-    输出 = service.serialize_result 的完整结果（transactions + summaries + stats +
-    bank_accounts）＋ engineClaims（认领层，含被覆盖的认领）＋ engineStats。
-    失败返回 ``{"status": "failed", "error": ..., "stats": {...}}``，不抛异常。
+    输出 = service.serialize_result 的完整结果（bscat_transactions + bscat_summaries +
+    bscat_stats + bank_accounts）＋ engineClaims（认领层，含被覆盖的认领）＋ engineStats。
+    失败返回 ``{"status": "failed", "error": ..., "stats": {...}}``（run_model 原语义，
+    键名不随 service 输出改名），不抛异常。
     """
     try:
         transactions = prepare_transactions(input_vars)

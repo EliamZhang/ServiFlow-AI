@@ -97,7 +97,7 @@ class GamblingEngine:
                     *TRANSACTION_KEY_COLUMNS,
                     "matched",
                     "counterparty",
-                    "finv_category",
+                    "bscat",
                 ]
             ),
             transactions=pd.DataFrame(),
@@ -201,7 +201,7 @@ class GamblingEngine:
             matched_mask, list(TRANSACTION_KEY_COLUMNS)
         ].copy()
         predictions["matched"] = True
-        predictions["finv_category"] = "Gambling"
+        predictions["bscat"] = "Gambling"
 
         counterparts: list[str] = []
         reasons: list[tuple[str, str]] = []

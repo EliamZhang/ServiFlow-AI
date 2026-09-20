@@ -32,7 +32,7 @@ class AllOtherCreditEngine:
 
         if candidates.empty:
             return EngineResult(
-                predictions=pd.DataFrame(columns=[*TRANSACTION_KEY_COLUMNS, "matched", "counterparty", "finv_category"]),
+                predictions=pd.DataFrame(columns=[*TRANSACTION_KEY_COLUMNS, "matched", "counterparty", "bscat"]),
                 transactions=pd.DataFrame(),
             )
 
@@ -46,7 +46,7 @@ class AllOtherCreditEngine:
 
         if candidates.empty:
             return EngineResult(
-                predictions=pd.DataFrame(columns=[*TRANSACTION_KEY_COLUMNS, "matched", "counterparty", "finv_category"]),
+                predictions=pd.DataFrame(columns=[*TRANSACTION_KEY_COLUMNS, "matched", "counterparty", "bscat"]),
                 transactions=pd.DataFrame(),
             )
 
@@ -66,7 +66,7 @@ class AllOtherCreditEngine:
         predictions = matched.loc[:, list(TRANSACTION_KEY_COLUMNS)].copy()
         predictions["matched"] = True
         predictions["counterparty"] = "-"
-        predictions["finv_category"] = "All Other Credits"
+        predictions["bscat"] = "All Other Credits"
 
         return EngineResult(
             predictions=predictions,
