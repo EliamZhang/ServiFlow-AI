@@ -14,7 +14,9 @@ from .pipeline import run_pipeline
 
 class TransferEngine:
     engine_id = "transfer"
-    engine_version = "1.0"
+    # 1.1: transfer rows no longer emit a stream_id (the removed value echoed the
+    # transfer category).  Row-level output change, so the claims archive shows it.
+    engine_version = "1.1"
 
     def classify(self, context: EngineContext) -> EngineResult:
         result = run_pipeline(
@@ -29,7 +31,6 @@ class TransferEngine:
                 "matched": True,
                 "counterparty": matched["counterparty"].values,
                 "bscat": matched["bscat"].values,
-                "stream_id": matched["stream_id"].values,
                 "classification_rule_id": matched[
                     "prediction_rule"
                 ].values,
@@ -38,6 +39,9 @@ class TransferEngine:
                 ].values,
             }
         )
+        # Transfer rows own no stream: pinned to NA (rather than omitted) so the
+        # claim archive keeps its fixed column set.
+        predictions["stream_id"] = pd.NA
         return EngineResult(
             predictions=predictions,
             transactions=details,

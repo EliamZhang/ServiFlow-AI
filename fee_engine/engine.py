@@ -35,7 +35,10 @@ class FeeEngine:
     """
 
     engine_id = "fee"
-    engine_version = "1.0"
+    # 1.1: the stale "Fees" -> "fee" stream_id mapping is gone; fee rows never
+    # emit a stream_id.  Invisible at the row level today (the mapping never
+    # fired), so the version bump is what makes it visible in run_meta.json.
+    engine_version = "1.1"
 
     # ------------------------------------------------------------------
     # ClassificationEngine protocol
@@ -74,11 +77,13 @@ class FeeEngine:
                 "matched": True,
                 "counterparty": matched["counterparty"].values,
                 "bscat": matched["bscat"].values,
-                "stream_id": matched["stream_id"].values,
                 "classification_rule_id": matched["fee_rule_name"].values,
                 "classification_reason": matched["fee_pred_reason"].values,
             }
         )
+        # Fee rows own no stream: pinned to NA (rather than omitted) so the claim
+        # archive keeps its fixed column set.
+        predictions["stream_id"] = pd.NA
 
         return EngineResult(
             predictions=predictions,

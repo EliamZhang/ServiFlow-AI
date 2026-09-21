@@ -57,13 +57,13 @@
     "all_other_credit": "1.0",
     "catch_all": "1.0",
     "dishonour": "1.0",
-    "fee": "1.0",
+    "fee": "1.1",
     "gambling": "1.0",
     "income": "1.1",
     "initial": "1.1",
     "liability": "1.0",
     "rent": "2.0",
-    "transfer": "1.0"
+    "transfer": "1.1"
   },
   "fingerprints": {
     "input": {

@@ -261,10 +261,10 @@ def classify_fees(
 
     output["fee_pred_reason"] = output.apply(_build_reason, axis=1)
 
-    # stream_id (legacy value "fee" — keep as-is for baseline parity)
-    output["stream_id"] = output["bscat"].map(
-        {"Fees": "fee"}
-    ).where(output["is_fee_pred"].eq(1), "")
+    # No stream_id assignment: the legacy "Fees" -> "fee" mapping went stale when
+    # the rules table renamed its category values (Overdrawn / fee), so it never
+    # fired.  Fee rows own no stream; the engine pins its predictions to pd.NA
+    # (see engine.py) instead of deriving a value from bscat.
 
     # Drop internal columns
     output = output.drop(columns=["text_norm", "_text_original"])
