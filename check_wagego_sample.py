@@ -22,8 +22,10 @@ duplicated account must not fan transaction rows out.
 A v2 row is the payload's own fields in the payload's own order, echoed as sent (an empty
 string stays `""`), then the business results -- none of the synthesized columns
 (`transaction_id` / `bank_account_id` / `bank` / `account_type` / `credit_limit`) appears.
-The payload may name a row's account `bank_account_number` (with a per-row `institution`)
-or `account_number` alone; both must resolve to the same account entry and the same result.
+A row names its account `bank_account_number`, optionally with a per-row `institution`; a row
+carrying no `institution` must still resolve its entry (and so its `bank`) by number alone.
+`account_number` is the account *list*'s own key, not a row's: a row spelling it that way
+names no account and the field rides out as ordinary upstream data.
 """
 
 from __future__ import annotations
@@ -288,32 +290,56 @@ def main() -> int:
                   accounts_in_rows <= sample_accounts,
                   sorted(accounts_in_rows - sample_accounts))
 
-    # The payroll sample shape names the row's account `account_number` and carries no
-    # per-row institution.  The row must still find its bank_accounts entry -- and with it
-    # the `bank` liability's counterparty rules mask on -- so no result may move.
-    payroll_rows = [
-        {**{key: value for key, value in source.items()
-            if key not in ("institution", "bank_account_number")},
-         "account_number": source["bank_account_number"]}
+    # The account list is keyed by institution + number, so a row carrying no `institution`
+    # of its own must still find its entry by number alone -- that is where its `bank` comes
+    # from, which liability's counterparty rules mask on, so no result may move.
+    no_institution_rows = [
+        {key: value for key, value in source.items() if key != "institution"}
         for source in payload["raw_transactions"]
     ]
-    payroll = ModelService().predict({**payload, "raw_transactions": payroll_rows})
-    payroll_out = payroll.get("bscat_transactions", [])
-    checker.check("rows naming their account `account_number` classify the same",
-                  payroll.get("status") != "failed"
+    bare = ModelService().predict({**payload, "raw_transactions": no_institution_rows})
+    bare_out = bare.get("bscat_transactions", [])
+    checker.check("rows carrying no institution classify the same",
+                  bare.get("status") != "failed"
                   and [(row.get("bscat"), row.get("counterparty"), row.get("stream_id"))
-                       for row in payroll_out]
+                       for row in bare_out]
                   == [(row["bscat"], row["counterparty"], row["stream_id"])
                       for row in rows],
-                  payroll.get("error"))
+                  bare.get("error"))
     checker.check("no row-institution is invented for them",
-                  all("institution" not in row and "bank_account_number" not in row
-                      for row in payroll_out))
-    frame = build_wagego_frame({**payload, "raw_transactions": payroll_rows})
+                  all("institution" not in row for row in bare_out))
+    frame = build_wagego_frame({**payload, "raw_transactions": no_institution_rows})
     checker.check("the account resolves from its number alone",
                   set(frame["bank"])
                   == {account["institution"] for account in payload["bank_accounts"]},
                   sorted(set(frame["bank"])))
+
+    # `account_number` is the account list's key, not a row's: a row spelling it that way
+    # (stripped of any per-row institution too, i.e. the retired payroll shape) names no
+    # account, so it matches no entry and resolves no `bank`.  Accepted trade-off: such a
+    # row's bank-masked liability rules go quiet instead of the batch failing.
+    alias_rows: list[tuple[dict[str, Any], str]] = []
+    for source in payload["raw_transactions"][:2]:
+        row = {key: value for key, value in source.items()
+               if key not in ("bank_account_number", "institution")}
+        row["account_number"] = source["bank_account_number"]
+        alias_rows.append((row, source["bank_account_number"]))
+    alias_payload = {**payload, "raw_transactions": [row for row, _ in alias_rows]}
+    alias_frame = build_wagego_frame(alias_payload)
+    checker.check("a row spelling its account `account_number` matches no account",
+                  set(alias_frame["bank_account_id"]) == {""},
+                  sorted(set(alias_frame["bank_account_id"])))
+    checker.check("... and so resolves no bank",
+                  set(alias_frame["bank"]) == {""},
+                  sorted(set(alias_frame["bank"])))
+    alias = ModelService().predict(alias_payload)
+    alias_out = alias.get("bscat_transactions", [])
+    checker.check("the `account_number` field echoes as ordinary upstream data",
+                  len(alias_out) == len(alias_rows)
+                  and all(row.get("account_number") == number
+                          and "bank_account_number" not in row
+                          for row, (_, number) in zip(alias_out, alias_rows)),
+                  alias.get("error") or f"{len(alias_out)} row(s)")
 
     # ── summaries ───────────────────────────────────────────────────────────
     summaries = output.get("bscat_summaries", {})
