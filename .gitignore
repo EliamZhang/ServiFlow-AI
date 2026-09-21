@@ -2,12 +2,14 @@ __pycache__/
 *.py[cod]
 .venv/
 .venv-backfill/
-*.pickle
 .pytest_cache/
 .ipynb_checkpoints/
 .coverage
 output/
 /model_output_*.json
+/demo
+/case
+/tmp_refund_out
 
 # 大样本导出文件(如 sample-100.csv),不纳入版本控制
 sample-*.csv
@@ -18,3 +20,6 @@ wagego_example.json
 
 # 回溯工具产物与测试数据
 backfill/
+
+# 预构建缓存（automaton / keyword map）：本地自动生成，不入库
+*.pickle
