@@ -21,5 +21,4 @@ wagego_example.json
 # 回溯工具产物与测试数据
 backfill/
 
-# 预构建缓存（automaton / keyword map）：本地自动生成，不入库
 *.pickle
