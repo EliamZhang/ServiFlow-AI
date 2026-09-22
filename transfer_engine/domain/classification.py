@@ -262,11 +262,10 @@ def classify_transfers(
     # ── rule metadata ──
     output["transfer_pred_reason"] = _build_reason_vectorised(output)
 
-    # ── stream id ──
-    output["stream_id"] = output["bscat"].where(
-        output["is_transfer_pred"].eq(1), ""
-    )
-
+    # No stream_id assignment: a transfer row belongs to no liability/income
+    # stream, so the column used to echo the transfer category is gone.  The
+    # engine pins its predictions to pd.NA (see engine.py), and a transfer-owned
+    # row therefore serializes with a null stream_id.
     return output
 
 
