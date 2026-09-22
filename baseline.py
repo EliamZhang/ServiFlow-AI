@@ -102,10 +102,28 @@ def run_pipeline(
 # ── run metadata (pipeline config + engine versions) ────────────────────────
 
 def _sha256(path: Path) -> str:
+    """SHA-256 of the file contents with CRLF normalised to LF.
+
+    Every fingerprinted file is text (CSV/JSON) whose line endings are decided
+    by git's core.autocrlf rather than by whoever edits the rules, so hashing
+    raw bytes turned a checkout or merge into a phantom "rule file changed"
+    alert.  Line endings do not change what the CSV/JSON parsers read, so they
+    must not change the fingerprint; any real edit still does.
+    """
     digest = hashlib.sha256()
     with path.open("rb") as file:
+        pending = b""
         for block in iter(lambda: file.read(1024 * 1024), b""):
-            digest.update(block)
+            data = pending + block
+            # Carry a trailing CR into the next block so a CRLF straddling the
+            # block boundary is still normalised.
+            if data.endswith(b"\r"):
+                data, pending = data[:-1], b"\r"
+            else:
+                pending = b""
+            digest.update(data.replace(b"\r\n", b"\n"))
+        if pending:
+            digest.update(pending)
     return digest.hexdigest()
 
 
