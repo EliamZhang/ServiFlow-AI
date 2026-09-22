@@ -44,11 +44,12 @@ produces keep normalizing their empty values to null; so `institution` /
 Synthesized column names deliberately overwrite same-named upstream transaction keys when
 the payload happens to carry them (ids and account metadata must be ours, not theirs).
 
-A row is related to its account by its own account number, spelled `bank_account_number` in
-the production shape and `account_number` in the payroll sample shape; when the row carries
-no `institution` of its own, the matched `bank_accounts` entry supplies it (see
-_wagego_row_account).  Rows therefore always resolve their `bank` -- which liability's
-counterparty rules are masked on -- from either side.
+A row names its account with `bank_account_number`; the account list spells the same number
+`account_number`, so the two sides are matched through their own key (see
+_wagego_account_key).  When the row carries no `institution` of its own, the matched
+`bank_accounts` entry supplies it (see _wagego_row_account).  A row that names a known
+account therefore resolves its `bank` -- which liability's counterparty rules are masked on
+-- from either side.
 """
 
 from __future__ import annotations
@@ -479,6 +480,8 @@ def _illion_account_key(account: dict) -> str:
 def _wagego_account_key(account: dict) -> str:
     # The account list names the number `account_number`, the transaction rows name it
     # `bank_account_number`; both sides carry the same value, so the helpers differ.
+    # This is the only reader of the account-side spelling -- a row spelling it
+    # `account_number` names no account (see _wagego_row_account_number).
     return account_key(account.get("institution"), account.get("account_number"))
 
 
@@ -490,17 +493,16 @@ def _wagego_account_number_key(account: dict) -> str:
 def _wagego_row_account_number(row: dict) -> str:
     """A v2 transaction row's own account number, normalized.
 
-    The production shape names it `bank_account_number`, the payroll sample shape
-    `account_number`; a row carrying neither (or a non-scalar) names no account.
+    A row names its account `bank_account_number`; a row without it (or carrying a
+    non-scalar) names no account.  `account_number` belongs to the account *list*
+    (see _wagego_account_key), not to a transaction row: a row that spells it that
+    way is read as naming no account, and the field rides through to the output as
+    ordinary upstream data.
     """
-    for column in ("bank_account_number", "account_number"):
-        value = row.get(column)
-        if not pd.api.types.is_scalar(value):
-            continue  # an array / object names nothing (see _to_scalar_column)
-        number = normalize_account_number(value)
-        if number:
-            return number
-    return ""
+    value = row.get("bank_account_number")
+    if not pd.api.types.is_scalar(value):
+        return ""  # an array / object names nothing (see _to_scalar_column)
+    return normalize_account_number(value)
 
 
 def _wagego_row_account(
@@ -512,7 +514,7 @@ def _wagego_row_account(
 
     A row that carries an `institution` of its own is matched on institution + number only,
     so two banks sharing an account number never borrow each other's metadata.  A row that
-    carries none (the payroll sample shape) is matched on its number alone and then takes
+    carries none is matched on its number alone and then takes
     the institution from the account it matched -- `institution`, falling back to the
     entry's `bank` -- because the `bank` column built from it is what liability's
     counterparty rules mask on.  No match leaves both halves empty and the metadata
@@ -726,8 +728,8 @@ def build_wagego_frame(payload: dict) -> pd.DataFrame:
         )
 
     accounts = _account_dicts_by_key(payload, _wagego_account_key)
-    # Second view of the same account list, keyed by the bare number: rows of the payroll
-    # shape name no institution, so only the number can find their account.
+    # Second view of the same account list, keyed by the bare number: a row may carry no
+    # institution of its own, and then only the number can find its account.
     accounts_by_number = _account_dicts_by_key(payload, _wagego_account_number_key)
     resolved = [
         _wagego_row_account(row, accounts, accounts_by_number) for row in rows

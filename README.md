@@ -515,14 +515,14 @@ Same pipeline and the same output shape as `fundo`; the wording follows the wage
 
 (2 of the 5 accounts and 2 of the 58 transactions of this sample are shown.)
 
-A row may instead name its account with `account_number` alone and carry no `institution`, as the payroll sample does — it then takes the institution from the `bank_accounts` entry it matches, so the account metadata (and `bank`) still resolve:
+A row that carries no `institution` of its own takes it from the `bank_accounts` entry it matches by its `bank_account_number`, so the account metadata (and `bank`) still resolve:
 
 ```json
 {
   "secondary_category": "",
   "transaction_date": "2026-09-15",
   "amount": 1320.15,
-  "account_number": "55107322",
+  "bank_account_number": "55107322",
   "balance": 1339.16,
   "dr_cr": "credit",
   "trx_type": "",
@@ -531,6 +531,8 @@ A row may instead name its account with `account_number` alone and carry no `ins
   "third_party": "External Transfers"
 }
 ```
+
+`account_number` is the account *list*'s key, never a row's. A row spelling its account that way names no account: it matches no entry, so its internal `bank_account_id` collapses to `"{institution}-"` (or an empty string when the row carries no institution either) instead of the account's own id. Because income / liability streams are grouped per account, such rows are then grouped wrongly — `stream_id` is renumbered or dropped and the stream summaries change with it (a one-row payload can even flip `bscat`). The batch still succeeds and the field itself echoes back as ordinary upstream data.
 
 Field description:
 
@@ -542,7 +544,7 @@ Field description:
 | flowId | string | Real application identifier of the wagego payload, echoed back as `flow_id` |
 | flowTime | string | Request time, echoed back unchanged as `flowTime` |
 | bank_accounts | array | Optional account list; supplies `account_type` / `credit_limit` (and the `bank` the liability rules mask on) to the transactions whose account it names. Echoed back at the top level as the contract's key list — `bsb` / `account_number` / `bank` / `institution` / `account_type` / `account_holder` / `account_holder_type` / `account_name`, `null` for a key the entry did not send — one entry per account, duplicates collapsed to their last entry and id-less entries dropped. A duplicate `account_number` never fans out transaction rows |
-| raw_transactions | array | wagego raw transactions; each names its account with `bank_account_number` (optionally plus a row-level `institution`) or with `account_number` alone, and carries the rest of the fields the classifier reads (`transaction_date` / `amount` / `dr_cr` / `text`). Transactions carry **no id**; the internal `transaction_id` is the 1-based array position and is not exported. Upstream fields (`institution` / `bank_account_number` / `account_number` / `secondary_category` / `trx_type` …) are echoed back **as sent** — `""` stays `""`, a `null` stays `null` — in the payload's own field order. As in `fundo`, a non-string `text` is classified as its text form and an array / object `text` is treated as blank |
+| raw_transactions | array | wagego raw transactions; each names its account with `bank_account_number` (optionally plus a row-level `institution`), and carries the rest of the fields the classifier reads (`transaction_date` / `amount` / `dr_cr` / `text`). Transactions carry **no id**; the internal `transaction_id` is the 1-based array position and is not exported. Upstream fields (`institution` / `bank_account_number` / `secondary_category` / `trx_type` …) are echoed back **as sent** — `""` stays `""`, a `null` stays `null` — in the payload's own field order. As in `fundo`, a non-string `text` is classified as its text form and an array / object `text` is treated as blank |
 
 ##### Output example
 
@@ -709,11 +711,11 @@ Field description:
 
 ##### Contract notes (v2)
 
-- Account identity is expressed in the input's own wording and only on the transaction rows (they are upstream fields echoed through). A row is related to its account by the number it carries: `bank_account_number` (the production shape, usually with a row-level `institution`) or `account_number` (the payroll sample shape). Internally the adapter composes `bank_account_id` as `"{institution}-{number}"` and `bank` as the row's `institution`; a row that names no institution of its own takes it from the account entry it matched (`institution`, falling back to `bank`) — the liability counterparty rules are masked on `bank`, so it must be mapped. A row that names an institution is only ever matched on institution + number, so two banks sharing an account number never borrow each other's metadata. Neither column is exported.
+- Account identity is expressed in the input's own wording and only on the transaction rows (they are upstream fields echoed through). A row is related to its account by its `bank_account_number`, usually with a row-level `institution`. (`account_number` is the account list's own key — a row spelling it that way names no account and resolves no `bank`; there is no alias.) Internally the adapter composes `bank_account_id` as `"{institution}-{number}"` and `bank` as the row's `institution`; a row that names no institution of its own takes it from the account entry it matched (`institution`, falling back to `bank`) — the liability counterparty rules are masked on `bank`, so it must be mapped. A row that names an institution is only ever matched on institution + number, so two banks sharing an account number never borrow each other's metadata. Neither column is exported.
 - Upstream fields are echoed as sent: an empty string stays `""`, a `null` stays `null`, an array stays an array. Only the pipeline's own columns (`counterparty` / `bscat` / `stream_id`) and the summaries serialize an empty value as `null` — which is why `secondary_category` / `trx_type` come back as `""` for the sample above while the v1 rows (a fixed field set) would show `null`.
 - A v2 payload with neither `applicationId` nor `flowId` usable, or without a `raw_transactions` list, returns the failed shape with the same echo keys.
 - Robustness: the field-level rules under Failure handling above (non-string `text`, array-valued fields, omitted fields, duplicated / id-less `bank_accounts` entries, account-id type tolerance) apply to v2 as well — the account number is canonicalised (`12345678`, `12345678.0` and `"12345678"` are one account), so a transaction row and its `bank_accounts` entry match whatever type each side used; and a missing or unusable `bank_accounts` costs `account_type` / `credit_limit` for the rows that named an account it does not list.
-- Regression handle: `check_wagego_sample.py` runs the anonymised `wagego_sample.json` through the service and asserts the stats, the echoed field values (empty strings included), the row key set and order, the absence of the synthetic columns, the account echo, the summary column sets, the `account_number`-only row shape and a per-category count snapshot. Run it after any change to the v2 adapter or the serializers (`baseline.py` only covers v1).
+- Regression handle: `check_wagego_sample.py` runs the anonymised `wagego_sample.json` through the service and asserts the stats, the echoed field values (empty strings included), the row key set and order, the absence of the synthetic columns, the account echo, the summary column sets, the account resolution of a row carrying no `institution` (and that a row spelling its account `account_number` resolves none) and a per-category count snapshot. Run it after any change to the v2 adapter or the serializers (`baseline.py` only covers v1).
 
 ## Local run
 
