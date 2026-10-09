@@ -238,18 +238,6 @@ Field description:
         "frequency_day": "Wednesday",
         "predicted_closing_date": null
       }
-    ],
-    "category_summary": [
-      {
-        "bscat": "All Other Credits",
-        "transaction_start_date": "2025-11-13",
-        "transaction_end_date": "2025-11-13",
-        "transaction_count": 1,
-        "total_amount": 48.6,
-        "average_amount": 48.6,
-        "median_amount": 48.6,
-        "latest_amount": 48.6
-      }
     ]
   }
 }
@@ -270,7 +258,7 @@ All output field names are snake_case, matching the Excel report column names pr
 | bscat_stats.transaction_date_max | string | Max transaction date in input; values that are not date strings (null, numbers, arrays) are ignored, and the key is `null` when none is usable |
 | bank_accounts | array | Account metadata (`bank_account_id` / `account_number` / `account_type` / `bank`) echoed from the input list — one entry per `bank_account_id` (duplicates collapsed to their last entry, id-less entries dropped), not repeated at the transaction row level; the key is **absent** in `failed` outputs |
 | bscat_transactions | array | Original transaction fields + classification results; the core new fields are `bscat` (fine-grained category), `counterparty` (counterparty name) and `stream_id` (income/liability stream id, null for rows not belonging to any stream). Rows come out in input order. Field set: `amount` / `balance` / `bank_account_id` / `category` / `dr_cr` / `text` / `third_party` / `transaction_date` / `transaction_id` / `trx_type` / `counterparty` / `bscat` / `stream_id` (+ any extra upstream field the payload carries, e.g. `account_number` / `illion_trx_uuid`) |
-| bscat_summaries | object | Summaries grouped by type — income_summary (14 fields: stream_id / income_category / transaction_start_date / transaction_end_date / status / transaction_count / total_income_amount / average_income_amount / median_income_amount / latest_income_amount / estimated_monthly_income / frequency / frequency_day / predicted_next_income_date), liability_summary (12 fields: same shape with liability_category / funded_amount / repaid_amount / repayment_amount / recent_fn_repay_amount / predicted_closing_date), category_summary (8 fields: `bscat` + the two dates + transaction_count + total_/average_/median_/latest_amount) |
+| bscat_summaries | object | Summaries grouped by type — income_summary (14 fields: stream_id / income_category / transaction_start_date / transaction_end_date / status / transaction_count / total_income_amount / average_income_amount / median_income_amount / latest_income_amount / estimated_monthly_income / frequency / frequency_day / predicted_next_income_date), liability_summary (12 fields: same shape with liability_category / funded_amount / repaid_amount / repayment_amount / recent_fn_repay_amount / predicted_closing_date) |
 
 ##### Input/output examples by scenario
 
@@ -679,18 +667,6 @@ Field description:
         "frequency_day": null,
         "predicted_closing_date": null
       }
-    ],
-    "category_summary": [
-      {
-        "bscat": "All Other Credits",
-        "transaction_start_date": "2026-07-22",
-        "transaction_end_date": "2026-07-22",
-        "transaction_count": 1,
-        "total_amount": 1698.27,
-        "average_amount": 1698.27,
-        "median_amount": 1698.27,
-        "latest_amount": 1698.27
-      }
     ]
   }
 }
@@ -707,7 +683,7 @@ Field description:
 | bscat_stats | object | Same as `fundo`, `product` = `wagego` |
 | bank_accounts | array | The payload's `bank_accounts` echoed in the contract's own key list (bsb / account_number / bank / institution / account_type / account_holder / account_holder_type / account_name), `null` for a key an entry did not send — one entry per account, duplicates collapsed to their last entry and id-less entries dropped; `[]` when the key is missing. Absent in `failed` outputs, like `fundo` |
 | bscat_transactions | array | The `raw_transactions` fields in their original order, echoed as sent, then the business results `counterparty` / `bscat` / `stream_id`. None of the synthetic columns (`transaction_id` / `bank_account_id` / `bank` / `account_type` / `credit_limit`) and not the resolved `application_id` is repeated per row |
-| bscat_summaries | object | Identical to `fundo`'s summaries, field for field (income_summary 14 / liability_summary 12 / category_summary 8) — the account identity and the resolved `application_id` appear in neither contract's summaries |
+| bscat_summaries | object | Identical to `fundo`'s summaries, field for field (income_summary 14 / liability_summary 12) — the account identity and the resolved `application_id` appear in neither contract's summaries |
 
 ##### Contract notes (v2)
 
