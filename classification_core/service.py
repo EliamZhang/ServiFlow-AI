@@ -164,13 +164,11 @@ _ILLION_ROW_EXCLUDE = (
 _STREAM_SUMMARY_EXCLUDE = _ACCOUNT_METADATA_COLUMNS | frozenset(
     {"bscat", "bank_account_id", "application_id", "counterparty"}
 )
-# Per-summary output columns.  category_summary groups by `bscat`, so it keeps that one
-# and drops only the account id.  Summaries not listed here fall back to the
+# Per-summary output columns; a summary not listed here falls back to the
 # account-metadata exclusion alone.
 _SUMMARY_EXCLUDE_COLUMNS: dict[str, frozenset[str]] = {
     "income_summary": _STREAM_SUMMARY_EXCLUDE,
     "liability_summary": _STREAM_SUMMARY_EXCLUDE,
-    "category_summary": _ACCOUNT_METADATA_COLUMNS | frozenset({"bank_account_id"}),
 }
 
 # Columns that engine code reads without guarding for their absence (liability's
