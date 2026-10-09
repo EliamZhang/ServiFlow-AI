@@ -12,9 +12,9 @@ load_pipeline_config(), category_owners=load_category_owners())``——configs/ 
 标准库内部 import traceback 时会加载本文件，引发循环导入）。
 
 四种模式（--mode）：
-    batch       整帧单次 run 全量批量分类（943 平台契约：四个数据文件夹 + manifest.json）
-    traceback   逐 application_id 行级回溯（四个数据文件夹 + run_meta/.progress/error_detail）
-    summary     逐 application_id 汇总回溯（只三个 summary 数据文件夹）
+    batch       整帧单次 run 全量批量分类（943 平台契约：三个数据文件夹 + manifest.json）
+    traceback   逐 application_id 行级回溯（三个数据文件夹 + run_meta/.progress/error_detail）
+    summary     逐 application_id 汇总回溯（只两个 summary 数据文件夹）
     app         单申请 JSON → JSON（追加 engineClaims / engineStats；flowTime → 行级
                 sample_datetime——liability 流识别依赖该列，缺它少数贷款产品会识别不同，
                 实测 app 2534115 的 20 笔 SACC Loans 变 Unknown Loans）
@@ -27,8 +27,7 @@ load_pipeline_config(), category_owners=load_category_owners())``——configs/ 
     ├── .progress.txt          仅回溯两模式（断点续跑：每行一个已完成 app_id，隐藏文件）
     ├── transactions.csv/      块文件 {dataset}_{seq:06d}.csv，按 --chunk-rows 精确分块
     ├── income_summary.csv/    （summary 模式不写 transactions.csv/）
-    ├── liability_summary.csv/
-    └── category_summary.csv/
+    └── liability_summary.csv/
 
 运行注意（与根目录 backfill.py / baseline.py 同一惯例）：
 - 从仓库根执行（仓库代码优先于 .venv-backfill/site-packages 的快照副本）。
@@ -83,10 +82,11 @@ OUTPUT_DATASETS = (
     "transactions",
     "income_summary",
     "liability_summary",
-    "category_summary",
 )
-SUMMARY_DATASETS = ("income_summary", "liability_summary", "category_summary")
+SUMMARY_DATASETS = ("income_summary", "liability_summary")
 DATASET_DIR_NAMES = {name: f"{name}.csv" for name in OUTPUT_DATASETS}
+# 旧版曾输出 category_summary.csv/；分类汇总层已废弃，--replace 清理时一并移除残留。
+LEGACY_DATASET_DIRS = ("category_summary.csv",)
 
 RUN_META_PATH = "run_meta.json"
 MANIFEST_NAME = "manifest.json"
@@ -165,16 +165,16 @@ def load_app_transactions(
 
 
 # =====================================================
-# 输出契约：四个数据文件夹 + 按行分块（全入口统一）
+# 输出契约：三个数据文件夹 + 按行分块（全入口统一）
 # =====================================================
 
-# 943 输出契约：数据只有这四类，各自一个文件夹；线上产出很大时按行分块放进对应
+# 943 输出契约：数据各占一个文件夹；线上产出很大时按行分块放进对应
 # 文件夹。文件夹名带 .csv 后缀（如 transactions.csv/），块文件命名
 # {dataset}_{seq:06d}.csv（如 transactions_000000.csv）。
 
 
 def dataset_dir(out_dir: Path, dataset: str) -> Path:
-    """四个数据文件夹之一的路径（out_dir/transactions.csv 等）。"""
+    """数据文件夹之一的路径（out_dir/transactions.csv 等）。"""
     return out_dir / DATASET_DIR_NAMES[dataset]
 
 
@@ -290,7 +290,7 @@ def mark_done(out_dir: Path, app_id: str) -> None:
 
 
 def clear_dataset_chunks(out_dir: Path) -> None:
-    """清空四个数据文件夹里的所有块文件（--replace 全量重跑时用）。
+    """清空各数据文件夹里的所有块文件（--replace 全量重跑时用）。
 
     行分块下块边界与 app 无关，重跑必须清块从头写；续跑（非 replace）则保留
     已有块、序号接续追加（见 ChunkedBuffer）。
@@ -318,10 +318,11 @@ def detect_legacy_conflicts(out_dir: Path) -> list[str]:
 def _cleanup_outputs(out_dir: Path) -> None:
     """--replace 全量重跑：清掉进度标记、错误快照、全部块文件与旧版本残留。
 
-    四个数据文件夹的块文件必须清空从头写（行分块下块边界与 app 无关，旧块
+    各数据文件夹的块文件必须清空从头写（行分块下块边界与 app 无关，旧块
     残留会混入输出）；.progress.txt / error_detail.csv 是 append 语义，必须清。
     顺带清旧版本 shard_* 残留目录与旧结构单文件（app_summary.csv / manifest.json /
-    各数据集同名单文件），语义为分类与汇总两模式清理逻辑的并集。
+    各数据集同名单文件）及已废弃数据集的残留目录（category_summary.csv/），
+    语义为分类与汇总两模式清理逻辑的并集。
     """
     clear_dataset_chunks(out_dir)
     progress = out_dir / PROGRESS_PATH
@@ -333,7 +334,11 @@ def _cleanup_outputs(out_dir: Path) -> None:
     for d in out_dir.glob("shard_*"):
         if d.is_dir():
             shutil.rmtree(d)
-    for legacy in ("app_summary.csv", MANIFEST_NAME, *DATASET_DIR_NAMES.values()):
+    for legacy_dir in LEGACY_DATASET_DIRS:
+        p = out_dir / legacy_dir
+        if p.is_dir():
+            shutil.rmtree(p)
+    for legacy in ("app_summary.csv", MANIFEST_NAME, *DATASET_DIR_NAMES.values(), *LEGACY_DATASET_DIRS):
         p = out_dir / legacy
         if p.exists() and p.is_file():
             p.unlink()
@@ -954,7 +959,7 @@ def _run_app_pipeline(
     """逐 app 回溯执行体：断点续跑 + 索引 + run_meta + Pool/内联 + 分块落盘。
 
     datasets 决定写哪些数据文件夹：classification 传 OUTPUT_DATASETS（含
-    transactions），summary 传 SUMMARY_DATASETS（只三个汇总）。返回 out_dir。
+    transactions），summary 传 SUMMARY_DATASETS（只两个汇总）。返回 out_dir。
     """
     _prepare_out_dir(out_dir, replace)
     done_ids = load_progress(out_dir)
@@ -1060,7 +1065,7 @@ def run_classification_pipeline(
     pipeline_config_path: str | Path = DEFAULT_PIPELINE_CONFIG,
     category_catalog_path: str | Path = DEFAULT_CATEGORY_CATALOG,
 ) -> Path:
-    """按 application_id 回溯分类流水线（四个数据文件夹 + 按行分块）。
+    """按 application_id 回溯分类流水线（三个数据文件夹 + 按行分块）。
 
     sample_path 与 app_ids 二选一；txn_dir 为交易语料目录。返回实际使用的 out_dir。
     """
@@ -1137,7 +1142,7 @@ def run_single_file_pipeline(
 
     batch 模式（一次 run）受单进程与整帧内存限制，大文件（几百万行）在单机上
     跑不动；本模式把输入切成语料目录后走逐 app 回溯链路（Pool 多进程 + 断点
-    续跑 + 四文件夹分块输出，语义与逐 app 回溯一致——stream_id 为 app 内编号，
+    续跑 + 三文件夹分块输出，语义与逐 app 回溯一致——stream_id 为 app 内编号，
     liability 少数双流贷款派生单元格与 batch 范围不同）。
 
     内部步骤：
@@ -1145,7 +1150,7 @@ def run_single_file_pipeline(
        out_dir/.input_auto_clean.csv，标准 CSV（含引号字段）直接使用；
     1. 切分：split_by_application 把输入按 app 切成 out_dir/.corpus_single/
        （samples 放 out_dir/samples_auto.csv，避免被语料索引扫到）；
-    2. 委托 run_classification_pipeline 执行逐 app 回溯（四文件夹 + run_meta +
+    2. 委托 run_classification_pipeline 执行逐 app 回溯（三文件夹 + run_meta +
        .progress 断点续跑 + error_detail）；
     3. run_meta 追加输入文件 SHA-256 与清洗统计（自动清洗时；分类链路只指纹
        样本清单，本模式把真正输入也留痕）。
@@ -1191,7 +1196,7 @@ def run_single_file_pipeline(
     samples = split_by_application(clean_input, corpus_dir, samples_path=samples_path)
     logger.info("Split complete: %d apps -> %s", len(samples), corpus_dir)
 
-    # ── 2. 委托逐 app 回溯（四文件夹 + 断点续跑 + 多进程） ───────────────
+    # ── 2. 委托逐 app 回溯（三文件夹 + 断点续跑 + 多进程） ───────────────
     run_classification_pipeline(
         sample_path=samples_path,
         txn_dir=corpus_dir,
@@ -1237,10 +1242,10 @@ def run_batch_pipeline(
     pipeline_config_path: str | Path = DEFAULT_PIPELINE_CONFIG,
     category_catalog_path: str | Path = DEFAULT_CATEGORY_CATALOG,
 ) -> Path:
-    """单份交易 CSV 全量分类（一次 run 覆盖全量），输出四个数据文件夹。
+    """单份交易 CSV 全量分类（一次 run 覆盖全量），输出三个数据文件夹。
 
     与根 backfill.py 完全同语义（同一 orchestrator、同一 batch 范围：stream_id
-    为跨 app 全局编号），输出为四文件夹 + 按行分块 + manifest.json。
+    为跨 app 全局编号），输出为三文件夹 + 按行分块 + manifest.json。
     返回实际使用的 out_dir。
     """
     input_csv = Path(input_csv)
@@ -1290,11 +1295,11 @@ def run_batch_pipeline(
         len(result.summaries),
     )
 
-    # ── 行级输出：四个数据文件夹 + 按行分块 ──
+    # ── 行级输出：三个数据文件夹 + 按行分块 ──
     write_dataset_chunks(result.transactions, out_dir, "transactions", chunk_rows)
 
     summaries = {artifact.name: artifact.data for artifact in result.summaries}
-    for dataset in ("income_summary", "liability_summary", "category_summary"):
+    for dataset in SUMMARY_DATASETS:
         data = summaries.get(dataset)
         write_dataset_chunks(data, out_dir, dataset, chunk_rows)
 
@@ -1307,8 +1312,8 @@ def run_batch_pipeline(
                 "chunk_rows": chunk_rows,
                 "apps": int(result.transactions["application_id"].nunique()),
                 "transactions": int(len(result.transactions)),
-                "note": "Output = four dataset folders (transactions/income_summary/"
-                "liability_summary/category_summary), chunked by chunk_rows",
+                "note": "Output = three dataset folders (transactions/income_summary/"
+                "liability_summary), chunked by chunk_rows",
             },
             indent=2,
             ensure_ascii=False,
@@ -1331,11 +1336,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         description=(
             "Transaction classification traceback pipeline (single file, direct "
             "repo engine code, no pkl registration). Modes:\n"
-            "  batch      full-frame batch classification (943 contract: four dataset "
+            "  batch      full-frame batch classification (943 contract: three dataset "
             "folders + manifest.json)\n"
-            "  traceback  per-application row-level traceback (four dataset folders + "
+            "  traceback  per-application row-level traceback (three dataset folders + "
             ".progress resume)\n"
-            "  summary    per-application summary-only traceback (three summary folders)\n"
+            "  summary    per-application summary-only traceback (two summary folders)\n"
             "  app        single-application JSON -> JSON (with engineClaims/engineStats)"
         )
     )

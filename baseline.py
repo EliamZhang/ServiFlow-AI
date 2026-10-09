@@ -8,9 +8,9 @@ Usage:
 classification (bscat, counterparty, winning engine, stream_id) as a
 baseline CSV, plus per-engine claim snapshots (engine_claims.csv), pipeline
 config/engine versions (run_meta.json), and deterministic summary metrics
-(baseline/summaries/: category_summary all columns, liability_summary amount
-columns).  ``diff`` reruns the pipeline and reports every transaction whose
-classification changed versus the baseline, per-engine claim changes,
+(baseline/summaries/: liability_summary amount columns).  ``diff`` reruns the
+pipeline and reports every transaction whose classification changed versus the
+baseline, per-engine claim changes,
 claim-count changes per rule, pipeline config / engine version drift, and
 summary metric changes.  Exit code: 0 = no differences, 1 = differences
 found, 2 = error.
@@ -51,7 +51,6 @@ BASELINE_FORMAT_VERSION = 4
 # stable amounts; comparing the amounts alone avoids drift noise when the
 # sample window changes.
 SUMMARY_ARTIFACTS = (
-    ("category_summary", None),
     ("liability_summary", ("funded_amount", "repaid_amount", "repayment_amount", "recent_fn_repay_amount")),
 )
 
@@ -349,7 +348,7 @@ def extract_summary_baseline(
             if col not in output.columns:
                 output[col] = ""
     # Multiple streams can share one (bank_account_id, bscat) key in
-    # category_summary; keep the first row so keys stay unique for alignment.
+    # liability_summary; keep the first row so keys stay unique for alignment.
     return output.drop_duplicates(subset=key_columns, keep="first").reset_index(drop=True)
 
 

@@ -88,7 +88,6 @@ FORBIDDEN_SUCCESS_KEYS = ("run_id", "status", "error")
 EXPECTED_RUN_KEYS = (
     "income_summary",
     "liability_summary",
-    "category_summary",
 )
 # Same column sets as the v1 contract's summaries: neither summary carries the account
 # identity, and the two stream summaries carry neither the coarse category nor the
@@ -107,22 +106,15 @@ EXPECTED_SUMMARY_KEYS = {
         "repayment_amount", "recent_fn_repay_amount", "frequency",
         "frequency_day", "predicted_closing_date",
     ],
-    "category_summary": [
-        "bscat", "transaction_start_date", "transaction_end_date",
-        "transaction_count", "total_amount", "average_amount", "median_amount",
-        "latest_amount",
-    ],
 }
 FORBIDDEN_SUMMARY_KEYS = (
     "bank_account_id", "application_id", "institution", "bank_account_number",
     "account_type", "bank", "credit_limit",
 )
-# `bscat` stays in category_summary, which groups by it.
 FORBIDDEN_STREAM_SUMMARY_KEYS = ("bscat", "counterparty")
 EXPECTED_SUMMARY_COUNTS = {
     "income_summary": 2,
     "liability_summary": 11,
-    "category_summary": 37,
 }
 
 EXPECTED_CATEGORY_COUNTS = {
@@ -356,11 +348,10 @@ def main() -> int:
                           if any(key in record for record in summary)]
         checker.check(f"{name} exposes no account identity", not leaked_summary,
                       leaked_summary)
-        if name in ("income_summary", "liability_summary"):
-            leaked_stream = [key for key in FORBIDDEN_STREAM_SUMMARY_KEYS
-                             if any(key in record for record in summary)]
-            checker.check(f"{name} drops bscat/counterparty", not leaked_stream,
-                          leaked_stream)
+        leaked_stream = [key for key in FORBIDDEN_STREAM_SUMMARY_KEYS
+                         if any(key in record for record in summary)]
+        checker.check(f"{name} drops bscat/counterparty", not leaked_stream,
+                      leaked_stream)
 
     # ── product dispatch ────────────────────────────────────────────────────
     # `product` wins over key presence when it names a registered product.
