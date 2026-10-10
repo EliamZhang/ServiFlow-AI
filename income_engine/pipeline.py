@@ -41,8 +41,17 @@ def _add_kb_counterparty(transactions: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def run_pipeline(transactions: pd.DataFrame) -> PipelineResult:
-    """Classify an in-memory transaction dataframe."""
+def run_pipeline(
+    transactions: pd.DataFrame,
+    *,
+    prior_claims: pd.DataFrame | None = None,
+) -> PipelineResult:
+    """Classify an in-memory transaction dataframe.
+
+    ``prior_claims`` (optional) is passed to the stream-numbering stage, which
+    skips rows a prior engine finally owns (gambling, 特例5) -- see
+    ``domain.summary._PRIOR_CLAIM_ENGINES_STREAM_EXCLUDES``.
+    """
     output = prepare_input(transactions)
     original_columns = list(output.columns)
 
@@ -50,7 +59,7 @@ def run_pipeline(transactions: pd.DataFrame) -> PipelineResult:
     output = apply_wages_rules(output)
     output = add_income_type_rules(output)
     output = _add_kb_counterparty(output)
-    output = add_income_streams(output)
+    output = add_income_streams(output, prior_claims=prior_claims)
     output = reorder_output_columns(output, original_columns)
     return PipelineResult(
         transactions=output,

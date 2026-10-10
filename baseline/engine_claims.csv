@@ -808,7 +808,7 @@ liability,2420589,2755538256,Non SACC Loans,Wagetap,liability_product:wage_advan
 liability,2420589,2755538112,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
 liability,2420589,2755538247,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
 liability,2420589,2755537725,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
-liability,2420589,2755537799,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537799,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
 liability,2420589,2755538333,Non SACC Loans,Humm,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Humm",loan_004,300
 liability,2420589,2755538258,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
 liability,2420589,2755537609,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
@@ -829,7 +829,7 @@ liability,2420589,2755537552,Non SACC Loans,Wagetap,liability_product:wage_advan
 liability,2420589,2755538194,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
 liability,2420589,2755537772,Non SACC Loans,Wagetap,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagetap",loan_010,300
 liability,2420589,2755537895,Non SACC Loans,Beforepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Beforepay",loan_001,300
-liability,2420589,2755537931,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537931,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
 liability,2420589,2755537862,Unknown Loans,Credit Corp,liability_product:personal_loan,"category=Unknown Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_006,300
 liability,2420589,2755538187,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
 liability,2420589,2755537973,Dishonours,Wagepay,liability_product:wage_advance,"category=Dishonours; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300
@@ -847,7 +847,7 @@ liability,2420589,2755537775,Dishonours,Wagepay,liability_product:wage_advance,"
 liability,2420589,2755538025,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
 liability,2420589,2755538344,Non SACC Loans,Afterpay,liability_product:bnpl,"category=Non SACC Loans; rule=liability_product:bnpl; evidence=product_type=bnpl, counterparty=Afterpay",loan_003,300
 liability,2420589,2755538260,Overdrawn,Overdrawn,liability_product:,"category=Overdrawn; rule=liability_product:; evidence=product_type=, counterparty=Overdrawn",,300
-liability,2420589,2755537812,Non SACC Loans,Credit Corp,liability_product:personal_loan,"category=Non SACC Loans; rule=liability_product:personal_loan; evidence=product_type=personal_loan, counterparty=Credit Corp",loan_011,300
+liability,2420589,2755537812,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
 liability,2420589,2755537615,Non SACC Loans,Credit Corp,liability_product:loc,"category=Non SACC Loans; rule=liability_product:loc; evidence=product_type=loc, counterparty=Credit Corp",loan_011,300
 liability,2420589,2755537859,Non SACC Loans,MyPayNow,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=MyPayNow",loan_005,300
 liability,2420589,2755538319,Non SACC Loans,Wagepay,liability_product:wage_advance,"category=Non SACC Loans; rule=liability_product:wage_advance; evidence=product_type=wage_advance, counterparty=Wagepay",loan_008,300

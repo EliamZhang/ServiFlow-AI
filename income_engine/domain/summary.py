@@ -5,6 +5,10 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
+from classification_core.merchant_institution import prior_claim_keys
+from classification_core.models import TRANSACTION_KEY_COLUMNS
+from classification_core.text import is_missing_value
+
 
 WEEKDAY_NAMES = {
     0: "Monday",
@@ -20,6 +24,15 @@ WEEKDAY_NAMES = {
 # ("wage_001", "wage_002", ...).  The fine subtype remains available via
 # income_category on summary rows.  centrelink keeps its own label.
 WAGES_INCOME_TYPES = frozenset({"salary_payg", "salary_packaging", "self_employed_gig"})
+
+# Engines whose prior claims are final against income (特例5): the orchestrator
+# drops income/liability predictions on these rows before commit
+# (classification_core/orchestrator.py, gambling protection), so the stream
+# numbering stage must skip them as well -- otherwise a dropped stream still
+# consumes a stream id and the surviving streams start at wage_002.  Same
+# pattern as the rent/gambling institution layer (module constant + shared
+# prior_claim_keys helper).
+_PRIOR_CLAIM_ENGINES_STREAM_EXCLUDES = ("gambling",)
 
 SUMMARY_COLUMNS = [
     "bscat",
@@ -160,38 +173,83 @@ def derive_stream_status(
     return "active" if days_since_last <= allowed_gap else "inactive"
 
 
-def assign_stream_ids(transactions: pd.DataFrame) -> pd.DataFrame:
+def assign_stream_ids(
+    transactions: pd.DataFrame,
+    prior_claims: Optional[pd.DataFrame] = None,
+) -> pd.DataFrame:
     output = transactions.copy()
     income_mask = output["is_income_pred"].eq(1)
     income = output[income_mask].copy()
+
+    # Skip rows a prior engine finally owns (gambling, 特例5): their income
+    # predictions are discarded before commit, so numbering must not spend a
+    # stream id on them.  Keys use the same normalization as the orchestrator's
+    # commit-layer guard (astype("string").fillna("")), so the two key sets
+    # match exactly.  Excluded rows fall through the .map(stream_ids) below as
+    # "" -- harmless, they never make it into the output as income rows.
+    if prior_claims is not None and not prior_claims.empty:
+        excluded_keys = prior_claim_keys(
+            prior_claims, _PRIOR_CLAIM_ENGINES_STREAM_EXCLUDES
+        )
+        if excluded_keys:
+            row_keys = (
+                income[list(TRANSACTION_KEY_COLUMNS)]
+                .astype("string")
+                .fillna("")
+            )
+            income = income.loc[
+                [
+                    key not in excluded_keys
+                    for key in row_keys.itertuples(index=False, name=None)
+                ]
+            ]
+
     if income.empty:
         return output
 
     stream_order = (
         income.groupby("_income_stream_group_key", dropna=False)
         .agg(
+            application_id=("application_id", first_non_null),
             income_type_pred=("income_type_pred", first_non_null),
             bank_account_id=("bank_account_id", first_non_null),
             counterparty=("counterparty", first_non_null),
             first_txn_date=("txn_date", "min"),
         )
         .sort_values(
-            ["income_type_pred", "bank_account_id", "counterparty", "first_txn_date"],
+            [
+                "application_id",
+                "income_type_pred",
+                "bank_account_id",
+                "counterparty",
+                "first_txn_date",
+            ],
             na_position="last",
         )
         .reset_index()
     )
 
+    # Numbering restarts at 001 for every (application, stream label) pair: one
+    # contiguous 1..N sequence per application and label ("wage_001".."wage_00n",
+    # "centrelink_001".."centrelink_00m"), ordered by the same keys as before
+    # (type, account, counterparty, first transaction date).  The same number
+    # therefore repeats across applications; a stream is identified by the pair
+    # (application_id, stream_id).
     stream_ids: dict[str, str] = {}
-    counters: dict[str, int] = {}
+    counters: dict[tuple[str, str], int] = {}
     for _, row in stream_order.iterrows():
         category = str(row["income_type_pred"])
         stream_label = (
             "wage" if category in WAGES_INCOME_TYPES else category
         )
-        counters[stream_label] = counters.get(stream_label, 0) + 1
+        application_key = (
+            "" if is_missing_value(row["application_id"])
+            else str(row["application_id"]).strip()
+        )
+        counter_key = (application_key, stream_label)
+        counters[counter_key] = counters.get(counter_key, 0) + 1
         stream_ids[row["_income_stream_group_key"]] = (
-            f"{stream_label}_{counters[stream_label]:03d}"
+            f"{stream_label}_{counters[counter_key]:03d}"
         )
 
     output.loc[income_mask, "stream_id"] = (
@@ -210,11 +268,16 @@ def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
     income["txn_date"] = pd.to_datetime(income["txn_date"], errors="coerce")
     income["amount_num"] = pd.to_numeric(income["amount_num"], errors="coerce")
     global_last_date = income["txn_date"].max()
-    group_column = (
-        "_income_stream_group_key"
-        if "_income_stream_group_key" in income.columns
-        else "stream_id"
-    )
+    # add_income_streams drops the group key after assigning stream ids, so
+    # rebuild it here: the summary must group by stream identity, not by
+    # stream_id.  Stream ids restart at 001 per (application, label) since
+    # 2026-10, so the same id exists in many applications and grouping by id
+    # alone merged their streams into a single row.
+    if "_income_stream_group_key" not in income.columns:
+        income["_income_stream_group_key"] = income.apply(
+            build_stream_group_key, axis=1
+        )
+    group_column = "_income_stream_group_key"
 
     summary_rows = []
     for _, group in income.groupby(group_column, dropna=False):
@@ -298,10 +361,13 @@ def build_summary(transactions: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def add_income_streams(transactions: pd.DataFrame) -> pd.DataFrame:
+def add_income_streams(
+    transactions: pd.DataFrame,
+    prior_claims: Optional[pd.DataFrame] = None,
+) -> pd.DataFrame:
     output = transactions.copy()
     output["counterparty"] = output.apply(derive_counterparty, axis=1)
     output["_income_stream_group_key"] = output.apply(build_stream_group_key, axis=1)
     output["stream_id"] = ""
-    output = assign_stream_ids(output)
+    output = assign_stream_ids(output, prior_claims=prior_claims)
     return output.drop(columns=["_income_stream_group_key"])
