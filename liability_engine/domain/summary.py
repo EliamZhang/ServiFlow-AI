@@ -12,6 +12,8 @@ import pandas as pd
 
 from classification_core.text import is_missing_value, parse_decimal_amount
 
+from .dishonours import dishonour_rows_mask
+
 SUMMARY_COLUMNS = [
     "bscat",
     "stream_id",
@@ -448,15 +450,18 @@ def calculate_predicted_closing_date(
     repayment_amount: Decimal,
     frequency: str,
     transaction_end_date: pd.Timestamp | pd.NaT,
-) -> str:
+) -> str | None:
     # Stream IDs no longer carry the "sacc_" prefix (they are renamed to
     # loan_001-style IDs), so use the derived category instead.
+    # No date can be predicted in the branches below; return None so the field
+    # comes out empty (null in JSON, blank in Excel) exactly like the other
+    # builders' hardcoded None, instead of a literal "NA" string.
     if str(bscat).strip().casefold() != "sacc loans":
-        return "NA"
+        return None
     if status == "Closed":
-        return "NA"
+        return None
     if repayment_amount <= 0 or pd.isna(transaction_end_date):
-        return "NA"
+        return None
 
     loan_amt_rmning = round_money(
         round_money(funded_amount * Decimal("1.25")) - repaid_amount
@@ -470,11 +475,11 @@ def calculate_predicted_closing_date(
     }.get(frequency, 14)
     # 病态还款数据（如 0.01 元借记被识别为还款）会让剩余期数大到预测日期超出
     # pandas 可表示时间范围，Timedelta 溢出会炸掉整 app 的回溯；超界时与
-    # Closed / 无还款数据等分支同语义，返回 "NA"。
+    # Closed / 无还款数据等分支同语义，返回空（None）。
     days_to_close = freq_days * rpmnts_rmning
     max_days = int((pd.Timestamp.max - transaction_end_date).days)
     if days_to_close > max_days:
-        return "NA"
+        return None
     predicted_date = transaction_end_date + pd.Timedelta(days=days_to_close)
     return predicted_date.strftime("%Y-%m-%d")
 
@@ -757,10 +762,17 @@ def build_wage_advance_summary(df: pd.DataFrame) -> pd.DataFrame:
 def build_personal_loan_summary(df: pd.DataFrame) -> pd.DataFrame:
     """Return one summary row per personal-loan non-sacc/sacc stream."""
 
+    # Both conditions are needed: the bscat condition alone would also pull in
+    # bnpl / wage_advance streams (their coarse class is the same "Non SACC
+    # Loans"), and product_type alone would steal the bscat == "Unknown Loans"
+    # rows that build_standard_summary(prepared, "unknown") owns.  Rows reaching
+    # here have been aligned by align_product_type_with_stream, so a stream's
+    # product_type matches its stream_id owner.
     personal_loans = df[
         df["bscat"].astype("string").isin(
             PERSONAL_LOAN_PRODUCT_TYPES
         )
+        & df["product_type"].astype("string").str.strip().eq("personal_loan")
         & df["stream_id"].notna()
         & df["stream_id"].astype("string").str.strip().ne("")
     ].copy()
@@ -919,6 +931,15 @@ def build_summary(
     limits_file: str | Path = "resources/bnpl_maximum_limits.csv",
 ) -> pd.DataFrame:
     prepared = prepare_summary_input(df)
+    # A dishonour is not a stream: the "Return ... Direct Debit" rows are flagged
+    # by is_dishonours and add_bscat overwrites their bscat to "Dishonours", but
+    # identify_streams claimed them into the merchant's stream.  Left in, the
+    # bscat-keyed grouping below turns them into a second, all-zero summary row
+    # per stream.  Dropping them here cannot move any other row: they only ever
+    # formed groups of their own.  The stream-numbering stage reads the same
+    # mask (renumber_stream_ids_uniform) so a stream dropped here never
+    # consumes a stream id.
+    prepared = prepared[~dishonour_rows_mask(prepared)].copy()
     limits = load_bnpl_maximum_limits(limits_file)
     summaries = [
         build_bnpl_summary(prepared, limits=limits),
@@ -936,4 +957,21 @@ def build_summary(
     if not summaries:
         return empty_summary()
 
-    return pd.concat(summaries, ignore_index=True)[SUMMARY_COLUMNS]
+    combined = pd.concat(summaries, ignore_index=True)[SUMMARY_COLUMNS]
+    # Invariant: one stream -> exactly one builder -> exactly one summary row.
+    # Overlapping builder selection (a stream matched by two builders) would
+    # silently emit the same stream twice; fail loudly instead.
+    duplicated = combined.duplicated(subset=SUMMARY_GROUP_COLUMNS, keep=False)
+    if duplicated.any():
+        offenders = (
+            combined.loc[duplicated, SUMMARY_GROUP_COLUMNS]
+            .drop_duplicates()
+            .head(5)
+        )
+        raise ValueError(
+            "liability_summary has duplicate stream keys -- one stream must be "
+            f"summarized by exactly one builder ({int(duplicated.sum())} rows "
+            f"across {offenders.shape[0]} conflicting keys, e.g. "
+            f"{offenders.to_dict('records')})"
+        )
+    return combined

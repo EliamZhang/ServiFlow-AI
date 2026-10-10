@@ -114,7 +114,13 @@ FORBIDDEN_SUMMARY_KEYS = (
 FORBIDDEN_STREAM_SUMMARY_KEYS = ("bscat", "counterparty")
 EXPECTED_SUMMARY_COUNTS = {
     "income_summary": 2,
-    "liability_summary": 11,
+    # 7, down from the original 11 in two steps: loan_008 / loan_009 are
+    # wage_advance streams the personal builder used to summarize a second time
+    # (bscat-only selection), removed by the product_type filter in
+    # build_personal_loan_summary; loan_002 (DentiCare) / loan_004 (Wagepay)
+    # consist of a dishonoured direct-debit return only, and build_summary now
+    # drops dishoured rows instead of summarizing them as all-zero streams.
+    "liability_summary": 7,
 }
 
 EXPECTED_CATEGORY_COUNTS = {
@@ -341,6 +347,11 @@ def main() -> int:
         summary = summaries.get(name, [])
         checker.check(f"{name} row count unchanged", len(summary) == expected_count,
                       len(summary))
+        # Invariant: one stream -> exactly one summary row (see build_summary).
+        stream_ids = [record["stream_id"] for record in summary]
+        checker.check(f"{name} has no duplicate stream_id",
+                      len(stream_ids) == len(set(stream_ids)),
+                      sorted({sid for sid in stream_ids if stream_ids.count(sid) > 1}))
         checker.check(f"{name} columns unchanged",
                       all(list(record) == EXPECTED_SUMMARY_KEYS[name] for record in summary),
                       next((list(r) for r in summary if list(r) != EXPECTED_SUMMARY_KEYS[name]), None))
