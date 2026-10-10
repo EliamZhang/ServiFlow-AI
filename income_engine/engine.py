@@ -22,7 +22,11 @@ class IncomeEngine:
     engine_version = "1.1"
 
     def classify(self, context: EngineContext) -> EngineResult:
-        result = run_pipeline(context.candidates)
+        # prior_claims lets the stream-numbering stage skip rows a prior engine
+        # finally owns (gambling, 特例5) so numbering and commit agree.
+        result = run_pipeline(
+            context.candidates, prior_claims=context.prior_claims
+        )
         details = result.transactions
         matched = details[details["is_income_pred"].eq(1)].copy()
         predictions = pd.DataFrame(

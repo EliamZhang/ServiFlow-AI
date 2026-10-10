@@ -21,4 +21,8 @@ wagego_example.json
 # 回溯工具产物与测试数据
 backfill/
 
+# 预构建的 Aho-Corasick 自动机缓存(约 700MB,可由 merchant_kb.csv 自动重建,
+# 重建仅需数秒,见 initial_engine/domain/classification.py 的 load_merchant_kb)
 *.pickle
+
+

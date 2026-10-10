@@ -19,7 +19,11 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
+from classification_core.merchant_institution import prior_claim_keys
+from classification_core.models import TRANSACTION_KEY_COLUMNS
 from classification_core.text import is_missing_value, parse_decimal_amount
+
+from .dishonours import dishonour_rows_mask
 
 
 # ---------------------------------------------------------------------------
@@ -2318,16 +2322,42 @@ def renumber_stream_ids_by_application(df: pd.DataFrame) -> pd.DataFrame:
     return output
 
 
-def renumber_stream_ids_uniform(output: pd.DataFrame) -> pd.DataFrame:
+# Engines whose prior claims are final against liability (特例5): the
+# orchestrator drops liability predictions on these rows before commit
+# (classification_core/orchestrator.py, gambling protection), so the summary
+# never sees them and the numbering stage must not spend a stream id on a
+# stream made only of such rows.  Same pattern as the income stream-numbering
+# stage (income_engine/domain/summary.py).
+_PRIOR_CLAIM_ENGINES_STREAM_EXCLUDES = ("gambling",)
+
+
+def renumber_stream_ids_uniform(
+    output: pd.DataFrame,
+    *,
+    prior_claims: pd.DataFrame | None = None,
+) -> pd.DataFrame:
     """Renumber every assigned stream_id as ``loan_001``-style IDs.
 
     Runs at the very end of the liability pipeline, after stream
-    identification and bscat derivation, so it is a purely cosmetic
-    rename: nothing downstream may read product/type semantics from the
-    stream_id prefix anymore (use product_type / bscat instead).
-    Numbering is global across applications, ordered by each stream's
-    earliest transaction date so it does not depend on the raw input row
-    order.
+    identification and bscat derivation, so nothing downstream may read
+    product/type semantics from the stream_id prefix anymore (use
+    product_type / bscat instead).
+
+    Numbering domain == summary-visible domain: a stream earns a number
+    only if at least one of its rows will appear in the summary.
+    Invisible rows are dishonour rows (build_summary drops them) and rows
+    a prior engine finally owns (gambling, 特例5).  A stream made only of
+    such rows never reaches the summary, so its rows get "" here and do
+    not consume a number -- this keeps the per-application sequence in
+    liability_summary contiguous 1..N.  Mixed streams (some dishonour
+    rows) keep their number, and so do their dishonour rows.
+
+    Numbering restarts at ``loan_001`` for every application -- one
+    contiguous 1..N sequence per application_id, ordered by each stream's
+    earliest transaction date (old stream_id as tiebreaker) so it does
+    not depend on the raw input row order.  The same number therefore
+    repeats across applications; a stream is identified by the pair
+    (application_id, stream_id).
     """
 
     result = output.copy()
@@ -2338,35 +2368,113 @@ def renumber_stream_ids_uniform(output: pd.DataFrame) -> pd.DataFrame:
 
     sid_clean = sid_text.str.strip()
     dated = pd.to_datetime(result["transaction_date"], errors="coerce")
+    app_key = result["application_id"].map(normalize_group_value)
 
-    # One stable ordering key per stream: earliest transaction date, then
-    # application_id, then the old stream_id as a tiebreaker.
+    # Rows the summary will never show.  Keys use the same normalization as
+    # the orchestrator's commit-layer guard and the income numbering stage
+    # (astype("string").fillna("")), so the two key sets match exactly.
+    visible_row = ~dishonour_rows_mask(result)
+    if prior_claims is not None and not prior_claims.empty:
+        excluded_keys = prior_claim_keys(
+            prior_claims, _PRIOR_CLAIM_ENGINES_STREAM_EXCLUDES
+        )
+        if excluded_keys:
+            key_frame = (
+                result[list(TRANSACTION_KEY_COLUMNS)]
+                .astype("string")
+                .fillna("")
+            )
+            visible_row &= ~pd.Series(
+                [
+                    key in excluded_keys
+                    for key in key_frame.itertuples(index=False, name=None)
+                ],
+                index=result.index,
+            )
+
+    # One stable ordering key per (application, stream): earliest
+    # transaction date, then the old stream_id as a tiebreaker.  The
+    # application order itself is irrelevant (numbering restarts per
+    # application), so it must not enter the sort keys -- application_id
+    # may be a mixed-type object column.  Streams with no visible row are
+    # dropped before ranking; the sort keys still run over all rows of the
+    # survivors (including their dishonour rows), so their relative order
+    # is unchanged.
     stream_meta = (
         pd.DataFrame(
             {
+                "app_key": app_key.loc[has_sid],
                 "stream_id": sid_clean.loc[has_sid],
                 "first_date": dated.loc[has_sid],
-                "application_id": result.loc[has_sid, "application_id"],
+                "visible_row": visible_row.loc[has_sid],
             }
         )
-        .groupby("stream_id", sort=False)
+        .groupby(["app_key", "stream_id"], sort=False)
         .agg(
             first_date=("first_date", "min"),
-            application_id=("application_id", "first"),
+            visible_row=("visible_row", "max"),
         )
         .reset_index()
-        .sort_values(
-            ["first_date", "application_id", "stream_id"],
-            kind="stable",
-            na_position="last",
-        )
+    )
+    stream_meta = stream_meta[stream_meta["visible_row"].astype(bool)].sort_values(
+        ["first_date", "stream_id"],
+        kind="stable",
+        na_position="last",
     )
 
+    # 1..N inside each application (same "||" composite-key idiom as
+    # renumber_stream_ids_by_application above).
+    rank_in_app = stream_meta.groupby("app_key", sort=False).cumcount() + 1
     mapping = {
-        old: f"loan_{index:03d}"
-        for index, old in enumerate(stream_meta["stream_id"], start=1)
+        str(app) + "||" + old: f"loan_{index:03d}"
+        for app, old, index in zip(
+            stream_meta["app_key"], stream_meta["stream_id"], rank_in_app
+        )
     }
-    result.loc[has_sid, "stream_id"] = sid_clean.loc[has_sid].map(mapping)
+    row_keys = app_key.loc[has_sid].astype(str) + "||" + sid_clean.loc[has_sid]
+    # Streams that earned no number are absent from the mapping; blank their
+    # rows explicitly -- without the fillna, .map would keep their old ids.
+    result.loc[has_sid, "stream_id"] = row_keys.map(mapping).fillna("").values
+    return result
+
+
+def assign_generic_catchall_stream_ids(output: pd.DataFrame) -> pd.DataFrame:
+    """Give the rows the generic-loan catchall labeled the stream id they lack.
+
+    ``apply_generic_loan_catchall`` runs after stream identification, so the
+    "Generic Loans" rows it manufactures never entered a product rule and
+    have no stream_id.  They are one stream per application: the catchall
+    gives every row the same counterparty and bscat, and the summary groups
+    them by (application_id, counterparty, bscat) with the (empty) stream_id,
+    so the whole group is already a single summary stream.
+
+    Ids continue the per-application ``generic_loan_`` counter used by
+    ProductRule 37, so they never collide with streams rule 37 assigned to
+    real merchants; the final renumber stage then renames them ``loan_NNN``
+    together with every other stream (and applies the usual
+    invisible-stream/summary-visible rules like any other stream).
+    """
+    result = output.copy()
+    if "product_type" not in result.columns or "stream_id" not in result.columns:
+        return result
+
+    product = result["product_type"].astype("string").str.strip()
+    sid_text = result["stream_id"].astype("string")
+    has_sid = sid_text.notna() & sid_text.str.strip().ne("")
+    has_cp = (
+        result["counterparty"].notna()
+        & result["counterparty"].astype("string").str.strip().ne("")
+    )
+    target = product.eq("generic_loan") & ~has_sid & has_cp
+    if not target.any():
+        return result
+
+    counter = _StreamIdCounter(result)
+    app_key = result["application_id"].map(normalize_group_value)
+    for key in app_key.loc[target].drop_duplicates():
+        result.loc[target & app_key.eq(key), "stream_id"] = counter.next(
+            key, "generic_loan"
+        )
     return result
 
 
@@ -2425,6 +2533,55 @@ def validate_columns(df: pd.DataFrame, group_columns: list[str]) -> None:
         raise ValueError(
             f"Missing required columns: {', '.join(missing_columns)}"
         )
+
+
+# Owning product of a stream, keyed by the prefix of its (pre-renumber)
+# stream_id.  merge_sacc_streams_into_loc moves SACC rows into a loc stream
+# without rewriting product_type, so a stream can carry rows of two products;
+# without this alignment the summary layer (which selects builders by
+# product_type) would summarize such a stream twice.
+STREAM_PREFIX_TO_PRODUCT = {
+    "bnpl": "bnpl",
+    "wage_advance": "wage_advance",
+    "home_loan": "home_loan",
+    "car_loan": "car_loan",
+    "bank": "bank",
+    "contract_loan": "contract_loan",
+    "generic_loan": "generic_loan",
+    "loc": "loc",
+    "sacc": PERSONAL_LOAN,
+    "non_sacc": PERSONAL_LOAN,
+    "unknown": PERSONAL_LOAN,
+}
+
+
+def align_product_type_with_stream(output: pd.DataFrame) -> pd.DataFrame:
+    """Make every row's product_type agree with the stream that owns it.
+
+    The owner is read from the prefix of the row's stream_id (``loc_001`` ->
+    loc, ``sacc_007``/``non_sacc_002``/``unknown_001`` -> personal_loan, ...),
+    so every stream ends up internally homogeneous and the summary layer's
+    product_type-based selection becomes stream-based.
+
+    Must run after every product/type check inside ``identify_streams`` (a
+    merge step reads product_type == personal_loan mid-flight) and before
+    ``renumber_stream_ids_uniform`` drops the prefixes.  Only rows that
+    currently disagree are touched; ``add_bscat`` is unaffected either way
+    (a merged row's bscat comes from its stream base, already the special
+    ``loc``).
+    """
+    result = output.copy()
+    prefix = (
+        result["stream_id"]
+        .astype("string")
+        .str.strip()
+        .str.extract(r"^(.+?)_\d+$")[0]
+    )
+    owner = prefix.map(STREAM_PREFIX_TO_PRODUCT)
+    current = result["product_type"].astype("string").str.strip()
+    changed = owner.notna() & owner.ne(current)
+    result.loc[changed, "product_type"] = owner[changed]
+    return result
 
 
 def add_bscat(df: pd.DataFrame) -> pd.DataFrame:

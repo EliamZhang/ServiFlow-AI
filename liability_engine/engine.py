@@ -25,9 +25,13 @@ class LiabilityEngine:
         self.resources_dir = Path(resources_dir)
 
     def classify(self, context: EngineContext) -> EngineResult:
+        # prior_claims lets the final stream-numbering stage skip streams whose
+        # rows a prior engine finally owns (gambling, 特例5) so numbering and
+        # the summary agree.
         result = run_pipeline(
             context.candidates,
             resources_dir=self.resources_dir,
+            prior_claims=context.prior_claims,
         )
         details = result.transactions
         category = details["bscat"].astype("string").str.strip()
