@@ -1,4 +1,4 @@
-﻿keyword,counterparty,product_type,match_type
+﻿keyword,counterparty,product_type,rule_type
 360 Cash Loans; LazerMoney; 30/12 Financier,360 Cash Loans,personal_loan,keyword
 FINANCIER,360 Cash Loans,personal_loan,keyword
 A1 Cars Finance; A1 CARS,A1 Cars Finance,car_loan,keyword
@@ -348,3 +348,4 @@ Swoosh Finance; Ausfinancial Pty Ltd; AusFinancial Pty; Ref: Swoosh,Swoosh Finan
 SWOOSH LOSS RECO,Swoosh Finance,personal_loan,keyword
 Unipay Finance,Unipay Loans,personal_loan,keyword
 POL PL,Police Bank Personal Loan,personal_loan,keyword
+CIRL; CIRL PTY LTD,CIRL Loans,personal_loan,keyword
