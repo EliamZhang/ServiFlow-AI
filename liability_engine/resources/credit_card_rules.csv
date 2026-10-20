@@ -327,7 +327,6 @@
 80,*,*,*,regex,Zip\s*Business|zipbusiness,0,Zip Business,generic_loan,
 80,*,*,*,regex,debt\s*buddy|debtbuddy,0,debt buddy,generic_loan,
 80,*,*,*,regex,flexicommercial,0,flexicommercial,generic_loan,
-80,*,*,*,regex,just\s*budget|justbudget,0,just budget,generic_loan,
 80,*,*,*,regex,smartAR,0,smartAR,generic_loan,
 90,-,credit,cba,regex,PAYMENT\s+RECEIVED\s+THANK\s+YOU,0,CBA Credit Card Repayment,bank,
 90,*,*,*,regex,(?i)^PAYMENT\s+BY\s+AUTHORITY\s+TO\s+WESTPAC\s+BANKING\s+.*$,0,WESTPAC Loans,contract_loan,
