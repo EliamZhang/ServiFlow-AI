@@ -349,3 +349,51 @@ SWOOSH LOSS RECO,Swoosh Finance,personal_loan,keyword
 Unipay Finance,Unipay Loans,personal_loan,keyword
 POL PL,Police Bank Personal Loan,personal_loan,keyword
 CIRL; CIRL PTY LTD,CIRL Loans,personal_loan,keyword
+R4K; R4K SERVICES; R4K NSW; NAASHPTYLTDR4KNS; NAASHPTYLTR4KNS,R4K Group,generic_loan,keyword
+AZORA PERSONAL L; AZORA PERSONAL LOA; AZORA PERSONAL LOANS; AZORA PERSONAL LOAN; AZORA ASSET FINA; AZORA FINANCE,Azora Finance,generic_loan,keyword
+SWOOSH FINANC; SWOOSH FINA; SWOOSH FINACE; SWOOSH FINANCOSH; SWOOSH F; FSOFT PTY LTD; AUSFINANCIAL,Swoosh Finance,generic_loan,keyword
+MONEY3RECOVERIES,Money3,generic_loan,keyword
+ALLIED RETAIL FINANC; VIK LOA; AMO LOA; MFF LOA; AME LOA; SFS LOA; AAF LOA; MCF LOA,Allied Retail Finance,generic_loan,keyword
+PYPL PAYIN,PayPal Pay in 4,bnpl,keyword
+WALKERSTORESPTYL,Snaffle,generic_loan,keyword
+POWERTORQUEFIN; POWERTORQUE FINANC; TOYOTA FIN,Toyota Finance,car_loan,keyword
+POLYGON GROUP,Poligon Group,generic_loan,keyword
+ZIPPLOAN; ZIP PERSON,Zip Personal Loan,generic_loan,keyword
+UMELOANS,Ume Loans,generic_loan,keyword
+CCPF DDRS,Cash Converters,generic_loan,keyword
+SECURE FUNDING PTY; SECURE FUNDING,Liberty Financial,generic_loan,keyword
+LATITUDE PERSNL LO,Latitude Financial,generic_loan,keyword
+SHOPIFY COMMERCE,Shopify Capital,generic_loan,keyword
+PAYTIME; WAGE ADVANCE REPAYMENT,Earned Wage Access,wage_advance,keyword
+AUSLENDINGPTYLTD,Aus Lending,generic_loan,keyword
+SALT&LIME,Salt and Lime,generic_loan,keyword
+CAPFLOW,CapFlow,generic_loan,keyword
+PEPPER ASSET FINAN,Pepper Money,generic_loan,keyword
+NEWSTARTAUTOLOAN,New Start Auto Loans,car_loan,keyword
+AUSTRALIAN PREMI,Australian Premier Finance,generic_loan,keyword
+CAR FINANCE SAVE; CUSTOMISED CAR FINANCE,Auto Finance Loans,car_loan,keyword
+IBA HLC; IBA EMERGING MKT,IBA Loans,generic_loan,keyword
+MONEYPLACE,Money Place,generic_loan,keyword
+ANZ PERSONAL LOANS,ANZ Loans,contract_loan,keyword
+LOANBARNPTYLTD,Loan Barn,generic_loan,keyword
+RESCUECREDITPTYL,Rescue Credit,generic_loan,keyword
+VOLKSWAGEN FINANCI,Volkswagen Financial,car_loan,keyword
+ELANTIS PF L; ELANTIS PF,Elantis Premium Funding,generic_loan,keyword
+HUNTER PREMIUM,Hunter Premium Funding,generic_loan,keyword
+PERPETUAL TRUST,Perpetual Limited,generic_loan,keyword
+MORT REPAY,Keystart Loans,generic_loan,keyword
+ST CHOICE APPLIANCE; CHOICE APPLIANCE,1st Choice Rentals,generic_loan,keyword
+AFI LOA,Allied Credit,generic_loan,keyword
+VISA LOANS,Visa Loans,generic_loan,keyword
+JINGLE LOANS,Jingle Loans,generic_loan,keyword
+BMWAUSTRALIAFINANCE,BMW Finance,car_loan,keyword
+IFIN CASH LOANS,IFinance,generic_loan,keyword
+SHIFT DEBIT BUSINESS,Shift Financial,generic_loan,keyword
+LATROBE FIN,La Trobe Financial,generic_loan,keyword
+BENDIGO BANK BBL,BENDIGO Loans,generic_loan,keyword
+BOQ SPECIALIST,BOQ Loans,generic_loan,keyword
+MORGAN'S MORTGAGES,General Mortgage,generic_loan,keyword
+RADIORENT,Thorn Group,generic_loan,keyword
+LOANREPAYMENT,Generic Loans,generic_loan,keyword
+CASH A WAY LOANS,Cash A Way Loans,generic_loan,keyword
+NAB LOANS,NAB Loans,contract_loan,keyword
